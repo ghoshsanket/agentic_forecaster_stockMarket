@@ -1,4 +1,8 @@
-"""PyTorch training loop with early stopping and best-checkpoint tracking."""
+"""PyTorch training loop with early stopping, gradient clipping, and
+best-checkpoint tracking.
+
+Uses ``BCEWithLogitsLoss`` for the single-binary-logit model.
+"""
 
 from __future__ import annotations
 
@@ -23,6 +27,20 @@ class TrainingResult:
     checkpoint_path: str | None = None
 
 
+def resolve_device(device: str | None = None) -> torch.device:
+    """Resolve a device string to a torch.device.
+
+    Supports: ``auto``, ``cpu``, ``cuda``, ``cuda:0``, ``cuda:1``, ...
+    Respects ``CUDA_VISIBLE_DEVICES``.
+    """
+    if device is None or device == "auto":
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if device.startswith("cuda") and not torch.cuda.is_available():
+        logger.warning("CUDA requested (%s) but not available; falling back to CPU", device)
+        return torch.device("cpu")
+    return torch.device(device)
+
+
 class Trainer:
     def __init__(
         self,
@@ -30,9 +48,11 @@ class Trainer:
         learning_rate: float = 1e-3,
         weight_decay: float = 1e-4,
         batch_size: int = 64,
-        epochs: int = 100,
-        patience: int = 15,
-        class_weight: str | None = "balanced",
+        epochs: int = 3,
+        patience: int = 10,
+        beta1: float = 0.9,
+        beta2: float = 0.999,
+        gradient_clip_norm: float = 1.0,
         seed: int = 42,
         device: str | None = None,
     ):
@@ -42,19 +62,17 @@ class Trainer:
         self.batch_size = batch_size
         self.epochs = epochs
         self.patience = patience
+        self.beta1 = beta1
+        self.beta2 = beta2
+        self.gradient_clip_norm = gradient_clip_norm
         self.seed = seed
-        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = resolve_device(device)
         self.model.to(self.device)
-
-        if class_weight == "balanced":
-            self._class_weight = "balanced"
-        else:
-            self._class_weight = None
 
     def _make_loader(self, X: np.ndarray, y: np.ndarray, shuffle: bool) -> DataLoader:
         ds = TensorDataset(
             torch.tensor(X, dtype=torch.float32),
-            torch.tensor(y, dtype=torch.long),
+            torch.tensor(y, dtype=torch.float32),
         )
         return DataLoader(ds, batch_size=self.batch_size, shuffle=shuffle)
 
@@ -70,15 +88,12 @@ class Trainer:
         train_loader = self._make_loader(X_train, y_train, shuffle=True)
         val_loader = self._make_loader(X_val, y_val, shuffle=False)
 
-        counts = np.bincount(y_train.astype(int), minlength=2).astype(np.float64)
-        weights = torch.tensor(
-            counts.sum() / (2.0 * np.maximum(counts, 1.0)),
-            dtype=torch.float32,
-            device=self.device,
-        )
-        criterion = nn.CrossEntropyLoss(weight=weights)
+        criterion = nn.BCEWithLogitsLoss()
         optimizer = torch.optim.Adam(
-            self.model.parameters(), lr=self.lr, weight_decay=self.wd
+            self.model.parameters(),
+            lr=self.lr,
+            weight_decay=self.wd,
+            betas=(self.beta1, self.beta2),
         )
 
         best_val = float("inf")
@@ -96,6 +111,8 @@ class Trainer:
                 logits = self.model(xb)
                 loss = criterion(logits, yb)
                 loss.backward()
+                if self.gradient_clip_norm > 0:
+                    nn.utils.clip_grad_norm_(self.model.parameters(), self.gradient_clip_norm)
                 optimizer.step()
                 train_losses.append(loss.item())
 

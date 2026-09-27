@@ -1,13 +1,39 @@
 """Technical-indicator feature engineering.
 
-All indicators are computed per ticker on the OHLCV frame.  The target is the
-next-day close-to-close direction: 1 if ``close[t+1] > close[t]`` else 0.
+All indicators are computed per ticker on the DAILY OHLCV frame.  The target
+is the next-day close-to-close direction: 1 if ``close[t+1] > close[t]`` else
+0.  The final daily observation has no label (NA).
+
+Phase-1 canonical feature set (11 features):
+    open, high, low, close, volume,
+    log_return, realized_volatility_20, rsi_14,
+    macd, macd_signal, macd_histogram, atr_14
+
+Extra indicators (SMA, EMA, Bollinger, OBV, multi-period returns) remain
+implemented for future experimentation but are NOT enabled in
+``configs/paper.yaml``.
 """
 
 from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+
+PHASE1_FEATURES = [
+    "open", "high", "low", "close", "volume",
+    "log_return", "realized_volatility_20", "rsi_14",
+    "macd", "macd_signal", "macd_histogram", "atr_14",
+]
+
+
+def log_return(close: pd.Series) -> pd.Series:
+    """Log return: log(close[t] / close[t-1])."""
+    return np.log(close / close.shift(1))
+
+
+def realized_volatility(close: pd.Series, window: int = 20) -> pd.Series:
+    """Rolling standard deviation of LOG returns."""
+    return log_return(close).rolling(window).std()
 
 
 def rsi(close: pd.Series, period: int = 14) -> pd.Series:
@@ -72,14 +98,16 @@ def obv(close: pd.Series, volume: pd.Series) -> pd.Series:
 def build_feature_frame(
     df: pd.DataFrame,
     indicators: list[str] | None = None,
+    use_ohlcv: bool = True,
 ) -> pd.DataFrame:
-    """Build the full feature frame for one ticker.
+    """Build the feature frame for one ticker from DAILY OHLCV.
 
     Parameters
     ----------
     df : DataFrame with columns ``date, open, high, low, close, volume``.
     indicators : optional list of indicator names to compute.  If ``None``,
-        all available indicators are computed.
+        the Phase-1 canonical set is used.
+    use_ohlcv : if True, include raw OHLCV columns as features.
     """
     out = pd.DataFrame()
     out["date"] = df["date"]
@@ -89,9 +117,10 @@ def build_feature_frame(
         "rsi_14": lambda: rsi(close, 14),
         "macd": lambda: macd(close)[0],
         "macd_signal": lambda: macd(close)[1],
-        "macd_hist": lambda: macd(close)[2],
+        "macd_histogram": lambda: macd(close)[2],
         "atr_14": lambda: atr(df["high"], df["low"], close, 14),
-        "volatility_20": lambda: close.pct_change().rolling(20).std(),
+        "realized_volatility_20": lambda: realized_volatility(close, 20),
+        "log_return": lambda: log_return(close),
         "sma_20": lambda: close.rolling(20).mean(),
         "sma_50": lambda: close.rolling(50).mean(),
         "ema_12": lambda: close.ewm(span=12, adjust=False).mean(),
@@ -106,13 +135,17 @@ def build_feature_frame(
         "log_volume": lambda: np.log1p(df["volume"].astype(float)),
     }
 
-    selected = indicators if indicators is not None else list(all_indicators)
+    if use_ohlcv:
+        for col in ("open", "high", "low", "close", "volume"):
+            out[col] = df[col].astype(float)
+
+    selected = indicators if indicators is not None else PHASE1_FEATURES
     for name in selected:
         if name not in all_indicators:
             raise ValueError(f"Unknown indicator: {name!r}")
         out[name] = all_indicators[name]()
 
-    # Target: next-day direction
+    # Target: next-day direction (PAPER-DEFINED)
     out["target"] = (close.shift(-1) > close).astype(float)
     out.loc[out.index[-1], "target"] = np.nan
     return out

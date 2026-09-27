@@ -1,41 +1,38 @@
 {
   "provenance": "paper_reference",
-  "description": "Metrics transcribed from the published paper. These are NOT produced by this code.",
+  "description": "Metrics transcribed from the published paper. PAPER REFERENCE — NOT produced by this code.",
   "paper": {
     "title": "Explanation-First Agentic Forecaster for Stock Market",
     "doi": "10.1109/IEMENTECH202669403.2026.11434302"
   },
-  "metrics": {
-    "attention_lstm": {
-      "accuracy": null,
-      "brier": null,
-      "ece": null,
-      "precision_at_3": null
+  "models": {
+    "attention_lstm_calibrated": {
+      "accuracy": 0.815,
+      "f1": 0.60,
+      "brier": 0.205,
+      "precision_at_3_up": 0.70,
+      "precision_at_3_down": 0.65
+    },
+    "attention_lstm_raw": {
+      "accuracy": 0.815,
+      "f1": 0.59,
+      "brier": 0.240,
+      "precision_at_3_up": 0.70,
+      "precision_at_3_down": 0.65
     },
     "lstm": {
-      "accuracy": null,
-      "brier": null,
-      "ece": null,
-      "precision_at_3": null
+      "accuracy": 0.690,
+      "f1": 0.57,
+      "brier": 0.230,
+      "precision_at_3_up": 0.62,
+      "precision_at_3_down": 0.60
     },
     "random_forest": {
-      "accuracy": null,
-      "brier": null,
-      "ece": null,
-      "precision_at_3": null
-    },
-    "logistic_regression": {
-      "accuracy": null,
-      "brier": null,
-      "ece": null,
-      "precision_at_3": null
-    },
-    "majority": {
-      "accuracy": null,
-      "brier": null,
-      "ece": null,
-      "precision_at_3": null
+      "accuracy": 0.772,
+      "f1": 0.55,
+      "brier": 0.245,
+      "precision_at_3_up": 0.58,
+      "precision_at_3_down": 0.52
     }
-  },
-  "note": "null indicates the paper does not report this metric, or the value could not be transcribed from the available paper text. Fill in from the paper PDF where available."
+  }
 }

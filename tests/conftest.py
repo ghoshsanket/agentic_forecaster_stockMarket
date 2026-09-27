@@ -31,7 +31,8 @@ def tiny_config():
             "val_fraction": 0.15,
         },
         "features": {
-            "indicators": ["rsi_14", "macd", "atr_14", "volatility_20", "returns_1"],
+            "indicators": ["rsi_14", "macd", "macd_signal", "macd_histogram", "atr_14", "realized_volatility_20", "log_return"],
+            "use_ohlcv": True,
             "drop_na": True,
         },
         "models": {

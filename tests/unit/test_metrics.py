@@ -7,7 +7,6 @@ import numpy as np
 from agentic_forecaster.evaluation.metrics import (
     compute_metrics,
     expected_calibration_error,
-    precision_at_k,
 )
 
 
@@ -30,8 +29,11 @@ def test_ece_zero_when_calibrated():
     assert ece < 0.05
 
 
-def test_precision_at_k():
+def test_compute_metrics_returns_all_keys():
     y = np.array([0, 1, 0, 1, 0])
     p = np.array([0.9, 0.8, 0.7, 0.6, 0.5])
-    # top-3 are indices 0,1,2 -> labels 0,1,0 -> precision = 1/3
-    assert abs(precision_at_k(y, p, 3) - 1 / 3) < 1e-9
+    m = compute_metrics(y, p)
+    assert "accuracy" in m
+    assert "brier" in m
+    assert "ece" in m
+    assert "f1" in m

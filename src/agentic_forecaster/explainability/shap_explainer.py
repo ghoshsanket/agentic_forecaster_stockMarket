@@ -1,7 +1,8 @@
-"""SHAP-based feature attribution for the Attention-LSTM.
+"""Per-prediction SHAP-based feature attribution for the Attention-LSTM.
 
-Uses ``shap.DeepExplainer`` when available; falls back to a permutation
-approximation so the pipeline never hard-fails when SHAP is not installed.
+Uses ``shap.GradientExplainer`` as the primary reconstructed method when
+compatible; falls back to a permutation approximation that is explicitly
+reported as a fallback (never mislabeled as SHAP).
 """
 
 from __future__ import annotations
@@ -20,32 +21,33 @@ class ShapExplainer:
         self.background = background
         self.feature_names = feature_names
         self._explainer = None
+        self._method = "permutation_fallback"
         try:
             import shap  # noqa: F401
-
             self._has_shap = True
         except ImportError:
             self._has_shap = False
             logger.warning("shap not installed; using permutation fallback")
 
-    def explain(self, X: np.ndarray) -> np.ndarray:
-        """Return SHAP values with shape ``(n_samples, seq_len, n_features)``."""
+    def explain(self, X: np.ndarray) -> tuple[np.ndarray, str]:
+        """Return (SHAP values, method_name) with shape ``(n, T, F)``."""
         if self._has_shap:
             try:
-                return self._explain_shap(X)
-            except (ValueError, RuntimeError, ImportError) as exc:
+                values = self._explain_gradient(X)
+                return values, "gradient_shap"
+            except Exception as exc:
                 logger.warning(
-                    "SHAP DeepExplainer failed (%s); using permutation fallback", exc
+                    "GradientExplainer failed (%s); using permutation fallback", exc
                 )
-        return self._explain_permutation(X)
+        return self._explain_permutation(X), "permutation_fallback"
 
-    def _explain_shap(self, X: np.ndarray) -> np.ndarray:
+    def _explain_gradient(self, X: np.ndarray) -> np.ndarray:
         import shap
 
         device = next(self.model.parameters()).device
         if self._explainer is None:
             bg = torch.tensor(self.background, dtype=torch.float32, device=device)
-            self._explainer = shap.DeepExplainer(self.model, bg)
+            self._explainer = shap.GradientExplainer(self.model, bg)
         X_t = torch.tensor(X, dtype=torch.float32, device=device)
         values = self._explainer.shap_values(X_t)
         arr = np.asarray(values)
@@ -68,8 +70,25 @@ class ShapExplainer:
             X_perm[:, :, j] = X[perm][:, :, j]
             with torch.no_grad():
                 perm_logits = self.model(torch.tensor(X_perm, dtype=torch.float32, device=device)).cpu().numpy()
-            shap_values[:, :, j] = (base_logits[:, 1] - perm_logits[:, 1])[:, None]
+            shap_values[:, :, j] = (base_logits - perm_logits)[:, None]
         return shap_values
+
+    def explain_single(self, x: np.ndarray) -> dict:
+        """Explain a SINGLE prediction. Returns structured evidence."""
+        x_batch = x[np.newaxis, :] if x.ndim == 2 else x
+        shap_values, method = self.explain(x_batch)
+        sv = shap_values[0]  # (T, F)
+        mean_abs = np.abs(sv).mean(axis=0)
+        order = np.argsort(mean_abs)[::-1][:5]
+        top_features = [
+            {"feature": self.feature_names[i], "mean_abs_shap": float(mean_abs[i])}
+            for i in order
+        ]
+        return {
+            "method": method,
+            "top_features": top_features,
+            "shap_values": sv.tolist(),
+        }
 
     def top_features(self, shap_values: np.ndarray, k: int = 5) -> list[dict]:
         """Aggregate SHAP over the time axis and return the top-k features."""

@@ -1,22 +1,29 @@
-"""Integration test: full pipeline on synthetic data."""
+"""Integration test: per-ticker model training on synthetic data."""
 
 from __future__ import annotations
 
-from agentic_forecaster.orchestration import Pipeline
+from agentic_forecaster.agents.model_agent import ModelAgent
+from agentic_forecaster.data import DataAgent
 
 
-def test_pipeline_end_to_end(tiny_config):
-    result = Pipeline(tiny_config).run()
-    assert result.dataset is not None
-    assert len(result.fitted_models) == 5
-    assert "attention_lstm" in result.fitted_models
-    assert result.metrics["attention_lstm"]["accuracy"] >= 0.0
-    assert len(result.reports) > 0
-    assert result.run_dir
+def test_per_ticker_training(tiny_config):
+    data_agent = DataAgent(tiny_config)
+    model_agent = ModelAgent(tiny_config)
+    ds = data_agent.run(ticker="SYN00")
+    fitted = model_agent.train_ticker("SYN00", ds, device="cpu")
+    assert fitted.ticker == "SYN00"
+    assert fitted.model is not None
+    assert "accuracy" in fitted.metrics
+    assert fitted.temperature > 0
 
 
-def test_dataset_split_sizes(tiny_config):
-    result = Pipeline(tiny_config).run()
-    n = len(result.dataset.train.y) + len(result.dataset.val.y) + len(result.dataset.test.y)
-    assert n > 0
-    assert len(result.dataset.train.y) > len(result.dataset.test.y)
+def test_different_tickers_different_models(tiny_config):
+    data_agent = DataAgent(tiny_config)
+    model_agent = ModelAgent(tiny_config)
+    ds1 = data_agent.run(ticker="SYN00")
+    ds2 = data_agent.run(ticker="SYN01")
+    f1 = model_agent.train_ticker("SYN00", ds1, device="cpu")
+    f2 = model_agent.train_ticker("SYN01", ds2, device="cpu")
+    assert f1.model is not f2.model
+    assert f1.ticker == "SYN00"
+    assert f2.ticker == "SYN01"

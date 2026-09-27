@@ -60,9 +60,9 @@ def test_obv_cumulative():
     assert len(o) == len(df)
 
 
-def test_build_feature_frame_columns():
+def test_build_feature_frame_phase1_columns():
     df = _frame()
-    ff = build_feature_frame(df, indicators=["rsi_14", "macd", "atr_14", "volatility_20", "returns_1"])
-    for col in ("rsi_14", "macd", "atr_14", "volatility_20", "returns_1", "target", "date"):
+    ff = build_feature_frame(df, indicators=["rsi_14", "macd", "macd_signal", "macd_histogram", "atr_14", "realized_volatility_20", "log_return"])
+    for col in ("rsi_14", "macd", "macd_signal", "macd_histogram", "atr_14", "realized_volatility_20", "log_return", "target", "date", "open", "high", "low", "close", "volume"):
         assert col in ff.columns
     assert ff["target"].dropna().isin([0.0, 1.0]).all()

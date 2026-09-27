@@ -1,9 +1,14 @@
-"""Explainer Agent — third agent in the five-agent workflow.
+"""Explainer Agent — per-prediction explanations.
 
-Combines SHAP feature attribution with attention evidence to produce an
-explanation bundle for each prediction.  When an LLM backend is configured
-the bundle is narrated by the LLM; otherwise a deterministic template
-fallback is used.
+For an individual prediction returns:
+    ticker, date, p_up, direction, confidence,
+    indicator values, top feature contributions, top attention dates, reason codes.
+
+SHAP GradientExplainer is the primary reconstructed method; a permutation
+fallback is explicitly reported and never mislabeled as SHAP.
+
+LLM narration receives only structured evidence with grounding instructions.
+The package remains usable with deterministic explanations and no LLM.
 """
 
 from __future__ import annotations
@@ -11,11 +16,21 @@ from __future__ import annotations
 import logging
 
 import numpy as np
-import openai
+import torch
 
-from agentic_forecaster.explainability import ShapExplainer, extract_attention_evidence
+from agentic_forecaster.explainability import ShapExplainer
 
 logger = logging.getLogger("agentic_forecaster.agents.explainer")
+
+GROUNDING_INSTRUCTIONS = """You are a financial explanation engine. Rules:
+- Do NOT invent news, events, or market developments.
+- Do NOT invent fundamentals (earnings, revenue, etc.).
+- Do NOT invent prices or price targets.
+- Use ONLY the supplied indicator values, SHAP feature contributions,
+  attention weights, and model outputs.
+- Do NOT claim guaranteed returns or certainty.
+- State that this is a model-based reconstruction, not investment advice.
+- Be concise and factual."""
 
 
 class ExplainerAgent:
@@ -24,38 +39,65 @@ class ExplainerAgent:
         self.exp_cfg = config.get("explainability", {})
         self.llm_cfg = config.get("reporting", {}).get("llm", {})
 
-    def run(self, fitted_model, dataset) -> dict:
-        X_test = dataset.test.X
-        background = dataset.train.X[
-            np.random.default_rng(0).choice(
-                len(dataset.train.X),
-                size=min(int(self.exp_cfg.get("background_samples", 100)), len(dataset.train.X)),
-                replace=False,
-            )
-        ]
-        shap = ShapExplainer(fitted_model.model, background, dataset.feature_names)
-        shap_values = shap.explain(X_test[:100])
-        top_features = shap.top_features(shap_values, k=int(self.exp_cfg.get("top_k_features", 5)))
+    def explain_prediction(
+        self,
+        fitted_model,
+        x: np.ndarray,
+        ticker: str,
+        date: str,
+        p_up: float,
+        indicator_values: dict | None = None,
+    ) -> dict:
+        """Produce a per-prediction explanation bundle."""
+        model = fitted_model.model
+        device = next(model.parameters()).device
+
+        background = fitted_model._background if hasattr(fitted_model, "_background") else None
+        if background is None:
+            background = x[np.newaxis, :]
+
+        shap = ShapExplainer(model, background, fitted_model.feature_names)
+        shap_result = shap.explain_single(x)
 
         attention_evidence = None
-        if self.exp_cfg.get("attention_evidence", False) and fitted_model.kind == "torch":
-            attention_evidence = extract_attention_evidence(
-                fitted_model.model,
-                X_test[:100],
-                dataset.test.dates[:100],
-                top_k=5,
-            )
+        if fitted_model.kind == "torch":
+            model.eval()
+            with torch.no_grad():
+                _, weights = model(
+                    torch.tensor(x[np.newaxis, :], dtype=torch.float32, device=device),
+                    return_attention=True,
+                )
+            w = weights.cpu().numpy()[0]
+            seq_len = x.shape[0]
+            top_idx = np.argsort(w)[::-1][:5]
+            attention_evidence = [
+                {
+                    "day_offset": int(seq_len - 1 - idx),
+                    "attention_weight": float(w[idx]),
+                }
+                for idx in top_idx
+            ]
+
+        direction = "UP" if p_up >= 0.5 else "DOWN"
+        confidence = p_up if direction == "UP" else 1 - p_up
+
+        reason_codes = [
+            f"direction={direction}",
+            f"confidence={confidence:.4f}",
+            f"shap_method={shap_result['method']}",
+        ]
 
         explanation = {
-            "top_features": top_features,
+            "ticker": ticker,
+            "date": str(date),
+            "p_up": float(p_up),
+            "direction": direction,
+            "confidence": float(confidence),
+            "indicator_values": indicator_values or {},
+            "top_features": shap_result["top_features"],
+            "shap_method": shap_result["method"],
             "attention_evidence": attention_evidence,
-            "shap_summary": {
-                "n_samples": len(shap_values),
-                "mean_abs_shap_per_feature": {
-                    dataset.feature_names[i]: float(np.abs(shap_values[:, :, i]).mean())
-                    for i in range(len(dataset.feature_names))
-                },
-            },
+            "reason_codes": reason_codes,
         }
 
         if self.llm_cfg.get("enabled", False):
@@ -80,16 +122,19 @@ class ExplainerAgent:
     def _llm_narrate(self, explanation: dict) -> str:
         try:
             from openai import OpenAI
-
+        except ImportError:
+            logger.warning("openai not installed; using deterministic fallback")
+            return self._deterministic_narrate(explanation)
+        try:
             client = OpenAI()
             response = client.chat.completions.create(
                 model=self.llm_cfg.get("model", "gpt-4o-mini"),
                 messages=[
-                    {"role": "system", "content": "You are a financial explainer."},
+                    {"role": "system", "content": GROUNDING_INSTRUCTIONS},
                     {"role": "user", "content": str(explanation)},
                 ],
             )
             return response.choices[0].message.content or ""
-        except (openai.OpenAIError, ValueError, RuntimeError) as exc:
+        except Exception as exc:
             logger.warning("LLM narration failed (%s); using fallback", exc)
             return self._deterministic_narrate(explanation)

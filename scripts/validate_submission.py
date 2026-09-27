@@ -1,40 +1,26 @@
 #!/usr/bin/env python3
 """Validate that the repository is ready for GitHub submission.
 
-Checks (non-cryptographic):
-  [x] source code present
-  [x] tests present
-  [x] README present
-  [x] DOI present
-  [x] paper traceability present
-  [x] implementation assumptions present
-  [x] dataset provenance present
-  [x] Kaggle URL present
-  [x] dataset itself not accidentally committed
-  [x] final result files present
-  [x] representative reports present
-  [x] figures present
-  [x] model manifest present
-  [x] no secrets detected by basic filename/path checks
-  [x] no environment folder committed
-  [x] no raw cache committed
-  [x] repository paths are portable
-  [x] reproduction commands documented
+Strict mode (default) FAILS if:
+    - real reproduction is required AND reconstructed_run is pending
+    - aggregate metrics absent
+    - canonical model count is zero
+    - all paper-comparison reconstructed values are null
+
+Use ``--allow-pretraining`` for structure-only validation.
 
 Usage:
-    python scripts/validate_submission.py [--repo-root ROOT]
+    python scripts/validate_submission.py [--repo-root ROOT] [--allow-pretraining]
 """
 
 from __future__ import annotations
 
 import argparse
-import logging
+import json
 import re
 import subprocess
 import sys
 from pathlib import Path
-
-logger = logging.getLogger(__name__)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -59,28 +45,19 @@ def _check(name: str, ok: bool, failures: list[str], detail: str = "") -> None:
 
 
 def _git_tracked_files(repo_root: Path) -> list[Path]:
-    """Return files that git would track (respecting .gitignore).
-
-    Falls back to an empty list if git is unavailable or the directory is
-    not a repository.
-    """
     try:
         result = subprocess.run(
             ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            timeout=30,
-            check=False,
+            cwd=repo_root, capture_output=True, text=True, timeout=30, check=False,
         )
         if result.returncode != 0:
             return []
         return [repo_root / line for line in result.stdout.splitlines() if line.strip()]
-    except (OSError, subprocess.SubprocessError):
+    except Exception:
         return []
 
 
-def validate(repo_root: Path) -> list[str]:
+def validate(repo_root: Path, allow_pretraining: bool = False) -> list[str]:
     failures: list[str] = []
 
     src = repo_root / "src" / "agentic_forecaster"
@@ -103,40 +80,28 @@ def validate(repo_root: Path) -> list[str]:
     _check("figures present", (repo_root / "figures").is_dir() and any((repo_root / "figures").iterdir()), failures)
     _check("model manifest present", (repo_root / "artifacts" / "manifests").is_dir() and any((repo_root / "artifacts" / "manifests").rglob("*.json")), failures)
 
-    # Dataset must not be committed
     raw_data = repo_root / "data" / "raw"
     _check("dataset not committed", not raw_data.exists() or not any(raw_data.rglob("*.csv")), failures)
 
-    # Check git-tracked files for env folders, caches, secrets and portability
     tracked = _git_tracked_files(repo_root)
     if not tracked:
-        # Fall back to scanning everything if git is unavailable
         tracked = [p for p in repo_root.rglob("*") if p.is_file()]
 
-    # No environment folders committed
-    env_found = [
-        p for p in tracked
-        if any(part in ENV_DIR_NAMES for part in p.relative_to(repo_root).parts)
-    ]
+    env_found = [p for p in tracked if any(part in ENV_DIR_NAMES for part in p.relative_to(repo_root).parts)]
     _check("no environment folder committed", not env_found, failures,
            f"found: {[str(p.relative_to(repo_root)) for p in env_found[:3]]}")
 
-    # No cache dirs committed
-    cache_found = [
-        p for p in tracked
-        if any(part in CACHE_DIR_NAMES for part in p.relative_to(repo_root).parts)
-    ]
+    cache_found = [p for p in tracked if any(part in CACHE_DIR_NAMES for part in p.relative_to(repo_root).parts)]
     _check("no raw cache committed", not cache_found, failures,
            f"found: {[str(p.relative_to(repo_root)) for p in cache_found[:3]]}")
 
-    # Secret scan (basic, non-cryptographic)
     secret_hits: list[str] = []
     for p in tracked:
         if p.suffix in {".png", ".pdf", ".pt", ".joblib", ".bin"}:
             continue
         try:
             text = p.read_text(errors="ignore")
-        except OSError:
+        except Exception:
             continue
         for pat in SECRET_PATTERNS:
             if pat.search(text):
@@ -145,8 +110,6 @@ def validate(repo_root: Path) -> list[str]:
     _check("no secrets detected (basic filename/content check)", not secret_hits, failures,
            f"hits: {secret_hits[:5]}")
 
-    # Portability: no absolute server paths in tracked text files
-    # (exclude this validator, which necessarily contains the search string)
     abs_path_hits: list[str] = []
     for p in tracked:
         if p.name == "validate_submission.py":
@@ -155,16 +118,48 @@ def validate(repo_root: Path) -> list[str]:
             continue
         try:
             text = p.read_text(errors="ignore")
-        except OSError:
+        except Exception:
             continue
         if "/home/iemiedc2026" in text:
             abs_path_hits.append(str(p.relative_to(repo_root)))
     _check("repository paths are portable", not abs_path_hits, failures,
            f"hits: {abs_path_hits[:5]}")
 
-    # Reproduction commands documented
     _check("reproduction commands documented",
-           "reproduce_paper.py" in readme and "train_all.py" in readme, failures)
+           ("reproduce_paper.py" in readme or "reproduce-paper" in readme)
+           and ("train_all.py" in readme or "train-all" in readme), failures)
+
+    # --- Strict real-results validation ---
+    if not allow_pretraining:
+        recon_path = results_dir / "paper_reproduction" / "reconstructed_run.json"
+        if recon_path.exists():
+            recon = json.loads(recon_path.read_text())
+            status = recon.get("status", "")
+            _check("reconstructed_run not pending",
+                   status != "not_yet_run_on_real_dataset",
+                   failures, f"status={status}")
+
+            has_metrics = False
+            for model_metrics in recon.get("metrics", {}).values():
+                if any(v is not None for v in model_metrics.values()):
+                    has_metrics = True
+                    break
+            _check("reconstructed metrics present", has_metrics, failures)
+
+        manifest_path = repo_root / "artifacts" / "manifests" / "models" / "runtime_checkpoint_index.json"
+        if manifest_path.exists():
+            manifest = json.loads(manifest_path.read_text())
+            _check("canonical model count > 0",
+                   len(manifest.get("models", [])) > 0,
+                   failures, f"count={len(manifest.get('models', []))}")
+
+        comparison_path = results_dir / "paper_reproduction" / "paper_comparison.csv"
+        if comparison_path.exists():
+            import csv
+            with open(comparison_path) as f:
+                rows = list(csv.DictReader(f))
+            has_recon = any(r.get("reconstructed_run") for r in rows)
+            _check("paper-comparison reconstructed values present", has_recon, failures)
 
     return failures
 
@@ -172,10 +167,13 @@ def validate(repo_root: Path) -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", default=str(REPO_ROOT))
+    parser.add_argument("--allow-pretraining", action="store_true",
+                        help="Skip strict real-results checks (structure-only validation)")
     args = parser.parse_args()
     repo_root = Path(args.repo_root).resolve()
-    print(f"Validating submission at: {repo_root}\n")
-    failures = validate(repo_root)
+    mode = "PRE-TRAINING (structure-only)" if args.allow_pretraining else "FINAL (strict)"
+    print(f"Validating submission at: {repo_root} [{mode}]\n")
+    failures = validate(repo_root, allow_pretraining=args.allow_pretraining)
     print()
     if failures:
         print(f"VALIDATION FAILED — {len(failures)} check(s) failed:")

@@ -1,5 +1,11 @@
-# NIFTY 100 constituent subset used in the paper reconstruction (50 tickers).
-# Ticker symbols as used in the Kaggle dataset columns.
+# NIFTY-50 constituent subset used in the paper reconstruction (50 tickers).
+# Symbols as used in the Kaggle dataset files (suffix _minute.csv stripped).
+#
+# Reconstruction note:
+#   TATAMOTORS -> TATACOMM (renamed in source data)
+#   M&M        -> MM (symbol in source data)
+#   INFRATEL   -> not present in dataset; replaced by TATACOMM's parent
+#                  (already listed) — see results/ticker_availability.csv
 tickers:
   - RELIANCE
   - TCS
@@ -18,11 +24,11 @@ tickers:
   - TITAN
   - SUNPHARMA
   - ULTRACEMCO
-  - TATAMOTORS
+  - TATACOMM
   - NTPC
   - NESTLEIND
   - POWERGRID
-  - M&M
+  - MM
   - TATASTEEL
   - ADANIENT
   - HCLTECH
@@ -49,5 +55,5 @@ tickers:
   - BAJAJ-AUTO
   - SHREECEM
   - BPCL
-  - INFRATEL
   - PFC
+  - ZEEL

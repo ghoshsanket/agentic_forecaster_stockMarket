@@ -1,14 +1,21 @@
-# Paper reproduction configuration — Explanation-First Agentic Forecaster
-# for Stock Market (DOI: 10.1109/IEMENTECH202669403.2026.11434302).
+# Phase-1 paper reconstruction configuration.
+# Explanation-First Agentic Forecaster for Stock Market
+# DOI: 10.1109/IEMENTECH202669403.2026.11434302
 #
-# This config mirrors the methodology described in the paper:
-#   - 50 NIFTY 100 constituents
+# PAPER-DEFINED:
+#   - 50 selected NIFTY-50 stocks
+#   - daily OHLCV resampled from intraday
 #   - 30-day lookback sequences
-#   - walk-forward (anchored) evaluation
-#   - Attention-LSTM primary model; plain LSTM, Random Forest,
-#     Logistic Regression, Majority baselines
-#   - temperature calibration, SHAP + attention evidence,
-#     deterministic explanation fallback, risk overlay, PDF/HTML reports
+#   - next-day direction target
+#   - one independent model per stock
+#   - ATR-based risk (confidence-multiplier formulation)
+#   - cross-sectional Precision@3
+#
+# RECONSTRUCTION-ASSUMED (not explicitly stated in paper):
+#   - 2 LSTM layers, hidden 64, dropout 0.2
+#   - Adam betas (0.9, 0.999)
+#   - temperature calibration method
+#   - gradient clipping
 
 experiment:
   name: paper_reproduction
@@ -21,55 +28,43 @@ data:
   dataset_slug: debashis74017/algo-trading-data-nifty-100-data-with-indicators
   tickers: configs/nifty50.yaml
   sequence_length: 30
-  target_horizon: 1
-  target_type: direction          # next-day close-to-close direction
-  train_start: "2015-01-01"
-  train_end: "2021-12-31"
-  val_start: "2022-01-01"
-  val_end: "2022-12-31"
-  test_start: "2023-01-01"
-  test_end: "2024-12-31"
+  target_type: next_day_direction       # PAPER-DEFINED
   scaler: standard
-  scaler_fit_scope: train_only    # prevent leakage
+  scaler_fit_scope: train_only          # PAPER-DEFINED: per-stock, per-fold
+  # Default split = paper walk-forward FOLD 0 (overridden per fold by orchestration)
+  train_start: "2016-01-01"
+  train_end: "2020-12-31"
+  val_start: "2021-01-01"
+  val_end: "2021-12-31"
+  test_start: "2022-01-01"
+  test_end: "2022-12-31"
 
 features:
-  use_ohlcv: true
-  use_indicators: true
-  indicators:
+  use_ohlcv: true                       # PAPER-DEFINED: raw OHLCV enters the model
+  indicators:                           # PAPER-DEFINED Phase-1 feature set
+    - log_return
+    - realized_volatility_20
     - rsi_14
     - macd
     - macd_signal
-    - macd_hist
+    - macd_histogram
     - atr_14
-    - volatility_20
-    - sma_20
-    - sma_50
-    - ema_12
-    - ema_26
-    - bb_upper
-    - bb_lower
-    - bb_width
-    - obv
-    - returns_1
-    - returns_5
-    - returns_10
-    - log_volume
   drop_na: true
 
 models:
   attention_lstm:
     enabled: true
-    hidden_size: 64
-    num_layers: 2
-    dropout: 0.2
-    attention_heads: 1
-    bidirectional: false
+    hidden_size: 64                      # RECONSTRUCTION-ASSUMED
+    num_layers: 2                         # RECONSTRUCTION-ASSUMED
+    dropout: 0.2                          # RECONSTRUCTION-ASSUMED
     learning_rate: 0.001
     weight_decay: 0.0001
     batch_size: 64
-    epochs: 100
-    patience: 15
-    class_weight: balanced
+    epochs: 3                             # PAPER-DEFINED: maximum 3 epochs
+    patience: 10
+    beta1: 0.9
+    beta2: 0.999
+    gradient_clip_norm: 1.0
   lstm:
     enabled: true
     hidden_size: 64
@@ -78,34 +73,29 @@ models:
     learning_rate: 0.001
     weight_decay: 0.0001
     batch_size: 64
-    epochs: 100
-    patience: 15
-    class_weight: balanced
+    epochs: 3
+    patience: 10
+    beta1: 0.9
+    beta2: 0.999
+    gradient_clip_norm: 1.0
   random_forest:
     enabled: true
     n_estimators: 300
     max_depth: 8
-    min_samples_leaf: 5
-    class_weight: balanced
   logistic_regression:
     enabled: true
     C: 1.0
-    max_iter: 1000
-    class_weight: balanced
   majority:
     enabled: true
 
 calibration:
-  method: temperature
-  temperature_init: 1.0
+  method: temperature                     # RECONSTRUCTION-ASSUMED method
   fit_on: val
 
 evaluation:
   walk_forward:
     enabled: true
-    scheme: anchored
-    step: 21                 # approximately one trading month
-    min_train_years: 3
+    folds: paper_exact                     # PAPER-DEFINED: fold 0 + fold 1
   metrics:
     - accuracy
     - brier
@@ -114,21 +104,21 @@ evaluation:
     - f1
     - roc_auc
   ece_bins: 10
-  confidence_thresholds: [0.5, 0.6, 0.7, 0.8, 0.9]
+  p_at_k: 3
 
 explainability:
-  method: shap
-  shap_explainer: deep       # DeepExplainer for torch models
-  background_samples: 100
+  method: gradient_shap                   # primary reconstructed method
+  fallback: permutation                   # explicitly reported fallback
   attention_evidence: true
   top_k_features: 5
 
 risk:
   enabled: true
-  kelly_fraction: 0.25
-  max_position_pct: 0.10
-  stop_loss_pct: 0.05
-  volatility_target: 0.15
+  formulation: atr_confidence_multiplier  # PAPER-DEFINED
+  confidence_bands:
+    HIGH:   {threshold: 0.80, lambda_sl: 0.8,  lambda_tp: 1.5}
+    MEDIUM: {threshold: 0.60, lambda_sl: 1.0,  lambda_tp: 1.0}
+    LOW:    {threshold: 0.0,  lambda_sl: 1.2,  lambda_tp: 0.8}
 
 reporting:
   formats: [html, pdf]
@@ -137,13 +127,6 @@ reporting:
     provider: openai
     model: gpt-4o-mini
     fallback: deterministic
-  conviction_thresholds:
-    low: 0.55
-    medium: 0.70
-    high: 0.85
 
 orchestration:
-  agents: [data, model, explainer, risk, report]
-  checkpoint_policy: lfs_if_small
-  max_repo_checkpoint_mb: 500
   export_final_results: true

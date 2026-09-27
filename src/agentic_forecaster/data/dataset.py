@@ -39,6 +39,10 @@ def discover_ticker_files(raw_root: str | Path) -> dict[str, Path]:
     files: dict[str, Path] = {}
     for csv_path in sorted(raw_root.glob("*.csv")):
         ticker = csv_path.stem.upper()
+        for suffix in ("_MINUTE", "_1MIN", "_1M", "_INTRADAY"):
+            if ticker.endswith(suffix):
+                ticker = ticker[: -len(suffix)]
+                break
         files[ticker] = csv_path
     if not files:
         raise FileNotFoundError(
