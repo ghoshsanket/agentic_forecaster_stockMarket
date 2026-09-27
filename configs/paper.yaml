@@ -1,0 +1,149 @@
+# Paper reproduction configuration — Explanation-First Agentic Forecaster
+# for Stock Market (DOI: 10.1109/IEMENTECH202669403.2026.11434302).
+#
+# This config mirrors the methodology described in the paper:
+#   - 50 NIFTY 100 constituents
+#   - 30-day lookback sequences
+#   - walk-forward (anchored) evaluation
+#   - Attention-LSTM primary model; plain LSTM, Random Forest,
+#     Logistic Regression, Majority baselines
+#   - temperature calibration, SHAP + attention evidence,
+#     deterministic explanation fallback, risk overlay, PDF/HTML reports
+
+experiment:
+  name: paper_reproduction
+  seed: 42
+  output_dir: ${AGENTIC_OUTPUT_ROOT}/reproduction/paper_reproduction
+
+data:
+  raw_root: ${AGENTIC_RAW_DATA_ROOT}
+  processed_root: ${AGENTIC_PROCESSED_DATA_ROOT}
+  dataset_slug: debashis74017/algo-trading-data-nifty-100-data-with-indicators
+  tickers: configs/nifty50.yaml
+  sequence_length: 30
+  target_horizon: 1
+  target_type: direction          # next-day close-to-close direction
+  train_start: "2015-01-01"
+  train_end: "2021-12-31"
+  val_start: "2022-01-01"
+  val_end: "2022-12-31"
+  test_start: "2023-01-01"
+  test_end: "2024-12-31"
+  scaler: standard
+  scaler_fit_scope: train_only    # prevent leakage
+
+features:
+  use_ohlcv: true
+  use_indicators: true
+  indicators:
+    - rsi_14
+    - macd
+    - macd_signal
+    - macd_hist
+    - atr_14
+    - volatility_20
+    - sma_20
+    - sma_50
+    - ema_12
+    - ema_26
+    - bb_upper
+    - bb_lower
+    - bb_width
+    - obv
+    - returns_1
+    - returns_5
+    - returns_10
+    - log_volume
+  drop_na: true
+
+models:
+  attention_lstm:
+    enabled: true
+    hidden_size: 64
+    num_layers: 2
+    dropout: 0.2
+    attention_heads: 1
+    bidirectional: false
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    batch_size: 64
+    epochs: 100
+    patience: 15
+    class_weight: balanced
+  lstm:
+    enabled: true
+    hidden_size: 64
+    num_layers: 2
+    dropout: 0.2
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    batch_size: 64
+    epochs: 100
+    patience: 15
+    class_weight: balanced
+  random_forest:
+    enabled: true
+    n_estimators: 300
+    max_depth: 8
+    min_samples_leaf: 5
+    class_weight: balanced
+  logistic_regression:
+    enabled: true
+    C: 1.0
+    max_iter: 1000
+    class_weight: balanced
+  majority:
+    enabled: true
+
+calibration:
+  method: temperature
+  temperature_init: 1.0
+  fit_on: val
+
+evaluation:
+  walk_forward:
+    enabled: true
+    scheme: anchored
+    step: 21                 # approximately one trading month
+    min_train_years: 3
+  metrics:
+    - accuracy
+    - brier
+    - ece
+    - precision_at_3
+    - f1
+    - roc_auc
+  ece_bins: 10
+  confidence_thresholds: [0.5, 0.6, 0.7, 0.8, 0.9]
+
+explainability:
+  method: shap
+  shap_explainer: deep       # DeepExplainer for torch models
+  background_samples: 100
+  attention_evidence: true
+  top_k_features: 5
+
+risk:
+  enabled: true
+  kelly_fraction: 0.25
+  max_position_pct: 0.10
+  stop_loss_pct: 0.05
+  volatility_target: 0.15
+
+reporting:
+  formats: [html, pdf]
+  llm:
+    enabled: false
+    provider: openai
+    model: gpt-4o-mini
+    fallback: deterministic
+  conviction_thresholds:
+    low: 0.55
+    medium: 0.70
+    high: 0.85
+
+orchestration:
+  agents: [data, model, explainer, risk, report]
+  checkpoint_policy: lfs_if_small
+  max_repo_checkpoint_mb: 500
+  export_final_results: true

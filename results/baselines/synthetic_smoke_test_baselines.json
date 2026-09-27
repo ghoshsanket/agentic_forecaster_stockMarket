@@ -1,0 +1,11 @@
+{
+  "provenance": "synthetic_smoke_test",
+  "description": "Baseline comparison from configs/demo.yaml on synthetic data. NOT a paper reconstruction.",
+  "models": {
+    "attention_lstm": {"accuracy": 0.5038, "brier": 0.2507, "ece": 0.0090, "precision_at_3": 0.0},
+    "lstm": {"accuracy": 0.5076, "brier": 0.2505, "ece": 0.0126, "precision_at_3": 1.0},
+    "random_forest": {"accuracy": 0.5076, "brier": 0.2542, "ece": 0.0350, "precision_at_3": 0.3333},
+    "logistic_regression": {"accuracy": 0.5038, "brier": 0.2673, "ece": 0.1247, "precision_at_3": 0.6667},
+    "majority": {"accuracy": 0.4924, "brier": 0.2507, "ece": 0.0276, "precision_at_3": 0.0}
+  }
+}

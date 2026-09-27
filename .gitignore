@@ -1,0 +1,60 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+
+# --- Secrets / credentials ---
+.env
+.env.*
+!.env.example
+kaggle.json
+access_token
+*token*
+*secret*
+*.key
+*.pem
+secrets/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.swp
+
+# --- Runtime caches ---
+.cache/
+wandb/
+*.log
+
+# --- Raw / processed dataset (Category B: outside Git) ---
+data/raw/
+data/interim/
+data/processed/
+datasets/
+
+# --- Runtime model store (Category B) ---
+# NOTE: artifacts/models/ (exported final checkpoints) is NOT ignored.
+# Only the external runtime store is ignored.
+runtime_models/
+
+# --- Runtime run output (Category B) ---
+outputs/
+
+# --- OpenCode / XDG state ---
+.opencode_state/
+
+# --- Temporary files ---
+tmp/
+*.tmp
+*.bak
+*~
+
+# --- Jupyter ---
+.ipynb_checkpoints/

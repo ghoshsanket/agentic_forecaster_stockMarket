@@ -1,0 +1,13 @@
+# Git LFS tracking for binary model artifacts.
+# Canonical exported checkpoints under artifacts/models/ are stored in LFS.
+# The external runtime model store is NOT tracked (see .gitignore).
+*.pt filter=lfs diff=lfs merge=lfs -text
+*.pth filter=lfs diff=lfs merge=lfs -text
+*.ckpt filter=lfs diff=lfs merge=lfs -text
+*.joblib filter=lfs diff=lfs merge=lfs -text
+*.safetensors filter=lfs diff=lfs merge=lfs -text
+*.onnx filter=lfs diff=lfs merge=lfs -text
+
+# Figures: keep PNGs as-is; SVGs are text.
+*.png filter=lfs diff=lfs merge=lfs -text
+*.pdf filter=lfs diff=lfs merge=lfs -text

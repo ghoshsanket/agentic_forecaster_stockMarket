@@ -1,0 +1,41 @@
+{
+  "provenance": "paper_reference",
+  "description": "Metrics transcribed from the published paper. These are NOT produced by this code.",
+  "paper": {
+    "title": "Explanation-First Agentic Forecaster for Stock Market",
+    "doi": "10.1109/IEMENTECH202669403.2026.11434302"
+  },
+  "metrics": {
+    "attention_lstm": {
+      "accuracy": null,
+      "brier": null,
+      "ece": null,
+      "precision_at_3": null
+    },
+    "lstm": {
+      "accuracy": null,
+      "brier": null,
+      "ece": null,
+      "precision_at_3": null
+    },
+    "random_forest": {
+      "accuracy": null,
+      "brier": null,
+      "ece": null,
+      "precision_at_3": null
+    },
+    "logistic_regression": {
+      "accuracy": null,
+      "brier": null,
+      "ece": null,
+      "precision_at_3": null
+    },
+    "majority": {
+      "accuracy": null,
+      "brier": null,
+      "ece": null,
+      "precision_at_3": null
+    }
+  },
+  "note": "null indicates the paper does not report this metric, or the value could not be transcribed from the available paper text. Fill in from the paper PDF where available."
+}

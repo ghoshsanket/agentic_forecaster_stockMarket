@@ -1,0 +1,47 @@
+{
+  "provenance": "synthetic_smoke_test",
+  "description": "Metrics from configs/demo.yaml on a synthetic dataset. NOT a paper reconstruction.",
+  "seed": 42,
+  "models": {
+    "attention_lstm": {
+      "accuracy": 0.5037878787878788,
+      "brier": 0.2507317084011891,
+      "ece": 0.00899418217666219,
+      "precision_at_3": 0.0,
+      "f1": 0.5403508771929825,
+      "roc_auc": 0.5016073478760046
+    },
+    "lstm": {
+      "accuracy": 0.5075757575757576,
+      "brier": 0.2505203664370301,
+      "ece": 0.012644523924047284,
+      "precision_at_3": 1.0,
+      "f1": 0.4583333333333333,
+      "roc_auc": 0.4946613088404133
+    },
+    "random_forest": {
+      "accuracy": 0.5075757575757576,
+      "brier": 0.25415143810679414,
+      "ece": 0.03502061319191962,
+      "precision_at_3": 0.3333333333333333,
+      "f1": 0.5112781954887218,
+      "roc_auc": 0.4954075774971298
+    },
+    "logistic_regression": {
+      "accuracy": 0.5037878787878788,
+      "brier": 0.2673193341060297,
+      "ece": 0.12472168435201501,
+      "precision_at_3": 0.6666666666666666,
+      "f1": 0.5093632958801498,
+      "roc_auc": 0.5233065442020666
+    },
+    "majority": {
+      "accuracy": 0.49242424242424243,
+      "brier": 0.2507030303030303,
+      "ece": 0.027575757575757476,
+      "precision_at_3": 0.0,
+      "f1": 0.6598984771573604,
+      "roc_auc": 0.5
+    }
+  }
+}

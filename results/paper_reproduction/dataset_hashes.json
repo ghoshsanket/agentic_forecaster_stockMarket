@@ -1,0 +1,6 @@
+{
+  "provenance": "reconstructed_run",
+  "description": "SHA-256 hashes of raw CSV files used in the reconstruction run. Populated by reproduce_paper.py --export-final-results.",
+  "dataset_slug": "debashis74017/algo-trading-data-nifty-100-data-with-indicators",
+  "files": {}
+}

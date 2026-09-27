@@ -1,0 +1,8 @@
+{
+  "provenance": "reconstructed_run",
+  "description": "SHA-256 hashes and byte sizes of trained checkpoints. Populated by reproduce_paper.py --export-final-results.",
+  "model_architecture": "AttentionLSTM",
+  "config": "configs/paper.yaml",
+  "seed": 42,
+  "models": []
+}

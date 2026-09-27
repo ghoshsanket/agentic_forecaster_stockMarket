@@ -1,0 +1,89 @@
+# Demo / smoke-test configuration.
+# Uses a tiny synthetic dataset — no Kaggle download required.
+# Verifies the full pipeline end-to-end in CI.
+
+experiment:
+  name: demo_smoke
+  seed: 42
+  output_dir: ${AGENTIC_OUTPUT_ROOT}/demo/demo_smoke
+
+data:
+  synthetic: true
+  n_tickers: 3
+  n_days: 600
+  sequence_length: 30
+  target_horizon: 1
+  target_type: direction
+  train_fraction: 0.7
+  val_fraction: 0.15
+  test_fraction: 0.15
+
+features:
+  use_ohlcv: true
+  use_indicators: true
+  indicators:
+    - rsi_14
+    - macd
+    - atr_14
+    - volatility_20
+    - returns_1
+
+models:
+  attention_lstm:
+    enabled: true
+    hidden_size: 16
+    num_layers: 1
+    dropout: 0.1
+    learning_rate: 0.001
+    batch_size: 32
+    epochs: 5
+    patience: 3
+  lstm:
+    enabled: true
+    hidden_size: 16
+    num_layers: 1
+    dropout: 0.1
+    learning_rate: 0.001
+    batch_size: 32
+    epochs: 5
+    patience: 3
+  random_forest:
+    enabled: true
+    n_estimators: 50
+    max_depth: 4
+  logistic_regression:
+    enabled: true
+    C: 1.0
+    max_iter: 200
+  majority:
+    enabled: true
+
+calibration:
+  method: temperature
+  fit_on: val
+
+evaluation:
+  walk_forward:
+    enabled: false
+  metrics: [accuracy, brier, ece, precision_at_3]
+  ece_bins: 5
+
+explainability:
+  method: shap
+  background_samples: 20
+  top_k_features: 3
+
+risk:
+  enabled: true
+  kelly_fraction: 0.25
+  max_position_pct: 0.10
+
+reporting:
+  formats: [html]
+  llm:
+    enabled: false
+    fallback: deterministic
+
+orchestration:
+  agents: [data, model, explainer, risk, report]
+  export_final_results: true

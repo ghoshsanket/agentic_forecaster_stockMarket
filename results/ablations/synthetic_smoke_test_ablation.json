@@ -1,0 +1,8 @@
+{
+  "provenance": "synthetic_smoke_test",
+  "description": "Ablation on synthetic demo data. NOT a paper reconstruction.",
+  "variants": {
+    "full_attention_lstm": {"accuracy": 0.5038, "brier": 0.2507, "ece": 0.0090},
+    "plain_lstm_no_attention": {"accuracy": 0.5076, "brier": 0.2505, "ece": 0.0126}
+  }
+}

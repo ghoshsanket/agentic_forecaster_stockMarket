@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Forecast Report — RELIANCE</title>
+<style>
+body { font-family: sans-serif; margin: 2rem; color: #222; }
+h1 { border-bottom: 2px solid #333; padding-bottom: .5rem; }
+.metric { display: inline-block; margin: .5rem 1rem .5rem 0; }
+.badge { padding: .25rem .75rem; border-radius: 4px; color: #fff; }
+.high { background: #c0392b; } .medium { background: #e67e22; }
+.low { background: #27ae60; } .no_trade { background: #7f8c8d; }
+table { border-collapse: collapse; margin-top: 1rem; }
+td, th { border: 1px solid #ccc; padding: .4rem .8rem; text-align: left; }
+</style></head><body>
+<h1>Forecast Report — RELIANCE</h1>
+<p><strong>Date:</strong> 2024-12-31</p>
+<p><strong>Direction:</strong> UP</p>
+<p><strong>Conviction:</strong> 50.5%</p>
+<p><strong>Risk level:</strong>
+<span class="badge no_trade">no_trade</span></p>
+<p><strong>Position size:</strong> 0.24%</p>
+<p><strong>Stop loss:</strong> 5.00% &nbsp;
+<strong>Take profit:</strong> 10.00%</p>
+<h2>Explanation</h2>
+<p>SYNTHETIC EXAMPLE — generated from demo config on synthetic data. The model&#x27;s prediction is primarily driven by the top SHAP features listed below. Attention evidence indicates which days in the lookback window most influenced the output.</p>
+<h2>Top features (SHAP)</h2>
+<table><tr><th>Feature</th><th>Mean |SHAP|</th></tr><tr><td>rsi_14</td><td>0.0123</td></tr><tr><td>macd_hist</td><td>0.0098</td></tr><tr><td>volatility_20</td><td>0.0076</td></tr><tr><td>atr_14</td><td>0.0054</td></tr><tr><td>returns_1</td><td>0.0032</td></tr></table>
+<h2>Model metrics (test split)</h2>
+<div class="metric"><strong>accuracy</strong>: 0.4848</div><div class="metric"><strong>brier</strong>: 0.2504</div><div class="metric"><strong>ece</strong>: 0.0281</div><div class="metric"><strong>precision_at_3</strong>: 0.6667</div><div class="metric"><strong>f1</strong>: 0.5245</div><div class="metric"><strong>roc_auc</strong>: 0.4877</div></body></html>

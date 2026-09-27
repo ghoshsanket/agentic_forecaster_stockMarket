@@ -1,0 +1,29 @@
+{
+  "python_version": "3.11.16",
+  "python_executable": "$AGENTIC_PROJECT_ROOT/.venv/bin/python",
+  "os": "Linux",
+  "architecture": "aarch64",
+  "uv_version": "0.12.19",
+  "packages": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "scipy": "1.17.1",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.0",
+    "shap": "0.51.0",
+    "matplotlib": "3.11.2",
+    "joblib": "1.6.0",
+    "pydantic": "2.13.5",
+    "PyYAML": "6.0.3",
+    "streamlit": "1.64.0",
+    "reportlab": "5.0.1",
+    "openai": "3.19.2",
+    "pytest": "9.1.1",
+    "ruff": "0.16.9"
+  },
+  "torch_cuda_runtime": "13.0",
+  "nvidia_driver": "580.142",
+  "gpu_model": "NVIDIA GB10",
+  "cuda_available": true,
+  "research_root": "$RESEARCH_ROOT"
+}
