@@ -95,6 +95,67 @@ def repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
+def available_tickers(repo: Path) -> list[str]:
+    """Tickers reported available in ``results/ticker_availability.csv``."""
+    csv = Path(repo) / "results" / "ticker_availability.csv"
+    if not csv.is_file():
+        return []
+    import csv as _csv
+
+    out: list[str] = []
+    with open(csv) as f:
+        for row in _csv.DictReader(f):
+            if str(row.get("available", "")).strip().lower() == "true":
+                out.append(row.get("discovered_symbol") or row["requested_ticker"])
+    return out
+
+
+def _coverage(run_dir: Path, repo: Path) -> dict:
+    """Compare the run's ticker/fold coverage against the expected universe."""
+    from agentic_forecaster.orchestration.walk_forward import PAPER_FOLDS
+
+    expected_tickers = available_tickers(repo)
+    expected_folds = [f["fold"] for f in PAPER_FOLDS]
+    expected_pairs = {(t, f) for t in expected_tickers for f in expected_folds}
+    expected_runs = len(expected_pairs)
+
+    trained: set[tuple[str, str]] = set()
+    failed: set[tuple[str, str]] = set()
+    status_path = run_dir / "ticker_status.json"
+    if status_path.is_file():
+        try:
+            status = json.loads(status_path.read_text())
+        except json.JSONDecodeError:
+            status = {}
+        for key, value in (status or {}).items():
+            ticker, _, fold = key.partition("/")
+            pair = (ticker, fold)
+            if str(value.get("status", "")).lower() == "trained":
+                trained.add(pair)
+            else:
+                failed.add(pair)
+
+    if not trained and not failed:
+        metrics_path = run_dir / "ticker_metrics.csv"
+        if metrics_path.is_file():
+            import csv as _csv
+
+            with open(metrics_path) as f:
+                for row in _csv.DictReader(f):
+                    trained.add((row["ticker"], row["fold"]))
+
+    missing = sorted(f"{t}/{f}" for t, f in (expected_pairs - trained))
+    return {
+        "expected_available_tickers": len(expected_tickers),
+        "expected_folds": len(expected_folds),
+        "expected_runs": expected_runs,
+        "completed_runs": len(trained & expected_pairs),
+        "failed_runs": len(failed),
+        "extra_runs_outside_universe": len(trained - expected_pairs),
+        "missing_ticker_folds": missing,
+    }
+
+
 def export_final_artifacts(
     roots: dict,
     run_dir: Path | None = None,
@@ -127,10 +188,18 @@ def export_final_artifacts(
     # 3. Representative reports (a bounded sample, not every daily report).
     reports = run_dir / "reports"
     if reports.is_dir():
-        for rep in sorted(reports.glob("*.html"))[:10]:
+        # Export BOTH HTML and PDF for the same bounded sample of reports.
+        representative: list[Path] = sorted(reports.glob("*.html"))[:10]
+        for rep in representative:
             got = _copy(rep, repo / "reports" / "examples" / rep.name, root=reports)
             if got:
                 copied.append(got)
+        for html_rep in representative:
+            pdf = html_rep.with_suffix(".pdf")
+            if pdf.is_file():
+                got = _copy(pdf, repo / "reports" / "examples" / pdf.name, root=reports)
+                if got:
+                    copied.append(got)
 
     # 4. Model manifest (hashes only; no checkpoint binaries).
     model_root = Path(roots["AGENTIC_MODEL_ROOT"])
@@ -160,23 +229,39 @@ def export_final_artifacts(
             dst.write_text(json.dumps(index, indent=2))
             copied.append(str(dst))
 
-    # 5. reconstructed_run.json must only claim completion for a REAL run.
+    # 5. reconstructed_run.json: a run is "completed" ONLY when it covers
+    #    every expected ticker/fold, never merely because something ran.
     aggregate = run_dir / "aggregate_metrics.json"
     if aggregate.is_file():
         agg = json.loads(aggregate.read_text())
+        coverage = _coverage(run_dir, repo)
         n_runs = int(agg.get("n_ticker_fold_runs", 0))
-        status = "completed" if n_runs > 0 else "not_yet_run_on_real_dataset"
+        attempted = coverage["completed_runs"] + coverage["failed_runs"]
+        if coverage["expected_runs"] == 0 or attempted == 0:
+            # Nothing in the expected universe was attempted yet.
+            status = "not_yet_run_on_full_universe"
+            description = "No full-universe reproduction has been recorded yet."
+        elif coverage["failed_runs"] or coverage["missing_ticker_folds"]:
+            # Something ran, but not the whole universe -> never "completed".
+            status = "partial"
+            description = (
+                "Real-data run recorded, but it does not cover the full "
+                "configured universe; see coverage.missing_ticker_folds."
+            )
+        else:
+            status = "completed"
+            description = (
+                "Metrics produced by this implementation on the real dataset "
+                "for the full available universe."
+            )
         payload = {
             "provenance": "reconstructed_run",
             "status": status,
-            "description": (
-                "Metrics produced by this implementation on the real dataset."
-                if n_runs > 0 else
-                "No real reproduction run has been recorded yet."
-            ),
+            "description": description,
             "run_id": run_dir.name,
             "run_dir_env": "$AGENTIC_OUTPUT_ROOT/reproduction/" + run_dir.name,
             "n_ticker_fold_runs": n_runs,
+            "coverage": coverage,
             "aggregate_metrics": agg,
         }
         dst = repo / "results" / "paper_reproduction" / "reconstructed_run.json"

@@ -2,20 +2,27 @@
 # Explanation-First Agentic Forecaster for Stock Market
 # DOI: 10.1109/IEMENTECH202669403.2026.11434302
 #
-# PAPER-DEFINED:
-#   - 50 selected NIFTY-50 stocks
-#   - daily OHLCV resampled from intraday
-#   - 30-day lookback sequences
-#   - next-day direction target
-#   - one independent model per stock
-#   - ATR-based risk (confidence-multiplier formulation)
-#   - cross-sectional Precision@3
+# Every value below is tagged with one of:
 #
-# RECONSTRUCTION-ASSUMED (not explicitly stated in paper):
-#   - 2 LSTM layers, hidden 64, dropout 0.2
-#   - Adam betas (0.9, 0.999)
-#   - temperature calibration method
-#   - gradient clipping
+#   PAPER-DEFINED        explicitly present in the publication
+#   AUTHOR-CONFIRMED     confirmed by the authors, not verbatim in the text
+#   RECONSTRUCTION-ASSUMED  chosen by the reconstruction team where the paper
+#                           is silent or ambiguous
+#
+# PAPER-DEFINED: 50 NIFTY-50 securities; daily bars; next-day direction target;
+#                five-agent architecture; attention formulation; binary logit;
+#                Adam lr = 1e-3, beta1 = 0.9, beta2 = 0.999; batch size = 64;
+#                patience = 10; ATR risk equations and confidence multipliers;
+#                the two published walk-forward folds; published metric set.
+# AUTHOR-CONFIRMED: one independent model per stock; 30-day lookback window;
+#                maximum 3 training epochs; Python 3.11; PyTorch; LLM
+#                explanation usage.
+# RECONSTRUCTION-ASSUMED: StandardScaler convention; exact Phase-1 feature
+#                subset; two LSTM layers; hidden size 64; dropout 0.2; weight
+#                decay; gradient clipping; temperature-scaling method; SHAP
+#                GradientExplainer implementation; ECE bin count; symmetric
+#                bearish ATR treatment; CalibrationFactor = directional
+#                confidence.
 
 experiment:
   name: paper_reproduction
@@ -27,11 +34,12 @@ data:
   processed_root: ${AGENTIC_PROCESSED_DATA_ROOT}
   dataset_slug: debashis74017/algo-trading-data-nifty-100-data-with-indicators
   tickers: configs/nifty50.yaml
-  sequence_length: 30
-  target_type: next_day_direction       # PAPER-DEFINED
-  scaler: standard
-  scaler_fit_scope: train_only          # PAPER-DEFINED: per-stock, per-fold
-  # Default split = paper walk-forward FOLD 0 (overridden per fold by orchestration)
+  sequence_length: 30                        # AUTHOR-CONFIRMED
+  target_type: next_day_direction            # PAPER-DEFINED
+  scaler: standard                           # RECONSTRUCTION-ASSUMED
+  scaler_fit_scope: train_only               # RECONSTRUCTION-ASSUMED (per stock, per fold)
+  # Default split = paper walk-forward FOLD 0 (PAPER-DEFINED);
+  # overridden per fold by orchestration/walk_forward.py
   train_start: "2016-01-01"
   train_end: "2020-12-31"
   val_start: "2021-01-01"
@@ -40,8 +48,8 @@ data:
   test_end: "2022-12-31"
 
 features:
-  use_ohlcv: true                       # PAPER-DEFINED: raw OHLCV enters the model
-  indicators:                           # PAPER-DEFINED Phase-1 feature set
+  use_ohlcv: true                            # PAPER-DEFINED
+  indicators:                                # RECONSTRUCTION-ASSUMED (exact subset)
     - log_return
     - realized_volatility_20
     - rsi_14
@@ -49,35 +57,35 @@ features:
     - macd_signal
     - macd_histogram
     - atr_14
-  drop_na: true
+  drop_na: true                              # RECONSTRUCTION-ASSUMED
 
 models:
   attention_lstm:
     enabled: true
-    hidden_size: 64                      # RECONSTRUCTION-ASSUMED
-    num_layers: 2                         # RECONSTRUCTION-ASSUMED
-    dropout: 0.2                          # RECONSTRUCTION-ASSUMED
-    learning_rate: 0.001
-    weight_decay: 0.0001
-    batch_size: 64
-    epochs: 3                             # PAPER-DEFINED: maximum 3 epochs
-    patience: 10
-    beta1: 0.9
-    beta2: 0.999
-    gradient_clip_norm: 1.0
+    hidden_size: 64                          # RECONSTRUCTION-ASSUMED
+    num_layers: 2                            # RECONSTRUCTION-ASSUMED
+    dropout: 0.2                             # RECONSTRUCTION-ASSUMED
+    learning_rate: 0.001                     # PAPER-DEFINED
+    beta1: 0.9                               # PAPER-DEFINED
+    beta2: 0.999                             # PAPER-DEFINED
+    weight_decay: 0.0001                     # RECONSTRUCTION-ASSUMED
+    batch_size: 64                           # PAPER-DEFINED
+    epochs: 3                                # AUTHOR-CONFIRMED
+    patience: 10                             # PAPER-DEFINED
+    gradient_clip_norm: 1.0                  # RECONSTRUCTION-ASSUMED
   lstm:
     enabled: true
-    hidden_size: 64
-    num_layers: 2
-    dropout: 0.2
-    learning_rate: 0.001
-    weight_decay: 0.0001
-    batch_size: 64
-    epochs: 3
-    patience: 10
-    beta1: 0.9
-    beta2: 0.999
-    gradient_clip_norm: 1.0
+    hidden_size: 64                          # RECONSTRUCTION-ASSUMED
+    num_layers: 2                            # RECONSTRUCTION-ASSUMED
+    dropout: 0.2                             # RECONSTRUCTION-ASSUMED
+    learning_rate: 0.001                     # PAPER-DEFINED
+    beta1: 0.9                               # PAPER-DEFINED
+    beta2: 0.999                             # PAPER-DEFINED
+    weight_decay: 0.0001                     # RECONSTRUCTION-ASSUMED
+    batch_size: 64                           # PAPER-DEFINED
+    epochs: 3                                # AUTHOR-CONFIRMED
+    patience: 10                             # PAPER-DEFINED
+    gradient_clip_norm: 1.0                  # RECONSTRUCTION-ASSUMED
   random_forest:
     enabled: true
     n_estimators: 300
@@ -85,37 +93,40 @@ models:
   logistic_regression:
     enabled: true
     C: 1.0
+    max_iter: 1000
   majority:
     enabled: true
 
 calibration:
-  method: temperature                     # RECONSTRUCTION-ASSUMED method
+  method: temperature                        # RECONSTRUCTION-ASSUMED (method)
   fit_on: val
+  # CalibrationFactor is reconstructed as the directional confidence.
 
 evaluation:
   walk_forward:
     enabled: true
-    folds: paper_exact                     # PAPER-DEFINED: fold 0 + fold 1
-  metrics:
+    folds: paper_exact                       # PAPER-DEFINED (the two folds)
+  metrics:                                   # PAPER-DEFINED
     - accuracy
     - brier
     - ece
     - precision_at_3
     - f1
     - roc_auc
-  ece_bins: 10
+  ece_bins: 10                              # RECONSTRUCTION-ASSUMED
   p_at_k: 3
 
 explainability:
-  method: gradient_shap                   # primary reconstructed method
-  fallback: permutation                   # explicitly reported fallback
-  attention_evidence: true
+  method: gradient_shap                      # RECONSTRUCTION-ASSUMED
+  fallback: integrated_gradients             # implemented fallback method
+  attention_evidence: true                   # PAPER-DEFINED
   top_k_features: 5
+  background_samples: 64
 
 risk:
   enabled: true
-  formulation: atr_confidence_multiplier  # PAPER-DEFINED
-  confidence_bands:
+  formulation: atr_confidence_multiplier    # PAPER-DEFINED
+  confidence_bands:                          # PAPER-DEFINED multipliers
     HIGH:   {threshold: 0.80, lambda_sl: 0.8,  lambda_tp: 1.5}
     MEDIUM: {threshold: 0.60, lambda_sl: 1.0,  lambda_tp: 1.0}
     LOW:    {threshold: 0.0,  lambda_sl: 1.2,  lambda_tp: 0.8}
@@ -123,7 +134,7 @@ risk:
 reporting:
   formats: [html, pdf]
   llm:
-    enabled: false
+    enabled: false                           # AUTHOR-CONFIRMED (LLM explanations)
     provider: openai
     model: gpt-4o-mini
     fallback: deterministic

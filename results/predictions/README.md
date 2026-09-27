@@ -1,12 +1,18 @@
 # Predictions
 
-Representative prediction samples from the reconstruction run.
+Per-date, per-ticker calibrated predictions for the full paper reproduction
+(`predictions.csv.gz`).
 
-| File | Provenance | Description |
-|---|---|---|
-| `synthetic_smoke_test_predictions.csv` | `synthetic_smoke_test` | Sample predictions from the demo config |
+Written by:
 
-Full prediction tables (one row per ticker per test date) are runtime-only
-(Category B) due to size.  They are written to
-`$AGENTIC_OUTPUT_ROOT/predictions/` by the reproduction pipeline.  Hashes and
-manifests for the full files are in `artifacts/manifests/`.
+```bash
+uv run python -m agentic_forecaster reproduce-paper \
+    --config configs/paper.yaml --device auto --export-final-results
+```
+
+Columns: `date`, `ticker`, `y`, `raw_p_up`, `calibrated_p_up`, `fold`,
+`direction`, `confidence`, `origin_date`, `target_date`.
+
+The file is gzipped because the full 49-ticker x 2-fold test set is large. The
+1-ticker real-data smoke-test sample is in
+`../smoke_tests/reliance_two_fold/`.

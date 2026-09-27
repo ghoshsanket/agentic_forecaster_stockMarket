@@ -1,19 +1,20 @@
 {
   "provenance": "reconstructed_run",
-  "status": "completed",
-  "description": "Metrics produced by this implementation on the real dataset.",
-  "run_id": "testrun",
-  "run_dir_env": "$AGENTIC_OUTPUT_ROOT/reproduction/testrun",
-  "n_ticker_fold_runs": 2,
-  "aggregate_metrics": {
-    "policy": "unweighted mean of per-ticker test-split metrics",
-    "n_ticker_fold_runs": 2,
-    "accuracy": 0.4778071552507643,
-    "f1": 0.575114324558151,
-    "roc_auc": 0.44679979091596606,
-    "brier_raw": 0.25026503950357437,
-    "brier_calibrated": 0.25026503950357437,
-    "ece_raw": 0.03770073518337991,
-    "ece_calibrated": 0.03770073518337991
-  }
+  "status": "not_yet_run_on_full_universe",
+  "description": "No full-universe paper reproduction has been run yet. The full run trains one Attention-LSTM per available configured NIFTY-50 security, for each of the two paper walk-forward folds.",
+  "run_id": null,
+  "run_dir_env": null,
+  "n_ticker_fold_runs": 0,
+  "coverage": {
+    "expected_available_tickers": null,
+    "expected_folds": 2,
+    "expected_runs": null,
+    "completed_runs": 0,
+    "failed_runs": 0,
+    "missing_ticker_folds": null,
+    "note": "Populated by `reproduce-paper --export-final-results`. Expected counts are derived from results/ticker_availability.csv at validation time, not hard-coded here."
+  },
+  "aggregate_metrics": null,
+  "smoke_test_evidence": "results/smoke_tests/reliance_two_fold/",
+  "note": "Smoke-test artefacts are real but cover 1 ticker only; see results/smoke_tests/reliance_two_fold/README.md."
 }

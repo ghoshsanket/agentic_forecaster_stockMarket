@@ -1,20 +1,21 @@
 # Ablations
 
-Ablation study results.
+Executed ablation variants for the full paper reproduction:
 
-The paper's ablations disable individual components to measure their
-contribution.  To reproduce:
+| Variant | Question |
+|---|---|
+| `attention_lstm` vs `plain_lstm` | Does attention help? |
+| `attention_lstm_raw` vs `attention_lstm_calibrated` | Does temperature scaling help? |
+| `ohlcv_only` vs `ohlcv_plus_technical` | Do the Phase-1 technical indicators help? |
+
+Populated by:
 
 ```bash
-# Disable attention (plain LSTM only)
-# Edit configs/paper.yaml: models.attention_lstm.enabled = false
-python scripts/reproduce_paper.py --config configs/paper.yaml
-
-# Disable SHAP (attention evidence only)
-# Edit configs/paper.yaml: explainability.method = attention_only
-python scripts/reproduce_paper.py --config configs/paper.yaml
+uv run python -m agentic_forecaster reproduce-paper \
+    --config configs/paper.yaml --device auto --export-final-results
 ```
 
-| File | Provenance | Description |
-|---|---|---|
-| `synthetic_smoke_test_ablation.json` | `synthetic_smoke_test` | Demo ablation on synthetic data |
+`ablation_metrics.csv` is written here by that export. The primary model and
+the plain-LSTM baseline are **reused** from the main run; only the OHLCV-only
+Attention-LSTM is trained additionally, so each ticker/fold needs three neural
+fits rather than five.

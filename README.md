@@ -30,6 +30,27 @@ The five agents are:
    forecast, indicators, SL/TP prices, RRR, RiskScore, SHAP, attention,
    reason codes, narrative, and reconstruction disclaimer.
 
+## Universe Limitation (49 of 50)
+
+| Quantity | Value |
+|---|---|
+| **Requested universe** | **50** NIFTY-50 securities (`configs/nifty50.yaml`) |
+| **Available from the specified Kaggle source** | **49** |
+| **Unavailable** | `ZOMATO` — not present in the dataset |
+| **Models trained per fold** | **49** |
+| **Total models (2 paper folds)** | **98** |
+
+`results/ticker_availability.csv` is the authoritative record. `ZOMATO` is
+reported as unavailable and is **not** substituted with an unrelated company;
+the only alias honoured is `M&M` → `MM`, a genuine symbol-format spelling of
+the *same* security.
+
+The full reproduction therefore trains **49 independent models per fold**
+(98 total across both paper folds). A literal 50-stock reconstruction would
+require deliberately choosing a 50th constituent from a documented NIFTY-50
+snapshot and verifying it exists in the source dataset — that is a scientific
+decision, deliberately not made implicitly.
+
 ## Paper
 
 - **Title:** Explanation-First Agentic Forecaster for Stock Market

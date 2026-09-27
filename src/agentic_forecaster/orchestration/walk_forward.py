@@ -62,6 +62,25 @@ AGGREGATE_KEYS = (
 )
 
 
+def _default_tickers(config: dict, data_agent: DataAgent) -> list[str]:
+    """Ticker list to reproduce when the caller does not restrict it.
+
+    Synthetic (demo/test) configs have no raw dataset, so the generated
+    symbols are used instead of the configured NIFTY-50 universe.
+    """
+    if config.get("data", {}).get("synthetic"):
+        from agentic_forecaster.data.dataset import make_synthetic_dataset
+
+        frames = make_synthetic_dataset(
+            n_tickers=int(config["data"].get("n_tickers", 3)),
+            n_days=int(config["data"].get("n_days", 600)),
+            seed=int(config.get("experiment", {}).get("seed", 42)),
+        )
+        return sorted(frames)
+    universe = data_agent.universe()
+    return sorted(universe.available.values())
+
+
 def _fold_config(config: dict, fold: dict) -> dict:
     out = copy.deepcopy(config)
     out["data"].update({
@@ -89,8 +108,7 @@ def run_walk_forward(
     model_root = ensure_dir(Path(roots["AGENTIC_MODEL_ROOT"]))
 
     base_agent = DataAgent(config)
-    available = base_agent._discover()
-    selected = tickers or sorted(available)
+    selected = tickers or _default_tickers(config, base_agent)
     logger.info("Reproduction run_id=%s tickers=%d", run_id, len(selected))
 
     all_predictions: list[pd.DataFrame] = []
@@ -150,8 +168,9 @@ def run_walk_forward(
                     **{k: fm.metrics.get(k) for k in AGGREGATE_KEYS},
                 })
             for variant, values in (result.ablations or {}).items():
-                if isinstance(values, dict):
-                    ablation_rows.append({
+                if not isinstance(values, dict) or variant.startswith("_"):
+                    continue
+                ablation_rows.append({
                         "ticker": ticker, "fold": fold_name, "variant": variant,
                         **{k: values.get(k) for k in AGGREGATE_KEYS},
                         "extra": json.dumps(
@@ -276,6 +295,17 @@ def _paper_comparison(
     }
 
     rows: list[dict] = []
+
+    # P@3 aggregate: UNWEIGHTED MEAN of the fold-level values (each fold is a
+    # distinct test year, so weighting by date count would let one year
+    # dominate).  Fold-level values are kept alongside for auditability.
+    def _p3_mean(field: str) -> float | None:
+        values = [r[field] for r in p3_rows if r.get(field) is not None]
+        return float(sum(values) / len(values)) if values else None
+
+    p3_up_mean = _p3_mean("precision_at_3_up")
+    p3_down_mean = _p3_mean("precision_at_3_down")
+
     for model, values in PAPER_REFERENCE.items():
         ref_acc = values.get("accuracy")
         if model == "attention_lstm_raw":
@@ -303,11 +333,22 @@ def _paper_comparison(
             "f1_paper_reference": values.get("f1"),
             "precision_at_3_up_paper_reference": values.get("precision_at_3_up"),
             "precision_at_3_down_paper_reference": values.get("precision_at_3_down"),
-            "precision_at_3_up_reconstructed": next(
+            "precision_at_3_up_reconstructed": p3_up_mean,
+            "precision_at_3_down_reconstructed": p3_down_mean,
+            "p3_aggregate_policy": "unweighted mean of fold-level P@3 "
+                                   "across all folds",
+            "p3_folds_included": ",".join(r.get("fold", "") for r in p3_rows),
+            "precision_at_3_up_fold_0": next(
                 (r["precision_at_3_up"] for r in p3_rows if r["fold"] == "fold_0"), None
             ),
-            "precision_at_3_down_reconstructed": next(
+            "precision_at_3_down_fold_0": next(
                 (r["precision_at_3_down"] for r in p3_rows if r["fold"] == "fold_0"), None
+            ),
+            "precision_at_3_up_fold_1": next(
+                (r["precision_at_3_up"] for r in p3_rows if r["fold"] == "fold_1"), None
+            ),
+            "precision_at_3_down_fold_1": next(
+                (r["precision_at_3_down"] for r in p3_rows if r["fold"] == "fold_1"), None
             ),
             "provenance": "paper_reference values are transcribed from the publication",
         })

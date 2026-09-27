@@ -16,6 +16,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import re
 import subprocess
@@ -55,6 +56,111 @@ def _git_tracked_files(repo_root: Path) -> list[Path]:
         return [repo_root / line for line in result.stdout.splitlines() if line.strip()]
     except Exception:
         return []
+
+
+def _expected_coverage(repo_root: Path) -> dict:
+    """Derive the expected ticker/fold coverage from the ACTUAL universe.
+
+    expected_available_tickers = rows in results/ticker_availability.csv
+                                  where available == true
+    expected_folds            = len(PAPER_FOLDS)
+    expected_ticker_fold_runs = available_tickers * folds
+
+    Nothing is hard-coded: a change to the universe or the folds changes the
+    expectation automatically.
+    """
+    availability_csv = repo_root / "results" / "ticker_availability.csv"
+    available: list[str] = []
+    requested = 0
+    if availability_csv.is_file():
+        with open(availability_csv) as f:
+            for row in csv.DictReader(f):
+                requested += 1
+                if str(row.get("available", "")).strip().lower() == "true":
+                    available.append(row.get("discovered_symbol")
+                                     or row.get("requested_ticker", ""))
+
+    try:
+        from agentic_forecaster.orchestration.walk_forward import PAPER_FOLDS
+        folds = [fold["fold"] for fold in PAPER_FOLDS]
+    except Exception:
+        folds = ["fold_0", "fold_1"]
+
+    return {
+        "requested_tickers": requested,
+        "available_tickers": available,
+        "n_available": len(available),
+        "folds": folds,
+        "n_folds": len(folds),
+        "expected_runs": len(available) * len(folds),
+    }
+
+
+def _validate_full_reproduction(repo_root: Path, failures: list[str]) -> None:
+    """Strict final check: the run must cover the whole available universe."""
+    exp = _expected_coverage(repo_root)
+    pairs = {(t, f) for t in exp["available_tickers"] for f in exp["folds"]}
+
+    recon_path = repo_root / "results" / "paper_reproduction" / "reconstructed_run.json"
+    status = None
+    if recon_path.is_file():
+        recon = json.loads(recon_path.read_text())
+        status = recon.get("status")
+    _check("reconstructed_run status is completed",
+           status == "completed", failures, f"status={status!r}")
+
+    if not exp["available_tickers"]:
+        _check("ticker availability recorded", False, failures,
+               "results/ticker_availability.csv missing or has no available tickers")
+        return
+
+    _check("ticker universe resolved",
+           exp["n_available"] > 0, failures,
+           f"{exp['n_available']}/{exp['requested_tickers']} available")
+
+    metrics_path = repo_root / "results" / "paper_reproduction" / "ticker_metrics.csv"
+    trained: set[tuple[str, str]] = set()
+    if metrics_path.is_file():
+        with open(metrics_path) as f:
+            for row in csv.DictReader(f):
+                trained.add((row["ticker"], row["fold"]))
+
+    missing = sorted(f"{t}/{f}" for t, f in (pairs - trained))
+    _check("every available ticker has BOTH paper folds",
+           not missing, failures,
+           f"missing {len(missing)}: {missing[:5]}" if missing else
+           f"{len(pairs)}/{len(pairs)} pairs present")
+
+    agg_path = repo_root / "results" / "paper_reproduction" / "aggregate_metrics.json"
+    n_runs = None
+    if agg_path.is_file():
+        n_runs = int(json.loads(agg_path.read_text()).get("n_ticker_fold_runs", 0))
+    _check("ticker/fold run count matches expected",
+           n_runs == exp["expected_runs"], failures,
+           f"actual={n_runs} expected={exp['expected_runs']} "
+           f"({exp['n_available']} tickers x {exp['n_folds']} folds)")
+
+    for rel, label in (
+        ("results/paper_reproduction/precision_at_3.csv", "precision@3"),
+        ("results/paper_reproduction/calibration_metrics.csv", "calibration metrics"),
+        ("results/baselines/baseline_metrics.csv", "baseline metrics"),
+        ("results/ablations/ablation_metrics.csv", "ablation metrics"),
+        ("results/predictions/predictions.csv.gz", "predictions"),
+    ):
+        path = repo_root / rel
+        populated = path.is_file() and path.stat().st_size > 0
+        if populated and path.suffix == ".csv":
+            with open(path) as f:
+                populated = len(f.readlines()) > 1
+        _check(f"final artefact present: {label}", populated, failures, rel)
+
+    model_index = repo_root / "artifacts" / "manifests" / "models" / "runtime_checkpoint_index.json"
+    n_models = 0
+    if model_index.is_file():
+        n_models = len(json.loads(model_index.read_text()).get("models", []))
+    _check("canonical model count matches expected",
+           n_models >= exp["expected_runs"], failures,
+           f"actual={n_models} expected>={exp['expected_runs']}")
 
 
 def validate(repo_root: Path, allow_pretraining: bool = False) -> list[str]:
@@ -129,62 +235,9 @@ def validate(repo_root: Path, allow_pretraining: bool = False) -> list[str]:
            ("reproduce_paper.py" in readme or "reproduce-paper" in readme)
            and ("train_all.py" in readme or "train-all" in readme), failures)
 
-    # --- Strict real-results validation ---
+    # --- Strict real-results validation -----------------------------------
     if not allow_pretraining:
-        recon_path = results_dir / "paper_reproduction" / "reconstructed_run.json"
-        if recon_path.exists():
-            recon = json.loads(recon_path.read_text())
-            status = recon.get("status", "")
-            _check("reconstructed_run not pending",
-                   status == "completed",
-                   failures, f"status={status}")
-
-            # Real run recorded AND it actually produced ticker/fold models.
-            n_runs = int(recon.get("n_ticker_fold_runs", 0) or 0)
-            _check("real reproduction recorded", n_runs > 0, failures,
-                   f"n_ticker_fold_runs={n_runs}")
-
-            aggregate = recon.get("aggregate_metrics", {}) or {}
-            has_metrics = any(
-                isinstance(v, (int, float)) for v in aggregate.values()
-            )
-            _check("aggregate metrics present", has_metrics, failures)
-
-        agg_path = results_dir / "paper_reproduction" / "aggregate_metrics.json"
-        if agg_path.exists():
-            agg = json.loads(agg_path.read_text())
-            _check("aggregate metrics file non-empty",
-                   int(agg.get("n_ticker_fold_runs", 0)) > 0
-                   and "accuracy" in agg,
-                   failures)
-
-        manifest_path = repo_root / "artifacts" / "manifests" / "models" / "runtime_checkpoint_index.json"
-        if manifest_path.exists():
-            manifest = json.loads(manifest_path.read_text())
-            _check("canonical model count > 0",
-                   len(manifest.get("models", [])) > 0,
-                   failures, f"count={len(manifest.get('models', []))}")
-
-        comparison_path = results_dir / "paper_reproduction" / "paper_comparison.csv"
-        if comparison_path.exists():
-            import csv
-            with open(comparison_path) as f:
-                rows = list(csv.DictReader(f))
-            has_recon = any(r.get("accuracy_reconstructed") for r in rows)
-            _check("paper-comparison reconstructed values present", has_recon, failures)
-
-        for rel in ("results/baselines/baseline_metrics.csv",
-                    "results/ablations/ablation_metrics.csv",
-                    "results/paper_reproduction/precision_at_3.csv"):
-            path = repo_root / rel
-            populated = path.is_file() and path.stat().st_size > 0
-            if rel.endswith("baseline_metrics.csv") and populated:
-                with open(path) as f:
-                    populated = len(f.readlines()) > 1
-            if rel.endswith("ablation_metrics.csv") and populated:
-                with open(path) as f:
-                    populated = len(f.readlines()) > 1
-            _check(f"final artefact present: {rel}", populated, failures)
+        _validate_full_reproduction(repo_root, failures)
 
     return failures
 

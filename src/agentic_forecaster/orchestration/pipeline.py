@@ -93,10 +93,13 @@ class Pipeline:
         primary = model_agent.train_ticker(ticker, dataset, fold=self.fold, device=device)
         baselines = model_agent.train_baselines(ticker, dataset, fold=self.fold, device=device)
 
-        ablations: dict = {}
+        # Reuse the already-trained primary and baselines for the ablations;
+        # the only extra neural fit is the OHLCV-only variant.
         from agentic_forecaster.agents.ablation_agent import AblationAgent
         ablations = AblationAgent(self.config).run_ticker(
-            ticker, dataset, fold=self.fold, device=device
+            ticker, dataset, fold=self.fold, device=device,
+            already_trained_primary=primary,
+            already_trained_baselines=baselines,
         )
 
         p_raw = primary.predict_proba_raw(dataset.test.X)

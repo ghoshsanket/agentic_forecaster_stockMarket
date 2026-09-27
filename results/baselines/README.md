@@ -1,11 +1,16 @@
 # Baselines
 
-Baseline model metrics from the reconstruction run.
+Per-ticker baseline metrics (Plain LSTM, Random Forest, Logistic Regression,
+Majority Class) for the full paper reproduction.
 
-| File | Provenance | Description |
-|---|---|---|
-| `synthetic_smoke_test_baselines.json` | `synthetic_smoke_test` | All five model families on synthetic demo data |
+Populated by:
 
-The paper's baselines are: plain LSTM, Random Forest, Logistic Regression and
-Majority.  Their real-dataset metrics are written to
-`$AGENTIC_OUTPUT_ROOT/baselines/` (Category B) during the reproduction run.
+```bash
+uv run python -m agentic_forecaster reproduce-paper \
+    --config configs/paper.yaml --device auto --export-final-results
+```
+
+`baseline_metrics.csv` is written here by that export. Before the full run
+completes this directory intentionally contains only this README; the
+1-ticker real-data smoke-test evidence lives in
+`../smoke_tests/reliance_two_fold/`.

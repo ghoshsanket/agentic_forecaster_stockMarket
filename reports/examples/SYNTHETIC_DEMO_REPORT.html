@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Forecast Report — DEMO</title>
+<style>
+body { font-family: sans-serif; margin: 2rem; color: #222; }
+h1 { border-bottom: 2px solid #333; padding-bottom: .5rem; }
+.metric { display: inline-block; margin: .5rem 1rem .5rem 0; }
+.badge { padding: .25rem .75rem; border-radius: 4px; color: #fff; }
+.HIGH { background: #c0392b; } .MEDIUM { background: #e67e22; }
+.LOW { background: #27ae60; }
+table { border-collapse: collapse; margin-top: 1rem; }
+td, th { border: 1px solid #ccc; padding: .4rem .8rem; text-align: left; }
+.footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ccc; font-size: .85rem; color: #666; }
+</style></head><body>
+<h1>Forecast Report — DEMO</h1>
+<p><strong>Run ID:</strong> demo &nbsp;
+<strong>Model ID:</strong> demo &nbsp;
+<strong>Config ID:</strong> demo</p>
+<p><strong>Origin date:</strong> 2024-01-01 &nbsp;
+<strong>Target date:</strong> 2024-01-02</p>
+<p><strong>Latest close:</strong> 100.00</p>
+<p><strong>Raw p(up):</strong> 0.6800 &nbsp;
+<strong>Calibrated p(up):</strong> 0.7200</p>
+<p><strong>Direction:</strong> UP &nbsp;
+<strong>Confidence:</strong> 72.0% &nbsp;
+<strong>Confidence level:</strong>
+<span class="badge MEDIUM">MEDIUM</span></p>
+
+<h2>Technical Indicators</h2>
+<table><tr><th>Indicator</th><th>Value</th></tr><tr><td>atr_14</td><td>2.0000</td></tr></table>
+
+<h2>Risk Assessment (ATR-based)</h2>
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>ATR</td><td>2.0000</td></tr>
+<tr><td>Stop-loss price</td><td>98.00</td></tr>
+<tr><td>Take-profit price</td><td>102.00</td></tr>
+<tr><td>RRR</td><td>1.0000</td></tr>
+<tr><td>RiskScore</td><td>0.360000</td></tr>
+<tr><td>lambda_SL</td><td>1.0</td></tr>
+<tr><td>lambda_TP</td><td>1.0</td></tr>
+</table>
+
+<h2>Explanation</h2>
+<p>SYNTHETIC DEMO REPORT — generated from explicit demo inputs, not a real market prediction.</p>
+<p><strong>SHAP method:</strong> demo</p>
+
+<h2>Top features (SHAP)</h2>
+<table><tr><th>Feature</th><th>Mean |SHAP|</th></tr><tr><td>rsi_14</td><td>0.0100</td></tr></table>
+
+<h2>Top attention dates</h2>
+<table><tr><th>Day offset</th><th>Attention weight</th></tr><tr><td>day -0</td><td>0.2000</td></tr></table>
+
+<h2>Reason codes</h2><ul><li>demo_report</li></ul>
+
+<h2>Model metrics (test split)</h2>
+<div class="metric"><strong>accuracy</strong>: 0.0000</div>
+
+<div class="footer">
+<p>This report is a software reconstruction of a research paper. It does not constitute investment advice. Past performance does not guarantee future results.</p>
+</div>
+</body></html>

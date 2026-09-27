@@ -51,11 +51,12 @@ Every reconstruction decision is classified with one of three labels:
 | # | Item | Label | Choice / rationale |
 |---|---|---|---|
 | 24 | Epochs | AUTHOR-CONFIRMED | Maximum 3 epochs. **Not** paper-defined. |
-| 25 | Optimizer | PAPER-DEFINED | Adam, lr = 0.001, weight decay = 0.0001. |
-| 26 | Adam betas | RECONSTRUCTION-ASSUMED | (0.9, 0.999). |
+| 25 | Optimizer | PAPER-DEFINED | Adam, lr = 0.001 (weight decay is RECONSTRUCTION-ASSUMED). |
+| 26 | Adam betas | PAPER-DEFINED | beta1 = 0.9, beta2 = 0.999. |
 | 27 | Batch size | PAPER-DEFINED | 64. |
 | 28 | Patience | PAPER-DEFINED | 10. |
 | 29 | Gradient clipping | RECONSTRUCTION-ASSUMED | `gradient_clip_norm = 1.0`. |
+| 29b | Weight decay | RECONSTRUCTION-ASSUMED | 0.0001. |
 | 30 | Seeds | RECONSTRUCTION-ASSUMED | Global seed 42. |
 
 ## Calibration

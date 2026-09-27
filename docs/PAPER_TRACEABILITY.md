@@ -15,7 +15,7 @@
 
 | Paper component | Label | Implementation | Test |
 |---|---|---|---|
-| 50 NIFTY-50 stocks | PAPER-DEFINED | `configs/nifty50.yaml`, `data/universe.py` | `test_universe` |
+| 50 NIFTY-50 stocks | PAPER-DEFINED | `configs/nifty50.yaml`, `data/universe.py` | `test_universe.py` |
 | Intraday → daily OHLCV | PAPER-DEFINED | `data/resampling.py:resample_intraday_to_daily` | `test_daily_resampling.py` |
 | Next-day direction target | PAPER-DEFINED | `features/engineer.py:build_feature_frame` | `test_target_next_day.py` |
 | `target_date` = next trading date | PAPER-DEFINED | `data/agent.py:run_ticker` | `test_target_date_metadata.py` |
