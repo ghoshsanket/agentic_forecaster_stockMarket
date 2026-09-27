@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Verify the 50-ticker universe against downloaded raw files.
+"""Verify the NIFTY-50 universe against the downloaded raw dataset.
 
-Generates:
-    results/ticker_availability.csv
-
-with columns:
+Generates ``results/ticker_availability.csv`` with:
     requested_ticker, discovered_symbol, available, source_file,
-    source_start, source_end, fold_0_available, fold_1_available
+    source_start, source_end, fold_0_available, fold_1_available, reason
+
+Applies the reconstruction policy in ``configs/nifty50.yaml``: genuine
+symbol-format aliases are honoured; a missing security is reported as
+unavailable and never substituted with a different company.
 """
 
 from __future__ import annotations
@@ -15,10 +16,9 @@ import argparse
 import csv
 from pathlib import Path
 
-import pandas as pd
-
-from agentic_forecaster.config import get_env_roots, load_config
-from agentic_forecaster.data.dataset import discover_ticker_files, load_ticker_frame
+from agentic_forecaster.config import load_config
+from agentic_forecaster.data.dataset import discover_ticker_files
+from agentic_forecaster.data.universe import load_universe_config, resolve_universe
 from agentic_forecaster.utils import setup_logging
 
 PAPER_FOLDS = [
@@ -35,43 +35,43 @@ def main() -> int:
     setup_logging()
 
     config = load_config(args.config)
-    roots = get_env_roots()
-    raw_root = Path(roots["AGENTIC_RAW_DATA_ROOT"])
+    raw_root = Path(config["data"]["raw_root"])
+    discovered = discover_ticker_files(raw_root)
 
-    ticker_files = discover_ticker_files(raw_root)
-    discovered = {k.upper(): v for k, v in ticker_files.items()}
-
-    ticker_path = config["data"]["tickers"]
-    if not Path(ticker_path).is_absolute():
+    ticker_path = Path(config["data"]["tickers"])
+    if not ticker_path.is_absolute():
         ticker_path = Path(config.get("_config_dir", ".")) / ticker_path
-    import yaml
-    with open(ticker_path) as f:
-        requested = [t.upper() for t in yaml.safe_load(f).get("tickers", [])]
+    universe = resolve_universe(load_universe_config(ticker_path), discovered)
 
     rows = []
-    for req in requested:
-        available = req in discovered
+    for symbol in universe.requested:
+        dataset_symbol = universe.available.get(symbol)
         row = {
-            "requested_ticker": req,
-            "discovered_symbol": req if available else "",
-            "available": available,
-            "source_file": str(discovered[req]) if available else "",
+            "requested_ticker": symbol,
+            "discovered_symbol": dataset_symbol or "",
+            "available": dataset_symbol is not None,
+            "source_file": "",
             "source_start": "",
             "source_end": "",
             "fold_0_available": False,
             "fold_1_available": False,
+            "reason": universe.unavailable.get(symbol, ""),
         }
-        if available:
-            df = load_ticker_frame(discovered[req])
-            row["source_start"] = str(df["date"].min().date())
-            row["source_end"] = str(df["date"].max().date())
+        if dataset_symbol:
+            path = discovered[dataset_symbol]
+            row["source_file"] = path.name
+            with open(path) as f:
+                f.readline()
+                first = f.readline().split(",")[0].strip()
+                last = ""
+                for line in f:
+                    if line.strip():
+                        last = line.split(",")[0].strip()
+            row["source_start"] = first[:10]
+            row["source_end"] = last[:10]
             for fold in PAPER_FOLDS:
-                fold_key = f"{fold['fold']}_available"
-                fold_start = pd.Timestamp(fold["test_start"])
-                fold_end = pd.Timestamp(fold["test_end"])
-                dates = pd.to_datetime(df["date"])
-                mask = (dates >= fold_start) & (dates <= fold_end)
-                row[fold_key] = int(mask.sum()) > 0
+                # A fold is usable when the test window has intraday coverage.
+                row[f"{fold['fold']}_available"] = last[:10] >= fold["test_start"]
         rows.append(row)
 
     out_path = Path(args.out)
@@ -81,12 +81,10 @@ def main() -> int:
         writer.writeheader()
         writer.writerows(rows)
 
-    n_available = sum(1 for r in rows if r["available"])
     print(f"Wrote {out_path}")
-    print(f"Available: {n_available}/{len(requested)}")
-    for r in rows:
-        if not r["available"]:
-            print(f"  MISSING: {r['requested_ticker']}")
+    print(f"Available: {universe.n_available}/{universe.n_requested}")
+    for symbol, reason in universe.unavailable.items():
+        print(f"  UNAVAILABLE: {symbol} — {reason}")
     return 0
 
 

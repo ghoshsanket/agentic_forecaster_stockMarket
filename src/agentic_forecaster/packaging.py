@@ -1,13 +1,14 @@
-"""Export final artefacts from runtime (Category B) into the repository (Category A).
+"""Export final reproduction artefacts from runtime into the repository.
 
-This module backs both ``python -m agentic_forecaster package-submission``
-and ``python scripts/package_submission.py``.
+This backs both::
 
-Safety guarantees:
-  * never copies the raw dataset;
-  * never copies secrets, OpenCode state, caches or virtual environments;
-  * never copies temporary files;
-  * prints exactly what was copied.
+    python -m agentic_forecaster reproduce-paper --export-final-results
+    python scripts/package_submission.py
+
+It copies the CANONICAL final result set from the newest completed
+reproduction run under ``$AGENTIC_OUTPUT_ROOT/reproduction/<run_id>/`` into
+the repository.  It never copies raw data, secrets, caches, environments or
+temporary files, and it prints exactly what was copied.
 """
 
 from __future__ import annotations
@@ -19,142 +20,169 @@ from pathlib import Path
 
 logger = logging.getLogger("agentic_forecaster.packaging")
 
-# Directory names that must NEVER be exported when they appear as a direct
-# child of an export source root.
+# Directory / file names that must NEVER be exported.
 BLOCKED_DIR_NAMES = {
     ".venv", "venv", "env", "cache", "caches", "wandb", "tmp", "temp",
     "opencode", "xdg", "secrets", ".git", "__pycache__", ".pytest_cache",
-    ".ruff_cache", "node_modules", ".ipynb_checkpoints",
+    ".ruff_cache", "node_modules", ".ipynb_checkpoints", "raw", "dataset",
+}
+BLOCKED_EXTENSIONS = {".pyc", ".pyo", ".log", ".tmp", ".bak", ".swp", ".env", ".key", ".pem"}
+BLOCKED_FILENAMES = {"kaggle.json", ".env", ".git"}
+MAX_FILE_BYTES = 200 * 1024 * 1024
+
+# run artefact -> repository destination
+REPO_MAP = {
+    "aggregate_metrics.json": "results/paper_reproduction/aggregate_metrics.json",
+    "ticker_metrics.csv": "results/paper_reproduction/ticker_metrics.csv",
+    "paper_comparison.csv": "results/paper_reproduction/paper_comparison.csv",
+    "calibration_metrics.csv": "results/paper_reproduction/calibration_metrics.csv",
+    "precision_at_3.csv": "results/paper_reproduction/precision_at_3.csv",
+    "p3_daily_selections.csv": "results/paper_reproduction/p3_daily_selections.csv",
+    "baseline_metrics.csv": "results/baselines/baseline_metrics.csv",
+    "ablation_metrics.csv": "results/ablations/ablation_metrics.csv",
+    "predictions.csv.gz": "results/predictions/predictions.csv.gz",
+    "training_summary.json": "results/paper_reproduction/training_summary.json",
+    "ticker_status.json": "results/paper_reproduction/ticker_status.json",
+    "manifest.json": "results/paper_reproduction/run_manifest.json",
 }
 
-# File extensions that must NEVER be exported.
-BLOCKED_EXTENSIONS = {
-    ".pyc", ".pyo", ".log", ".tmp", ".bak", ".swp", ".env", ".key", ".pem",
-}
 
-# Maximum size for a single exported file (50 MB).
-MAX_FILE_BYTES = 50 * 1024 * 1024
+def _safe(path: Path, root: Path | None = None) -> bool:
+    """Return True if ``path`` may be exported.
 
-
-def _is_safe(path: Path, root: Path | None = None) -> bool:
-    """Return True if ``path`` is safe to export.
-
-    When ``root`` is given, blocked directory names are only enforced for the
-    path components *relative to* ``root`` (so a temp directory elsewhere on
-    the filesystem does not trigger a false positive).
+    Blocked directory names are enforced only for the components *below*
+    ``root`` (or below the source directory), so an unrelated ancestor that
+    happens to be named e.g. ``tmp`` does not cause a false positive.
     """
+    if path.name in BLOCKED_FILENAMES:
+        return False
+    if path.suffix.lower() in BLOCKED_EXTENSIONS:
+        return False
     if root is not None:
         try:
             rel = path.relative_to(root)
-            blocked_parts = set(rel.parts) & BLOCKED_DIR_NAMES
         except ValueError:
-            blocked_parts = set(path.parts) & BLOCKED_DIR_NAMES
-        if blocked_parts:
+            rel = path
+        if any(part in BLOCKED_DIR_NAMES for part in rel.parts):
             return False
-    if path.name in {"kaggle.json", ".env", ".git"}:
-        return False
-    return path.suffix.lower() not in BLOCKED_EXTENSIONS
+    return True
 
 
-def _copy_safe(src: Path, dst: Path, root: Path | None = None) -> str | None:
-    if not src.exists():
+def _copy(src: Path, dst: Path, root: Path | None = None) -> str | None:
+    if not src.is_file() or not _safe(src, root) or src.stat().st_size > MAX_FILE_BYTES:
         return None
-    if src.is_dir():
-        if not _is_safe(src, root):
-            return None
-        dst.mkdir(parents=True, exist_ok=True)
-        count = 0
-        for child in src.rglob("*"):
-            if child.is_file() and _is_safe(child, root):
-                rel = child.relative_to(src)
-                target = dst / rel
-                target.parent.mkdir(parents=True, exist_ok=True)
-                if child.stat().st_size <= MAX_FILE_BYTES:
-                    shutil.copy2(child, target)
-                    count += 1
-        return str(dst) if count else None
-    if src.is_file() and _is_safe(src, root) and src.stat().st_size <= MAX_FILE_BYTES:
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, dst)
-        return str(dst)
-    return None
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dst)
+    return str(dst)
 
 
-def export_final_artifacts(roots: dict) -> list[str]:
-    """Export final artefacts from runtime roots into the repository.
+def find_latest_run(output_root: Path) -> Path | None:
+    """Newest reproduction run directory that contains aggregate_metrics.json."""
+    repro = Path(output_root) / "reproduction"
+    if not repro.is_dir():
+        return None
+    candidates = [
+        d for d in repro.iterdir()
+        if d.is_dir() and (d / "aggregate_metrics.json").is_file()
+    ]
+    if not candidates:
+        return None
+    return max(candidates, key=lambda p: p.stat().st_mtime)
 
-    Parameters
-    ----------
-    roots : dict with keys
-        AGENTIC_OUTPUT_ROOT, AGENTIC_MODEL_ROOT,
-        AGENTIC_REPO_RESULTS_ROOT, AGENTIC_REPO_REPORTS_ROOT,
-        AGENTIC_REPO_FIGURES_ROOT, AGENTIC_REPO_ARTIFACTS_ROOT.
-    """
-    copied: list[str] = []
+
+def repo_root() -> Path:
+    """Repository root (the directory containing pyproject.toml / src)."""
+    return Path(__file__).resolve().parents[2]
+
+
+def export_final_artifacts(
+    roots: dict,
+    run_dir: Path | None = None,
+    repo: Path | None = None,
+) -> list[str]:
+    """Copy the canonical final result set into the repository."""
     output_root = Path(roots["AGENTIC_OUTPUT_ROOT"])
+    repo = Path(repo) if repo is not None else repo_root()
+
+    run_dir = run_dir or find_latest_run(output_root)
+    if run_dir is None:
+        logger.warning("No completed reproduction run found under %s", output_root / "reproduction")
+        return []
+
+    copied: list[str] = []
+
+    # 1. Flat run artefacts -> repository (Category A).
+    for name, rel in REPO_MAP.items():
+        got = _copy(run_dir / name, repo / rel, root=run_dir)
+        if got:
+            copied.append(got)
+
+    # 2. Figures.
+    for fig in sorted((run_dir / "figures").glob("*")) if (run_dir / "figures").is_dir() else []:
+        if fig.suffix.lower() in (".png", ".svg", ".pdf"):
+            got = _copy(fig, repo / "figures" / fig.name, root=run_dir / "figures")
+            if got:
+                copied.append(got)
+
+    # 3. Representative reports (a bounded sample, not every daily report).
+    reports = run_dir / "reports"
+    if reports.is_dir():
+        for rep in sorted(reports.glob("*.html"))[:10]:
+            got = _copy(rep, repo / "reports" / "examples" / rep.name, root=reports)
+            if got:
+                copied.append(got)
+
+    # 4. Model manifest (hashes only; no checkpoint binaries).
     model_root = Path(roots["AGENTIC_MODEL_ROOT"])
-    repo_results = Path(roots["AGENTIC_REPO_RESULTS_ROOT"])
-    repo_reports = Path(roots["AGENTIC_REPO_REPORTS_ROOT"])
-    repo_figures = Path(roots["AGENTIC_REPO_FIGURES_ROOT"])
-    repo_artifacts = Path(roots["AGENTIC_REPO_ARTIFACTS_ROOT"])
+    if model_root.is_dir():
+        from agentic_forecaster.utils import file_size_bytes, sha256_file
 
-    # 1. Runtime metrics -> results/ (search recursively for run subdirs)
-    if output_root.exists():
-        for metrics_file in sorted(output_root.rglob("metrics.json")):
-            if not _is_safe(metrics_file, root=output_root):
+        index = {
+            "provenance": "reconstructed_run",
+            "run_id": run_dir.name,
+            "runtime_model_root_env": "AGENTIC_MODEL_ROOT",
+            "path_base": "relative to $AGENTIC_MODEL_ROOT",
+            "models": [],
+        }
+        for ckpt in sorted(model_root.rglob("model.pt")):
+            if not _safe(ckpt, root=model_root):
                 continue
-            dst = repo_results / "metrics" / "run_metrics.json"
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(metrics_file, dst)
-            copied.append(str(dst))
-        for expl_file in sorted(output_root.rglob("explanation.json")):
-            if not _is_safe(expl_file, root=output_root):
-                continue
-            dst = repo_results / "metrics" / "run_explanation.json"
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(expl_file, dst)
-            copied.append(str(dst))
-
-    # 2. Runtime reports -> reports/
-    if output_root.exists():
-        for html in sorted(output_root.rglob("*.html")):
-            if not _is_safe(html, root=output_root):
-                continue
-            dst = repo_reports / "html" / html.name
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(html, dst)
-            copied.append(str(dst))
-
-    # 3. Runtime figures -> figures/
-    if output_root.exists():
-        for fig in sorted(output_root.rglob("*.png")) + sorted(output_root.rglob("*.svg")):
-            if not _is_safe(fig, root=output_root):
-                continue
-            dst = repo_figures / fig.name
-            shutil.copy2(fig, dst)
-            copied.append(str(dst))
-
-    # 4. Runtime checkpoints -> artifacts/manifests/models/ (metadata only)
-    if model_root.exists():
-        manifest_dir = repo_artifacts / "manifests" / "models"
-        manifest_dir.mkdir(parents=True, exist_ok=True)
-        index = {"models": []}
-        for ckpt in sorted(model_root.rglob("*.pt")):
-            if not _is_safe(ckpt, root=model_root):
-                continue
-            from agentic_forecaster.utils import file_size_bytes, sha256_file
-
-            index["models"].append(
-                {
-                    "ticker": ckpt.parent.name if ckpt.parent != model_root else ckpt.stem,
-                    "path": str(ckpt.relative_to(model_root)),
-                    "sha256": sha256_file(ckpt),
-                    "bytes": file_size_bytes(ckpt),
-                }
-            )
+            index["models"].append({
+                "ticker": ckpt.parent.parent.name,
+                "fold": ckpt.parent.name,
+                "path": str(ckpt.relative_to(model_root)),
+                "sha256": sha256_file(ckpt),
+                "bytes": file_size_bytes(ckpt),
+            })
         if index["models"]:
-            dst = manifest_dir / "runtime_checkpoint_index.json"
+            dst = repo / "artifacts" / "manifests" / "models" / "runtime_checkpoint_index.json"
+            dst.parent.mkdir(parents=True, exist_ok=True)
             dst.write_text(json.dumps(index, indent=2))
             copied.append(str(dst))
 
+    # 5. reconstructed_run.json must only claim completion for a REAL run.
+    aggregate = run_dir / "aggregate_metrics.json"
+    if aggregate.is_file():
+        agg = json.loads(aggregate.read_text())
+        n_runs = int(agg.get("n_ticker_fold_runs", 0))
+        status = "completed" if n_runs > 0 else "not_yet_run_on_real_dataset"
+        payload = {
+            "provenance": "reconstructed_run",
+            "status": status,
+            "description": (
+                "Metrics produced by this implementation on the real dataset."
+                if n_runs > 0 else
+                "No real reproduction run has been recorded yet."
+            ),
+            "run_id": run_dir.name,
+            "run_dir_env": "$AGENTIC_OUTPUT_ROOT/reproduction/" + run_dir.name,
+            "n_ticker_fold_runs": n_runs,
+            "aggregate_metrics": agg,
+        }
+        dst = repo / "results" / "paper_reproduction" / "reconstructed_run.json"
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        dst.write_text(json.dumps(payload, indent=2, default=str))
+        copied.append(str(dst))
+
+    logger.info("Exported %d artefact(s) from %s", len(copied), run_dir)
     return copied

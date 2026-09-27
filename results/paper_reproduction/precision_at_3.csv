@@ -1,0 +1,3 @@
+fold,precision_at_3_up,precision_at_3_down,n_dates,probability_used
+fold_0,0.0,0.0,0,calibrated_p_up
+fold_1,0.0,0.0,0,calibrated_p_up

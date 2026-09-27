@@ -2,21 +2,48 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
-    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.11"
-      - name: Install dependencies
-        run: pip install -e '.[all]'
+          enable-cache: true
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      # Validates the COMMITTED uv.lock rather than resolving latest versions.
+      - name: Sync locked environment
+        run: uv sync --all-extras --frozen
+
+      - name: Verify environment
+        run: uv run python scripts/verify_environment.py
+
       - name: Lint
-        run: ruff check .
+        run: uv run ruff check .
+
       - name: Test
-        run: pytest
+        run: uv run pytest -v
+
+      - name: Demo train smoke (synthetic, no dataset/CUDA/LLM needed)
+        run: |
+          uv run python -m agentic_forecaster train \
+            --ticker SYN00 --config configs/demo.yaml --device cpu
+
+      - name: Structure-only submission validation
+        run: uv run python scripts/validate_submission.py --allow-pretraining

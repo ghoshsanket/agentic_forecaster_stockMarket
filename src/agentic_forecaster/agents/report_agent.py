@@ -60,7 +60,11 @@ class ReportAgent:
         top_features = explanation.get("top_features", [])
         attention_evidence = explanation.get("attention_evidence", [])
         reason_codes = explanation.get("reason_codes", [])
-        shap_method = explanation.get("shap_method", "unknown")
+        shap_method = (
+            explanation.get("attribution_method")
+            or explanation.get("shap_method")
+            or "unknown"
+        )
 
         feat_rows = "".join(
             f"<tr><td>{html.escape(f['feature'])}</td>"

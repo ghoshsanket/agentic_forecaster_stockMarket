@@ -90,32 +90,56 @@ The dataset lives **outside** the repository under `$AGENTIC_RAW_DATA_ROOT`.
 ### How to download
 
 ```bash
-python scripts/download_dataset.py
+uv run python scripts/download_dataset.py
 ```
 
 ### How to inspect
 
 ```bash
-python scripts/inspect_raw_dataset.py
+uv run python scripts/inspect_raw_dataset.py
+# verify the 50-symbol universe against the dataset
+uv run python scripts/verify_ticker_universe.py
+# regenerate dataset provenance metadata from the raw files
+uv run python scripts/verify_dataset_provenance.py
 ```
 
 ## Installation
 
+The project targets **Python 3.11** and is managed by **uv** with a committed
+`uv.lock`.  Install Research-locally — do **not** install globally:
+
 ```bash
-pip install -e '.[all]'
+# Preferred: bootstrap the project .venv from the workspace environment
+./scripts/bootstrap_environment.sh
+
+# Equivalent, using the committed lockfile
+uv sync --all-extras --frozen
 ```
+
+Both create/update `$AGENTIC_PROJECT_ROOT/.venv`.  Run commands through it:
+
+```bash
+uv run python -m agentic_forecaster --help
+uv run pytest
+```
+
+CI installs with `uv sync --all-extras --frozen`, so the committed lockfile is
+what gets validated rather than whatever resolves "latest".
 
 ## Training
 
+One independent model (and one StandardScaler, one calibrator) per stock.
+
 ```bash
-# Train a single stock
-python -m agentic_forecaster train --ticker RELIANCE --config configs/paper.yaml
+uv run python -m agentic_forecaster train \
+    --ticker RELIANCE --config configs/paper.yaml --device auto
 
-# Train all 50 stocks independently
-python -m agentic_forecaster train-all --config configs/paper.yaml
+# Every selected NIFTY-50 stock, independently
+uv run python -m agentic_forecaster train-all \
+    --config configs/paper.yaml --device auto --baselines
 
-# Or use the script directly
-python scripts/train_all.py --config configs/paper.yaml
+# Script form (identical behaviour)
+uv run python scripts/train_all.py --config configs/paper.yaml
 ```
 
 Checkpoints are written under `$AGENTIC_MODEL_ROOT/trained/<ticker>/fold_0/`.
@@ -123,11 +147,13 @@ Checkpoints are written under `$AGENTIC_MODEL_ROOT/trained/<ticker>/fold_0/`.
 ## Evaluation
 
 ```bash
-# Evaluate a trained model
-python -m agentic_forecaster evaluate --model <bundle_dir> --data <processed_dir>
+# Evaluate a saved bundle
+uv run python -m agentic_forecaster evaluate \
+    --model <bundle_dir> --data <processed_dir>
 
-# Run paper walk-forward (2 folds, retrain per ticker)
-python -m agentic_forecaster walk-forward --config configs/paper.yaml
+# Paper walk-forward: the two exact folds, retraining every stock
+uv run python -m agentic_forecaster walk-forward \
+    --config configs/paper.yaml --device auto
 ```
 
 Metrics: accuracy, Brier (raw + calibrated), ECE (raw + calibrated),
@@ -135,22 +161,22 @@ Precision@3 (cross-sectional UP/DOWN), F1, ROC-AUC.
 
 ## Reproduce the Paper
 
+Both entry points run the identical implementation:
+
 ```bash
-# 1. Download the dataset
-python scripts/download_dataset.py
+uv run python -m agentic_forecaster reproduce-paper \
+    --config configs/paper.yaml --device auto --export-final-results
 
-# 2. Run the full paper reproduction
-python -m agentic_forecaster reproduce-paper --config configs/paper.yaml \
-    --export-final-results
-
-# 3. Validate the submission
-python scripts/validate_submission.py
+uv run python scripts/reproduce_paper.py \
+    --config configs/paper.yaml --device auto --export-final-results
 ```
 
-A quick smoke test on one real ticker:
+A smoke test on one real stock (real close/ATR/target date, SHAP, report,
+bundle reload):
 
 ```bash
-python scripts/smoke_test_real.py --ticker RELIANCE
+uv run python scripts/smoke_test_real.py --ticker RELIANCE \
+    --config configs/paper.yaml
 ```
 
 ## Results

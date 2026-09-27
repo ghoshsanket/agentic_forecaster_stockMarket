@@ -1,8 +1,22 @@
 {
   "provenance": "reconstructed_run",
-  "description": "SHA-256 hashes and byte sizes of trained checkpoints. Populated by reproduce_paper.py --export-final-results.",
-  "model_architecture": "AttentionLSTM",
-  "config": "configs/paper.yaml",
-  "seed": 42,
-  "models": []
+  "run_id": "testrun",
+  "runtime_model_root_env": "AGENTIC_MODEL_ROOT",
+  "path_base": "relative to $AGENTIC_MODEL_ROOT",
+  "models": [
+    {
+      "ticker": "RELIANCE",
+      "fold": "fold_0",
+      "path": "trained/RELIANCE/fold_0/model.pt",
+      "sha256": "6a45f3493986be7613c82401c9693be7ae911071748c03a1b5c00a208ec5cbd9",
+      "bytes": 235208
+    },
+    {
+      "ticker": "RELIANCE",
+      "fold": "fold_1",
+      "path": "trained/RELIANCE/fold_1/model.pt",
+      "sha256": "3bac28da36f64694670fa51cdee156d509ac87edd101c785383a3443c38d34fd",
+      "bytes": 235208
+    }
+  ]
 }

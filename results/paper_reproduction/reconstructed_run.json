@@ -1,60 +1,19 @@
 {
   "provenance": "reconstructed_run",
-  "description": "Metrics produced by this implementation. Populated after running reproduce_paper.py on the real dataset.",
-  "status": "not_yet_run_on_real_dataset",
-  "config": "configs/paper.yaml",
-  "seed": 42,
-  "metrics": {
-    "attention_lstm": {
-      "accuracy": null,
-      "brier": null,
-      "ece": null,
-      "precision_at_3": null,
-      "f1": null,
-      "roc_auc": null
-    },
-    "lstm": {
-      "accuracy": null,
-      "brier": null,
-      "ece": null,
-      "precision_at_3": null,
-      "f1": null,
-      "roc_auc": null
-    },
-    "random_forest": {
-      "accuracy": null,
-      "brier": null,
-      "ece": null,
-      "precision_at_3": null,
-      "f1": null,
-      "roc_auc": null
-    },
-    "logistic_regression": {
-      "accuracy": null,
-      "brier": null,
-      "ece": null,
-      "precision_at_3": null,
-      "f1": null,
-      "roc_auc": null
-    },
-    "majority": {
-      "accuracy": null,
-      "brier": null,
-      "ece": null,
-      "precision_at_3": null,
-      "f1": null,
-      "roc_auc": null
-    }
-  },
-  "synthetic_smoke_test": {
-    "provenance": "synthetic_smoke_test",
-    "description": "Produced by configs/demo.yaml on a synthetic dataset. Verifies the pipeline only; NOT a paper reconstruction.",
-    "accuracy": 0.5037878787878788,
-    "brier": 0.2507317084011891,
-    "ece": 0.00899418217666219,
-    "precision_at_3": 0.0,
-    "f1": 0.5403508771929825,
-    "roc_auc": 0.5016073478760046,
-    "note": "attention_lstm on synthetic demo data; near-chance accuracy is expected."
+  "status": "completed",
+  "description": "Metrics produced by this implementation on the real dataset.",
+  "run_id": "testrun",
+  "run_dir_env": "$AGENTIC_OUTPUT_ROOT/reproduction/testrun",
+  "n_ticker_fold_runs": 2,
+  "aggregate_metrics": {
+    "policy": "unweighted mean of per-ticker test-split metrics",
+    "n_ticker_fold_runs": 2,
+    "accuracy": 0.4778071552507643,
+    "f1": 0.575114324558151,
+    "roc_auc": 0.44679979091596606,
+    "brier_raw": 0.25026503950357437,
+    "brier_calibrated": 0.25026503950357437,
+    "ece_raw": 0.03770073518337991,
+    "ece_calibrated": 0.03770073518337991
   }
 }

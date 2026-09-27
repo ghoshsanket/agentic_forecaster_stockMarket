@@ -1,21 +1,5 @@
-model,metric,paper_reference,reconstructed_run,difference,provenance_note
-attention_lstm,accuracy,,,,paper_reference transcribed from paper; reconstructed_run populated after reproduce_paper.py
-attention_lstm,brier,,,,
-attention_lstm,ece,,,,
-attention_lstm,precision_at_3,,,,
-lstm,accuracy,,,,
-lstm,brier,,,,
-lstm,ece,,,,
-lstm,precision_at_3,,,,
-random_forest,accuracy,,,,
-random_forest,brier,,,,
-random_forest,ece,,,,
-random_forest,precision_at_3,,,,
-logistic_regression,accuracy,,,,
-logistic_regression,brier,,,,
-logistic_regression,ece,,,,
-logistic_regression,precision_at_3,,,,
-majority,accuracy,,,,
-majority,brier,,,,
-majority,ece,,,,
-majority,precision_at_3,,,,
+model,accuracy_paper_reference,accuracy_reconstructed,accuracy_difference,brier_paper_reference,brier_reconstructed,f1_paper_reference,precision_at_3_up_paper_reference,precision_at_3_down_paper_reference,precision_at_3_up_reconstructed,precision_at_3_down_reconstructed,provenance
+attention_lstm_calibrated,0.815,0.4778071552507643,-0.33719284474923567,0.205,0.25026503950357437,0.6,0.7,0.65,0.0,0.0,paper_reference values are transcribed from the publication
+attention_lstm_raw,0.815,0.4778071552507643,-0.33719284474923567,0.24,0.25026503950357437,0.59,0.7,0.65,0.0,0.0,paper_reference values are transcribed from the publication
+plain_lstm,0.69,0.4980500702305214,-0.19194992976947856,0.23,,0.57,0.62,0.6,0.0,0.0,paper_reference values are transcribed from the publication
+random_forest,0.772,0.5082211022060646,-0.2637788977939354,0.245,,0.55,0.58,0.52,0.0,0.0,paper_reference values are transcribed from the publication

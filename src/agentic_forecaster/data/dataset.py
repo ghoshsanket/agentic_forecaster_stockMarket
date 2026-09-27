@@ -17,17 +17,38 @@ logger = logging.getLogger("agentic_forecaster.data")
 REQUIRED_COLUMNS = {"date", "open", "high", "low", "close", "volume"}
 
 
+_SUFFIXES_TO_STRIP = ("_MINUTE", "_1MIN", "_1M", "_INTRADAY", "_MIN")
+
+
+def normalize_symbol(stem: str) -> str:
+    """Normalize a raw CSV stem into a ticker symbol.
+
+    Handles the dataset's duplicated ``*_minute_new.csv`` files by stripping
+    the ``_NEW`` marker and then the frequency suffix, so
+    ``MM_minute_new`` and ``MM_minute`` both map to ``MM``.
+    """
+    ticker = stem.upper()
+    ticker = ticker.removesuffix("_NEW")
+    for suffix in _SUFFIXES_TO_STRIP:
+        if ticker.endswith(suffix):
+            ticker = ticker[: -len(suffix)]
+            break
+    return ticker
+
+
 def discover_ticker_files(raw_root: str | Path) -> dict[str, Path]:
     """Discover per-ticker CSV files under the raw dataset root.
 
     Expected layout (Kaggle download)::
 
         <raw_root>/
-            RELIANCE.csv
-            TCS.csv
+            RELIANCE_minute.csv
+            TCS_minute.csv
             ...
 
-    Returns a mapping ``{ticker: path}``.
+    Files whose stem normalises to the same symbol (e.g. ``MM_minute.csv``
+    and ``MM_minute_new.csv``) are deduplicated; the canonical (non-``_new``)
+    file wins.  Returns a mapping ``{ticker: path}``.
     """
     raw_root = Path(raw_root)
     if not raw_root.exists():
@@ -36,19 +57,26 @@ def discover_ticker_files(raw_root: str | Path) -> dict[str, Path]:
             "Run `python scripts/download_dataset.py` first. "
             "See docs/DATASET_PROVENANCE.md."
         )
-    files: dict[str, Path] = {}
+    candidates: dict[str, list[Path]] = {}
     for csv_path in sorted(raw_root.glob("*.csv")):
-        ticker = csv_path.stem.upper()
-        for suffix in ("_MINUTE", "_1MIN", "_1M", "_INTRADAY"):
-            if ticker.endswith(suffix):
-                ticker = ticker[: -len(suffix)]
-                break
-        files[ticker] = csv_path
+        ticker = normalize_symbol(csv_path.stem)
+        candidates.setdefault(ticker, []).append(csv_path)
+
+    files: dict[str, Path] = {}
+    for ticker, paths in candidates.items():
+        # Prefer a file without the duplicated "_new" marker, then the largest.
+        def rank(p: Path) -> tuple[int, int]:
+            return (1 if "_new" in p.stem.lower() else 0, -p.stat().st_size)
+        files[ticker] = min(paths, key=rank)
+
     if not files:
         raise FileNotFoundError(
             f"No per-ticker CSV files found under {raw_root}. "
-            "Expected one CSV per NIFTY 100 constituent."
+            "Expected one CSV per NIFTY constituent."
         )
+    deduped = sum(len(v) - 1 for v in candidates.values() if len(v) > 1)
+    if deduped:
+        logger.info("Deduplicated %d duplicate symbol file(s)", deduped)
     logger.info("Discovered %d ticker files under %s", len(files), raw_root)
     return files
 

@@ -1,0 +1,54 @@
+{
+  "RELIANCE/fold_0": {
+    "config": {
+      "hidden_size": 64,
+      "num_layers": 2,
+      "dropout": 0.2,
+      "learning_rate": 0.001,
+      "epochs": 3,
+      "batch_size": 64,
+      "patience": 10,
+      "gradient_clip_norm": 1.0,
+      "best_epoch": 0,
+      "best_val_loss": 0.6931643337011337
+    },
+    "history": {
+      "train_loss": [
+        0.6936375319957733,
+        0.6925348460674285,
+        0.6923443913459778
+      ],
+      "val_loss": [
+        0.6931643337011337,
+        0.6970775872468948,
+        0.6940332651138306
+      ]
+    }
+  },
+  "RELIANCE/fold_1": {
+    "config": {
+      "hidden_size": 64,
+      "num_layers": 2,
+      "dropout": 0.2,
+      "learning_rate": 0.001,
+      "epochs": 3,
+      "batch_size": 64,
+      "patience": 10,
+      "gradient_clip_norm": 1.0,
+      "best_epoch": 2,
+      "best_val_loss": 0.6906804889440536
+    },
+    "history": {
+      "train_loss": [
+        0.6923188418149948,
+        0.6906870454549789,
+        0.6926111802458763
+      ],
+      "val_loss": [
+        0.6924615800380707,
+        0.6909151971340179,
+        0.6906804889440536
+      ]
+    }
+  }
+}

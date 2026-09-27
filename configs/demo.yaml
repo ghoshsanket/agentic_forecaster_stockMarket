@@ -1,6 +1,10 @@
 # Demo / smoke-test configuration.
 # Uses a tiny synthetic dataset — no Kaggle download required.
-# Verifies the full pipeline end-to-end in CI.
+# Verifies the full per-stock pipeline end-to-end in CI and on a laptop.
+#
+# Feature set matches the Phase-1 reconstruction (OHLCV + the technical
+# indicators actually used by the paper), so a passing demo run exercises the
+# same code paths as the real reproduction.
 
 experiment:
   name: demo_smoke
@@ -12,21 +16,21 @@ data:
   n_tickers: 3
   n_days: 600
   sequence_length: 30
-  target_horizon: 1
-  target_type: direction
+  target_type: next_day_direction
   train_fraction: 0.7
   val_fraction: 0.15
-  test_fraction: 0.15
 
 features:
   use_ohlcv: true
-  use_indicators: true
   indicators:
+    - log_return
+    - realized_volatility_20
     - rsi_14
     - macd
+    - macd_signal
+    - macd_histogram
     - atr_14
-    - volatility_20
-    - returns_1
+  drop_na: true
 
 models:
   attention_lstm:
@@ -35,55 +39,48 @@ models:
     num_layers: 1
     dropout: 0.1
     learning_rate: 0.001
+    weight_decay: 0.0001
     batch_size: 32
-    epochs: 5
-    patience: 3
-  lstm:
-    enabled: true
-    hidden_size: 16
-    num_layers: 1
-    dropout: 0.1
-    learning_rate: 0.001
-    batch_size: 32
-    epochs: 5
-    patience: 3
-  random_forest:
-    enabled: true
-    n_estimators: 50
-    max_depth: 4
-  logistic_regression:
-    enabled: true
-    C: 1.0
-    max_iter: 200
-  majority:
-    enabled: true
+    epochs: 3
+    patience: 10
+    beta1: 0.9
+    beta2: 0.999
+    gradient_clip_norm: 1.0
 
 calibration:
   method: temperature
   fit_on: val
 
 evaluation:
-  walk_forward:
-    enabled: false
-  metrics: [accuracy, brier, ece, precision_at_3]
-  ece_bins: 5
+  ece_bins: 10
+  p_at_k: 3
+
+baselines:
+  enabled: true
+  lstm: true
+  random_forest: true
+  logistic_regression: true
+  majority: true
+
+ablations:
+  enabled: true
 
 explainability:
-  method: shap
-  background_samples: 20
-  top_k_features: 3
+  method: gradient_shap
+  fallback: integrated_gradients
+  attention_evidence: true
+  top_k_features: 5
+  background_samples: 64
 
 risk:
   enabled: true
-  kelly_fraction: 0.25
-  max_position_pct: 0.10
+  formulation: atr_confidence_multiplier
 
 reporting:
-  formats: [html]
+  formats: [html, pdf]
   llm:
     enabled: false
     fallback: deterministic
 
 orchestration:
-  agents: [data, model, explainer, risk, report]
-  export_final_results: true
+  export_final_results: false

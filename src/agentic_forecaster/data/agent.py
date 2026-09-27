@@ -33,6 +33,7 @@ from agentic_forecaster.data.dataset import (
     make_synthetic_dataset,
 )
 from agentic_forecaster.data.resampling import resample_intraday_to_daily
+from agentic_forecaster.data.universe import Universe
 from agentic_forecaster.features.engineer import build_feature_frame
 from agentic_forecaster.utils import ensure_dir
 
@@ -43,10 +44,14 @@ logger = logging.getLogger("agentic_forecaster.data.agent")
 class ProcessedSplit:
     X: np.ndarray
     y: np.ndarray
-    dates: np.ndarray
-    target_dates: np.ndarray
+    dates: np.ndarray            # sequence_end_date == prediction-origin date
+    target_dates: np.ndarray     # next actual trading date after the origin
     tickers: np.ndarray
     feature_names: list[str] = field(default_factory=list)
+    # Unscaled (real-world) feature values at the prediction-origin date,
+    # retained verbatim for reporting.  Never reconstructed by inverse transform.
+    unscaled: np.ndarray | None = None   # (n_samples, n_features) float64
+    unscaled_feature_names: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -63,16 +68,19 @@ class ProcessedDataset:
         root = ensure_dir(root)
         for name in ("train", "val", "test"):
             split = getattr(self, name)
-            np.savez_compressed(
-                root / f"{name}.npz",
-                X=split.X,
-                y=split.y,
-                dates=split.dates.astype("datetime64[D]").astype(str),
-                target_dates=split.target_dates.astype("datetime64[D]").astype(str),
-                tickers=split.tickers.astype(str),
-            )
+            payload = {
+                "X": split.X,
+                "y": split.y,
+                "dates": split.dates.astype("datetime64[D]").astype(str),
+                "target_dates": split.target_dates.astype("datetime64[D]").astype(str),
+                "tickers": split.tickers.astype(str),
+            }
+            if split.unscaled is not None and len(split.unscaled):
+                payload["unscaled"] = split.unscaled.astype(np.float64)
+            np.savez_compressed(root / f"{name}.npz", **payload)
         joblib.dump(self.scaler, root / "scaler.joblib")
         (root / "feature_names.txt").write_text("\n".join(self.feature_names))
+        (root / "meta.json").write_text(json.dumps({"ticker": self.ticker}, indent=2))
         return root
 
     @classmethod
@@ -87,17 +95,22 @@ class ProcessedDataset:
                 dates=z["dates"],
                 target_dates=z["target_dates"],
                 tickers=z["tickers"],
+                unscaled=z["unscaled"] if "unscaled" in z.files else None,
             )
         scaler = joblib.load(root / "scaler.joblib")
         feature_names = (root / "feature_names.txt").read_text().splitlines()
-        for name, split in splits.items():
+        for split in splits.values():
             split.feature_names = feature_names
+            split.unscaled_feature_names = feature_names
+        meta_path = root / "meta.json"
+        ticker = json.loads(meta_path.read_text()).get("ticker", "") if meta_path.exists() else ""
         return cls(
             train=splits["train"],
             val=splits["val"],
             test=splits["test"],
             scaler=scaler,
             feature_names=feature_names,
+            ticker=ticker,
         )
 
 
@@ -130,20 +143,32 @@ class DataAgent:
         if not path.is_absolute():
             path = Path(self.config.get("_config_dir", ".")) / path
         if path.exists():
-            import yaml
-            with open(path) as f:
-                data = yaml.safe_load(f)
-            return data.get("tickers", [])
+            from agentic_forecaster.data.universe import load_universe_config
+
+            return load_universe_config(path).requested
         return None
 
+    def universe(self) -> Universe:
+        """Resolve the configured NIFTY-50 universe against the raw dataset."""
+        from agentic_forecaster.data.universe import load_universe_config, resolve_universe
+
+        ticker_path = self.data_cfg.get("tickers")
+        if not ticker_path:
+            return Universe()
+        path = Path(ticker_path)
+        if not path.is_absolute():
+            path = Path(self.config.get("_config_dir", ".")) / path
+        declared = load_universe_config(path)
+        return resolve_universe(declared, discover_ticker_files(self.data_cfg["raw_root"]))
+
     def _discover(self) -> dict[str, Path]:
+        """Return ``{dataset_symbol: path}`` for every available universe member."""
         raw_root = self.data_cfg["raw_root"]
         ticker_files = discover_ticker_files(raw_root)
-        selected = self._load_ticker_config()
-        if selected:
-            selected_upper = {s.upper() for s in selected}
-            ticker_files = {k: v for k, v in ticker_files.items() if k in selected_upper}
-        return ticker_files
+        if not self.data_cfg.get("tickers"):
+            return ticker_files
+        resolved = self.universe()
+        return {sym: ticker_files[sym] for sym in resolved.available.values()}
 
     def _resample_to_daily(self, ticker: str, path: Path, processed_root: Path) -> pd.DataFrame:
         """Resample intraday CSV to daily OHLCV with caching and source-hash validation."""
@@ -178,18 +203,30 @@ class DataAgent:
         }))
         return daily
 
-    def run_ticker(self, ticker: str, df: pd.DataFrame | None = None) -> ProcessedDataset:
+    def run_ticker(self, ticker: str, df: pd.DataFrame | None = None,
+                   indicators: list[str] | None = None) -> ProcessedDataset:
         """Process a SINGLE ticker end-to-end: features, target, sequences, scaler.
 
         This is the primary entry point for the one-model-per-stock design.
+
+        Parameters
+        ----------
+        indicators : optional override of ``features.indicators`` (used by the
+            OHLCV-only ablation to pass ``[]``).
         """
         feat_cfg = self.feat_cfg
-        indicators = feat_cfg.get("indicators")
+        selected = indicators if indicators is not None else feat_cfg.get("indicators")
         use_ohlcv = feat_cfg.get("use_ohlcv", True)
 
-        ff = build_feature_frame(df, indicators=indicators, use_ohlcv=use_ohlcv)
+        # target_date[t] = next ACTUAL trading date, recorded BEFORE dropping
+        # the final (unlabelled) row.  Without this the last valid sample would
+        # have target_date = NaT.
+        df = df.sort_values("date").reset_index(drop=True)
+        nxt = pd.to_datetime(df["date"]).shift(-1)
+        ff = build_feature_frame(df, indicators=selected, use_ohlcv=use_ohlcv)
+        ff["target_date"] = nxt.to_numpy()
         if feat_cfg.get("drop_na", True):
-            ff = ff.dropna().reset_index(drop=True)
+            ff = ff.dropna(subset=[c for c in ff.columns if c != "target_date"]).reset_index(drop=True)
 
         train_start = self.data_cfg.get("train_start")
         train_end = self.data_cfg.get("train_end")
@@ -201,16 +238,17 @@ class DataAgent:
         train_frac = float(self.data_cfg.get("train_fraction", 0.7))
         val_frac = float(self.data_cfg.get("val_fraction", 0.15))
 
-        train_X, train_y, train_dates, train_tdates = [], [], [], []
-        val_X, val_y, val_dates, val_tdates = [], [], [], []
-        test_X, test_y, test_dates, test_tdates = [], [], [], []
-
-        feat_cols = [c for c in ff.columns if c not in ("date", "target")]
+        feat_cols = [c for c in ff.columns if c not in ("date", "target", "target_date")]
         values = ff[feat_cols].to_numpy(dtype=np.float64)
         target = ff["target"].to_numpy(dtype=np.float64)
         dates = ff["date"].to_numpy()
-
+        target_dates = ff["target_date"].to_numpy()
         n = len(ff)
+
+        buckets: dict[str, dict[str, list]] = {
+            name: {"X": [], "y": [], "d": [], "td": [], "raw": []}
+            for name in ("train", "val", "test")
+        }
 
         for i in range(self.seq_len - 1, n):
             window = values[i - self.seq_len + 1 : i + 1]
@@ -218,70 +256,99 @@ class DataAgent:
                 continue
             if np.isnan(target[i]):
                 continue
-            d = pd.Timestamp(dates[i])
-            td = pd.Timestamp(dates[i + 1]) if i + 1 < n else pd.NaT
+            origin = pd.Timestamp(dates[i])
+            tdate = pd.Timestamp(target_dates[i])
+            if pd.isna(tdate) or tdate <= origin:
+                continue
 
             if use_date_splits:
-                if pd.Timestamp(train_start) <= d <= pd.Timestamp(train_end):
-                    train_X.append(window)
-                    train_y.append(target[i])
-                    train_dates.append(d)
-                    train_tdates.append(td)
-                elif pd.Timestamp(val_start) <= d <= pd.Timestamp(val_end):
-                    val_X.append(window)
-                    val_y.append(target[i])
-                    val_dates.append(d)
-                    val_tdates.append(td)
-                elif pd.Timestamp(test_start) <= d <= pd.Timestamp(test_end):
-                    test_X.append(window)
-                    test_y.append(target[i])
-                    test_dates.append(d)
-                    test_tdates.append(td)
+                # Leakage guard: a sample belongs to a window only when BOTH
+                # the origin date AND the label's target date fall inside it.
+                if pd.Timestamp(train_start) <= origin <= pd.Timestamp(train_end) and \
+                   pd.Timestamp(train_start) <= tdate <= pd.Timestamp(train_end):
+                    name = "train"
+                elif pd.Timestamp(val_start) <= origin <= pd.Timestamp(val_end) and \
+                     pd.Timestamp(val_start) <= tdate <= pd.Timestamp(val_end):
+                    name = "val"
+                elif pd.Timestamp(test_start) <= origin <= pd.Timestamp(test_end) and \
+                     pd.Timestamp(test_start) <= tdate <= pd.Timestamp(test_end):
+                    name = "test"
+                else:
+                    continue
             else:
                 n_train = int(n * train_frac)
                 n_val = int(n * val_frac)
                 if i < n_train:
-                    train_X.append(window)
-                    train_y.append(target[i])
-                    train_dates.append(d)
-                    train_tdates.append(td)
+                    name = "train"
                 elif i < n_train + n_val:
-                    val_X.append(window)
-                    val_y.append(target[i])
-                    val_dates.append(d)
-                    val_tdates.append(td)
+                    name = "val"
                 else:
-                    test_X.append(window)
-                    test_y.append(target[i])
-                    test_dates.append(d)
-                    test_tdates.append(td)
+                    name = "test"
 
-        def _mk(X, y, d, td) -> ProcessedSplit:
+            b = buckets[name]
+            b["X"].append(window)
+            b["y"].append(target[i])
+            b["d"].append(dates[i])
+            b["td"].append(target_dates[i])
+            b["raw"].append(values[i])  # unscaled values AT the origin row
+
+        def _mk(b: dict) -> ProcessedSplit:
+            raw = np.asarray(b["raw"], dtype=np.float64)
             return ProcessedSplit(
-                X=np.asarray(X, dtype=np.float32),
-                y=np.asarray(y, dtype=np.float32),
-                dates=np.asarray(d),
-                target_dates=np.asarray(td),
-                tickers=np.asarray([ticker] * len(X)),
+                X=np.asarray(b["X"], dtype=np.float32),
+                y=np.asarray(b["y"], dtype=np.float32),
+                dates=np.asarray(b["d"]),
+                target_dates=np.asarray(b["td"]),
+                tickers=np.asarray([ticker] * len(b["X"])),
                 feature_names=feat_cols,
+                unscaled=raw if raw.size else None,
+                unscaled_feature_names=feat_cols,
             )
 
-        train = _mk(train_X, train_y, train_dates, train_tdates)
-        val = _mk(val_X, val_y, val_dates, val_tdates)
-        test = _mk(test_X, test_y, test_dates, test_tdates)
+        train = _mk(buckets["train"])
+        val = _mk(buckets["val"])
+        test = _mk(buckets["test"])
 
+        if len(train.X) == 0:
+            raise ValueError(
+                f"{ticker}: no training samples in window "
+                f"{train_start}..{train_end} (target dates must also fall inside)"
+            )
+
+        # One StandardScaler per ticker, fit on TRAIN rows only.
         scaler = StandardScaler()
         train.X = scaler.fit_transform(train.X.reshape(-1, train.X.shape[-1])).reshape(train.X.shape)
-        val.X = scaler.transform(val.X.reshape(-1, val.X.shape[-1])).reshape(val.X.shape)
-        test.X = scaler.transform(test.X.reshape(-1, test.X.shape[-1])).reshape(test.X.shape)
+        if len(val.X):
+            val.X = scaler.transform(val.X.reshape(-1, val.X.shape[-1])).reshape(val.X.shape)
+        if len(test.X):
+            test.X = scaler.transform(test.X.reshape(-1, test.X.shape[-1])).reshape(test.X.shape)
 
         return ProcessedDataset(
             train=train, val=val, test=test,
             scaler=scaler, feature_names=feat_cols, ticker=ticker,
         )
 
-    def run(self, ticker: str | None = None) -> ProcessedDataset:
-        """Process one ticker (or all tickers for backward compat / demo)."""
+    def origin_snapshot(self, split: ProcessedSplit, index: int) -> dict:
+        """Return the real (unscaled) feature values at one prediction origin.
+
+        Values come from the retained unscaled snapshot, never from an
+        inverse transform of the scaled data.
+        """
+        if split.unscaled is None or index >= len(split.unscaled):
+            return {}
+        row = split.unscaled[index]
+        return {
+            name: float(row[i])
+            for i, name in enumerate(split.unscaled_feature_names)
+        }
+
+    def run(self, ticker: str | None = None,
+            indicators: list[str] | None = None) -> ProcessedDataset:
+        """Process one ticker.
+
+        ``indicators`` overrides ``features.indicators`` (used by the
+        OHLCV-only ablation, which passes ``[]``).
+        """
         if self.data_cfg.get("synthetic"):
             frames = make_synthetic_dataset(
                 n_tickers=int(self.data_cfg.get("n_tickers", 3)),
@@ -290,10 +357,10 @@ class DataAgent:
             )
             if ticker:
                 if ticker in frames:
-                    return self.run_ticker(ticker, frames[ticker])
+                    return self.run_ticker(ticker, frames[ticker], indicators=indicators)
                 raise KeyError(f"Synthetic ticker {ticker!r} not found")
             first = next(iter(frames))
-            return self.run_ticker(first, frames[first])
+            return self.run_ticker(first, frames[first], indicators=indicators)
 
         ticker_files = self._discover()
         if ticker:
@@ -305,7 +372,7 @@ class DataAgent:
             path = ticker_files[ticker]
             processed_root = Path(self.data_cfg.get("processed_root", "./data/processed"))
             daily = self._resample_to_daily(ticker, path, processed_root)
-            return self.run_ticker(ticker, daily)
+            return self.run_ticker(ticker, daily, indicators=indicators)
 
         raise ValueError(
             "run() without a ticker is not supported in the one-model-per-stock design. "

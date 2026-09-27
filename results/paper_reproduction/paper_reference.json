@@ -1,6 +1,6 @@
 {
   "provenance": "paper_reference",
-  "description": "Metrics transcribed from the published paper. PAPER REFERENCE — NOT produced by this code.",
+  "description": "Metrics transcribed from the published paper. PAPER REFERENCE \u2014 NOT produced by this code.",
   "paper": {
     "title": "Explanation-First Agentic Forecaster for Stock Market",
     "doi": "10.1109/IEMENTECH202669403.2026.11434302"
@@ -8,24 +8,24 @@
   "models": {
     "attention_lstm_calibrated": {
       "accuracy": 0.815,
-      "f1": 0.60,
+      "f1": 0.6,
       "brier": 0.205,
-      "precision_at_3_up": 0.70,
+      "precision_at_3_up": 0.7,
       "precision_at_3_down": 0.65
     },
     "attention_lstm_raw": {
       "accuracy": 0.815,
       "f1": 0.59,
-      "brier": 0.240,
-      "precision_at_3_up": 0.70,
+      "brier": 0.24,
+      "precision_at_3_up": 0.7,
       "precision_at_3_down": 0.65
     },
-    "lstm": {
-      "accuracy": 0.690,
+    "plain_lstm": {
+      "accuracy": 0.69,
       "f1": 0.57,
-      "brier": 0.230,
+      "brier": 0.23,
       "precision_at_3_up": 0.62,
-      "precision_at_3_down": 0.60
+      "precision_at_3_down": 0.6
     },
     "random_forest": {
       "accuracy": 0.772,

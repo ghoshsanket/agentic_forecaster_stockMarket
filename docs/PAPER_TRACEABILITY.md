@@ -7,46 +7,59 @@
 
 | Label | Meaning |
 |---|---|
-| PAPER-DEFINED | Explicitly stated in the paper |
-| RECONSTRUCTION-ASSUMED | Chosen by the reconstruction team where the paper is ambiguous |
+| **PAPER-DEFINED** | Explicitly present in the publication |
+| **AUTHOR-CONFIRMED** | Confirmed by the authors, not verbatim in the publication |
+| **RECONSTRUCTION-ASSUMED** | Chosen by the reconstruction team where the paper is silent |
 
-## Equation-to-code map
+## Traceability table
 
-| Paper component | Classification | Implementation | Test |
+| Paper component | Label | Implementation | Test |
 |---|---|---|---|
-| 50 NIFTY-50 stocks | PAPER-DEFINED | `configs/nifty50.yaml` | `test_ticker_universe` |
-| Intraday → daily resampling | PAPER-DEFINED | `data/resampling.py:resample_intraday_to_daily` | `test_daily_resampling` |
-| OHLCV input | PAPER-DEFINED | `features/engineer.py:build_feature_frame` | `tests/unit/test_features.py` |
-| log_return | PAPER-DEFINED | `features/engineer.py:log_return` | `tests/unit/test_features.py` |
-| realized_volatility_20 | PAPER-DEFINED | `features/engineer.py:realized_volatility` | `tests/unit/test_features.py` |
-| RSI-14 | PAPER-DEFINED | `features/engineer.py:rsi` | `tests/unit/test_features.py` |
-| MACD | PAPER-DEFINED | `features/engineer.py:macd` | `tests/unit/test_features.py` |
-| ATR-14 | PAPER-DEFINED | `features/engineer.py:atr` | `tests/unit/test_features.py` |
-| Next-day target | PAPER-DEFINED | `features/engineer.py` target construction | `test_target_next_day` |
-| 30-day lookback | PAPER-DEFINED | `data/agent.py:run_ticker` | `test_sequence_alignment` |
-| One-model-per-stock | PAPER-DEFINED | `agents/model_agent.py:train_ticker` | `test_one_model_per_stock` |
-| Per-stock scaler | PAPER-DEFINED | `data/agent.py:run_ticker` | `test_per_stock_scalers` |
-| Attention mechanism | RECONSTRUCTION-ASSUMED | `models/attention_lstm.py` | `tests/unit/test_models.py` |
-| 2 layers, hidden 64, dropout .2 | RECONSTRUCTION-ASSUMED | `models/attention_lstm.py` | — |
-| Binary logit + BCE | PAPER-DEFINED | `models/attention_lstm.py`, `training/trainer.py` | `tests/unit/test_models.py` |
-| 3 epochs max | PAPER-DEFINED | `training/trainer.py` | `test_training_3_epochs` |
-| Gradient clipping | RECONSTRUCTION-ASSUMED | `training/trainer.py` | — |
-| Temperature calibration | RECONSTRUCTION-ASSUMED | `calibration/temperature.py` | `tests/unit/test_calibration.py` |
-| SHAP (GradientExplainer) | RECONSTRUCTION-ASSUMED | `explainability/shap_explainer.py` | — |
+| 50 NIFTY-50 stocks | PAPER-DEFINED | `configs/nifty50.yaml`, `data/universe.py` | `test_universe` |
+| Intraday → daily OHLCV | PAPER-DEFINED | `data/resampling.py:resample_intraday_to_daily` | `test_daily_resampling.py` |
+| Next-day direction target | PAPER-DEFINED | `features/engineer.py:build_feature_frame` | `test_target_next_day.py` |
+| `target_date` = next trading date | PAPER-DEFINED | `data/agent.py:run_ticker` | `test_target_date_metadata.py` |
+| Split-boundary label safety | RECONSTRUCTION-ASSUMED | `data/agent.py:run_ticker` | `test_split_boundary_leakage.py` |
+| 30-day sequence | AUTHOR-CONFIRMED | `data/agent.py:run_ticker` | `test_sequence_alignment.py` |
+| One model per stock | AUTHOR-CONFIRMED | `agents/model_agent.py:train_ticker` | `test_pipeline_integration.py` |
+| Per-stock StandardScaler | RECONSTRUCTION-ASSUMED | `data/agent.py:run_ticker` | `test_per_stock_scalers` |
+| OHLCV in the model | PAPER-DEFINED | `features/engineer.py:build_feature_frame` | `test_features.py` |
+| log return | PAPER-DEFINED | `features/engineer.py:log_return` | `test_features.py` |
+| realised volatility (log returns) | PAPER-DEFINED | `features/engineer.py:realized_volatility` | `test_features.py` |
+| RSI-14 | PAPER-DEFINED | `features/engineer.py:rsi` | `test_features.py` |
+| MACD line/signal/histogram | PAPER-DEFINED | `features/engineer.py:macd` | `test_features.py` |
+| ATR-14 | PAPER-DEFINED | `features/engineer.py:atr` | `test_features.py` |
+| Attention formulation | PAPER-DEFINED | `models/attention_lstm.py` | `test_models.py` |
+| `Linear(hidden,1)` + BCE | PAPER-DEFINED | `models/attention_lstm.py`, `training/trainer.py` | `test_models.py` |
+| 3 epochs max | AUTHOR-CONFIRMED | `training/trainer.py` | `test_training_3_epochs.py` |
+| Adam lr 1e-3, wd 1e-4 | PAPER-DEFINED | `training/trainer.py` | `test_training_3_epochs.py` |
+| batch size 64 | PAPER-DEFINED | `configs/paper.yaml` | — |
+| patience 10 | PAPER-DEFINED | `training/trainer.py` | `test_training_3_epochs.py` |
+| gradient clipping | RECONSTRUCTION-ASSUMED | `training/trainer.py` | — |
+| 2 layers / hidden 64 / dropout .2 | RECONSTRUCTION-ASSUMED | `models/attention_lstm.py` | — |
+| Temperature calibration | RECONSTRUCTION-ASSUMED | `calibration/temperature.py` | `test_calibration_applied.py` |
+| Calibration applied at inference | PAPER-DEFINED | `agents/model_agent.py:predict_proba` | `test_calibration_applied.py` |
+| SHAP implementation | RECONSTRUCTION-ASSUMED | `explainability/shap_explainer.py` | `test_shap_nonzero.py` |
 | Attention evidence | PAPER-DEFINED | `explainability/attention.py` | — |
-| ATR risk (SL/TP/RRR/RiskScore) | PAPER-DEFINED | `risk/risk_agent.py` | `test_atr_risk` |
-| Cross-sectional P@3 | PAPER-DEFINED | `evaluation/metrics.py:precision_at_3_cross_sectional` | `test_precision_at_3_cross_sectional` |
-| Brier / ECE / F1 / Accuracy | PAPER-DEFINED | `evaluation/metrics.py` | `tests/unit/test_metrics.py` |
-| Paper walk-forward (2 folds) | PAPER-DEFINED | `orchestration/walk_forward.py` | — |
-| HTML/PDF reports | PAPER-DEFINED | `agents/report_agent.py` | — |
-| Five-agent workflow | PAPER-DEFINED | `orchestration/pipeline.py` | `tests/integration/test_pipeline.py` |
+| LLM explanation usage | AUTHOR-CONFIRMED | `agents/explainer_agent.py:_llm_narrate` (lazy import) | — |
+| ATR risk equations | PAPER-DEFINED | `risk/risk_agent.py:decide` | `test_atr_risk.py` |
+| Confidence multipliers | PAPER-DEFINED | `risk/risk_agent.py:decide` | `test_atr_risk.py` |
+| RRR / RiskScore | PAPER-DEFINED | `risk/risk_agent.py:decide` | `test_atr_risk.py` |
+| Walk-forward folds | PAPER-DEFINED | `orchestration/walk_forward.py:PAPER_FOLDS` | `test_walk_forward_folds.py` |
+| Cross-sectional Precision@3 | PAPER-DEFINED | `evaluation/metrics.py:precision_at_3_cross_sectional` | `test_precision_at_3_cross_sectional.py` |
+| Baselines executed | PAPER-DEFINED | `agents/model_agent.py:train_baselines` | `test_baseline_execution.py` |
+| Ablations executed | RECONSTRUCTION-ASSUMED | `agents/ablation_agent.py` | `test_ablation_execution.py` |
+| Aggregate metrics | RECONSTRUCTION-ASSUMED | `orchestration/walk_forward.py` | `test_reproduction_outputs.py` |
+| ECE bin count | RECONSTRUCTION-ASSUMED | `evaluation/metrics.py` | `test_metrics.py` |
+| Five-agent architecture | PAPER-DEFINED | `orchestration/pipeline.py` | `test_pipeline_integration.py` |
+| HTML/PDF reports | PAPER-DEFINED | `agents/report_agent.py` | `test_report_agent.py` |
 
 ## Five-agent workflow
 
-| Paper agent | Entry point |
+| Agent | Entry point |
 |---|---|
-| Data Agent | `DataAgent.run_ticker(ticker)` |
-| Model Agent | `ModelAgent.train_ticker(ticker, dataset)` |
-| Explainer Agent | `ExplainerAgent.explain_prediction(...)` |
-| Risk Agent | `RiskAgent.decide(...)` |
-| Report Agent | `ReportAgent.run(...)` |
+| Data | `DataAgent.run_ticker(ticker)` |
+| Model | `ModelAgent.train_ticker(ticker, dataset)` |
+| Explainer | `ExplainerAgent.explain_prediction(...)` |
+| Risk | `RiskAgent.decide(...)` |
+| Report | `ReportAgent.run(...)` |

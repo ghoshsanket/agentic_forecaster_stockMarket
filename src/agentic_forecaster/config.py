@@ -16,17 +16,40 @@ import yaml
 _ENV_PATTERN = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)(?::-([^}]*))?\}")
 
 
+def _env_defaults() -> dict:
+    """Canonical defaults for the AGENTIC_* runtime roots (no recursion)."""
+    project_root = Path(__file__).resolve().parents[2]
+    research_root = Path(
+        os.environ.get("RESEARCH_ROOT", str(project_root.parent.parent))
+    )
+    return {
+        "AGENTIC_RAW_DATA_ROOT": str(research_root / "dataset" / "agentic-forecaster" / "raw"),
+        "AGENTIC_PROCESSED_DATA_ROOT": str(research_root / "dataset" / "agentic-forecaster" / "processed"),
+        "AGENTIC_MODEL_ROOT": str(research_root / "models" / "agentic-forecaster"),
+        "AGENTIC_OUTPUT_ROOT": str(research_root / "outputs" / "agentic-forecaster"),
+        "AGENTIC_PROJECT_ROOT": str(project_root),
+        "AGENTIC_REPO_RESULTS_ROOT": str(project_root / "results"),
+        "AGENTIC_REPO_REPORTS_ROOT": str(project_root / "reports"),
+        "AGENTIC_REPO_FIGURES_ROOT": str(project_root / "figures"),
+        "AGENTIC_REPO_ARTIFACTS_ROOT": str(project_root / "artifacts"),
+    }
+
+
 def _expand(value: Any) -> Any:
     if isinstance(value, str):
+        defaults = _env_defaults()
+
         def _sub(match: re.Match) -> str:
             var, default = match.group(1), match.group(2)
             if var in os.environ:
                 return os.environ[var]
             if default is not None:
                 return default
+            if var in defaults:
+                return defaults[var]
             raise KeyError(
-                f"Environment variable {var!r} is not set and no default was "
-                f"provided in the config file."
+                f"Environment variable {var!r} is not set, has no default in the "
+                f"config file, and is not a known AGENTIC_* root."
             )
         return _ENV_PATTERN.sub(_sub, value)
     if isinstance(value, dict):
@@ -55,7 +78,7 @@ def get_env_roots() -> dict:
     """
     project_root = Path(__file__).resolve().parents[2]
     research_root = Path(
-        os.environ.get("RESEARCH_ROOT", str(project_root.parent))
+        os.environ.get("RESEARCH_ROOT", str(project_root.parent.parent))
     )
     return {
         "AGENTIC_RAW_DATA_ROOT": os.environ.get(

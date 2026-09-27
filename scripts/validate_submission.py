@@ -136,15 +136,27 @@ def validate(repo_root: Path, allow_pretraining: bool = False) -> list[str]:
             recon = json.loads(recon_path.read_text())
             status = recon.get("status", "")
             _check("reconstructed_run not pending",
-                   status != "not_yet_run_on_real_dataset",
+                   status == "completed",
                    failures, f"status={status}")
 
-            has_metrics = False
-            for model_metrics in recon.get("metrics", {}).values():
-                if any(v is not None for v in model_metrics.values()):
-                    has_metrics = True
-                    break
-            _check("reconstructed metrics present", has_metrics, failures)
+            # Real run recorded AND it actually produced ticker/fold models.
+            n_runs = int(recon.get("n_ticker_fold_runs", 0) or 0)
+            _check("real reproduction recorded", n_runs > 0, failures,
+                   f"n_ticker_fold_runs={n_runs}")
+
+            aggregate = recon.get("aggregate_metrics", {}) or {}
+            has_metrics = any(
+                isinstance(v, (int, float)) for v in aggregate.values()
+            )
+            _check("aggregate metrics present", has_metrics, failures)
+
+        agg_path = results_dir / "paper_reproduction" / "aggregate_metrics.json"
+        if agg_path.exists():
+            agg = json.loads(agg_path.read_text())
+            _check("aggregate metrics file non-empty",
+                   int(agg.get("n_ticker_fold_runs", 0)) > 0
+                   and "accuracy" in agg,
+                   failures)
 
         manifest_path = repo_root / "artifacts" / "manifests" / "models" / "runtime_checkpoint_index.json"
         if manifest_path.exists():
@@ -158,8 +170,21 @@ def validate(repo_root: Path, allow_pretraining: bool = False) -> list[str]:
             import csv
             with open(comparison_path) as f:
                 rows = list(csv.DictReader(f))
-            has_recon = any(r.get("reconstructed_run") for r in rows)
+            has_recon = any(r.get("accuracy_reconstructed") for r in rows)
             _check("paper-comparison reconstructed values present", has_recon, failures)
+
+        for rel in ("results/baselines/baseline_metrics.csv",
+                    "results/ablations/ablation_metrics.csv",
+                    "results/paper_reproduction/precision_at_3.csv"):
+            path = repo_root / rel
+            populated = path.is_file() and path.stat().st_size > 0
+            if rel.endswith("baseline_metrics.csv") and populated:
+                with open(path) as f:
+                    populated = len(f.readlines()) > 1
+            if rel.endswith("ablation_metrics.csv") and populated:
+                with open(path) as f:
+                    populated = len(f.readlines()) > 1
+            _check(f"final artefact present: {rel}", populated, failures)
 
     return failures
 

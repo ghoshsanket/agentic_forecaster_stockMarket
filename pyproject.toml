@@ -33,9 +33,14 @@ all = [
     "reportlab>=4.0",
     "streamlit>=1.30",
     "kaggle>=1.6",
+    "pyarrow>=14.0",
     "pytest>=8.0",
     "ruff>=0.4",
 ]
+
+# uv dependency groups (used by `uv sync --all-extras`).
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.4"]
 
 [project.scripts]
 agentic-forecaster = "agentic_forecaster.cli:main"
@@ -49,4 +54,9 @@ addopts = "-q"
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py311"
+
+[tool.ruff.lint]
+# Scripts carry a shebang and are not chmod +x; blind excepts are deliberate
+# at orchestration boundaries where a failure must be recorded, not raised.
+ignore = ["EXE001", "BLE001", "S112"]

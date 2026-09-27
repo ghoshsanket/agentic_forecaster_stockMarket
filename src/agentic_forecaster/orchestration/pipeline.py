@@ -1,12 +1,20 @@
-"""End-to-end pipeline orchestrating the five agents.
+"""Per-stock orchestration for the five-agent workflow.
 
-Workflow:
-    DataAgent -> ModelAgent -> ExplainerAgent -> RiskAgent -> ReportAgent
+Workflow (per stock, no pooling):
 
-Heavy runtime artefacts (checkpoints, processed data, logs) are written under
-Category B roots (``$AGENTIC_*``).  Final submission-worthy artefacts are
-exported into the repository by ``scripts/package_submission.py`` or by
-``reproduce-paper --export-final-results``.
+    DataAgent.run_ticker(ticker)
+        -> ModelAgent.train_ticker(ticker, dataset)
+        -> ModelAgent.train_baselines(ticker, dataset)
+        -> ExplainerAgent.explain_prediction(...)
+        -> RiskAgent.decide(...)
+        -> ReportAgent.run(...)
+
+``Pipeline`` is a thin wrapper over this for a single ticker (used by tests
+and the smoke test).  ``walk_forward`` runs it across the paper's folds and
+writes the aggregate reproduction outputs.
+
+There is deliberately NO pooled/"ALL" model and NO position-sizing logic:
+the Phase-1 risk implementation is ATR-based.
 """
 
 from __future__ import annotations
@@ -16,124 +24,158 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 
-from agentic_forecaster.agents import ExplainerAgent, ModelAgent, ReportAgent
-from agentic_forecaster.data import DataAgent
+from agentic_forecaster.agents.explainer_agent import ExplainerAgent
+from agentic_forecaster.agents.model_agent import FittedModel, ModelAgent
+from agentic_forecaster.agents.report_agent import ReportAgent
+from agentic_forecaster.data.agent import DataAgent
 from agentic_forecaster.risk import RiskAgent
 from agentic_forecaster.utils import atomic_json_dump, ensure_dir, seed_everything
 
 logger = logging.getLogger("agentic_forecaster.orchestration")
 
+REPORT_INDICATORS = (
+    "close", "atr_14", "rsi_14", "macd", "macd_signal",
+    "realized_volatility_20",
+)
+
+
+@dataclass
+class PredictionRecord:
+    """One calibrated prediction, with everything needed for auditing."""
+    ticker: str
+    fold: str
+    origin_date: str
+    target_date: str
+    y_true: float
+    p_up_raw: float
+    p_up_calibrated: float
+    direction: str
+    confidence: float
+
 
 @dataclass
 class PipelineResult:
+    ticker: str = ""
+    fold: str = ""
     dataset: object = None
-    fitted_models: dict = field(default_factory=dict)
-    explanation: dict = field(default_factory=dict)
+    primary: FittedModel | None = None
+    baselines: dict = field(default_factory=dict)
+    ablations: dict = field(default_factory=dict)
     metrics: dict = field(default_factory=dict)
-    reports: list = field(default_factory=list)
+    predictions: pd.DataFrame | None = None
+    report: dict | None = None
+    explanation: dict | None = None
     run_dir: str = ""
 
 
 class Pipeline:
-    def __init__(self, config: dict):
+    """Runs the full five-agent workflow for ONE stock."""
+
+    def __init__(self, config: dict, fold: str = "fold_0"):
         self.config = config
-        self.exp_cfg = config.get("experiment", {})
-        self.seed = int(self.exp_cfg.get("seed", 42))
-        self.output_root = Path(
-            self.exp_cfg.get("output_dir", "./outputs/run")
+        self.fold = fold
+        self.seed = int(config.get("experiment", {}).get("seed", 42))
+        self.run_root = ensure_dir(
+            Path(config.get("experiment", {}).get("output_dir", "./outputs/run"))
+            / fold
         )
 
-    def run(self) -> PipelineResult:
+    def run(self, ticker: str, device: str | None = None,
+            n_reports: int = 1, report_dir: Path | None = None) -> PipelineResult:
         seed_everything(self.seed)
-        run_dir = ensure_dir(self.output_root)
 
-        logger.info("=== Agent 1/5: Data ===")
         data_agent = DataAgent(self.config)
-        dataset = data_agent.run()
-        processed_root = self.config["data"].get("processed_root")
-        if processed_root:
-            dataset.save(processed_root)
+        dataset = data_agent.run(ticker=ticker)
 
-        logger.info("=== Agent 2/5: Model ===")
         model_agent = ModelAgent(self.config)
-        fitted = model_agent.run(dataset)
+        primary = model_agent.train_ticker(ticker, dataset, fold=self.fold, device=device)
+        baselines = model_agent.train_baselines(ticker, dataset, fold=self.fold, device=device)
 
-        cal_cfg = self.config.get("calibration", {})
-        if cal_cfg.get("method") == "temperature":
-            import torch
-
-            from agentic_forecaster.calibration import TemperatureCalibrator
-            for name, fm in fitted.items():
-                if fm.kind == "torch":
-                    calibrator = TemperatureCalibrator()
-                    device = next(fm.model.parameters()).device
-                    val_logits = fm.model(torch.tensor(dataset.val.X, dtype=torch.float32, device=device)).detach().cpu().numpy()
-                    calibrator.fit(val_logits, dataset.val.y)
-                    fm.calibration = calibrator.to_dict()
-                    logger.info("Calibrated %s: T=%.4f", name, calibrator.temperature)
-
-        logger.info("=== Agent 3/5: Explainer ===")
-        explainer_agent = ExplainerAgent(self.config)
-        explanation = explainer_agent.run(fitted["attention_lstm"], dataset)
-
-        logger.info("=== Agent 4/5: Risk ===")
-        risk_agent = RiskAgent(
-            kelly_fraction=float(self.config.get("risk", {}).get("kelly_fraction", 0.25)),
-            max_position_pct=float(self.config.get("risk", {}).get("max_position_pct", 0.10)),
-            stop_loss_pct=float(self.config.get("risk", {}).get("stop_loss_pct", 0.05)),
-            volatility_target=float(self.config.get("risk", {}).get("volatility_target", 0.15)),
+        ablations: dict = {}
+        from agentic_forecaster.agents.ablation_agent import AblationAgent
+        ablations = AblationAgent(self.config).run_ticker(
+            ticker, dataset, fold=self.fold, device=device
         )
 
-        logger.info("=== Agent 5/5: Report ===")
+        p_raw = primary.predict_proba_raw(dataset.test.X)
+        p_cal = primary.predict_proba(dataset.test.X)
+        predictions = pd.DataFrame({
+            "date": dataset.test.dates.astype("datetime64[D]").astype(str),
+            "ticker": ticker,
+            "y": dataset.test.y.astype(float),
+            "raw_p_up": p_raw.astype(float),
+            "calibrated_p_up": p_cal.astype(float),
+        })
+        predictions["fold"] = self.fold
+        predictions["direction"] = np.where(p_cal >= 0.5, "UP", "DOWN")
+        predictions["confidence"] = np.where(
+            p_cal >= 0.5, p_cal, 1.0 - p_cal
+        )
+        predictions["origin_date"] = predictions["date"]
+        predictions["target_date"] = dataset.test.target_dates.astype(
+            "datetime64[D]"
+        ).astype(str)
+
+        explainer = ExplainerAgent(self.config)
+        risk_agent = RiskAgent()
         report_agent = ReportAgent(self.config)
-        reports = []
-        proba = fitted["attention_lstm"].predict_proba(dataset.test.X)
-        for i in range(min(10, len(proba))):
-            ticker = str(dataset.test.tickers[i])
-            date = str(dataset.test.dates[i])
-            direction = "UP" if proba[i, 1] >= 0.5 else "DOWN"
-            conviction = float(proba[i, 1] if direction == "UP" else proba[i, 0])
-            risk = risk_agent.decide(ticker, date, direction, conviction, 0.02)
-            rep = report_agent.run(
-                ticker=ticker, date=date, direction=direction,
-                conviction=conviction, explanation=explanation,
-                risk_decision=risk,
-                metrics=fitted["attention_lstm"].metrics,
-                output_dir=run_dir / "reports",
+
+        n = min(n_reports, len(dataset.test.X))
+        reports, explanation = [], None
+        for i in range(n - 1, -1, -1):
+            snapshot = data_agent.origin_snapshot(dataset.test, i)
+            indicators = {k: v for k, v in snapshot.items() if k in REPORT_INDICATORS}
+            explanation = explainer.explain_prediction(
+                primary,
+                dataset.test.X[i],
+                ticker=ticker,
+                date=str(dataset.test.dates[i]),
+                p_up=float(p_cal[i]),
+                indicator_values=indicators,
+                p_up_raw=float(p_raw[i]),
             )
-            reports.append(rep)
+            close = float(snapshot.get("close", np.nan))
+            atr = float(snapshot.get("atr_14", np.nan))
+            if not np.isfinite(close) or not np.isfinite(atr) or atr <= 0:
+                continue
+            risk = risk_agent.decide(
+                ticker=ticker,
+                date=str(dataset.test.dates[i]),
+                p_up=float(p_cal[i]),
+                close=close,
+                atr=atr,
+            )
+            reports.append(report_agent.run(
+                ticker=ticker,
+                origin_date=str(dataset.test.dates[i]),
+                target_date=str(dataset.test.target_dates[i]),
+                latest_close=close,
+                p_up_raw=float(p_raw[i]),
+                p_up_calibrated=float(p_cal[i]),
+                direction=risk.direction,
+                confidence=risk.confidence,
+                confidence_level=risk.confidence_level,
+                explanation=explanation,
+                risk_decision=risk,
+                metrics=primary.metrics,
+                technical_indicators=indicators,
+                model_id=f"{ticker}:{self.fold}:attention_lstm",
+                config_id=str(self.config.get("experiment", {}).get("name", "paper")),
+                output_dir=report_dir or (self.run_root / "reports"),
+            ))
 
-        metrics_summary = {name: fm.metrics for name, fm in fitted.items()}
-        atomic_json_dump(metrics_summary, run_dir / "metrics.json")
-        atomic_json_dump(explanation, run_dir / "explanation.json")
-
-        # Persist arrays needed by the figure generator (Category B runtime).
-        alm = fitted["attention_lstm"]
-        proba = alm.predict_proba(dataset.test.X)
-        np.savez_compressed(
-            run_dir / "test_predictions.npz",
-            y=dataset.test.y,
-            p=proba[:, 1],
-        )
-        if alm.kind == "torch":
-            import torch
-
-            alm.model.eval()
-            device = next(alm.model.parameters()).device
-            with torch.no_grad():
-                _, w = alm.model(
-                    torch.tensor(dataset.test.X, dtype=torch.float32, device=device),
-                    return_attention=True,
-                )
-            np.save(run_dir / "attention_weights.npy", w.cpu().numpy())
-        atomic_json_dump(alm.history, run_dir / "training_history.json")
+        metrics = {
+            "attention_lstm": primary.metrics,
+            **{name: fm.metrics for name, fm in baselines.items()},
+        }
+        atomic_json_dump(metrics, self.run_root / f"metrics_{ticker}.json")
 
         return PipelineResult(
-            dataset=dataset,
-            fitted_models=fitted,
-            explanation=explanation,
-            metrics=metrics_summary,
-            reports=reports,
-            run_dir=str(run_dir),
+            ticker=ticker, fold=self.fold, dataset=dataset,
+            primary=primary, baselines=baselines, ablations=ablations,
+            metrics=metrics, predictions=predictions,
+            report=reports[0] if reports else None,
+            explanation=explanation, run_dir=str(self.run_root),
         )

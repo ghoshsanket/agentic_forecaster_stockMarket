@@ -1,11 +1,19 @@
-# NIFTY-50 constituent subset used in the paper reconstruction (50 tickers).
-# Symbols as used in the Kaggle dataset files (suffix _minute.csv stripped).
+# NIFTY-50 constituent universe for the paper reconstruction.
 #
-# Reconstruction note:
-#   TATAMOTORS -> TATACOMM (renamed in source data)
-#   M&M        -> MM (symbol in source data)
-#   INFRATEL   -> not present in dataset; replaced by TATACOMM's parent
-#                  (already listed) — see results/ticker_availability.csv
+# RECONSTRUCTION POLICY (see docs/IMPLEMENTATION_ASSUMPTIONS.md):
+#   The publication uses "NIFTY-50".  NIFTY-50 membership is time-varying and
+#   the publication does not state an as-of date.  We therefore fix a concrete
+#   constituent list (below) and record any security that cannot be resolved
+#   against the downloaded dataset as UNAVAILABLE rather than silently
+#   substituting a different company.
+#
+#   `aliases` maps a requested symbol to a dataset symbol ONLY when the two
+#   are genuine symbol-format spellings of the SAME security (e.g. the NSE
+#   symbol "M&M" is carried as "MM" by the data vendor).
+#
+#   A symbol is never mapped to a different company.  TATAMOTORS, for example,
+#   is NOT aliased to TATACOMM.
+
 tickers:
   - RELIANCE
   - TCS
@@ -13,22 +21,22 @@ tickers:
   - INFY
   - ICICIBANK
   - HINDUNILVR
+  - ITC
   - SBIN
   - BAJFINANCE
-  - BHARTIARTL
   - KOTAKBANK
-  - ITC
   - LT
+  - BHARTIARTL
   - AXISBANK
   - MARUTI
-  - TITAN
   - SUNPHARMA
+  - TITAN
   - ULTRACEMCO
-  - TATACOMM
+  - ASIANPAINT
   - NTPC
   - NESTLEIND
   - POWERGRID
-  - MM
+  - "M&M"
   - TATASTEEL
   - ADANIENT
   - HCLTECH
@@ -37,23 +45,32 @@ tickers:
   - WIPRO
   - TECHM
   - INDUSINDBK
-  - GRASIM
+  - SBILIFE
+  - HINDALCO
   - CIPLA
   - DRREDDY
-  - BRITANNIA
-  - HEROMOTOCO
   - EICHERMOT
+  - BRITANNIA
   - DIVISLAB
-  - HINDALCO
-  - JSWSTEEL
-  - UPL
-  - TATACONSUM
-  - APOLLOHOSP
+  - GRASIM
+  - HEROMOTOCO
   - BAJAJFINSV
-  - SBILIFE
-  - HDFCLIFE
+  - APOLLOHOSP
+  - TATACONSUM
+  - SHRIRAMFIN
   - BAJAJ-AUTO
-  - SHREECEM
+  - TRENT
+  - INDIGO
+  - JSWSTEEL
   - BPCL
-  - PFC
-  - ZEEL
+  - UPL
+  - ZOMATO
+
+# Genuine symbol-format aliases (same security, different vendor spelling).
+aliases:
+  "M&M": MM
+
+# Symbols known to be absent from the downloaded dataset.  These are reported
+# as unavailable in results/ticker_availability.csv and are never substituted.
+known_unavailable:
+  - ZOMATO
