@@ -1,22 +1,701 @@
 {
   "provenance": "reconstructed_run",
-  "run_id": "testrun",
+  "run_id": "full_phase1_20260928_015333",
   "runtime_model_root_env": "AGENTIC_MODEL_ROOT",
   "path_base": "relative to $AGENTIC_MODEL_ROOT",
   "models": [
     {
+      "ticker": "ADANIENT",
+      "fold": "fold_0",
+      "path": "trained/ADANIENT/fold_0/model.pt",
+      "sha256": "a4d576ca7cb6b1a2fdd22b54b019573370b0d1291c2f905920c1fa2b8c3d76d6",
+      "bytes": 233989
+    },
+    {
+      "ticker": "ADANIENT",
+      "fold": "fold_1",
+      "path": "trained/ADANIENT/fold_1/model.pt",
+      "sha256": "d0d9464ac74ff4a4e47bc6c2c0db83467e735c46df554bfd5dfe4a2ae3d35f1a",
+      "bytes": 233989
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "fold": "fold_0",
+      "path": "trained/APOLLOHOSP/fold_0/model.pt",
+      "sha256": "70c834b3cce7df6da81d2e8d80f2b75c1db262c0528fbf43b2e024fc8e87636f",
+      "bytes": 233989
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "fold": "fold_1",
+      "path": "trained/APOLLOHOSP/fold_1/model.pt",
+      "sha256": "dd6139e6394898609437e16709820f1e1570354b2bd4b3803457555091f62150",
+      "bytes": 233989
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "fold": "fold_0",
+      "path": "trained/ASIANPAINT/fold_0/model.pt",
+      "sha256": "adb84adaab139fa0c32084d734609b1e9426437ed9b6cce917d9e2c583342fb5",
+      "bytes": 233989
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "fold": "fold_1",
+      "path": "trained/ASIANPAINT/fold_1/model.pt",
+      "sha256": "a24bc32e84a4dd6967549b099b6055797fba6f45071629eacdf5683019fd693b",
+      "bytes": 233989
+    },
+    {
+      "ticker": "AXISBANK",
+      "fold": "fold_0",
+      "path": "trained/AXISBANK/fold_0/model.pt",
+      "sha256": "b38329f7d4e0891975d933695f1600e8997f0c08c467808003c40cd2883ffb1a",
+      "bytes": 233989
+    },
+    {
+      "ticker": "AXISBANK",
+      "fold": "fold_1",
+      "path": "trained/AXISBANK/fold_1/model.pt",
+      "sha256": "7f6d335943239a357e96fa7a54193bb28a8982b87945a73f106c3d9f083b779c",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "fold": "fold_0",
+      "path": "trained/BAJAJ-AUTO/fold_0/model.pt",
+      "sha256": "aea7769ba908e396b445ff1862d09b4ee0eb600ac70eae0b2676497101961756",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "fold": "fold_1",
+      "path": "trained/BAJAJ-AUTO/fold_1/model.pt",
+      "sha256": "7f8ee18f5f692e77802aa3a504d852b6bd097afa677bdc00ba3be72ca21f70c9",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "fold": "fold_0",
+      "path": "trained/BAJAJFINSV/fold_0/model.pt",
+      "sha256": "f6bef26f7fad995154869472a340d75af28ef31c170154e09a6eb84738aa0b8c",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "fold": "fold_1",
+      "path": "trained/BAJAJFINSV/fold_1/model.pt",
+      "sha256": "4b2e14248fb59d3c5b6fb31d1f8b96c40404d61bfb1f0fc748c1867f8fd22421",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "fold": "fold_0",
+      "path": "trained/BAJFINANCE/fold_0/model.pt",
+      "sha256": "4300f77de81004651692476ef40ad19deb023f35f6d3dc1565ddb4d96a21d4d5",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "fold": "fold_1",
+      "path": "trained/BAJFINANCE/fold_1/model.pt",
+      "sha256": "af7bc21ab83b5aad5bc441572474c68d62da98a90d044a322460ef1fd482ca41",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BHARTIARTL",
+      "fold": "fold_0",
+      "path": "trained/BHARTIARTL/fold_0/model.pt",
+      "sha256": "3b9ec15e58852e2e12becb15c29221cd23834d375adf7513ad56094ad34f63e0",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BHARTIARTL",
+      "fold": "fold_1",
+      "path": "trained/BHARTIARTL/fold_1/model.pt",
+      "sha256": "5b683b4f5aa96290cda71e858feeedc5f1c0b5f57143f90f876d623554800ba0",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BPCL",
+      "fold": "fold_0",
+      "path": "trained/BPCL/fold_0/model.pt",
+      "sha256": "a2889fe94cb31f49a91e8b65789cc032f04975946b9433d0386a29481aa9b61f",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BPCL",
+      "fold": "fold_1",
+      "path": "trained/BPCL/fold_1/model.pt",
+      "sha256": "8774b2ff98c17091ea15a8d434691053ef7ace7ded432fa61afff7385a9866db",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BRITANNIA",
+      "fold": "fold_0",
+      "path": "trained/BRITANNIA/fold_0/model.pt",
+      "sha256": "df27033d8ac12d2ac7ee531986b689173d6d58e0de58c74a10fae7ae80dc9d1e",
+      "bytes": 233989
+    },
+    {
+      "ticker": "BRITANNIA",
+      "fold": "fold_1",
+      "path": "trained/BRITANNIA/fold_1/model.pt",
+      "sha256": "5cd0e88810f3e3d1fab43a6ad5c5e70d39ecbfd99ee5a8a7fbd8074f392c84d5",
+      "bytes": 233989
+    },
+    {
+      "ticker": "CIPLA",
+      "fold": "fold_0",
+      "path": "trained/CIPLA/fold_0/model.pt",
+      "sha256": "3cf3b230796705b29ed7ba4b6648cd046ee3e4e83063ea03f4e9c0ccc1d44c16",
+      "bytes": 233989
+    },
+    {
+      "ticker": "CIPLA",
+      "fold": "fold_1",
+      "path": "trained/CIPLA/fold_1/model.pt",
+      "sha256": "0c57c8590a727868aec1a4db728d2d146d760a4c42ee714dde8394b3a41dbce7",
+      "bytes": 233989
+    },
+    {
+      "ticker": "COALINDIA",
+      "fold": "fold_0",
+      "path": "trained/COALINDIA/fold_0/model.pt",
+      "sha256": "e029dedf5b23853179fcf6898fe36bd60ed54b6cff432bf3a7ea00f23436dc3f",
+      "bytes": 233989
+    },
+    {
+      "ticker": "COALINDIA",
+      "fold": "fold_1",
+      "path": "trained/COALINDIA/fold_1/model.pt",
+      "sha256": "e4bfa1f95050c310966a1becdcd1ea322fb3c6ed104e639511204b9381719950",
+      "bytes": 233989
+    },
+    {
+      "ticker": "DIVISLAB",
+      "fold": "fold_0",
+      "path": "trained/DIVISLAB/fold_0/model.pt",
+      "sha256": "f392ebd849203e892e2d2b3458331502188b407711275849a1166d38fcc6102d",
+      "bytes": 233989
+    },
+    {
+      "ticker": "DIVISLAB",
+      "fold": "fold_1",
+      "path": "trained/DIVISLAB/fold_1/model.pt",
+      "sha256": "a524324308563907c417e780a2ecd4650d0fabc6edb96ead71cceb8d9164f18f",
+      "bytes": 233989
+    },
+    {
+      "ticker": "DRREDDY",
+      "fold": "fold_0",
+      "path": "trained/DRREDDY/fold_0/model.pt",
+      "sha256": "433ca54d33f85061055d9dfe80c6960e51e07880153512c082249c46a95fa1d4",
+      "bytes": 233989
+    },
+    {
+      "ticker": "DRREDDY",
+      "fold": "fold_1",
+      "path": "trained/DRREDDY/fold_1/model.pt",
+      "sha256": "27b153075ed4bbc5bb54a219af268cfd2ae1569591abeeed083e428abaa05a9b",
+      "bytes": 233989
+    },
+    {
+      "ticker": "EICHERMOT",
+      "fold": "fold_0",
+      "path": "trained/EICHERMOT/fold_0/model.pt",
+      "sha256": "41991c9c34da4588c01868738230068edff9e58f8449ae521d79f4c861253674",
+      "bytes": 233989
+    },
+    {
+      "ticker": "EICHERMOT",
+      "fold": "fold_1",
+      "path": "trained/EICHERMOT/fold_1/model.pt",
+      "sha256": "babf1b9256b1c1cd472d9d0360d5cc4435205cad7935aff00d8b48ad019fa48e",
+      "bytes": 233989
+    },
+    {
+      "ticker": "GRASIM",
+      "fold": "fold_0",
+      "path": "trained/GRASIM/fold_0/model.pt",
+      "sha256": "30d7307bb004c82c5dca96f5e7362333a45e91077bac62693d749f56ebd34ea5",
+      "bytes": 233989
+    },
+    {
+      "ticker": "GRASIM",
+      "fold": "fold_1",
+      "path": "trained/GRASIM/fold_1/model.pt",
+      "sha256": "2ea8d87b2d1681bb94750fe9f4bef8aaeb5813ac7b173f785a004232afbccf7b",
+      "bytes": 233989
+    },
+    {
+      "ticker": "HCLTECH",
+      "fold": "fold_0",
+      "path": "trained/HCLTECH/fold_0/model.pt",
+      "sha256": "4918ddfd9ca5cb748c059954c3d1d4425f600e1442115973b02044e0a7751131",
+      "bytes": 233989
+    },
+    {
+      "ticker": "HCLTECH",
+      "fold": "fold_1",
+      "path": "trained/HCLTECH/fold_1/model.pt",
+      "sha256": "95578c3d33f6e4bc2b3110940b206fbe02b06febe3d31fc14eda7590d99d26b1",
+      "bytes": 233989
+    },
+    {
+      "ticker": "HDFCBANK",
+      "fold": "fold_0",
+      "path": "trained/HDFCBANK/fold_0/model.pt",
+      "sha256": "6b22fdd0e101c60e676677560a6c04e419ef8d068fcd6af14678c28962036ff1",
+      "bytes": 233989
+    },
+    {
+      "ticker": "HDFCBANK",
+      "fold": "fold_1",
+      "path": "trained/HDFCBANK/fold_1/model.pt",
+      "sha256": "fed3e0a8aea98a79737b810ef26f42aa6b8a4a0f694cdfde9a3d6498a635bd24",
+      "bytes": 233989
+    },
+    {
+      "ticker": "HEROMOTOCO",
+      "fold": "fold_0",
+      "path": "trained/HEROMOTOCO/fold_0/model.pt",
+      "sha256": "2da28c767c02f7face0c638c3c0b421e5a91e1e53fa5c744fffd12ed5f5253ea",
+      "bytes": 233989
+    },
+    {
+      "ticker": "HEROMOTOCO",
+      "fold": "fold_1",
+      "path": "trained/HEROMOTOCO/fold_1/model.pt",
+      "sha256": "9a1b59c821efd7b43671d1f3cd6c9b9885171f7489c1e64e8cbeed34d946a24c",
+      "bytes": 233989
+    },
+    {
+      "ticker": "HINDALCO",
+      "fold": "fold_0",
+      "path": "trained/HINDALCO/fold_0/model.pt",
+      "sha256": "339382c4e6acc1dfb28a5be12ef025c53a5831eba9ccc2ac60f47a44e6c1f841",
+      "bytes": 233989
+    },
+    {
+      "ticker": "HINDALCO",
+      "fold": "fold_1",
+      "path": "trained/HINDALCO/fold_1/model.pt",
+      "sha256": "86197c618859073115e5fa823e1bff7101ffcd87cbb499b6f1fb3ea0410e72a1",
+      "bytes": 233989
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "fold": "fold_0",
+      "path": "trained/HINDUNILVR/fold_0/model.pt",
+      "sha256": "689239fe7b84aeb86b41c3ee15d94fb9f62dd6750a600b6c955709cb35f625de",
+      "bytes": 233989
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "fold": "fold_1",
+      "path": "trained/HINDUNILVR/fold_1/model.pt",
+      "sha256": "9d31cdea5cf0e1c5ee49d3251bef0c5270b069176f72b0cbe72f04c24d2330bb",
+      "bytes": 233989
+    },
+    {
+      "ticker": "ICICIBANK",
+      "fold": "fold_0",
+      "path": "trained/ICICIBANK/fold_0/model.pt",
+      "sha256": "1fffc7bc6eb0553b5f90974a14d360f2898cf93fc15dbac137dc1362660173d7",
+      "bytes": 233989
+    },
+    {
+      "ticker": "ICICIBANK",
+      "fold": "fold_1",
+      "path": "trained/ICICIBANK/fold_1/model.pt",
+      "sha256": "22b7a18c70e9724e9b7f41ed14bae0c133b9f836cb485e2459ba6c76ae78f466",
+      "bytes": 233989
+    },
+    {
+      "ticker": "INDIGO",
+      "fold": "fold_0",
+      "path": "trained/INDIGO/fold_0/model.pt",
+      "sha256": "ece382bb34381c003956559de2a3c661dca6e1055e9e0c0b847ce30490516835",
+      "bytes": 233989
+    },
+    {
+      "ticker": "INDIGO",
+      "fold": "fold_1",
+      "path": "trained/INDIGO/fold_1/model.pt",
+      "sha256": "5a38fc349ebf0d1d016869e42c33d589e4c1a1240b00165e798b80e0e36f8acd",
+      "bytes": 233989
+    },
+    {
+      "ticker": "INDUSINDBK",
+      "fold": "fold_0",
+      "path": "trained/INDUSINDBK/fold_0/model.pt",
+      "sha256": "f89eaf4afea3c974c4e0dbbcae57c12e30430a94a37b8ef842825055fe390963",
+      "bytes": 233989
+    },
+    {
+      "ticker": "INDUSINDBK",
+      "fold": "fold_1",
+      "path": "trained/INDUSINDBK/fold_1/model.pt",
+      "sha256": "9250775e029d444a96dfd0800a8a21bc369ef237ae3e9ccd51b119fd914d254e",
+      "bytes": 233989
+    },
+    {
+      "ticker": "INFY",
+      "fold": "fold_0",
+      "path": "trained/INFY/fold_0/model.pt",
+      "sha256": "4a0b1b94a87d8175b7da133b6bba235ae8297b4b091f22c8bcd783606d656980",
+      "bytes": 233989
+    },
+    {
+      "ticker": "INFY",
+      "fold": "fold_1",
+      "path": "trained/INFY/fold_1/model.pt",
+      "sha256": "f7a8effa03eeef2c1cd1c2efe14ac07a6e7159add58981d18474e83b775639f1",
+      "bytes": 233989
+    },
+    {
+      "ticker": "ITC",
+      "fold": "fold_0",
+      "path": "trained/ITC/fold_0/model.pt",
+      "sha256": "c74c20a2a6e5f6432815c298db5af3d85bd12fe9cc68d63a00954ebf124a3be7",
+      "bytes": 233989
+    },
+    {
+      "ticker": "ITC",
+      "fold": "fold_1",
+      "path": "trained/ITC/fold_1/model.pt",
+      "sha256": "e5d965c6bb40a4c50d650c2f464b310f0673f91bf5667954eac709473a7eee79",
+      "bytes": 233989
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "fold": "fold_0",
+      "path": "trained/JSWSTEEL/fold_0/model.pt",
+      "sha256": "a648c7352f6b67e17d1120434a1e7c1266be859b190e94c61e8cb69305191bfa",
+      "bytes": 233989
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "fold": "fold_1",
+      "path": "trained/JSWSTEEL/fold_1/model.pt",
+      "sha256": "8b37c20593aa700c7951f2c8e8c0f3361f238431e59f9b8a9b40c06a52f30369",
+      "bytes": 233989
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "fold": "fold_0",
+      "path": "trained/KOTAKBANK/fold_0/model.pt",
+      "sha256": "966640ecb3a048abebf61090e31570e992fdc59209c2e2b81201015122a5460b",
+      "bytes": 233989
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "fold": "fold_1",
+      "path": "trained/KOTAKBANK/fold_1/model.pt",
+      "sha256": "f5860b842ccf641ba787e0b1c8ebcecdea3dbd32c718c216ac55261a79ff5b0f",
+      "bytes": 233989
+    },
+    {
+      "ticker": "LT",
+      "fold": "fold_0",
+      "path": "trained/LT/fold_0/model.pt",
+      "sha256": "5f708b5018a2b4dbf593121dd32ab4be9d83d49a07001e93167cad2f992757ea",
+      "bytes": 233989
+    },
+    {
+      "ticker": "LT",
+      "fold": "fold_1",
+      "path": "trained/LT/fold_1/model.pt",
+      "sha256": "a6e5168577cbbe74ba344cd5d82f5b8171865e92aab4865813abf8d7b96751e7",
+      "bytes": 233989
+    },
+    {
+      "ticker": "MARUTI",
+      "fold": "fold_0",
+      "path": "trained/MARUTI/fold_0/model.pt",
+      "sha256": "af46d6617b1cfd533d92d452975c0b94c9ff6f304ae40fc936add9a0bda5c9af",
+      "bytes": 233989
+    },
+    {
+      "ticker": "MARUTI",
+      "fold": "fold_1",
+      "path": "trained/MARUTI/fold_1/model.pt",
+      "sha256": "6685b948993687e7dcf14fed763dcc1a66df5f6b604e106e725adfd93ab2b2a7",
+      "bytes": 233989
+    },
+    {
+      "ticker": "MM",
+      "fold": "fold_0",
+      "path": "trained/MM/fold_0/model.pt",
+      "sha256": "665879e637958a7ba747ada07c8561e6eaa99d0adc2235770f9f7b6749bca8df",
+      "bytes": 233989
+    },
+    {
+      "ticker": "MM",
+      "fold": "fold_1",
+      "path": "trained/MM/fold_1/model.pt",
+      "sha256": "231df494b2043f8bbf2a9d8f79f62c797ce21a521e13a2998645b97ca9a88497",
+      "bytes": 233989
+    },
+    {
+      "ticker": "NESTLEIND",
+      "fold": "fold_0",
+      "path": "trained/NESTLEIND/fold_0/model.pt",
+      "sha256": "54468abaa42738adc3b48d5af241351fa45f819b8a0cfcccfe51b252630929eb",
+      "bytes": 233989
+    },
+    {
+      "ticker": "NESTLEIND",
+      "fold": "fold_1",
+      "path": "trained/NESTLEIND/fold_1/model.pt",
+      "sha256": "509cbfada7a602bd9f8a04e7e1fb053de62592383421e4a3212c2953fc6b0e07",
+      "bytes": 233989
+    },
+    {
+      "ticker": "NTPC",
+      "fold": "fold_0",
+      "path": "trained/NTPC/fold_0/model.pt",
+      "sha256": "7ec54670ff24ea45511004dc6e2b018ec33b741a4feaa328ae3cbbef886fe709",
+      "bytes": 233989
+    },
+    {
+      "ticker": "NTPC",
+      "fold": "fold_1",
+      "path": "trained/NTPC/fold_1/model.pt",
+      "sha256": "1e12a790868ae3ef3bea097643a7e98edd5f4d4a4d1dc97442a0ff8c34f4f69d",
+      "bytes": 233989
+    },
+    {
+      "ticker": "ONGC",
+      "fold": "fold_0",
+      "path": "trained/ONGC/fold_0/model.pt",
+      "sha256": "c7c4aafcd8cb7cec29ad3e11d14da83a5cad63a97882d322ee6622472d7d2381",
+      "bytes": 233989
+    },
+    {
+      "ticker": "ONGC",
+      "fold": "fold_1",
+      "path": "trained/ONGC/fold_1/model.pt",
+      "sha256": "95c491eddf6d6d7fc753ffc1aab2ec6cafc8915550bc2a964dec5e739b23c7cd",
+      "bytes": 233989
+    },
+    {
+      "ticker": "POWERGRID",
+      "fold": "fold_0",
+      "path": "trained/POWERGRID/fold_0/model.pt",
+      "sha256": "5d7cd7133b95d8cd45436c32dbceb87a7c7dd6b403f1956ec09cc90c65bd5b06",
+      "bytes": 233989
+    },
+    {
+      "ticker": "POWERGRID",
+      "fold": "fold_1",
+      "path": "trained/POWERGRID/fold_1/model.pt",
+      "sha256": "b6e53e66f3a619cf27e79bbbcccd1e133eadd6237b8c45f9e6db47587dcfbe28",
+      "bytes": 233989
+    },
+    {
       "ticker": "RELIANCE",
       "fold": "fold_0",
       "path": "trained/RELIANCE/fold_0/model.pt",
-      "sha256": "6a45f3493986be7613c82401c9693be7ae911071748c03a1b5c00a208ec5cbd9",
-      "bytes": 235208
+      "sha256": "971e5e1374d1a738104f555f2be6f588536a4097ab0a9fae4e25eef1cc8b8d24",
+      "bytes": 233989
     },
     {
       "ticker": "RELIANCE",
       "fold": "fold_1",
       "path": "trained/RELIANCE/fold_1/model.pt",
-      "sha256": "3bac28da36f64694670fa51cdee156d509ac87edd101c785383a3443c38d34fd",
-      "bytes": 235208
+      "sha256": "f8402cd95469680c64b6fec3aabfcda0dd697d14a7f662b0f268848807f3eea0",
+      "bytes": 233989
+    },
+    {
+      "ticker": "SBILIFE",
+      "fold": "fold_0",
+      "path": "trained/SBILIFE/fold_0/model.pt",
+      "sha256": "135f5b89af852267f4186a27065bba99aace74fae306c02c532fcd2a7f536baf",
+      "bytes": 233989
+    },
+    {
+      "ticker": "SBILIFE",
+      "fold": "fold_1",
+      "path": "trained/SBILIFE/fold_1/model.pt",
+      "sha256": "698ca5bbe13da13e231edd6353ec3cff0f2cce9c0f9cd5bd4ec68a6fb09adfb1",
+      "bytes": 233989
+    },
+    {
+      "ticker": "SBIN",
+      "fold": "fold_0",
+      "path": "trained/SBIN/fold_0/model.pt",
+      "sha256": "4ac0be51e8928709877a8f221e55de2aaecc974a7a9f30cc48b8844342f3117f",
+      "bytes": 233989
+    },
+    {
+      "ticker": "SBIN",
+      "fold": "fold_1",
+      "path": "trained/SBIN/fold_1/model.pt",
+      "sha256": "1ff60380d97e4f775db73aa33de1aad1e3797988a2006d263db53c2f81240241",
+      "bytes": 233989
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "fold": "fold_0",
+      "path": "trained/SHRIRAMFIN/fold_0/model.pt",
+      "sha256": "0016b9e149033a6ee6e026b63286d5861f65a0882ba5159ceb9f42f4722f9444",
+      "bytes": 233989
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "fold": "fold_1",
+      "path": "trained/SHRIRAMFIN/fold_1/model.pt",
+      "sha256": "5c6e521d675c905c8b1b4344605e2e51e768ea820b15c19753e43d53fece69c0",
+      "bytes": 233989
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "fold": "fold_0",
+      "path": "trained/SUNPHARMA/fold_0/model.pt",
+      "sha256": "5d78a759090e93b8e7917c6f01550b75f1c2a665c97ef716090f454834ea5ce1",
+      "bytes": 233989
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "fold": "fold_1",
+      "path": "trained/SUNPHARMA/fold_1/model.pt",
+      "sha256": "c716e41e086956b8c211b2889ee2281ccd86bf7e2d94a88ded0130de7204591d",
+      "bytes": 233989
+    },
+    {
+      "ticker": "SYN00",
+      "fold": "fold_0",
+      "path": "trained/SYN00/fold_0/model.pt",
+      "sha256": "1b35b0ff8b75e833cec8a191bca967f0297fb671b551d45f660dc0aac352a47b",
+      "bytes": 12869
+    },
+    {
+      "ticker": "TATACONSUM",
+      "fold": "fold_0",
+      "path": "trained/TATACONSUM/fold_0/model.pt",
+      "sha256": "a07b01a341d38b6a97ae29a46bbc99814f83c57e7ca37ee9ca55092094c82fca",
+      "bytes": 233989
+    },
+    {
+      "ticker": "TATACONSUM",
+      "fold": "fold_1",
+      "path": "trained/TATACONSUM/fold_1/model.pt",
+      "sha256": "880d0396fb85e64e898e02548a478b51f0aa7e6413a325f4c0dac499a8439187",
+      "bytes": 233989
+    },
+    {
+      "ticker": "TATASTEEL",
+      "fold": "fold_0",
+      "path": "trained/TATASTEEL/fold_0/model.pt",
+      "sha256": "11612a9538d4eafcc1f7114570d6fb0df9be856550b52b898e2f6c40175d8c9c",
+      "bytes": 233989
+    },
+    {
+      "ticker": "TATASTEEL",
+      "fold": "fold_1",
+      "path": "trained/TATASTEEL/fold_1/model.pt",
+      "sha256": "c9b079ccbc40c9746d902c96c7707577f6613a808a9dc0622eb34cb192d13107",
+      "bytes": 233989
+    },
+    {
+      "ticker": "TCS",
+      "fold": "fold_0",
+      "path": "trained/TCS/fold_0/model.pt",
+      "sha256": "39732008fa864e3cc8f35d5254ab0f5c4524dd574765b8a824e36c3fd2c41926",
+      "bytes": 233989
+    },
+    {
+      "ticker": "TCS",
+      "fold": "fold_1",
+      "path": "trained/TCS/fold_1/model.pt",
+      "sha256": "4764f4adcaebae45979bf5ae6421823953eee3cf523faa3bce29abb8da0462b6",
+      "bytes": 233989
+    },
+    {
+      "ticker": "TECHM",
+      "fold": "fold_0",
+      "path": "trained/TECHM/fold_0/model.pt",
+      "sha256": "9cf6f0a9dbb142a0e86d7047416c1896c372079854748d61fc324fcce95d7026",
+      "bytes": 233989
+    },
+    {
+      "ticker": "TECHM",
+      "fold": "fold_1",
+      "path": "trained/TECHM/fold_1/model.pt",
+      "sha256": "3eeb48fe8e805671282b39a12c3409b5275cea70d9fde6a6386878bdf0824f97",
+      "bytes": 233989
+    },
+    {
+      "ticker": "TITAN",
+      "fold": "fold_0",
+      "path": "trained/TITAN/fold_0/model.pt",
+      "sha256": "6c5cf73429c020f4b1f5732ab9cb82a4df1e1847906e76547dd0e3e0ce9b4f81",
+      "bytes": 233989
+    },
+    {
+      "ticker": "TITAN",
+      "fold": "fold_1",
+      "path": "trained/TITAN/fold_1/model.pt",
+      "sha256": "5538c92488a63f8bdcfb62c5d9086cef9d6eadc5abafa0aef7e036cbe13cb399",
+      "bytes": 233989
+    },
+    {
+      "ticker": "TRENT",
+      "fold": "fold_0",
+      "path": "trained/TRENT/fold_0/model.pt",
+      "sha256": "4104d1a76245f5fbb40a50aa6b11e50413ea7b7a3276e907e4cad14adbd757a5",
+      "bytes": 233989
+    },
+    {
+      "ticker": "TRENT",
+      "fold": "fold_1",
+      "path": "trained/TRENT/fold_1/model.pt",
+      "sha256": "59c1b2bd1a60ffbfd14ba036f87838300264e1d58cdb8324d4c2e1b3b0d24e86",
+      "bytes": 233989
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "fold": "fold_0",
+      "path": "trained/ULTRACEMCO/fold_0/model.pt",
+      "sha256": "f1977ea48d77f02dc1fa73d27e8d4abec356b3a21283a73388c578381b419f2c",
+      "bytes": 233989
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "fold": "fold_1",
+      "path": "trained/ULTRACEMCO/fold_1/model.pt",
+      "sha256": "357f3dc4eb06e29319c4a17a409cdf86f4613f91d4c308256e837c4b8719c5b1",
+      "bytes": 233989
+    },
+    {
+      "ticker": "UPL",
+      "fold": "fold_0",
+      "path": "trained/UPL/fold_0/model.pt",
+      "sha256": "0cf5038de1d6759fb46d2dc45c697ba8c329b44b4edef466c74905a9f9ef487b",
+      "bytes": 233989
+    },
+    {
+      "ticker": "UPL",
+      "fold": "fold_1",
+      "path": "trained/UPL/fold_1/model.pt",
+      "sha256": "b333b58bbc13e79797487a510decae56f9df9cf75336ee6838d3fc0046f776b1",
+      "bytes": 233989
+    },
+    {
+      "ticker": "WIPRO",
+      "fold": "fold_0",
+      "path": "trained/WIPRO/fold_0/model.pt",
+      "sha256": "ab0461cca189704c10725409b0df61ee34c689c8983d4598b3724857442e27ed",
+      "bytes": 233989
+    },
+    {
+      "ticker": "WIPRO",
+      "fold": "fold_1",
+      "path": "trained/WIPRO/fold_1/model.pt",
+      "sha256": "cafa6fff2f47ff2b090e05e7dca1036aeb8d714cef7eed9741e54df72197d69c",
+      "bytes": 233989
     }
   ]
 }

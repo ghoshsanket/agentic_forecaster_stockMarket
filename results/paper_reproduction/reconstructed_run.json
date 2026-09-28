@@ -1,20 +1,28 @@
 {
   "provenance": "reconstructed_run",
-  "status": "not_yet_run_on_full_universe",
-  "description": "No full-universe paper reproduction has been run yet. The full run trains one Attention-LSTM per available configured NIFTY-50 security, for each of the two paper walk-forward folds.",
-  "run_id": null,
-  "run_dir_env": null,
-  "n_ticker_fold_runs": 0,
+  "status": "completed",
+  "description": "Metrics produced by this implementation on the real dataset for the full available universe.",
+  "run_id": "full_phase1_20260928_015333",
+  "run_dir_env": "$AGENTIC_OUTPUT_ROOT/reproduction/full_phase1_20260928_015333",
+  "n_ticker_fold_runs": 98,
   "coverage": {
-    "expected_available_tickers": null,
+    "expected_available_tickers": 49,
     "expected_folds": 2,
-    "expected_runs": null,
-    "completed_runs": 0,
+    "expected_runs": 98,
+    "completed_runs": 98,
     "failed_runs": 0,
-    "missing_ticker_folds": null,
-    "note": "Populated by `reproduce-paper --export-final-results`. Expected counts are derived from results/ticker_availability.csv at validation time, not hard-coded here."
+    "extra_runs_outside_universe": 0,
+    "missing_ticker_folds": []
   },
-  "aggregate_metrics": null,
-  "smoke_test_evidence": "results/smoke_tests/reliance_two_fold/",
-  "note": "Smoke-test artefacts are real but cover 1 ticker only; see results/smoke_tests/reliance_two_fold/README.md."
+  "aggregate_metrics": {
+    "policy": "unweighted mean of per-ticker test-split metrics",
+    "n_ticker_fold_runs": 98,
+    "accuracy": 0.49082062635845053,
+    "f1": 0.3364818697031171,
+    "roc_auc": 0.5013992611678344,
+    "brier_raw": 0.25134930790078885,
+    "brier_calibrated": 0.25125447219731856,
+    "ece_raw": 0.045505019400060555,
+    "ece_calibrated": 0.04454911787634642
+  }
 }

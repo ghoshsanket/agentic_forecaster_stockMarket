@@ -1,0 +1,296 @@
+{
+  "ADANIENT/fold_0": {
+    "status": "trained"
+  },
+  "APOLLOHOSP/fold_0": {
+    "status": "trained"
+  },
+  "ASIANPAINT/fold_0": {
+    "status": "trained"
+  },
+  "AXISBANK/fold_0": {
+    "status": "trained"
+  },
+  "BAJAJ-AUTO/fold_0": {
+    "status": "trained"
+  },
+  "BAJAJFINSV/fold_0": {
+    "status": "trained"
+  },
+  "BAJFINANCE/fold_0": {
+    "status": "trained"
+  },
+  "BHARTIARTL/fold_0": {
+    "status": "trained"
+  },
+  "BPCL/fold_0": {
+    "status": "trained"
+  },
+  "BRITANNIA/fold_0": {
+    "status": "trained"
+  },
+  "CIPLA/fold_0": {
+    "status": "trained"
+  },
+  "COALINDIA/fold_0": {
+    "status": "trained"
+  },
+  "DIVISLAB/fold_0": {
+    "status": "trained"
+  },
+  "DRREDDY/fold_0": {
+    "status": "trained"
+  },
+  "EICHERMOT/fold_0": {
+    "status": "trained"
+  },
+  "GRASIM/fold_0": {
+    "status": "trained"
+  },
+  "HCLTECH/fold_0": {
+    "status": "trained"
+  },
+  "HDFCBANK/fold_0": {
+    "status": "trained"
+  },
+  "HEROMOTOCO/fold_0": {
+    "status": "trained"
+  },
+  "HINDALCO/fold_0": {
+    "status": "trained"
+  },
+  "HINDUNILVR/fold_0": {
+    "status": "trained"
+  },
+  "ICICIBANK/fold_0": {
+    "status": "trained"
+  },
+  "INDIGO/fold_0": {
+    "status": "trained"
+  },
+  "INDUSINDBK/fold_0": {
+    "status": "trained"
+  },
+  "INFY/fold_0": {
+    "status": "trained"
+  },
+  "ITC/fold_0": {
+    "status": "trained"
+  },
+  "JSWSTEEL/fold_0": {
+    "status": "trained"
+  },
+  "KOTAKBANK/fold_0": {
+    "status": "trained"
+  },
+  "LT/fold_0": {
+    "status": "trained"
+  },
+  "MARUTI/fold_0": {
+    "status": "trained"
+  },
+  "MM/fold_0": {
+    "status": "trained"
+  },
+  "NESTLEIND/fold_0": {
+    "status": "trained"
+  },
+  "NTPC/fold_0": {
+    "status": "trained"
+  },
+  "ONGC/fold_0": {
+    "status": "trained"
+  },
+  "POWERGRID/fold_0": {
+    "status": "trained"
+  },
+  "RELIANCE/fold_0": {
+    "status": "trained"
+  },
+  "SBILIFE/fold_0": {
+    "status": "trained"
+  },
+  "SBIN/fold_0": {
+    "status": "trained"
+  },
+  "SHRIRAMFIN/fold_0": {
+    "status": "trained"
+  },
+  "SUNPHARMA/fold_0": {
+    "status": "trained"
+  },
+  "TATACONSUM/fold_0": {
+    "status": "trained"
+  },
+  "TATASTEEL/fold_0": {
+    "status": "trained"
+  },
+  "TCS/fold_0": {
+    "status": "trained"
+  },
+  "TECHM/fold_0": {
+    "status": "trained"
+  },
+  "TITAN/fold_0": {
+    "status": "trained"
+  },
+  "TRENT/fold_0": {
+    "status": "trained"
+  },
+  "ULTRACEMCO/fold_0": {
+    "status": "trained"
+  },
+  "UPL/fold_0": {
+    "status": "trained"
+  },
+  "WIPRO/fold_0": {
+    "status": "trained"
+  },
+  "ADANIENT/fold_1": {
+    "status": "trained"
+  },
+  "APOLLOHOSP/fold_1": {
+    "status": "trained"
+  },
+  "ASIANPAINT/fold_1": {
+    "status": "trained"
+  },
+  "AXISBANK/fold_1": {
+    "status": "trained"
+  },
+  "BAJAJ-AUTO/fold_1": {
+    "status": "trained"
+  },
+  "BAJAJFINSV/fold_1": {
+    "status": "trained"
+  },
+  "BAJFINANCE/fold_1": {
+    "status": "trained"
+  },
+  "BHARTIARTL/fold_1": {
+    "status": "trained"
+  },
+  "BPCL/fold_1": {
+    "status": "trained"
+  },
+  "BRITANNIA/fold_1": {
+    "status": "trained"
+  },
+  "CIPLA/fold_1": {
+    "status": "trained"
+  },
+  "COALINDIA/fold_1": {
+    "status": "trained"
+  },
+  "DIVISLAB/fold_1": {
+    "status": "trained"
+  },
+  "DRREDDY/fold_1": {
+    "status": "trained"
+  },
+  "EICHERMOT/fold_1": {
+    "status": "trained"
+  },
+  "GRASIM/fold_1": {
+    "status": "trained"
+  },
+  "HCLTECH/fold_1": {
+    "status": "trained"
+  },
+  "HDFCBANK/fold_1": {
+    "status": "trained"
+  },
+  "HEROMOTOCO/fold_1": {
+    "status": "trained"
+  },
+  "HINDALCO/fold_1": {
+    "status": "trained"
+  },
+  "HINDUNILVR/fold_1": {
+    "status": "trained"
+  },
+  "ICICIBANK/fold_1": {
+    "status": "trained"
+  },
+  "INDIGO/fold_1": {
+    "status": "trained"
+  },
+  "INDUSINDBK/fold_1": {
+    "status": "trained"
+  },
+  "INFY/fold_1": {
+    "status": "trained"
+  },
+  "ITC/fold_1": {
+    "status": "trained"
+  },
+  "JSWSTEEL/fold_1": {
+    "status": "trained"
+  },
+  "KOTAKBANK/fold_1": {
+    "status": "trained"
+  },
+  "LT/fold_1": {
+    "status": "trained"
+  },
+  "MARUTI/fold_1": {
+    "status": "trained"
+  },
+  "MM/fold_1": {
+    "status": "trained"
+  },
+  "NESTLEIND/fold_1": {
+    "status": "trained"
+  },
+  "NTPC/fold_1": {
+    "status": "trained"
+  },
+  "ONGC/fold_1": {
+    "status": "trained"
+  },
+  "POWERGRID/fold_1": {
+    "status": "trained"
+  },
+  "RELIANCE/fold_1": {
+    "status": "trained"
+  },
+  "SBILIFE/fold_1": {
+    "status": "trained"
+  },
+  "SBIN/fold_1": {
+    "status": "trained"
+  },
+  "SHRIRAMFIN/fold_1": {
+    "status": "trained"
+  },
+  "SUNPHARMA/fold_1": {
+    "status": "trained"
+  },
+  "TATACONSUM/fold_1": {
+    "status": "trained"
+  },
+  "TATASTEEL/fold_1": {
+    "status": "trained"
+  },
+  "TCS/fold_1": {
+    "status": "trained"
+  },
+  "TECHM/fold_1": {
+    "status": "trained"
+  },
+  "TITAN/fold_1": {
+    "status": "trained"
+  },
+  "TRENT/fold_1": {
+    "status": "trained"
+  },
+  "ULTRACEMCO/fold_1": {
+    "status": "trained"
+  },
+  "UPL/fold_1": {
+    "status": "trained"
+  },
+  "WIPRO/fold_1": {
+    "status": "trained"
+  }
+}

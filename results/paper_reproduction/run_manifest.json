@@ -1,0 +1,52 @@
+{
+  "run_id": "full_phase1_20260928_015333",
+  "created_utc": "2026-09-27T20:32:03.915782+00:00",
+  "config_name": "paper_reproduction",
+  "device": "auto",
+  "seed": 42,
+  "folds": [
+    {
+      "fold": "fold_0",
+      "train_start": "2016-01-01",
+      "train_end": "2020-12-31",
+      "val_start": "2021-01-01",
+      "val_end": "2021-12-31",
+      "test_start": "2022-01-01",
+      "test_end": "2022-12-31"
+    },
+    {
+      "fold": "fold_1",
+      "train_start": "2016-01-01",
+      "train_end": "2021-12-31",
+      "val_start": "2022-01-01",
+      "val_end": "2022-12-31",
+      "test_start": "2023-01-01",
+      "test_end": "2023-12-31"
+    }
+  ],
+  "n_tickers_requested": 49,
+  "n_ticker_fold_runs": 98,
+  "figures": [
+    "reliability_diagram.png",
+    "confusion_matrix.png",
+    "paper_comparison.png",
+    "precision_at_3.png"
+  ],
+  "outputs": [
+    "ablation_metrics.csv",
+    "aggregate_metrics.json",
+    "baseline_metrics.csv",
+    "calibration_metrics.csv",
+    "figures",
+    "fold_0",
+    "fold_1",
+    "p3_daily_selections.csv",
+    "paper_comparison.csv",
+    "precision_at_3.csv",
+    "predictions.csv.gz",
+    "reports",
+    "ticker_metrics.csv",
+    "ticker_status.json",
+    "training_summary.json"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "policy": "unweighted mean of per-ticker test-split metrics",
+  "n_ticker_fold_runs": 98,
+  "accuracy": 0.49082062635845053,
+  "f1": 0.3364818697031171,
+  "roc_auc": 0.5013992611678344,
+  "brier_raw": 0.25134930790078885,
+  "brier_calibrated": 0.25125447219731856,
+  "ece_raw": 0.045505019400060555,
+  "ece_calibrated": 0.04454911787634642
+}

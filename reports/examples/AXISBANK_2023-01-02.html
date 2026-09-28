@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Forecast Report — AXISBANK</title>
+<style>
+body { font-family: sans-serif; margin: 2rem; color: #222; }
+h1 { border-bottom: 2px solid #333; padding-bottom: .5rem; }
+.metric { display: inline-block; margin: .5rem 1rem .5rem 0; }
+.badge { padding: .25rem .75rem; border-radius: 4px; color: #fff; }
+.HIGH { background: #c0392b; } .MEDIUM { background: #e67e22; }
+.LOW { background: #27ae60; }
+table { border-collapse: collapse; margin-top: 1rem; }
+td, th { border: 1px solid #ccc; padding: .4rem .8rem; text-align: left; }
+.footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ccc; font-size: .85rem; color: #666; }
+</style></head><body>
+<h1>Forecast Report — AXISBANK</h1>
+<p><strong>Run ID:</strong> 0441e6f7 &nbsp;
+<strong>Model ID:</strong> AXISBANK:fold_1:attention_lstm &nbsp;
+<strong>Config ID:</strong> paper_reproduction</p>
+<p><strong>Origin date:</strong> 2023-01-02T00:00:00.000 &nbsp;
+<strong>Target date:</strong> 2023-01-03T00:00:00.000</p>
+<p><strong>Latest close:</strong> 944.95</p>
+<p><strong>Raw p(up):</strong> 0.4756 &nbsp;
+<strong>Calibrated p(up):</strong> 0.4756</p>
+<p><strong>Direction:</strong> DOWN &nbsp;
+<strong>Confidence:</strong> 52.4% &nbsp;
+<strong>Confidence level:</strong>
+<span class="badge LOW">LOW</span></p>
+
+<h2>Technical Indicators</h2>
+<table><tr><th>Indicator</th><th>Value</th></tr><tr><td>close</td><td>944.9500</td></tr><tr><td>realized_volatility_20</td><td>0.0132</td></tr><tr><td>rsi_14</td><td>60.3948</td></tr><tr><td>macd</td><td>12.1009</td></tr><tr><td>macd_signal</td><td>14.0927</td></tr><tr><td>atr_14</td><td>17.0247</td></tr></table>
+
+<h2>Risk Assessment (ATR-based)</h2>
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>ATR</td><td>17.0247</td></tr>
+<tr><td>Stop-loss price</td><td>965.38</td></tr>
+<tr><td>Take-profit price</td><td>931.33</td></tr>
+<tr><td>RRR</td><td>0.6667</td></tr>
+<tr><td>RiskScore</td><td>0.030800</td></tr>
+<tr><td>lambda_SL</td><td>1.2</td></tr>
+<tr><td>lambda_TP</td><td>0.8</td></tr>
+</table>
+
+<h2>Explanation</h2>
+<p>AXISBANK on 2023-01-02T00:00:00.000: DOWN with confidence 52.4%. The prediction is primarily driven by low (|attribution|=0.0017), open (|attribution|=0.0008), high (|attribution|=0.0008). Attention evidence indicates which days in the 30-day lookback window most influenced the output.</p>
+<p><strong>SHAP method:</strong> gradient_shap</p>
+
+<h2>Top features (SHAP)</h2>
+<table><tr><th>Feature</th><th>Mean |SHAP|</th></tr><tr><td>low</td><td>0.0017</td></tr><tr><td>open</td><td>0.0008</td></tr><tr><td>high</td><td>0.0008</td></tr><tr><td>close</td><td>0.0008</td></tr><tr><td>rsi_14</td><td>0.0003</td></tr></table>
+
+<h2>Top attention dates</h2>
+<table><tr><th>Day offset</th><th>Attention weight</th></tr><tr><td>day -6</td><td>0.0334</td></tr><tr><td>day -5</td><td>0.0334</td></tr><tr><td>day -7</td><td>0.0334</td></tr><tr><td>day -4</td><td>0.0334</td></tr><tr><td>day -3</td><td>0.0334</td></tr></table>
+
+<h2>Reason codes</h2><ul><li>direction=DOWN</li><li>confidence=0.5244</li><li>attribution_method=gradient_shap</li></ul>
+
+<h2>Model metrics (test split)</h2>
+<div class="metric"><strong>accuracy</strong>: 0.4694</div><div class="metric"><strong>ece</strong>: 0.0597</div><div class="metric"><strong>f1</strong>: 0.0000</div><div class="metric"><strong>roc_auc</strong>: 0.4993</div><div class="metric"><strong>brier_raw</strong>: 0.2526</div><div class="metric"><strong>brier_calibrated</strong>: 0.2526</div><div class="metric"><strong>ece_raw</strong>: 0.0598</div><div class="metric"><strong>ece_calibrated</strong>: 0.0597</div>
+
+<div class="footer">
+<p>This report is a software reconstruction of a research paper. It does not constitute investment advice. Past performance does not guarantee future results.</p>
+</div>
+</body></html>
