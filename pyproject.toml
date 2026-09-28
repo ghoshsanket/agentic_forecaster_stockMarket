@@ -29,7 +29,7 @@ explain = ["shap>=0.43"]
 llm = ["openai>=1.0"]
 report = ["reportlab>=4.0"]
 app = ["streamlit>=1.30"]
-data = ["kaggle>=1.6"]
+data = ["kaggle>=1.6", "yfinance>=0.2.40", "openpyxl>=3.1"]
 dev = ["pytest>=8.0", "ruff>=0.4"]
 all = [
     "shap>=0.43",
@@ -37,6 +37,8 @@ all = [
     "reportlab>=4.0",
     "streamlit>=1.30",
     "kaggle>=1.6",
+    "yfinance>=0.2.40",
+    "openpyxl>=3.1",
     "pytest>=8.0",
     "ruff>=0.4",
 ]
@@ -57,6 +59,7 @@ addopts = "-q"
 markers = [
     "slow: long-running test (deselect with -m 'not slow')",
     "real_data: needs the downloaded Kaggle dataset; opt in with AGENTIC_RUN_REAL_DATA_TESTS=1",
+    "network: needs live Yahoo Finance access; opt in with AGENTIC_RUN_NETWORK_TESTS=1",
 ]
 
 [tool.ruff]

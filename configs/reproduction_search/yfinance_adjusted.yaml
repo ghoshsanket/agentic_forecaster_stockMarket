@@ -1,0 +1,144 @@
+# Reproduction-search config: Yahoo Finance daily data, ADJUSTED (PRIMARY).
+#
+# PURPOSE
+#   Points the existing Phase-1 pipeline at the reconstructed Yahoo Finance
+#   daily dataset (auto_adjust=True).  This is a DATA-SOURCE swap only: the
+#   feature set, models, folds, calibration and evaluation are byte-for-byte
+#   the same as configs/paper.yaml, so that any metric change is attributable
+#   to the data source alone.
+#
+#   NOT part of the primary reported result.  The paper reproduction remains
+#   configs/paper.yaml against the Kaggle dataset.  Nothing is trained by this
+#   task; run it explicitly with:
+#
+#       uv run python scripts/run_experiment.py \
+#           --config configs/reproduction_search/yfinance_adjusted.yaml
+#
+# SOURCE
+#   yfinance 1.7.0, yf.download(auto_adjust=True), start=2000-01-01,
+#   end=2026-01-01 (exclusive), interval=1d, actions=False, repair=False,
+#   prepost=False, threads=False.  See docs/YFINANCE_DAILY_DATASET.md.
+#
+# KNOWN DIFFERENCE vs configs/paper.yaml
+#   The Yahoo daily files are ALREADY daily bars, whereas the Kaggle files are
+#   minute bars that the loader resamples.  source_level records this so the
+#   data layer does not resample twice.
+
+experiment:
+  name: yfinance_adjusted_reproduction_search
+  seed: 42
+  output_dir: ${AGENTIC_OUTPUT_ROOT}/reproduction_search/yfinance_adjusted
+
+data:
+  raw_root: ${AGENTIC_YFINANCE_DAILY_ROOT}/adjusted/csv
+  processed_root: ${AGENTIC_DATA_ROOT}/yfinance_daily_2000_2025/adjusted/processed
+  source: yfinance
+  variant: adjusted
+  auto_adjust: true
+  source_level: daily                          # inputs are already daily bars
+  resample_to_daily: false                     # do not resample again
+  tickers: configs/nifty50.yaml
+  sequence_length: 30
+  target_type: next_day_direction
+  scaler: standard
+  scaler_fit_scope: train_only
+  train_start: "2016-01-01"
+  train_end: "2020-12-31"
+  val_start: "2021-01-01"
+  val_end: "2021-12-31"
+  test_start: "2022-01-01"
+  test_end: "2022-12-31"
+
+features:
+  use_ohlcv: true
+  indicators:
+    - log_return
+    - realized_volatility_20
+    - rsi_14
+    - macd
+    - macd_signal
+    - macd_histogram
+    - atr_14
+  drop_na: true
+
+models:
+  attention_lstm:
+    enabled: true
+    hidden_size: 64
+    num_layers: 2
+    dropout: 0.2
+    learning_rate: 0.001
+    beta1: 0.9
+    beta2: 0.999
+    weight_decay: 0.0001
+    batch_size: 64
+    epochs: 3
+    patience: 10
+    gradient_clip_norm: 1.0
+  lstm:
+    enabled: true
+    hidden_size: 64
+    num_layers: 2
+    dropout: 0.2
+    learning_rate: 0.001
+    beta1: 0.9
+    beta2: 0.999
+    weight_decay: 0.0001
+    batch_size: 64
+    epochs: 3
+    patience: 10
+    gradient_clip_norm: 1.0
+  random_forest:
+    enabled: true
+    n_estimators: 300
+    max_depth: 8
+  logistic_regression:
+    enabled: true
+    C: 1.0
+    max_iter: 1000
+  majority:
+    enabled: true
+
+calibration:
+  method: temperature
+  fit_on: val
+
+evaluation:
+  walk_forward:
+    enabled: true
+    folds: paper_exact
+  metrics:
+    - accuracy
+    - brier
+    - ece
+    - precision_at_3
+    - f1
+    - roc_auc
+  ece_bins: 10
+  p_at_k: 3
+
+explainability:
+  method: gradient_shap
+  fallback: integrated_gradients
+  attention_evidence: true
+  top_k_features: 5
+  background_samples: 64
+
+risk:
+  enabled: true
+  formulation: atr_confidence_multiplier
+  confidence_bands:
+    HIGH:   {threshold: 0.80, lambda_sl: 0.8,  lambda_tp: 1.5}
+    MEDIUM: {threshold: 0.60, lambda_sl: 1.0,  lambda_tp: 1.0}
+    LOW:    {threshold: 0.0,  lambda_sl: 1.2,  lambda_tp: 0.8}
+
+reporting:
+  formats: [html, pdf]
+  llm:
+    enabled: false
+    provider: openai
+    model: gpt-4o-mini
+    fallback: deterministic
+
+orchestration:
+  export_final_results: true

@@ -38,6 +38,13 @@ data/raw/
 data/interim/
 data/processed/
 datasets/
+# Yahoo Finance reconstruction root ($AGENTIC_DATA_ROOT/yfinance_daily_2000_2025).
+# It lives outside this repository as a sibling of projects/, but these guards
+# keep the ~128 MB of CSV/Parquet/workbook artifacts out of Git even if the
+# root is ever relocated or bind-mounted inside the working tree.
+yfinance_daily_2000_2025/
+**/yfinance_daily_2000_2025/
+*.xlsx
 
 # --- Runtime model store (Category B) ---
 # NOTE: artifacts/models/ (exported final checkpoints) is NOT ignored.
