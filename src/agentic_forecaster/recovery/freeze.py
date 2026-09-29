@@ -17,7 +17,12 @@ import os
 from datetime import UTC, datetime
 from pathlib import Path
 
-from agentic_forecaster.recovery.ledger import git_commit, hash_file
+from agentic_forecaster.recovery.ledger import (
+    git_commit,
+    hash_file,
+    ledger_path,
+    read_ledger,
+)
 
 FROZEN_CONFIG_RELATIVE = Path("configs/recovered_paper.yaml")
 FROZEN_MANIFEST_RELATIVE = Path("results/reproduction_recovery/frozen_config_manifest.json")
@@ -46,19 +51,75 @@ class FrozenConfigError(RuntimeError):
 def freeze_config(config_path: str | Path, *, dataset_variant: str,
                   dataset_manifest: str | Path | None, universe_id: str,
                   validation_metrics: dict, supporting_experiment_ids: list[str],
-                  notes: str = "", root: Path | None = None) -> dict:
-    """Write the frozen-config manifest for an already-chosen config.
+                  notes: str = "", root: Path | None = None,
+                  ledger: Path | None = None,
+                  required_search_folds: tuple[str, ...] = (
+                      "SEARCH_FOLD_A", "SEARCH_FOLD_B", "SEARCH_FOLD_C")) -> dict:
+    """Write the frozen-config manifest, enforcing the full pre-freeze checklist.
 
-    ``config_path`` is the config that has been selected, normally
-    ``configs/recovered_paper.yaml``.  The manifest pins its SHA-256.
+    A real freeze REQUIRES, and fails without:
+
+    1. the experiment ledger exists;
+    2. at least one supporting experiment id;
+    3. every supplied experiment id exists in the ledger;
+    4. every supporting experiment has ``test_evaluated=false``;
+    5. the validation metrics are non-empty;
+    6. the dataset manifest exists;
+    7. the chosen config exists.
+
+    Supporting experiments should come from all three search folds, so a choice
+    is not an artefact of one window.  Unknown ids FAIL rather than warn.
     """
     root = root or repo_root()
     cfg = Path(config_path)
     if not cfg.is_file():
         raise FrozenConfigError(f"Config to freeze does not exist: {cfg}")
-    ds = Path(dataset_manifest) if dataset_manifest else None
-    if ds is not None and not ds.is_file():
+    if not validation_metrics:
+        raise FrozenConfigError(
+            "Refusing to freeze with EMPTY validation metrics. A configuration "
+            "must be chosen on measured pre-2022 validation performance.")
+    if not dataset_manifest:
+        raise FrozenConfigError(
+            "Refusing to freeze without a dataset manifest. The dataset variant's "
+            "manifest hash must be recorded so the data is pinned.")
+    ds = Path(dataset_manifest)
+    if not ds.is_file():
         raise FrozenConfigError(f"Dataset manifest does not exist: {ds}")
+    if not supporting_experiment_ids:
+        raise FrozenConfigError(
+            "Refusing to freeze without supporting experiment ids. The choice must "
+            "be traceable to the search that produced it.")
+
+    # The ledger is injectable so the gate can be tested without touching the
+    # real repository ledger; the default is the repository one.
+    ledger_file = Path(ledger) if ledger is not None else ledger_path()
+    ledger_rows = read_ledger(ledger_file)
+    if not ledger_rows:
+        raise FrozenConfigError(
+            f"No experiment ledger found at {ledger_file}. Run the staged search "
+            "before freezing.")
+    by_id = {r["experiment_id"]: r for r in ledger_rows}
+
+    unknown = [i for i in supporting_experiment_ids if i not in by_id]
+    if unknown:
+        raise FrozenConfigError(
+            f"Refusing to freeze: supporting experiment ids not present in the "
+            f"ledger: {unknown}. Every id must exist.")
+    leaked = [i for i in supporting_experiment_ids
+              if str(by_id[i].get("test_evaluated", "")).lower() in ("true", "1", "yes")]
+    if leaked:
+        raise FrozenConfigError(
+            f"Refusing to freeze: supporting experiments claim test evaluation: "
+            f"{leaked}. A search experiment must have test_evaluated=false, "
+            "otherwise 2022/2023 leaked into the choice.")
+
+    folds_used = {by_id[i].get("search_fold", "") for i in supporting_experiment_ids}
+    missing_folds = [f for f in required_search_folds if f not in folds_used]
+    if missing_folds:
+        raise FrozenConfigError(
+            f"Refusing to freeze: supporting experiments do not cover all search "
+            f"folds. Missing {missing_folds}; found {sorted(folds_used)}. A choice "
+            "made on a single window may be an artefact of that window.")
 
     manifest = {
         "frozen_at_utc": datetime.now(UTC).isoformat(),
@@ -66,13 +127,14 @@ def freeze_config(config_path: str | Path, *, dataset_variant: str,
         "config_sha256": hash_file(cfg),
         "git_commit": git_commit(root),
         "dataset_variant": dataset_variant,
-        "dataset_manifest": str(ds) if ds else None,
-        "dataset_manifest_sha256": hash_file(ds) if ds else None,
+        "dataset_manifest": str(ds),
+        "dataset_manifest_sha256": hash_file(ds),
         "universe_id": universe_id,
         "selection_basis": (
             "Chosen using pre-2022 validation folds SEARCH_FOLD_A/B/C only. "
             "The 2022/2023 paper test years were NOT observed during search."
         ),
+        "search_folds_covered": sorted(folds_used),
         "validation_metrics": validation_metrics,
         "supporting_experiment_ids": list(supporting_experiment_ids),
         "final_command": (

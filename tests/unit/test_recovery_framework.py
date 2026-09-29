@@ -365,23 +365,40 @@ def test_final_test_refuses_without_freeze(tmp_path):
 
 
 def test_final_test_refuses_without_final_test_1(tmp_path):
+    """A valid freeze still refuses without FINAL_TEST=1."""
+    from agentic_forecaster.recovery.ledger import append_experiment
     cfg = tmp_path / "configs" / "recovered_paper.yaml"
     cfg.parent.mkdir(parents=True)
     cfg.write_text("data: {}\n")
-    freeze_config(cfg, dataset_variant="unadjusted", dataset_manifest=None,
-                  universe_id="U", validation_metrics={}, supporting_experiment_ids=[],
-                  root=tmp_path)
+    ds = tmp_path / "ds.json"
+    ds.write_text("{}")
+    ledger = tmp_path / "results" / "reproduction_recovery" / "experiment_ledger.csv"
+    ids = [append_experiment({"search_fold": f, "test_evaluated": "false"},
+                             path=ledger)["experiment_id"]
+           for f in ("SEARCH_FOLD_A", "SEARCH_FOLD_B", "SEARCH_FOLD_C")]
+    freeze_config(cfg, dataset_variant="unadjusted", dataset_manifest=ds,
+                  universe_id="U", validation_metrics={"accuracy": 0.55},
+                  supporting_experiment_ids=ids, root=tmp_path, ledger=ledger)
     with pytest.raises(FrozenConfigError, match="FINAL_TEST=1"):
         assert_final_test_allowed(cfg, env={}, root=tmp_path)
 
 
 def test_frozen_config_hash_is_enforced(tmp_path):
+    from agentic_forecaster.recovery.ledger import append_experiment
     cfg = tmp_path / "configs" / "recovered_paper.yaml"
     cfg.parent.mkdir(parents=True)
     cfg.write_text("models:\n  attention_lstm:\n    max_epochs: 100\n")
-    manifest = freeze_config(cfg, dataset_variant="unadjusted", dataset_manifest=None,
-                             universe_id="PAPER_CANDIDATE", validation_metrics={"acc": 0.55},
-                             supporting_experiment_ids=["EXP-1"], root=tmp_path)
+    ds = tmp_path / "ds.json"
+    ds.write_text("{}")
+    ledger = tmp_path / "results" / "reproduction_recovery" / "experiment_ledger.csv"
+    ids = [append_experiment({"search_fold": f, "test_evaluated": "false"},
+                             path=ledger)["experiment_id"]
+           for f in ("SEARCH_FOLD_A", "SEARCH_FOLD_B", "SEARCH_FOLD_C")]
+    manifest = freeze_config(cfg, dataset_variant="unadjusted", dataset_manifest=ds,
+                             universe_id="PAPER_CANDIDATE",
+                             validation_metrics={"acc": 0.55},
+                             supporting_experiment_ids=ids, root=tmp_path,
+                             ledger=ledger)
     assert manifest["config_sha256"]
     assert manifest["git_commit"]
     # unchanged config verifies
@@ -490,12 +507,20 @@ def test_train_all_parser_defines_tickers():
     assert "--tickers" in out.stdout
 
 
-def test_train_all_enters_the_command_body(tmp_path):
+def test_train_all_enters_the_command_body(tmp_path, monkeypatch):
     """A parser-help check is not enough: actually reach _cmd_train_all."""
     import yaml
 
     from agentic_forecaster.cli import build_parser
     from agentic_forecaster.cli import main as cli_main
+
+    # Redirect every shared runtime store into tmp_path. _cmd_train_all calls
+    # get_env_roots() and SAVES a real model bundle, so without this the test
+    # writes into $AGENTIC_MODEL_ROOT, which is shared with production runs and
+    # the completed Kaggle reproduction.
+    for var in ("AGENTIC_MODEL_ROOT", "AGENTIC_OUTPUT_ROOT", "AGENTIC_RAW_DATA_ROOT",
+                "AGENTIC_PROCESSED_DATA_ROOT", "AGENTIC_DATA_ROOT"):
+        monkeypatch.setenv(var, str(tmp_path / var.lower()))
 
     raw = tmp_path / "raw"
     raw.mkdir()

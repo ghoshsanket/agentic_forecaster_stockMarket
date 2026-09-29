@@ -52,6 +52,7 @@ class Trainer:
         max_epochs: int | None = None,
         patience: int = 10,
         restore_best_checkpoint: bool = True,
+        class_weighting: str = "none",
         beta1: float = 0.9,
         beta2: float = 0.999,
         gradient_clip_norm: float = 1.0,
@@ -69,11 +70,13 @@ class Trainer:
         self.epochs = int(max_epochs) if max_epochs is not None else int(epochs)
         self.patience = patience
         self.restore_best_checkpoint = bool(restore_best_checkpoint)
+        self.class_weighting = (class_weighting or "none").lower()
         self.beta1 = beta1
         self.beta2 = beta2
         self.gradient_clip_norm = gradient_clip_norm
         self.seed = seed
         self.device = resolve_device(device)
+        self.pos_weight: float | None = None
         self.model.to(self.device)
 
     def _make_loader(self, X: np.ndarray, y: np.ndarray, shuffle: bool) -> DataLoader:
@@ -95,7 +98,21 @@ class Trainer:
         train_loader = self._make_loader(X_train, y_train, shuffle=True)
         val_loader = self._make_loader(X_val, y_val, shuffle=False)
 
-        criterion = nn.BCEWithLogitsLoss()
+        # Class weighting. pos_weight is derived from the TRAIN labels ONLY;
+        # validation and test labels can never influence it.
+        if self.class_weighting == "pos_weight":
+            y_arr = np.asarray(y_train).reshape(-1)
+            n_pos = float((y_arr > 0.5).sum())
+            n_neg = float((y_arr <= 0.5).sum())
+            pw = (n_neg / n_pos) if n_pos > 0 else 1.0
+            logger.info("BCEWithLogitsLoss(pos_weight=%.6f) from TRAIN labels only "
+                        "(n_pos=%.0f n_neg=%.0f)", pw, n_pos, n_neg)
+            self.pos_weight = float(pw)
+            criterion = nn.BCEWithLogitsLoss(
+                pos_weight=torch.tensor([pw], dtype=torch.float32, device=self.device))
+        else:
+            self.pos_weight = None
+            criterion = nn.BCEWithLogitsLoss()
         optimizer = torch.optim.Adam(
             self.model.parameters(),
             lr=self.lr,

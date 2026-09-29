@@ -284,6 +284,41 @@ def run_shuffled_label_control(X_train, y_train, X_val, y_val, *,
     return res
 
 
+def run_real_label_reference(X_train, y_train, X_val, y_val, *, val_dates=None,
+                             seed=42, hidden_size=64, num_layers=2, dropout=0.0,
+                             learning_rate=1e-3, batch_size=32, weight_decay=0.0,
+                             epochs=100, patience=10,
+                             name="real_label_reference") -> SanityResult:
+    """Train a NORMAL model on the full TRAIN split to give the control a
+    fair opponent.
+
+    The shuffled-label control is only meaningful if it is compared against a
+    properly trained real-label model, not against the deliberately-overfit
+    probe. This function is that opponent: same architecture and optimizer as
+    the control, real labels, normal early-stopped budget.
+    """
+    if val_dates is not None:
+        assert_pre_test_dates(val_dates, where="real_reference/validation", search=True)
+    with firewall_guard(True):
+        out = _fit_and_score(
+            X_train, y_train, X_val, y_val, epochs=epochs, seed=seed,
+            hidden_size=hidden_size, num_layers=num_layers, dropout=dropout,
+            learning_rate=learning_rate, batch_size=batch_size,
+            weight_decay=weight_decay, patience=patience)
+    return SanityResult(
+        name=name, passed=True, n_train=len(X_train), n_val=len(X_val),
+        train_loss=out["train_loss"], train_accuracy=out["train_accuracy"],
+        validation_accuracy=out["validation_accuracy"],
+        validation_brier=out["validation_brier"],
+        majority_validation_accuracy=out["majority_validation_accuracy"],
+        chance_validation_accuracy=0.5, best_epoch=out["best_epoch"],
+        epochs_run=out["epochs_run"],
+        best_train_accuracy=out["best_train_accuracy"],
+        best_train_loss=out["best_train_loss"],
+        diagnostics={"shuffle_seed": None},
+        notes="Real-label reference model for the shuffled-label comparison.")
+
+
 def save_stage0(results: list[SanityResult], out_dir: Path) -> dict:
     """Write ``tiny_overfit.json`` / ``shuffled_label_control.json`` + summary."""
     from datetime import UTC, datetime

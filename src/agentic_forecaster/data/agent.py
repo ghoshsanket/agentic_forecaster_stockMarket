@@ -19,6 +19,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -37,6 +38,12 @@ from agentic_forecaster.data.dataset import (
 from agentic_forecaster.data.resampling import (
     normalize_daily_frame,
     resample_intraday_to_daily,
+)
+from agentic_forecaster.data.scaling import (
+    apply_scaler,
+    apply_volume_mode,
+    build_scaler,
+    fit_scaler_on_train,
 )
 from agentic_forecaster.data.universe import Universe
 from agentic_forecaster.features.engineer import build_feature_frame
@@ -57,6 +64,23 @@ class ProcessedSplit:
     # retained verbatim for reporting.  Never reconstructed by inverse transform.
     unscaled: np.ndarray | None = None   # (n_samples, n_features) float64
     unscaled_feature_names: list[str] = field(default_factory=list)
+    # The GENUINE raw market volume at the prediction-origin date, retained
+    # separately so reporting is unaffected by data.volume_mode.  When
+    # volume_mode=log1p the model sees log1p(volume) but the market volume is
+    # still recoverable here.
+    raw_volume: np.ndarray | None = None  # (n_samples,) float64
+
+
+def _resolve_search_mode(data_cfg: dict) -> bool:
+    """True when this data config must be treated as a recovery search.
+
+    Precedence: an explicit ``search_mode: true`` in the config, then
+    ``RECOVERY_SEARCH_MODE=1`` in the environment.
+    """
+    explicit = data_cfg.get("search_mode")
+    if explicit is not None:
+        return bool(explicit)
+    return os.environ.get("RECOVERY_SEARCH_MODE", "") == "1"
 
 
 @dataclass
@@ -78,6 +102,11 @@ class ProcessedDataset:
     historical_company_name: str = ""
     source_level: str = ""
     resampled: bool | None = None
+    # Resolved recovery choices, recorded so a run can be audited end to end.
+    scaler_name: str = "standard"
+    volume_mode: str = "raw"
+    split_mode: str = "fractional"
+    search_mode: bool = False
 
     def save(self, root: str | Path) -> Path:
         root = ensure_dir(root)
@@ -103,6 +132,10 @@ class ProcessedDataset:
             "historical_company_name": self.historical_company_name,
             "source_level": self.source_level,
             "resampled": self.resampled,
+            "scaler": self.scaler_name,
+            "volume_mode": self.volume_mode,
+            "split_mode": self.split_mode,
+            "search_mode": self.search_mode,
         }, indent=2))
         return root
 
@@ -396,9 +429,52 @@ class DataAgent:
         val_end = self.data_cfg.get("val_end")
         test_start = self.data_cfg.get("test_start")
         test_end = self.data_cfg.get("test_end")
-        use_date_splits = all([train_start, train_end, val_start, val_end, test_start, test_end])
+
+        # TWO date-split modes, plus the legacy fractional fallback.
+        #
+        #   A. train/validation/test  - all six boundaries present. This is the
+        #      paper walk-forward protocol and is unchanged.
+        #   B. train/validation only  - four boundaries present, no test dates.
+        #      Used by the recovery search folds. The test split is created
+        #      EMPTY and nothing is appended to it. Falling back to fractional
+        #      splitting here would silently mix 2000-2025 into the splits, so
+        #      it is not allowed.
+        #   C. fractional              - no explicit dates at all (legacy).
+        use_date_splits = all([train_start, train_end, val_start, val_end,
+                               test_start, test_end])
+        use_train_val_only = all([train_start, train_end, val_start, val_end]) \
+            and not (test_start or test_end)
         train_frac = float(self.data_cfg.get("train_fraction", 0.7))
         val_frac = float(self.data_cfg.get("val_fraction", 0.15))
+
+        # Recovery firewall: refuse to build a search dataset whose windows or
+        # labels could reach the paper test years.
+        self._search_mode = _resolve_search_mode(self.data_cfg)
+        if self._search_mode:
+            from agentic_forecaster.recovery.firewall import (
+                assert_config_windows_safe,
+            )
+            assert_config_windows_safe(
+                {k: self.data_cfg.get(k) for k in
+                 ("train_start", "train_end", "val_start", "val_end",
+                  "test_start", "test_end")},
+                where=f"DataAgent[{ticker}]", search=True)
+            if use_date_splits:
+                raise AssertionError(
+                    f"DataAgent[{ticker}]: search mode forbids a test window. "
+                    "A recovery search must use train/validation only; the test "
+                    "years stay behind the firewall.")
+
+        # Causal volume preprocessing, applied before scaling. OHLC untouched.
+        volume_mode = str(self.data_cfg.get("volume_mode", "raw")).lower()
+        raw_volume_by_index: dict[int, float] = {}
+        if "volume" in ff.columns:
+            raw_volume_by_index = {
+                i: float(v) for i, v in
+                enumerate(pd.to_numeric(ff["volume"], errors="coerce").to_numpy())
+            }
+        ff_raw = ff.copy()
+        ff = apply_volume_mode(ff, volume_mode)
 
         feat_cols = [c for c in ff.columns if c not in ("date", "target", "target_date")]
         values = ff[feat_cols].to_numpy(dtype=np.float64)
@@ -407,8 +483,12 @@ class DataAgent:
         target_dates = ff["target_date"].to_numpy()
         n = len(ff)
 
+        # Genuine, untransformed market values at each origin row, retained for
+        # reporting so volume_mode never corrupts the unscaled snapshot.
+        raw_values = ff_raw[feat_cols].to_numpy(dtype=np.float64)
+
         buckets: dict[str, dict[str, list]] = {
-            name: {"X": [], "y": [], "d": [], "td": [], "raw": []}
+            name: {"X": [], "y": [], "d": [], "td": [], "raw": [], "rv": []}
             for name in ("train", "val", "test")
         }
 
@@ -423,19 +503,24 @@ class DataAgent:
             if pd.isna(tdate) or tdate <= origin:
                 continue
 
-            if use_date_splits:
+            if use_date_splits or use_train_val_only:
                 # Leakage guard: a sample belongs to a window only when BOTH
                 # the origin date AND the label's target date fall inside it.
+                # Anything outside every window is dropped, not reassigned.
                 if pd.Timestamp(train_start) <= origin <= pd.Timestamp(train_end) and \
                    pd.Timestamp(train_start) <= tdate <= pd.Timestamp(train_end):
                     name = "train"
                 elif pd.Timestamp(val_start) <= origin <= pd.Timestamp(val_end) and \
                      pd.Timestamp(val_start) <= tdate <= pd.Timestamp(val_end):
                     name = "val"
-                elif pd.Timestamp(test_start) <= origin <= pd.Timestamp(test_end) and \
-                     pd.Timestamp(test_start) <= tdate <= pd.Timestamp(test_end):
-                    name = "test"
+                elif use_date_splits:
+                    if pd.Timestamp(test_start) <= origin <= pd.Timestamp(test_end) and \
+                       pd.Timestamp(test_start) <= tdate <= pd.Timestamp(test_end):
+                        name = "test"
+                    else:
+                        continue
                 else:
+                    # train/validation-only mode: no test split is ever filled.
                     continue
             else:
                 n_train = int(n * train_frac)
@@ -452,10 +537,12 @@ class DataAgent:
             b["y"].append(target[i])
             b["d"].append(dates[i])
             b["td"].append(target_dates[i])
-            b["raw"].append(values[i])  # unscaled values AT the origin row
+            b["raw"].append(raw_values[i])   # genuine market values at origin
+            b["rv"].append(raw_volume_by_index.get(i, np.nan))
 
         def _mk(b: dict) -> ProcessedSplit:
             raw = np.asarray(b["raw"], dtype=np.float64)
+            rv = np.asarray(b["rv"], dtype=np.float64)
             return ProcessedSplit(
                 X=np.asarray(b["X"], dtype=np.float32),
                 y=np.asarray(b["y"], dtype=np.float32),
@@ -465,6 +552,7 @@ class DataAgent:
                 feature_names=feat_cols,
                 unscaled=raw if raw.size else None,
                 unscaled_feature_names=feat_cols,
+                raw_volume=rv if rv.size else None,
             )
 
         train = _mk(buckets["train"])
@@ -477,17 +565,46 @@ class DataAgent:
                 f"{train_start}..{train_end} (target dates must also fall inside)"
             )
 
-        # One StandardScaler per ticker, fit on TRAIN rows only.
-        scaler = StandardScaler()
-        train.X = scaler.fit_transform(train.X.reshape(-1, train.X.shape[-1])).reshape(train.X.shape)
+        # One scaler per ticker, selected by data.scaler, fit on TRAIN rows ONLY.
+        # StandardScaler remains the default so existing runs are unaffected.
+        scaler_name = str(self.data_cfg.get("scaler", "standard")).lower()
+        scaler = build_scaler(scaler_name)
+        fit_scaler_on_train(scaler, train.X)
+        train.X = apply_scaler(scaler, train.X).astype(np.float32)
         if len(val.X):
-            val.X = scaler.transform(val.X.reshape(-1, val.X.shape[-1])).reshape(val.X.shape)
+            val.X = apply_scaler(scaler, val.X).astype(np.float32)
         if len(test.X):
-            test.X = scaler.transform(test.X.reshape(-1, test.X.shape[-1])).reshape(test.X.shape)
+            test.X = apply_scaler(scaler, test.X).astype(np.float32)
+
+        # Firewall on the ACTUAL materialised data, not just the config: any
+        # train/validation origin or target date at/after 2022-01-01 is a leak.
+        if self._search_mode:
+            from agentic_forecaster.recovery.firewall import (
+                assert_labels_not_firewalled,
+            )
+            for split_name, split in (("train", train), ("validation", val)):
+                if not len(split.y):
+                    continue
+                assert_labels_not_firewalled(
+                    split.y, dates=pd.to_datetime(split.dates),
+                    where=f"{split_name}/{ticker} origin", search=True)
+                assert_labels_not_firewalled(
+                    split.y, dates=pd.to_datetime(split.target_dates),
+                    where=f"{split_name}/{ticker} target", search=True)
+            if len(test.y):
+                raise AssertionError(
+                    f"DataAgent[{ticker}]: search mode produced a NON-EMPTY test "
+                    f"split ({len(test.y)} rows). The 2022/2023 test years must "
+                    "never be materialised during search.")
 
         return ProcessedDataset(
             train=train, val=val, test=test,
             scaler=scaler, feature_names=feat_cols, ticker=ticker,
+            scaler_name=scaler_name, volume_mode=volume_mode,
+            split_mode=("train_val_test" if use_date_splits
+                        else "train_val_only" if use_train_val_only
+                        else "fractional"),
+            search_mode=bool(self._search_mode),
         )
 
     def origin_snapshot(self, split: ProcessedSplit, index: int) -> dict:

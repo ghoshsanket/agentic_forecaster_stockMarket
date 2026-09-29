@@ -37,6 +37,13 @@ def main() -> int:
     parser.add_argument("--device", default="auto")
     parser.add_argument("--run-id", default="recovered_paper_final")
     parser.add_argument("--out", default=None)
+    parser.add_argument("--out-dir", default=None,
+                        help="run output directory (default: "
+                             "$AGENTIC_OUTPUT_ROOT/reproduction_recovery/final)")
+    parser.add_argument("--export-final-results", action="store_true",
+                        help="copy final artefacts into the repository; off by "
+                             "default so a previous canonical paper reproduction "
+                             "is not overwritten")
     args = parser.parse_args()
 
     from agentic_forecaster.recovery import freeze
@@ -55,19 +62,50 @@ def main() -> int:
         "git_commit": manifest["git_commit"],
         "dataset_variant": manifest["dataset_variant"],
         "universe_id": manifest["universe_id"],
+        "search_folds_covered": manifest.get("search_folds_covered"),
         "selection_basis": manifest["selection_basis"],
         "folds": [f["fold"] for f in PAPER_FOLDS],
         "test_years": [2022, 2023],
         "run_id": args.run_id,
     }, indent=2))
-    print("\nFinal test authorised. Executing the two paper walk-forward folds...")
-    raise SystemExit(
-        "Walk-forward execution is intentionally not wired into this script yet.\n"
-        "Once wired it will call run_walk_forward() from "
-        "agentic_forecaster.orchestration.walk_forward, which retrains every "
-        "ticker per fold. The gate above already refuses to reach this point "
-        "without a valid freeze and FINAL_TEST=1."
-    )
+
+    # ---- actually execute the two paper folds ----
+    # run_walk_forward is the SAME implementation the paper reproduction uses,
+    # so fold_0 (train 2016-2020 / val 2021 / test 2022) and fold_1
+    # (train 2016-2021 / val 2022 / test 2023) are retrained per ticker exactly
+    # as in the publication's protocol.
+    from agentic_forecaster.config import load_config
+    from agentic_forecaster.orchestration.walk_forward import run_walk_forward
+
+    config = load_config(cfg)
+
+    # Default output lives under the recovery tree so a previous canonical paper
+    # reproduction is never overwritten unless explicitly requested.
+    if args.out_dir:
+        out_dir = Path(args.out_dir)
+    else:
+        from agentic_forecaster.config import get_env_roots
+        out_dir = Path(get_env_roots()["AGENTIC_OUTPUT_ROOT"]) / "reproduction_recovery" / "final"
+    config.setdefault("experiment", {})["output_dir"] = str(out_dir)
+    print(f"\nExecuting walk-forward -> {out_dir}")
+
+    result = run_walk_forward(config, device=args.device, run_id=args.run_id)
+    print(json.dumps(result, indent=2, default=str))
+
+    if args.export_final_results:
+        from agentic_forecaster.config import get_env_roots
+        from agentic_forecaster.packaging import export_final_artifacts
+        copied = export_final_artifacts(get_env_roots(), run_dir=Path(result["run_dir"]))
+        print(f"\nExported {len(copied)} artefact(s) into the repository:")
+        for item in copied:
+            print(f"  + {item}")
+
+    if args.out:
+        p = Path(args.out)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(result, indent=2, default=str))
+        print(f"wrote {p}")
+    return 0
 
 
 if __name__ == "__main__":

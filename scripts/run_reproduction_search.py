@@ -1,26 +1,35 @@
 #!/usr/bin/env python3
-"""Run ONE pre-2022 search experiment and append it to the experiment ledger.
+"""Run a performance-recovery search experiment on PRE-2022 data only.
 
-Every invocation scores a SEARCH_FOLD_A/B/C validation window.  The test-set
-firewall is enabled for the whole run, so 2022 and 2023 cannot be reached even
-if a config mistakenly points at them.
+Two modes:
 
-The ledger is append-only: poor experiments are kept, because a search whose
-failures are hidden cannot be audited.
+``--stage 0``  sanity gate
+    Tiny-overfit and shuffled-label control on one ticker. If the tiny overfit
+    FAILS the run stops immediately and no later stage may proceed.
+
+(default)     a real search experiment
+    Trains one Attention-LSTM per ticker on the search fold's TRAIN window,
+    restores the best checkpoint, scores the VALIDATION window with the
+    firewall-guarded scorer, and appends one row to the experiment ledger.
+
+The test-set firewall is enabled for the whole process. A search fold has no
+test window, the DataAgent produces an EMPTY test split, and this script
+asserts that emptiness plus pre-2022 date bounds before returning.
 
 Examples
 --------
-STAGE 0 sanity (tiny overfit + shuffled control)::
+STAGE 0::
 
-    uv run python scripts/run_reproduction_search.py --stage 0 \\
-        --config configs/reproduction_search/paper_snapshot_2025_unadjusted_perf.yaml
+    uv run python scripts/run_reproduction_search.py \\
+        --config configs/reproduction_search/paper_snapshot_2025_unadjusted_perf.yaml \\
+        --stage 0 --search-fold SEARCH_FOLD_C --tickers RELIANCE --device auto
 
-A single training-length point on a search fold::
+A real search point::
 
     uv run python scripts/run_reproduction_search.py \\
         --config configs/reproduction_search/paper_snapshot_2025_unadjusted_perf.yaml \\
         --search-fold SEARCH_FOLD_C --tickers RELIANCE,TCS,INFY \\
-        --training-length T30 --feature-family F1
+        --training-length T30 --feature-family F2
 """
 
 from __future__ import annotations
@@ -33,20 +42,422 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
+CANONICAL = ["Date", "Open", "High", "Low", "Close", "Volume"]
+
+
+# ---------------------------------------------------------------- utilities
+
+def runtime_dir() -> Path:
+    from agentic_forecaster.recovery.ledger import runtime_dir as _rd
+    return _rd()
+
+
+def repo_dir() -> Path:
+    return REPO_ROOT
+
+
+def assert_no_test_data(dataset, experiment: str) -> dict:
+    """Item 17: a search run must never produce test data.
+
+    Asserts the test split is empty and that no train/validation origin or
+    target date reaches the firewalled years. Stops immediately on violation.
+    """
+    import pandas as pd
+
+    from agentic_forecaster.recovery.firewall import TEST_FIREWALL_START
+
+    if len(dataset.test.y):
+        raise AssertionError(
+            f"{experiment}: dataset.test is NOT empty ({len(dataset.test.y)} rows). "
+            "A search run must never materialise test data.")
+    bounds: dict[str, str | None] = {}
+    for name, split in (("train", dataset.train), ("validation", dataset.val)):
+        if not len(split.y):
+            continue
+        for axis, arr in (("origin", split.dates), ("target", split.target_dates)):
+            mx = pd.to_datetime(pd.Series(arr)).max()
+            if mx >= TEST_FIREWALL_START:
+                raise AssertionError(
+                    f"{experiment}: max {name} {axis} date {mx.date()} is at/after "
+                    f"{TEST_FIREWALL_START.date()}.")
+            bounds[f"max_{name}_{axis}"] = str(mx.date())
+        bounds[f"n_{name}"] = len(split.y)
+    bounds["test_rows"] = len(dataset.test.y)
+    return bounds
+
+
+def resolve_config(args, base_cfg: dict) -> dict:
+    """Apply the search fold and every requested variant to a config copy."""
+    import copy
+
+    from agentic_forecaster.recovery import folds, variants
+
+    cfg = folds.fold_config_for(args.search_fold, base_cfg)
+    # search_mode makes the DataAgent enforce the firewall on real data.
+    cfg["data"]["search_mode"] = True
+
+    tl = args.training_length or variants.DEFAULT_TRAINING_LENGTH
+    train = variants.TRAINING_LENGTHS[tl]
+    attn = cfg.setdefault("models", {}).setdefault("attention_lstm", {})
+    attn["max_epochs"] = train["max_epochs"]
+    attn["patience"] = train["patience"]
+    attn["restore_best_checkpoint"] = train["restore_best_checkpoint"]
+
+    fam = args.feature_family or variants.DEFAULT_FEATURE_FAMILY
+    rsi = args.rsi_method or variants.DEFAULT_RSI_METHOD
+    indicators = list(variants.build_feature_indicators(fam, rsi))
+    feat = cfg.setdefault("features", {})
+    feat["indicators"] = indicators
+    feat["use_ohlcv"] = variants.FEATURE_FAMILIES[fam]["use_ohlcv"]
+
+    if args.lookback is not None:
+        cfg["data"]["sequence_length"] = int(args.lookback)
+    cfg["data"]["scaler"] = args.scaler or variants.DEFAULT_SCALER
+    cfg["data"]["volume_mode"] = args.volume_mode or variants.DEFAULT_VOLUME_MODE
+    if args.architecture:
+        arch = variants.ARCHITECTURES[args.architecture]
+        attn["hidden_size"] = arch["hidden_size"]
+        attn["num_layers"] = arch["num_layers"]
+    if args.dropout is not None:
+        attn["dropout"] = float(args.dropout)
+    if args.weight_decay is not None:
+        attn["weight_decay"] = float(args.weight_decay)
+    attn["class_weighting"] = args.class_weighting or variants.DEFAULT_CLASS_WEIGHTING
+    cfg.setdefault("calibration", {})["method"] = (
+        args.calibration or variants.DEFAULT_CALIBRATION)
+    cfg.setdefault("experiment", {})["seed"] = (
+        args.seed if args.seed is not None else variants.DEFAULT_SEED)
+    cfg["experiment"]["name"] = f"recovery_{args.stage}_{args.search_fold}"
+    return copy.deepcopy(cfg)
+
+
+def describe_resolved(cfg: dict, args) -> dict:
+    from agentic_forecaster.recovery import variants
+    attn = cfg["models"]["attention_lstm"]
+    return {
+        "search_fold": args.search_fold,
+        "stage": args.stage,
+        "dataset_variant": cfg["data"].get("variant"),
+        "feature_family": args.feature_family or variants.DEFAULT_FEATURE_FAMILY,
+        "n_indicators": len(cfg["features"]["indicators"]),
+        "indicators": list(cfg["features"]["indicators"]),
+        "rsi_method": args.rsi_method or variants.DEFAULT_RSI_METHOD,
+        "lookback": cfg["data"]["sequence_length"],
+        "scaler": cfg["data"]["scaler"],
+        "volume_mode": cfg["data"]["volume_mode"],
+        "hidden_size": attn["hidden_size"],
+        "num_layers": attn["num_layers"],
+        "dropout": attn["dropout"],
+        "weight_decay": attn["weight_decay"],
+        "class_weighting": attn["class_weighting"],
+        "max_epochs": attn["max_epochs"],
+        "patience": attn["patience"],
+        "restore_best_checkpoint": attn["restore_best_checkpoint"],
+        "calibration": cfg["calibration"]["method"],
+        "seed": cfg["experiment"]["seed"],
+        "tickers": args.tickers or "<all>",
+        "data_windows": {k: cfg["data"].get(k) for k in
+                         ("train_start", "train_end", "val_start", "val_end")},
+        "test_window": "REMOVED (search folds have no test period)",
+        "search_mode": True,
+    }
+
+
+def dataset_manifest_hash(cfg: dict) -> str:
+    """Hash the ACTUAL dataset manifest the run consumed."""
+    from agentic_forecaster.recovery.ledger import hash_file
+    root = Path(cfg["data"]["raw_root"])
+    for up in [root, *root.parents]:
+        for m in up.glob("manifests/*manifest*.json"):
+            return hash_file(m)
+    return "unavailable"
+
+
+# ----------------------------------------------------------------- STAGE 0
+
+def run_stage_zero(args, cfg: dict, resolved: dict) -> int:
+    """Tiny overfit + shuffled-label control. A failed overfit STOPS the run."""
+
+    from agentic_forecaster.data.agent import DataAgent
+    from agentic_forecaster.recovery.firewall import firewall_guard
+    from agentic_forecaster.recovery.harness import (
+        run_real_label_reference,
+        run_shuffled_label_control,
+        run_tiny_overfit,
+        save_stage0,
+    )
+    from agentic_forecaster.recovery.ledger import append_experiment, hash_dict
+
+    out_dir = runtime_dir() / "stage0"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    ticker = (args.tickers.split(",")[0].strip().upper()
+              if args.tickers else "RELIANCE")
+
+    agent = DataAgent(cfg)
+    dataset = agent.run(ticker)
+    bounds = assert_no_test_data(dataset, "STAGE_0")
+    print(f"[STAGE 0] {ticker}: train={bounds.get('n_train')} "
+          f"validation={bounds.get('n_validation')} test={bounds['test_rows']}")
+
+    Xtr, ytr = dataset.train.X, dataset.train.y
+    Xva, yva = dataset.val.X, dataset.val.Y if hasattr(dataset.val, "Y") else dataset.val.y
+    # STAGE 0 only uses TRAIN/VALIDATION. The tiny subset is carved from TRAIN.
+    #
+    # Capacity and budget matter here. A first run with hidden=8 / 1 layer /
+    # 300 epochs reported 0.72 train accuracy and the gate fired, but a direct
+    # probe showed the SAME pipeline reaches 0.99 train accuracy with the
+    # paper's own architecture and optimizer. An under-provisioned gate produces
+    # false alarms, so STAGE 0 uses the paper's REFERENCE architecture
+    # (2 layers x 64 units), the paper's learning rate (1e-3) and a budget
+    # large enough to memorise. A failure now genuinely means the model,
+    # optimizer, gradients or target alignment are broken.
+    with firewall_guard(True):
+        overfit = run_tiny_overfit(
+            Xtr, ytr, Xva, yva, val_dates=dataset.val.dates,
+            seed=cfg["experiment"]["seed"], hidden_size=64, num_layers=2,
+            dropout=0.0, learning_rate=1e-3, batch_size=32,
+            epochs=1000, patience=1000, max_train_rows=256,
+            name="tiny_overfit")
+    print(f"[STAGE 0] tiny_overfit: passed={overfit.passed} "
+          f"best_train_accuracy={overfit.best_train_accuracy:.4f} "
+          f"best_train_loss={overfit.best_train_loss:.4f}")
+
+    if not overfit.passed:
+        # STOP: the pipeline cannot fit its own training data.
+        save_stage0([overfit], out_dir)
+        print("\nSTOP: tiny overfit FAILED. Investigate model / optimizer / target "
+              "alignment / gradients / scaling before any later stage. "
+              "No shuffled-label control was run and no search may proceed.")
+        return 1
+
+    # Only meaningful once the overfit passed.
+    with firewall_guard(True):
+        control = run_shuffled_label_control(
+            Xtr, ytr, Xva, yva, val_dates=dataset.val.dates,
+            seed=cfg["experiment"]["seed"], hidden_size=64, num_layers=2,
+            dropout=0.0, learning_rate=1e-3, batch_size=32,
+            epochs=30, patience=10, name="shuffled_label_control")
+    print(f"[STAGE 0] shuffled_label_control: passed={control.passed} "
+          f"validation_accuracy={control.validation_accuracy:.4f} "
+          f"(majority={control.majority_validation_accuracy:.4f})")
+
+    payload = save_stage0([overfit, control], out_dir)
+    cfg_hash = hash_dict(resolved)
+    common = {
+        "dataset_variant": cfg["data"].get("variant"),
+        "dataset_hash": dataset_manifest_hash(cfg),
+        "universe_id": cfg["data"].get("universe_id"),
+        "config_hash": cfg_hash,
+        "search_fold": args.search_fold,
+        "ticker_subset": ticker,
+        "feature_set": resolved["feature_family"],
+        "rsi_method": resolved["rsi_method"],
+        "lookback": resolved["lookback"],
+        "scaler": resolved["scaler"],
+        "hidden_size": 64, "layers": 2, "dropout": 0.0,
+        "max_epochs": 1000,
+        "best_epoch": overfit.best_epoch, "patience": 1000,
+        "weight_decay": 0.0, "class_weighting": "none",
+        "calibration_method": "none", "seed": cfg["experiment"]["seed"],
+        "test_evaluated": "false",
+    }
+    append_experiment({**common,
+                       "notes": (f"STAGE_0 tiny_overfit: best_train_acc="
+                                 f"{overfit.best_train_accuracy:.4f} "
+                                 f"best_train_loss={overfit.best_train_loss:.4f} "
+                                 f"passed={overfit.passed}"),
+                       "validation_accuracy": overfit.validation_accuracy,
+                       "validation_brier": overfit.validation_brier,
+                       "train_loss": overfit.best_train_loss}, root=repo_dir())
+    append_experiment({**common,
+                       "notes": (f"STAGE_0 shuffled_label_control: "
+                                 f"val_acc={control.validation_accuracy:.4f} "
+                                 f"majority={control.majority_validation_accuracy:.4f} "
+                                 f"passed={control.passed}"),
+                       "validation_accuracy": control.validation_accuracy,
+                       "validation_brier": control.validation_brier,
+                       "train_loss": control.train_loss}, root=repo_dir())
+
+    # A fair comparison needs a NORMAL real-label model, not the deliberately
+    # overfit probe, as the control's opponent.
+    with firewall_guard(True):
+        reference = run_real_label_reference(
+            Xtr, ytr, Xva, yva, val_dates=dataset.val.dates,
+            seed=cfg["experiment"]["seed"], hidden_size=64, num_layers=2,
+            dropout=0.0, learning_rate=1e-3, batch_size=32,
+            epochs=100, patience=10, name="real_label_reference")
+    print(f"[STAGE 0] real_label_reference: validation_accuracy="
+          f"{reference.validation_accuracy:.4f} "
+          f"(majority={reference.majority_validation_accuracy:.4f})")
+
+    payload = save_stage0([overfit, control, reference], out_dir)
+    real_beats_shuffled = (reference.validation_accuracy is not None
+                           and control.validation_accuracy is not None
+                           and reference.validation_accuracy > control.validation_accuracy)
+    print(f"\n[STAGE 0] artifacts -> {out_dir}")
+    print(f"[STAGE 0] all_passed={payload['all_passed']}")
+    print(f"[STAGE 0] real-label reference ({reference.validation_accuracy:.4f}) "
+          f"vs shuffled control ({control.validation_accuracy:.4f}): "
+          f"real labels win = {real_beats_shuffled}")
+    if not real_beats_shuffled:
+        print("NOTE: the real-label model did not beat the shuffled control on this "
+              "one ticker/window. That is a finding about predictive signal, not a "
+              "pipeline defect - the model CAN overfit and the control IS at chance. "
+              "Stage A will test this across 8-10 tickers and three folds.")
+    append_experiment({**common,
+                       "notes": (f"STAGE_0 real_label_reference: "
+                                 f"val_acc={reference.validation_accuracy:.4f} "
+                                 f"best_epoch={reference.best_epoch}"),
+                       "validation_accuracy": reference.validation_accuracy,
+                       "validation_brier": reference.validation_brier,
+                       "train_loss": reference.train_loss}, root=repo_dir())
+    print("\nSTAGE 0 complete. Stage A may now be run.")
+    return 0 if payload["all_passed"] else 1
+
+
+# ------------------------------------------------------------- search point
+
+def run_search_experiment(args, cfg: dict, resolved: dict) -> int:
+    """Train one Attention-LSTM per ticker; score VALIDATION only."""
+    import pandas as pd
+    import yaml as _yaml
+
+    from agentic_forecaster.agents.model_agent import ModelAgent
+    from agentic_forecaster.data.agent import DataAgent
+    from agentic_forecaster.recovery.firewall import firewall_guard
+    from agentic_forecaster.recovery.ledger import (
+        append_experiment,
+        hash_dict,
+        new_experiment_id,
+    )
+    from agentic_forecaster.recovery.scoring import (
+        aggregate,
+        cross_sectional_metrics,
+        score_validation_with_targets,
+    )
+
+    tickers = ([t.strip().upper() for t in args.tickers.split(",") if t.strip()]
+               if args.tickers else list(DataAgent(cfg).universe().requested))
+    experiment_id = new_experiment_id()
+    out_dir = runtime_dir() / experiment_id
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    (out_dir / "resolved_config.yaml").write_text(_yaml.safe_dump(cfg, sort_keys=False))
+    data_agent = DataAgent(cfg)
+    model_agent = ModelAgent(cfg)
+
+    per_ticker: list[dict] = []
+    pred_rows: list[dict] = []
+    history: dict = {}
+    bounds_all: dict = {}
+
+    for symbol in tickers:
+        try:
+            dataset = data_agent.run(symbol)
+        except (FileNotFoundError, KeyError) as exc:
+            print(f"  {symbol:12s} unavailable: {exc}")
+            continue
+        b = assert_no_test_data(dataset, f"{experiment_id}/{symbol}")
+        bounds_all[symbol] = b
+        fitted = model_agent.train_ticker(symbol, dataset, fold=args.search_fold,
+                                          device=args.device)
+        p = fitted.predict_proba(dataset.val.X)
+        with firewall_guard(True):
+            m = score_validation_with_targets(
+                dataset.val.y, p, dataset.val.dates, dataset.val.target_dates,
+                where=f"validation/{symbol}")
+        best_epoch = fitted.train_config.get("best_epoch")
+        per_ticker.append({"ticker": symbol, **m, "best_epoch": best_epoch,
+                           "pos_weight": fitted.train_config.get("pos_weight"),
+                           "calibration": fitted.calibration_method})
+        history[symbol] = fitted.history
+        for d, td, yv, pv in zip(dataset.val.dates, dataset.val.target_dates,
+                                 dataset.val.y, p):
+            pred_rows.append({"date": str(pd.Timestamp(d).date()),
+                              "target_date": str(pd.Timestamp(td).date()),
+                              "ticker": symbol, "y": float(yv), "p_up": float(pv)})
+        print(f"  {symbol:12s} acc={m['accuracy']:.4f} f1={m['f1']:.4f} "
+              f"brier={m['brier']:.4f} ece={m['ece']:.4f} best_epoch={best_epoch}")
+
+    if not per_ticker:
+        print("no tickers produced results; nothing to record")
+        return 1
+
+    agg = aggregate(per_ticker)
+    preds = pd.DataFrame(pred_rows)
+    if preds["ticker"].nunique() >= 3:
+        with firewall_guard(True):
+            agg.update(cross_sectional_metrics(preds, k=3, where="validation"))
+
+    pd.DataFrame(per_ticker).to_csv(out_dir / "ticker_metrics.csv", index=False)
+    preds.to_csv(out_dir / "validation_predictions.csv", index=False)
+    (out_dir / "training_history.json").write_text(
+        json.dumps(history, indent=2, default=str))
+    (out_dir / "aggregate_validation_metrics.json").write_text(
+        json.dumps({"experiment_id": experiment_id, "resolved": resolved,
+                    "split_bounds": bounds_all, "aggregate": agg}, indent=2))
+    (out_dir / "manifest.json").write_text(json.dumps({
+        "experiment_id": experiment_id,
+        "search_fold": args.search_fold,
+        "tickers": [t["ticker"] for t in per_ticker],
+        "test_evaluated": False,
+        "test_rows": 0,
+        "test_split_empty": True,
+        "resolved": resolved,
+    }, indent=2))
+
+    row = append_experiment({
+        "dataset_variant": cfg["data"].get("variant"),
+        "dataset_hash": dataset_manifest_hash(cfg),
+        "universe_id": cfg["data"].get("universe_id"),
+        "config_hash": hash_dict(resolved),
+        "search_fold": args.search_fold,
+        "ticker_subset": ",".join(t["ticker"] for t in per_ticker),
+        "feature_set": resolved["feature_family"],
+        "rsi_method": resolved["rsi_method"],
+        "lookback": resolved["lookback"],
+        "scaler": resolved["scaler"],
+        "hidden_size": resolved["hidden_size"],
+        "layers": resolved["num_layers"],
+        "dropout": resolved["dropout"],
+        "max_epochs": resolved["max_epochs"],
+        "best_epoch": max((t["best_epoch"] or 0) for t in per_ticker),
+        "patience": resolved["patience"],
+        "weight_decay": resolved["weight_decay"],
+        "class_weighting": resolved["class_weighting"],
+        "calibration_method": resolved["calibration"],
+        "seed": resolved["seed"],
+        "train_loss": agg.get("train_loss"),
+        "validation_accuracy": agg.get("accuracy"),
+        "validation_f1": agg.get("f1"),
+        "validation_brier": agg.get("brier"),
+        "validation_ece": agg.get("ece"),
+        "test_evaluated": "false",
+        "notes": (f"{experiment_id} stage={args.stage} "
+                  f"p@3up={agg.get('precision_at_3_up')} "
+                  f"p@3down={agg.get('precision_at_3_down')} "
+                  f"volume_mode={resolved['volume_mode']}"),
+    }, root=repo_dir())
+    print(f"\nexperiment_id : {row['experiment_id']}")
+    print(f"artifacts     : {out_dir}")
+    print(f"test_evaluated: {row['test_evaluated']}")
+    return 0
+
+
+# --------------------------------------------------------------------- main
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__,
-                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--config", required=True)
-    parser.add_argument("--search-fold", default="SEARCH_FOLD_C",
-                        help="pre-2022 validation window (never paper fold 0/1)")
+    parser.add_argument("--search-fold", default="SEARCH_FOLD_C")
     parser.add_argument("--tickers", default=None, help="comma-separated subset")
-    parser.add_argument("--stage", default="A", help="stage label recorded in the ledger")
+    parser.add_argument("--stage", default="A")
     parser.add_argument("--training-length", default=None, help="T3/T30/T50/T100")
     parser.add_argument("--feature-family", default=None, help="F0/F1/F2/F3")
     parser.add_argument("--rsi-method", default=None, help="R0_rolling/R1_wilder/R2_ema")
     parser.add_argument("--lookback", type=int, default=None)
-    parser.add_argument("--scaler", default=None)
+    parser.add_argument("--scaler", default=None, help="standard/minmax/robust")
     parser.add_argument("--volume-mode", default=None, help="raw/log1p")
     parser.add_argument("--architecture", default=None, help="A0/A1/A2/A3")
     parser.add_argument("--dropout", type=float, default=None)
@@ -57,89 +468,26 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--device", default=None)
     parser.add_argument("--dry-run", action="store_true",
-                        help="resolve and firewall-check the config, run nothing")
+                        help="resolve + firewall-check only; no training")
     args = parser.parse_args()
 
     from agentic_forecaster.config import load_config
-    from agentic_forecaster.recovery import folds, variants
     from agentic_forecaster.recovery.firewall import firewall_guard
 
     base = load_config(args.config)
-    # Firewall ON for the entire run.
     with firewall_guard(True):
-        cfg = folds.fold_config_for(args.search_fold, base)
-
-        tl = args.training_length or variants.DEFAULT_TRAINING_LENGTH
-        train = variants.TRAINING_LENGTHS[tl]
-        models = cfg.setdefault("models", {})
-        attn = models.setdefault("attention_lstm", {})
-        attn["max_epochs"] = train["max_epochs"]
-        attn["patience"] = train["patience"]
-        attn["restore_best_checkpoint"] = train["restore_best_checkpoint"]
-
-        fam = args.feature_family or variants.DEFAULT_FEATURE_FAMILY
-        rsi = args.rsi_method or variants.DEFAULT_RSI_METHOD
-        indicators = list(variants.build_feature_indicators(fam, rsi))
-        cfg.setdefault("features", {})["indicators"] = indicators
-        cfg["features"]["use_ohlcv"] = variants.FEATURE_FAMILIES[fam]["use_ohlcv"]
-
-        if args.lookback is not None:
-            cfg["data"]["sequence_length"] = int(args.lookback)
-        if args.scaler:
-            cfg["data"]["scaler"] = args.scaler
-        if args.volume_mode:
-            cfg["data"]["volume_mode"] = args.volume_mode
-        if args.architecture:
-            arch = variants.ARCHITECTURES[args.architecture]
-            attn["hidden_size"] = arch["hidden_size"]
-            attn["num_layers"] = arch["num_layers"]
-        if args.dropout is not None:
-            attn["dropout"] = float(args.dropout)
-        if args.weight_decay is not None:
-            attn["weight_decay"] = float(args.weight_decay)
-        if args.class_weighting:
-            attn["class_weighting"] = args.class_weighting
-        if args.calibration:
-            cfg.setdefault("calibration", {})["method"] = args.calibration
-        if args.seed is not None:
-            cfg.setdefault("experiment", {})["seed"] = int(args.seed)
-
-        resolved = {
-            "search_fold": args.search_fold,
-            "stage": args.stage,
-            "training_length": tl,
-            "feature_family": fam,
-            "rsi_method": rsi,
-            "lookback": cfg["data"].get("sequence_length"),
-            "scaler": cfg["data"].get("scaler"),
-            "architecture": {"hidden_size": attn.get("hidden_size"),
-                             "num_layers": attn.get("num_layers"),
-                             "dropout": attn.get("dropout")},
-            "max_epochs": attn["max_epochs"],
-            "patience": attn["patience"],
-            "weight_decay": attn.get("weight_decay"),
-            "class_weighting": attn.get("class_weighting", "none"),
-            "calibration": cfg.get("calibration", {}).get("method"),
-            "seed": cfg.get("experiment", {}).get("seed", 42),
-            "n_indicators": len(indicators),
-            "tickers": (args.tickers or "<all>"),
-            "data_windows": {k: cfg["data"].get(k)
-                             for k in ("train_start", "train_end", "val_start", "val_end")},
-            "test_window": "REMOVED (search folds have no test period)",
-        }
+        cfg = resolve_config(args, base)
+        resolved = describe_resolved(cfg, args)
 
     if args.dry_run:
         print(json.dumps(resolved, indent=2))
         print("\nDRY RUN: firewall active, no training performed.")
         return 0
 
-    raise SystemExit(
-        "Training is intentionally not wired into this script yet.\n"
-        "Use --dry-run to verify config resolution and the firewall.\n"
-        "Stage 0 sanity first:\n"
-        "  uv run python scripts/run_reproduction_search.py --stage 0 "
-        "--config <cfg> --dry-run"
-    )
+    with firewall_guard(True):
+        if str(args.stage) == "0":
+            return run_stage_zero(args, cfg, resolved)
+        return run_search_experiment(args, cfg, resolved)
 
 
 if __name__ == "__main__":

@@ -54,6 +54,10 @@ class FittedModel:
     metrics: dict = field(default_factory=dict)
     calibration: dict = field(default_factory=dict)
     temperature: float = 1.0
+    # A real calibrator object. ``temperature`` is kept for backward
+    # compatibility with existing temperature-only bundles.
+    _calibrator: object = field(default=None, repr=False)
+    calibration_method: str = "temperature"
     feature_names: list[str] = field(default_factory=list)
     train_config: dict = field(default_factory=dict)
     history: dict = field(default_factory=dict)
@@ -77,12 +81,19 @@ class FittedModel:
         return np.asarray(self.model.predict_proba(X))[:, 1]
 
     def predict_proba(self, X: np.ndarray) -> np.ndarray:
-        """CALIBRATED p_up (the default used everywhere downstream)."""
+        """CALIBRATED p_up, using the SELECTED calibration method.
+
+        A fitted calibrator is used when present. Otherwise fall back to the
+        legacy temperature float so old temperature-only bundles keep working.
+        """
         raw = self.predict_proba_raw(X)
+        cal = self._calibrator
+        if cal is not None:
+            return np.asarray(cal.predict(raw), dtype=float).reshape(-1)
         if self.kind == "torch" and self.temperature != 1.0:
-            cal = TemperatureCalibrator()
-            cal.temperature = self.temperature
-            return cal.calibrate_proba(raw)
+            c = TemperatureCalibrator()
+            c.temperature = self.temperature
+            return c.calibrate_proba(raw)
         return raw
 
     # --------------------------------------------------------- persistence
@@ -98,7 +109,13 @@ class FittedModel:
         if self._background is not None:
             np.save(root / "background.npy", self._background)
         atomic_json_dump(self.metrics, root / "metrics.json")
-        atomic_json_dump(self.calibration, root / "calibration.json")
+        if self._calibrator is not None:
+            cal_payload = self._calibrator.to_dict()
+        else:
+            # legacy temperature-only payload
+            cal_payload = {"method": "temperature", "temperature": float(self.temperature)}
+        cal_payload.setdefault("method", self.calibration_method)
+        atomic_json_dump(cal_payload, root / "calibration.json")
         atomic_json_dump(self.train_config, root / "config.json")
         atomic_json_dump(
             {
@@ -108,6 +125,7 @@ class FittedModel:
                 "ticker": self.ticker,
                 "fold": self.fold,
                 "temperature": self.temperature,
+                "calibration_method": self.calibration_method,
             },
             root / "manifest.json",
         )
@@ -134,6 +152,7 @@ class ModelAgent:
             max_epochs=(int(cfg["max_epochs"]) if cfg.get("max_epochs") is not None else None),
             patience=int(cfg.get("patience", 10)),
             restore_best_checkpoint=bool(cfg.get("restore_best_checkpoint", True)),
+            class_weighting=str(cfg.get("class_weighting", "none")).lower(),
             beta1=float(cfg.get("beta1", 0.9)),
             beta2=float(cfg.get("beta2", 0.999)),
             gradient_clip_norm=float(cfg.get("gradient_clip_norm", 1.0)),
@@ -141,13 +160,21 @@ class ModelAgent:
             device=device,
         )
 
-    def _fit_temperature(self, model, X_val, y_val, device) -> TemperatureCalibrator:
-        model.eval()
-        with torch.no_grad():
-            logits = model(
-                torch.tensor(X_val, dtype=torch.float32, device=device)
-            ).cpu().numpy()
-        return TemperatureCalibrator().fit(logits, y_val)
+    def _fit_calibrator(self, model, X_val, y_val, device):
+        """Fit the configured calibrator on VALIDATION data only.
+
+        ``calibration.method`` actually selects the method (none / temperature /
+        platt / isotonic). Validation labels are the only labels used; test
+        labels never influence calibration.
+        """
+        from agentic_forecaster.calibration.registry import build_calibrator
+
+        method = str(self.config.get("calibration", {}).get(
+            "method", "temperature")).lower()
+        p_val = self._raw(model, X_val, device)
+        if not len(p_val):
+            return build_calibrator("none"), "none"
+        return build_calibrator(method).fit(p_val, np.asarray(y_val).reshape(-1)), method
 
     @staticmethod
     def _evaluate(y_true, p_cal, p_raw) -> dict:
@@ -183,12 +210,23 @@ class ModelAgent:
             dataset.train.X, dataset.train.y, dataset.val.X, dataset.val.y
         )
 
-        calibrator = self._fit_temperature(
+        # Calibration method is chosen by calibration.method and fitted on
+        # VALIDATION data only.
+        calibrator, cal_method = self._fit_calibrator(
             model, dataset.val.X, dataset.val.y, trainer.device
         )
-        p_raw = model.eval() and self._raw(model, dataset.test.X, trainer.device)
-        p_cal = calibrator.calibrate_proba(p_raw)
-        metrics = self._evaluate(dataset.test.y, p_cal, p_raw)
+
+        # A recovery search has an EMPTY test split, so no test metric is
+        # computed. Production paper runs still score their test split.
+        metrics: dict = {}
+        if len(dataset.test.y):
+            p_raw = model.eval() and self._raw(model, dataset.test.X, trainer.device)
+            p_cal = calibrator.predict(p_raw)
+            metrics = self._evaluate(dataset.test.y, p_cal, p_raw)
+        else:
+            logger.info(
+                "%s/%s: test split is EMPTY; no test metrics computed "
+                "(recovery search mode)", ticker, fold)
 
         background = sample_background(
             dataset.train.X,
@@ -199,24 +237,32 @@ class ModelAgent:
             name="attention_lstm", kind="torch", model=model,
             ticker=ticker, fold=fold, metrics=metrics,
             calibration=calibrator.to_dict(),
-            temperature=calibrator.temperature,
+            temperature=float(getattr(calibrator._inner, "temperature", 1.0))
+                         if hasattr(calibrator, "_inner") else 1.0,
+            calibration_method=cal_method,
             train_config={
                 "hidden_size": int(cfg.get("hidden_size", 64)),
                 "num_layers": int(cfg.get("num_layers", 2)),
                 "dropout": float(cfg.get("dropout", 0.2)),
                 "learning_rate": float(cfg.get("learning_rate", 1e-3)),
+                "weight_decay": float(cfg.get("weight_decay", 1e-4)),
                 "epochs": int(cfg.get("max_epochs", cfg.get("epochs", 3))),
+                "max_epochs": int(cfg.get("max_epochs", cfg.get("epochs", 3))),
                 "batch_size": int(cfg.get("batch_size", 64)),
                 "patience": int(cfg.get("patience", 10)),
                 "restore_best_checkpoint": bool(cfg.get("restore_best_checkpoint", True)),
                 "gradient_clip_norm": float(cfg.get("gradient_clip_norm", 1.0)),
                 "best_epoch": result.best_epoch,
                 "best_val_loss": result.best_val_loss,
+                "class_weighting": str(cfg.get("class_weighting", "none")).lower(),
+                "pos_weight": getattr(trainer, "pos_weight", None),
+                "calibration_method": cal_method,
             },
             history=result.history,
             seed=self.seed,
             feature_names=list(dataset.feature_names),
         )
+        fitted._calibrator = calibrator
         fitted._scaler = dataset.scaler
         fitted._background = background
         return fitted
@@ -238,15 +284,27 @@ class ModelAgent:
             )
             trainer = self._trainer(model, lstm_cfg, device)
             trainer.fit(dataset.train.X, dataset.train.y, dataset.val.X, dataset.val.y)
-            p_raw = self._raw(model, dataset.test.X, trainer.device)
-            p_cal = self._fit_temperature(
+            cal_l, cal_l_method = self._fit_calibrator(
                 model, dataset.val.X, dataset.val.y, trainer.device
-            ).calibrate_proba(p_raw)
-            out["lstm"] = FittedModel(
+            )
+            lstm_metrics: dict = {}
+            if len(dataset.test.y):
+                p_raw = self._raw(model, dataset.test.X, trainer.device)
+                p_cal = cal_l.predict(p_raw)
+                lstm_metrics = self._evaluate(dataset.test.y, p_cal, p_raw)
+            else:
+                logger.info("%s/%s: empty test split; no LSTM test metrics",
+                            ticker, fold)
+            lstm_fitted = FittedModel(
                 name="lstm", kind="torch", model=model, ticker=ticker, fold=fold,
-                metrics=self._evaluate(dataset.test.y, p_cal, p_raw),
+                metrics=lstm_metrics,
+                calibration=cal_l.to_dict(),
+                calibration_method=cal_l_method,
                 feature_names=list(dataset.feature_names), seed=self.seed,
             )
+            lstm_fitted._calibrator = cal_l
+            lstm_fitted._scaler = dataset.scaler
+            out["lstm"] = lstm_fitted
 
         if self.baseline_cfg.get("random_forest", True):
             rf_cfg = self.model_cfg.get("random_forest", {})
