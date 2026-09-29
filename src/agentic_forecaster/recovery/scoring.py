@@ -146,3 +146,74 @@ def aggregate(ticker_metrics: Sequence[dict]) -> dict:
             out[k] = float(np.mean(vals))
     out["n_tickers"] = len(ticker_metrics)
     return out
+
+
+# ------------------------------------------------------- Stage D calibration
+
+def temporal_calibration_split(dates, fit_fraction: float = 0.6):
+    """Chronological inner split of a validation year for Stage D.
+
+    Stage D compares calibration METHODS, so a candidate must not be fitted and
+    scored on the same labels. Fitting a calibrator on the full validation set
+    and then scoring that same set is optimistic, and especially so for Platt
+    and isotonic, which can fit the validation labels closely.
+
+    This returns the FIRST ``fit_fraction`` of the chronologically ordered dates
+    for fitting and the remainder for scoring. It is strictly temporal - no
+    random shuffle - so no future information reaches the calibration fit.
+
+    The FINAL paper run does NOT use this: there, calibration is fitted on the
+    official validation year and evaluated on the separate 2022/2023 test year,
+    which is already a clean separation.
+    """
+    ordered = pd.Series(pd.to_datetime(pd.Series(dates))).sort_values().reset_index(drop=True)
+    if len(ordered) < 5:
+        raise ValueError(
+            f"Only {len(ordered)} validation dates; too few for a temporal "
+            "calibration split. Use at least 5.")
+    n_fit = int(len(ordered) * fit_fraction)
+    n_fit = max(1, min(n_fit, len(ordered) - 1))
+    return ordered.iloc[:n_fit], ordered.iloc[n_fit:]
+
+
+def stage_d_calibration_metrics(p_up, y, dates, methods=("none", "temperature",
+                                                          "platt", "isotonic"),
+                                fit_fraction: float = 0.6, *,
+                                where: str = "validation") -> list[dict]:
+    """Compare calibration methods on a chronological inner split.
+
+    For each method: fit on the first ``fit_fraction`` of the validation dates,
+    score Brier/ECE on the remaining (later) dates. The firewall is enforced on
+    both halves.
+    """
+    from agentic_forecaster.recovery.calibrators_registry import fit_calibrator_registry
+
+    p = np.asarray(pd.Series(p_up).astype(float).to_numpy(), dtype=float)
+    yv = np.asarray(pd.Series(y).astype(float).to_numpy(), dtype=float)
+    fit_dates, score_dates = temporal_calibration_split(dates, fit_fraction)
+    # Stage D is a recovery SEARCH activity, so the firewall is enforced
+    # explicitly rather than relying on the ambient env var.
+    assert_pre_test_dates(fit_dates, where=f"{where}/calibration_fit", search=True)
+    assert_pre_test_dates(score_dates, where=f"{where}/calibration_score", search=True)
+
+    # Masks must be built against the FULL date vector, not the split halves.
+    all_dates = pd.to_datetime(pd.Series(dates))
+    m_fit = all_dates.isin(set(pd.to_datetime(fit_dates)))
+    m_score = all_dates.isin(set(pd.to_datetime(score_dates)))
+    if m_fit.sum() < 2 or m_score.sum() < 2:
+        raise ValueError(
+            f"Temporal calibration split too small: fit={int(m_fit.sum())} "
+            f"score={int(m_score.sum())}")
+
+    out: list[dict] = []
+    for method in methods:
+        cal = fit_calibrator_registry(method, p[m_fit], yv[m_fit])
+        p_cal = cal.predict(p[m_score])
+        m = _metrics(yv[m_score].astype(int), p_cal)
+        out.append({"method": method, "n_fit": int(m_fit.sum()),
+                    "n_score": int(m_score.sum()),
+                    "fit_end": str(pd.to_datetime(fit_dates).max().date()),
+                    "score_start": str(pd.to_datetime(score_dates).min().date()),
+                    "brier": m["brier"], "ece": m["ece"],
+                    "accuracy": m["accuracy"]})
+    return out

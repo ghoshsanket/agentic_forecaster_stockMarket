@@ -199,6 +199,11 @@ class ModelAgent:
         from agentic_forecaster.explainability.shap_explainer import sample_background
 
         cfg = self.model_cfg["attention_lstm"]
+        # Seed BEFORE constructing the model. Trainer.fit() also seeds, but that
+        # is too late: the initial weights are drawn at construction time, so
+        # without this the starting point depended on whatever ran before.
+        from agentic_forecaster.utils import seed_everything
+        seed_everything(int(self.seed))
         model = AttentionLSTM(
             input_size=dataset.train.X.shape[-1],
             hidden_size=int(cfg.get("hidden_size", 64)),
@@ -276,6 +281,9 @@ class ModelAgent:
 
         lstm_cfg = dict(self.model_cfg.get("lstm", self.model_cfg["attention_lstm"]))
         if self.baseline_cfg.get("lstm", True):
+            # Same guarantee for the plain LSTM: seed before construction.
+            from agentic_forecaster.utils import seed_everything
+            seed_everything(int(self.seed))
             model = PlainLSTM(
                 input_size=dataset.train.X.shape[-1],
                 hidden_size=int(lstm_cfg.get("hidden_size", 64)),

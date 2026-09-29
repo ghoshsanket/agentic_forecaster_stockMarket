@@ -123,8 +123,15 @@ def resolve_config(args, base_cfg: dict) -> dict:
     if args.weight_decay is not None:
         attn["weight_decay"] = float(args.weight_decay)
     attn["class_weighting"] = args.class_weighting or variants.DEFAULT_CLASS_WEIGHTING
+    # Stages 0/A/B/C score the RAW p(up) by default. Comparing calibration
+    # methods needs a calibrated score, so leaving a calibrator on by default
+    # would confound every A-C comparison with a calibration effect. Stage D is
+    # the stage that exists to study calibration, so it keeps its own default.
+    _default_calibration = (
+        "temperature" if str(args.stage).upper() in {"D", "4"}
+        else "none")
     cfg.setdefault("calibration", {})["method"] = (
-        args.calibration or variants.DEFAULT_CALIBRATION)
+        args.calibration or _default_calibration)
     cfg.setdefault("experiment", {})["seed"] = (
         args.seed if args.seed is not None else variants.DEFAULT_SEED)
     cfg["experiment"]["name"] = f"recovery_{args.stage}_{args.search_fold}"
@@ -178,6 +185,8 @@ def dataset_manifest_hash(cfg: dict) -> str:
 def run_stage_zero(args, cfg: dict, resolved: dict) -> int:
     """Tiny overfit + shuffled-label control. A failed overfit STOPS the run."""
 
+    import yaml as _yaml
+
     from agentic_forecaster.data.agent import DataAgent
     from agentic_forecaster.recovery.firewall import firewall_guard
     from agentic_forecaster.recovery.harness import (
@@ -186,7 +195,7 @@ def run_stage_zero(args, cfg: dict, resolved: dict) -> int:
         run_tiny_overfit,
         save_stage0,
     )
-    from agentic_forecaster.recovery.ledger import append_experiment, hash_dict
+    from agentic_forecaster.recovery.ledger import append_experiment, hash_file
 
     out_dir = runtime_dir() / "stage0"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -241,43 +250,6 @@ def run_stage_zero(args, cfg: dict, resolved: dict) -> int:
           f"validation_accuracy={control.validation_accuracy:.4f} "
           f"(majority={control.majority_validation_accuracy:.4f})")
 
-    payload = save_stage0([overfit, control], out_dir)
-    cfg_hash = hash_dict(resolved)
-    common = {
-        "dataset_variant": cfg["data"].get("variant"),
-        "dataset_hash": dataset_manifest_hash(cfg),
-        "universe_id": cfg["data"].get("universe_id"),
-        "config_hash": cfg_hash,
-        "search_fold": args.search_fold,
-        "ticker_subset": ticker,
-        "feature_set": resolved["feature_family"],
-        "rsi_method": resolved["rsi_method"],
-        "lookback": resolved["lookback"],
-        "scaler": resolved["scaler"],
-        "hidden_size": 64, "layers": 2, "dropout": 0.0,
-        "max_epochs": 1000,
-        "best_epoch": overfit.best_epoch, "patience": 1000,
-        "weight_decay": 0.0, "class_weighting": "none",
-        "calibration_method": "none", "seed": cfg["experiment"]["seed"],
-        "test_evaluated": "false",
-    }
-    append_experiment({**common,
-                       "notes": (f"STAGE_0 tiny_overfit: best_train_acc="
-                                 f"{overfit.best_train_accuracy:.4f} "
-                                 f"best_train_loss={overfit.best_train_loss:.4f} "
-                                 f"passed={overfit.passed}"),
-                       "validation_accuracy": overfit.validation_accuracy,
-                       "validation_brier": overfit.validation_brier,
-                       "train_loss": overfit.best_train_loss}, root=repo_dir())
-    append_experiment({**common,
-                       "notes": (f"STAGE_0 shuffled_label_control: "
-                                 f"val_acc={control.validation_accuracy:.4f} "
-                                 f"majority={control.majority_validation_accuracy:.4f} "
-                                 f"passed={control.passed}"),
-                       "validation_accuracy": control.validation_accuracy,
-                       "validation_brier": control.validation_brier,
-                       "train_loss": control.train_loss}, root=repo_dir())
-
     # A fair comparison needs a NORMAL real-label model, not the deliberately
     # overfit probe, as the control's opponent.
     with firewall_guard(True):
@@ -291,27 +263,94 @@ def run_stage_zero(args, cfg: dict, resolved: dict) -> int:
           f"(majority={reference.majority_validation_accuracy:.4f})")
 
     payload = save_stage0([overfit, control, reference], out_dir)
-    real_beats_shuffled = (reference.validation_accuracy is not None
-                           and control.validation_accuracy is not None
-                           and reference.validation_accuracy > control.validation_accuracy)
-    print(f"\n[STAGE 0] artifacts -> {out_dir}")
-    print(f"[STAGE 0] all_passed={payload['all_passed']}")
-    print(f"[STAGE 0] real-label reference ({reference.validation_accuracy:.4f}) "
-          f"vs shuffled control ({control.validation_accuracy:.4f}): "
-          f"real labels win = {real_beats_shuffled}")
-    if not real_beats_shuffled:
-        print("NOTE: the real-label model did not beat the shuffled control on this "
-              "one ticker/window. That is a finding about predictive signal, not a "
-              "pipeline defect - the model CAN overfit and the control IS at chance. "
-              "Stage A will test this across 8-10 tickers and three folds.")
-    append_experiment({**common,
-                       "notes": (f"STAGE_0 real_label_reference: "
+    # Hash the actual written config file so the ledger hash is reproducible
+    # from the artifact with `sha256sum`, exactly as for search experiments.
+    stage0_cfg = out_dir / "resolved_config.yaml"
+    stage0_cfg.write_text(_yaml.safe_dump(cfg, sort_keys=False))
+    cfg_hash = hash_file(stage0_cfg)
+    # Each Stage-0 experiment gets its OWN ledger metadata. A single shared
+    # dict previously recorded max_epochs=1000/patience=1000 and the overfit's
+    # best_epoch for all three rows, which misrepresented the ledger.
+    def _base() -> dict:
+        return {
+            "dataset_variant": cfg["data"].get("variant"),
+            "dataset_hash": dataset_manifest_hash(cfg),
+            "universe_id": cfg["data"].get("universe_id"),
+            "config_hash": cfg_hash,
+            "search_fold": args.search_fold,
+            "ticker_subset": ticker,
+            "feature_set": resolved["feature_family"],
+            "rsi_method": resolved["rsi_method"],
+            "lookback": resolved["lookback"],
+            "scaler": resolved["scaler"],
+            "hidden_size": 64, "layers": 2, "dropout": 0.0,
+            "weight_decay": 0.0, "class_weighting": "none",
+            "calibration_method": "none", "seed": cfg["experiment"]["seed"],
+            "test_evaluated": "false",
+        }
+
+    append_experiment({**_base(),
+                       "max_epochs": 1000, "patience": 1000,
+                       "best_epoch": overfit.best_epoch,
+                       "epochs_run": overfit.epochs_run,
+                       "notes": (f"STAGE_0 tiny_overfit: requested_epochs=1000 "
+                                 f"patience=1000 best_epoch={overfit.best_epoch} "
+                                 f"epochs_run={overfit.epochs_run} "
+                                 f"best_train_acc={overfit.best_train_accuracy:.4f} "
+                                 f"best_train_loss={overfit.best_train_loss:.4f} "
+                                 f"passed={overfit.passed}"),
+                       "validation_accuracy": overfit.validation_accuracy,
+                       "validation_brier": overfit.validation_brier,
+                       "train_loss": overfit.best_train_loss}, root=repo_dir())
+
+    append_experiment({**_base(),
+                       "max_epochs": 30, "patience": 10,
+                       "best_epoch": control.best_epoch,
+                       "epochs_run": control.epochs_run,
+                       "notes": (f"STAGE_0 shuffled_label_control: requested_epochs=30 "
+                                 f"patience=10 best_epoch={control.best_epoch} "
+                                 f"epochs_run={control.epochs_run} "
+                                 f"val_acc={control.validation_accuracy:.4f} "
+                                 f"majority={control.majority_validation_accuracy:.4f} "
+                                 f"passed={control.passed}"),
+                       "validation_accuracy": control.validation_accuracy,
+                       "validation_brier": control.validation_brier,
+                       "train_loss": control.train_loss}, root=repo_dir())
+
+    append_experiment({**_base(),
+                       "max_epochs": 100, "patience": 10,
+                       "best_epoch": reference.best_epoch,
+                       "epochs_run": reference.epochs_run,
+                       "notes": (f"STAGE_0 real_label_reference: requested_epochs=100 "
+                                 f"patience=10 best_epoch={reference.best_epoch} "
+                                 f"epochs_run={reference.epochs_run} "
                                  f"val_acc={reference.validation_accuracy:.4f} "
-                                 f"best_epoch={reference.best_epoch}"),
+                                 f"majority={reference.majority_validation_accuracy:.4f}"),
                        "validation_accuracy": reference.validation_accuracy,
                        "validation_brier": reference.validation_brier,
                        "train_loss": reference.train_loss}, root=repo_dir())
-    print("\nSTAGE 0 complete. Stage A may now be run.")
+
+    print(f"\n[STAGE 0] artifacts -> {out_dir}")
+    print(f"[STAGE 0] all_passed={payload['all_passed']}")
+    print(f"[STAGE 0] GATE 1 (model can overfit TRAIN)            : "
+          f"{'PASS' if overfit.passed else 'FAIL'} "
+          f"(best_train_acc={overfit.best_train_accuracy:.4f})")
+    print(f"[STAGE 0] GATE 2 (shuffled labels behave like chance) : "
+          f"{'PASS' if control.passed else 'FAIL'} "
+          f"(val_acc={control.validation_accuracy:.4f} vs "
+          f"majority={control.majority_validation_accuracy:.4f})")
+    real_beats_shuffled = (reference.validation_accuracy is not None
+                           and control.validation_accuracy is not None
+                           and reference.validation_accuracy > control.validation_accuracy)
+    print(f"[STAGE 0] NOT A GATE - single-ticker signal check    : "
+          f"real={reference.validation_accuracy:.4f} vs "
+          f"shuffled={control.validation_accuracy:.4f} -> "
+          f"{'signal seen' if real_beats_shuffled else 'NOT DEMONSTRATED'}")
+    print("  One ticker and one pre-test window is not sufficient evidence of "
+          "predictive signal, and its absence is not a reason to stop. Whether "
+          "signal appears consistently across stocks and windows is what the "
+          "STAGE A PILOT determines.")
+    print("\nSTAGE 0 complete. Stage A pilot may now be run.")
     return 0 if payload["all_passed"] else 1
 
 
@@ -327,7 +366,7 @@ def run_search_experiment(args, cfg: dict, resolved: dict) -> int:
     from agentic_forecaster.recovery.firewall import firewall_guard
     from agentic_forecaster.recovery.ledger import (
         append_experiment,
-        hash_dict,
+        hash_file,
         new_experiment_id,
     )
     from agentic_forecaster.recovery.scoring import (
@@ -342,7 +381,12 @@ def run_search_experiment(args, cfg: dict, resolved: dict) -> int:
     out_dir = runtime_dir() / experiment_id
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    (out_dir / "resolved_config.yaml").write_text(_yaml.safe_dump(cfg, sort_keys=False))
+    # Hash the ACTUAL written config file, not a re-serialisation of a subset.
+    # Anyone can recompute it with sha256sum on the artifact, and it changes if
+    # and only if the effective configuration changes.
+    cfg_path = out_dir / "resolved_config.yaml"
+    cfg_path.write_text(_yaml.safe_dump(cfg, sort_keys=False))
+    cfg_hash = hash_file(cfg_path)
     data_agent = DataAgent(cfg)
     model_agent = ModelAgent(cfg)
 
@@ -410,7 +454,7 @@ def run_search_experiment(args, cfg: dict, resolved: dict) -> int:
         "dataset_variant": cfg["data"].get("variant"),
         "dataset_hash": dataset_manifest_hash(cfg),
         "universe_id": cfg["data"].get("universe_id"),
-        "config_hash": hash_dict(resolved),
+        "config_hash": cfg_hash,
         "search_fold": args.search_fold,
         "ticker_subset": ",".join(t["ticker"] for t in per_ticker),
         "feature_set": resolved["feature_family"],

@@ -35,7 +35,7 @@ experiment:
 
 data:
   raw_root: ${AGENTIC_YFINANCE_DAILY_ROOT}/adjusted/csv
-  processed_root: ${AGENTIC_DATA_ROOT}/yfinance_daily_2000_2025/adjusted/processed
+  processed_root: ${AGENTIC_OUTPUT_ROOT}/reproduction_recovery/processed/yfinance_daily_2000_2025/adjusted
   source: yfinance
   variant: adjusted
   auto_adjust: true

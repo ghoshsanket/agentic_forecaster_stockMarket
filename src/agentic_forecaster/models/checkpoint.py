@@ -4,7 +4,8 @@ A bundle directory contains::
 
     model.pt           state_dict
     scaler.joblib      fitted StandardScaler
-    calibration.json   temperature + metadata
+    calibration.json   selected calibrator (none/temperature/platt/isotonic)
+                       + metadata
     config.json        architecture + training config
     metrics.json       evaluation metrics
     manifest.json      name, kind, ticker, fold, seed, temperature
@@ -14,6 +15,11 @@ A bundle directory contains::
 ``save_model_bundle`` writes all of these; ``load_model_bundle`` rebuilds the
 architecture from ``config.json``, loads the state_dict, restores the scaler,
 calibration and background, and returns a ready-to-use ``FittedModel``.
+
+The calibrator is restored through the generic registry, so ``none``,
+``temperature``, ``platt`` and ``isotonic`` all round-trip. Bundles
+written before generic support stored only a temperature float and are
+still loaded as temperature.
 """
 
 from __future__ import annotations
@@ -27,7 +33,7 @@ import numpy as np
 import torch
 
 from agentic_forecaster.agents.model_agent import FittedModel
-from agentic_forecaster.calibration import TemperatureCalibrator
+from agentic_forecaster.calibration.registry import calibrator_from_payload
 from agentic_forecaster.models import AttentionLSTM
 from agentic_forecaster.utils import ensure_dir
 
@@ -84,13 +90,24 @@ def load_model_bundle(root: str | Path, device: str | None = None) -> FittedMode
         fold=manifest.get("fold", ""),
         metrics=metrics,
         calibration=calibration_dict,
-        temperature=TemperatureCalibrator.from_dict(calibration_dict).temperature,
+        # Backward compatibility: keep `temperature` populated when the method
+        # IS temperature. Non-temperature methods must NOT be forced into a fake
+        # temperature - the real calibrator is restored below instead.
+        temperature=(float(calibration_dict.get("temperature", 1.0))
+                     if str(calibration_dict.get("method", "temperature")).lower()
+                     == "temperature" else 1.0),
+        calibration_method=str(calibration_dict.get("method", "temperature")).lower(),
         train_config=config,
         seed=int(manifest.get("seed", 42)),
         feature_names=feature_names,
     )
     fitted._scaler = scaler
     fitted._background = background
-    logger.info("Loaded bundle %s (ticker=%s fold=%s device=%s T=%.4f)",
-                root, fitted.ticker, fitted.fold, torch_device, fitted.temperature)
+    # Restore the ACTUAL selected calibrator so platt/isotonic/none are used for
+    # inference, not just temperature via the legacy fallback.
+    fitted._calibrator = calibrator_from_payload(calibration_dict)
+    logger.info("Loaded bundle %s (ticker=%s fold=%s device=%s T=%.4f "
+                "calibration=%s)",
+                root, fitted.ticker, fitted.fold, torch_device, fitted.temperature,
+                fitted.calibration_method)
     return fitted

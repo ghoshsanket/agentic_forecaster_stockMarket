@@ -1,0 +1,473 @@
+{
+  "source": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/reproduction_recovery",
+  "experiment_runs": 9,
+  "ticker_fits": 72,
+  "folds": [
+    "SEARCH_FOLD_A",
+    "SEARCH_FOLD_B",
+    "SEARCH_FOLD_C"
+  ],
+  "firewall": "no date >= 2022-01-01 was read or scored",
+  "paper_reference_used": false,
+  "summary": {
+    "P0": {
+      "per_fold": {
+        "SEARCH_FOLD_A": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.5056818181818181,
+          "mean_f1": 0.4420183273936319,
+          "mean_brier_raw": 0.25054966099271403,
+          "mean_ece": 0.024429107746802035,
+          "mean_majority_accuracy": 0.5180785123966942,
+          "beating_majority_pct": 0.0,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        },
+        "SEARCH_FOLD_B": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.516,
+          "mean_f1": 0.5648524746532642,
+          "mean_brier_raw": 0.2490926497814175,
+          "mean_ece": 0.020499234855174974,
+          "mean_majority_accuracy": 0.5295000000000001,
+          "beating_majority_pct": 12.5,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        },
+        "SEARCH_FOLD_C": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.5050607287449393,
+          "mean_f1": 0.347785105910568,
+          "mean_brier_raw": 0.25042879629506476,
+          "mean_ece": 0.04133388567489647,
+          "mean_majority_accuracy": 0.5369433198380567,
+          "beating_majority_pct": 0.0,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        }
+      },
+      "cross_fold": {
+        "mean_accuracy": 0.508914182308919,
+        "std_accuracy": 0.025291497688022066,
+        "mean_f1": 0.4515519693191547,
+        "std_f1": 0.26823347008863313,
+        "mean_brier_raw": 0.25002370235639876,
+        "std_brier_raw": 0.0017053743795100442,
+        "mean_ece": 0.02875407609229116,
+        "mean_majority_accuracy": 0.5281739440782504,
+        "beating_majority_pct": 4.166666666666666,
+        "n_cases": 24,
+        "precision_at_3_up": 0.5266354676689605,
+        "precision_at_3_down": 0.4967599141953209
+      },
+      "per_ticker": {
+        "HDFCBANK": {
+          "mean_accuracy": 0.5113693133023276,
+          "mean_f1": 0.5910996105301761,
+          "beating_majority_pct": 0.0
+        },
+        "INFY": {
+          "mean_accuracy": 0.5290642754374812,
+          "mean_f1": 0.6842219004719005,
+          "beating_majority_pct": 0.0
+        },
+        "ITC": {
+          "mean_accuracy": 0.5035753337571519,
+          "mean_f1": 0.2951507028215967,
+          "beating_majority_pct": 0.0
+        },
+        "LT": {
+          "mean_accuracy": 0.5197381247142013,
+          "mean_f1": 0.18302339260666936,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "RELIANCE": {
+          "mean_accuracy": 0.48306795596747754,
+          "mean_f1": 0.563729071365641,
+          "beating_majority_pct": 0.0
+        },
+        "SUNPHARMA": {
+          "mean_accuracy": 0.48852901484480427,
+          "mean_f1": 0.0291970802919708,
+          "beating_majority_pct": 0.0
+        },
+        "TATASTEEL": {
+          "mean_accuracy": 0.5043617180267898,
+          "mean_f1": 0.5719681342116363,
+          "beating_majority_pct": 0.0
+        },
+        "TCS": {
+          "mean_accuracy": 0.5316077224211195,
+          "mean_f1": 0.6940258622536469,
+          "beating_majority_pct": 0.0
+        }
+      },
+      "best_epoch": {
+        "n": 24,
+        "median": 1.0,
+        "mean": 1.125,
+        "max": 2.0,
+        "pct_gt_3": 0.0,
+        "pct_gt_10": 0.0,
+        "histogram": {
+          "0": 7,
+          "1": 7,
+          "2": 10
+        }
+      }
+    },
+    "P1": {
+      "per_fold": {
+        "SEARCH_FOLD_A": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.5072314049586777,
+          "mean_f1": 0.4800657312993629,
+          "mean_brier_raw": 0.24907671660647354,
+          "mean_ece": 0.022096997096149325,
+          "mean_majority_accuracy": 0.5180785123966942,
+          "beating_majority_pct": 12.5,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        },
+        "SEARCH_FOLD_B": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.53,
+          "mean_f1": 0.5860812070058756,
+          "mean_brier_raw": 0.24809351008815994,
+          "mean_ece": 0.023379715889692267,
+          "mean_majority_accuracy": 0.5295000000000001,
+          "beating_majority_pct": 37.5,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        },
+        "SEARCH_FOLD_C": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.5227732793522267,
+          "mean_f1": 0.4340106836349145,
+          "mean_brier_raw": 0.24883634651528394,
+          "mean_ece": 0.021747431985521065,
+          "mean_majority_accuracy": 0.5369433198380567,
+          "beating_majority_pct": 12.5,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        }
+      },
+      "cross_fold": {
+        "mean_accuracy": 0.5200015614369682,
+        "std_accuracy": 0.03333117667357005,
+        "mean_f1": 0.5000525406467177,
+        "std_f1": 0.23570902103301633,
+        "mean_brier_raw": 0.24866885773663916,
+        "std_brier_raw": 0.0022584340413068084,
+        "mean_ece": 0.02240804832378755,
+        "mean_majority_accuracy": 0.5281739440782504,
+        "beating_majority_pct": 20.833333333333336,
+        "n_cases": 24,
+        "precision_at_3_up": 0.5352940074279787,
+        "precision_at_3_down": 0.5111884394181045
+      },
+      "per_ticker": {
+        "HDFCBANK": {
+          "mean_accuracy": 0.5113693133023276,
+          "mean_f1": 0.5910996105301761,
+          "beating_majority_pct": 0.0
+        },
+        "INFY": {
+          "mean_accuracy": 0.5412100244253355,
+          "mean_f1": 0.6965110254882981,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "ITC": {
+          "mean_accuracy": 0.5008205128205128,
+          "mean_f1": 0.28441154004348085,
+          "beating_majority_pct": 0.0
+        },
+        "LT": {
+          "mean_accuracy": 0.5115294275102887,
+          "mean_f1": 0.23930429381163135,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "RELIANCE": {
+          "mean_accuracy": 0.5326927872765194,
+          "mean_f1": 0.6198964017056001,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "SUNPHARMA": {
+          "mean_accuracy": 0.4803922775788805,
+          "mean_f1": 0.22082544490723208,
+          "beating_majority_pct": 0.0
+        },
+        "TATASTEEL": {
+          "mean_accuracy": 0.5352389110092459,
+          "mean_f1": 0.675166750224616,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "TCS": {
+          "mean_accuracy": 0.5467592375726348,
+          "mean_f1": 0.673205258462707,
+          "beating_majority_pct": 33.33333333333333
+        }
+      },
+      "best_epoch": {
+        "n": 24,
+        "median": 2.0,
+        "mean": 5.5,
+        "max": 24.0,
+        "pct_gt_3": 41.66666666666667,
+        "pct_gt_10": 16.666666666666664,
+        "histogram": {
+          "0": 5,
+          "1": 3,
+          "2": 6,
+          "4": 1,
+          "6": 3,
+          "8": 1,
+          "10": 1,
+          "12": 1,
+          "19": 1,
+          "22": 1,
+          "24": 1
+        }
+      }
+    },
+    "P2": {
+      "per_fold": {
+        "SEARCH_FOLD_A": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.5196280991735538,
+          "mean_f1": 0.5069096587270382,
+          "mean_brier_raw": 0.24919126425592036,
+          "mean_ece": 0.035333114129698924,
+          "mean_majority_accuracy": 0.5180785123966942,
+          "beating_majority_pct": 50.0,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        },
+        "SEARCH_FOLD_B": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.537,
+          "mean_f1": 0.5579560159022436,
+          "mean_brier_raw": 0.2485477179651932,
+          "mean_ece": 0.026130499020218776,
+          "mean_majority_accuracy": 0.5295000000000001,
+          "beating_majority_pct": 62.5,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        },
+        "SEARCH_FOLD_C": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.5298582995951417,
+          "mean_f1": 0.5565895248270528,
+          "mean_brier_raw": 0.24872164431066396,
+          "mean_ece": 0.01928075261202894,
+          "mean_majority_accuracy": 0.5369433198380567,
+          "beating_majority_pct": 12.5,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        }
+      },
+      "cross_fold": {
+        "mean_accuracy": 0.5288287995895652,
+        "std_accuracy": 0.026227588010422513,
+        "mean_f1": 0.5404850664854449,
+        "std_f1": 0.18364245401766388,
+        "mean_brier_raw": 0.24882020884392583,
+        "std_brier_raw": 0.0015110310271929169,
+        "mean_ece": 0.026914788587315542,
+        "mean_majority_accuracy": 0.5281739440782504,
+        "beating_majority_pct": 41.66666666666667,
+        "n_cases": 24,
+        "precision_at_3_up": 0.531123096998695,
+        "precision_at_3_down": 0.5143445199138978
+      },
+      "per_ticker": {
+        "HDFCBANK": {
+          "mean_accuracy": 0.5004057951617761,
+          "mean_f1": 0.6146919709129588,
+          "beating_majority_pct": 0.0
+        },
+        "INFY": {
+          "mean_accuracy": 0.5438604967600184,
+          "mean_f1": 0.7013667417417416,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "ITC": {
+          "mean_accuracy": 0.5383742318287773,
+          "mean_f1": 0.2600260195712427,
+          "beating_majority_pct": 66.66666666666666
+        },
+        "LT": {
+          "mean_accuracy": 0.534662071580732,
+          "mean_f1": 0.43383680605313685,
+          "beating_majority_pct": 100.0
+        },
+        "RELIANCE": {
+          "mean_accuracy": 0.523359453943186,
+          "mean_f1": 0.6262200064163016,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "SUNPHARMA": {
+          "mean_accuracy": 0.517059769576516,
+          "mean_f1": 0.41395759931229037,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "TATASTEEL": {
+          "mean_accuracy": 0.5151741336813106,
+          "mean_f1": 0.6157166104537053,
+          "beating_majority_pct": 0.0
+        },
+        "TCS": {
+          "mean_accuracy": 0.5577344441842049,
+          "mean_f1": 0.6580647774221816,
+          "beating_majority_pct": 66.66666666666666
+        }
+      },
+      "best_epoch": {
+        "n": 24,
+        "median": 2.5,
+        "mean": 5.208333333333333,
+        "max": 37.0,
+        "pct_gt_3": 45.83333333333333,
+        "pct_gt_10": 8.333333333333332,
+        "histogram": {
+          "0": 5,
+          "1": 3,
+          "2": 4,
+          "3": 1,
+          "4": 1,
+          "5": 2,
+          "6": 3,
+          "8": 2,
+          "9": 1,
+          "17": 1,
+          "37": 1
+        }
+      }
+    }
+  },
+  "diagnostics": {
+    "P0_vs_P1": {
+      "accuracy_delta": 0.011087379128049135,
+      "f1_delta": 0.04850057132756297,
+      "brier_delta": -0.0013548446197595987,
+      "beating_majority_delta_pct": 16.66666666666667,
+      "P1_best_epoch": {
+        "n": 24,
+        "median": 2.0,
+        "mean": 5.5,
+        "max": 24.0,
+        "pct_gt_3": 41.66666666666667,
+        "pct_gt_10": 16.666666666666664,
+        "histogram": {
+          "0": 5,
+          "1": 3,
+          "2": 6,
+          "4": 1,
+          "6": 3,
+          "8": 1,
+          "10": 1,
+          "12": 1,
+          "19": 1,
+          "22": 1,
+          "24": 1
+        }
+      }
+    },
+    "P1_vs_P2": {
+      "accuracy_delta": 0.008827238152597006,
+      "f1_delta": 0.04043252583872725,
+      "brier_delta": 0.00015135110728667356,
+      "beating_majority_delta_pct": 20.833333333333336
+    }
+  },
+  "signal_gate": {
+    "best_configuration": "P2",
+    "verdict": "WEAK",
+    "mean_accuracy": 0.5288287995895652,
+    "mean_majority_accuracy": 0.5281739440782504,
+    "accuracy_over_majority": 0.0006548555113148335,
+    "mean_f1": 0.5404850664854449,
+    "mean_brier_raw": 0.24882020884392583,
+    "beating_majority_pct": 41.66666666666667,
+    "criteria": {
+      "beats_majority_pct>=55": false,
+      "f1>=0.52": true,
+      "brier<0.25": true,
+      "stable_across_tickers": true
+    },
+    "proceed_to_stage_b": false,
+    "note": "Judged on pre-2022 validation only. Deliberately NOT compared to the paper's published test metrics."
+  }
+}

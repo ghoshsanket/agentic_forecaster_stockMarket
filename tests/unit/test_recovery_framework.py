@@ -190,7 +190,7 @@ def test_ledger_columns_match_the_specification():
         "patience", "weight_decay", "class_weighting", "calibration_method",
         "seed", "train_loss", "validation_loss", "validation_accuracy",
         "validation_f1", "validation_brier", "validation_ece",
-        "test_evaluated", "notes",
+        "test_evaluated", "epochs_run", "notes",
     ]
     assert list(LEDGER_COLUMNS) == expected
 

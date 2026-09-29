@@ -47,7 +47,7 @@ experiment:
 
 data:
   raw_root: ${AGENTIC_YFINANCE_LEGACY_ROOT}/adjusted/csv
-  processed_root: ${AGENTIC_YFINANCE_LEGACY_ROOT}/adjusted/processed
+  processed_root: ${AGENTIC_OUTPUT_ROOT}/reproduction_recovery/processed/yfinance_legacy_nifty50_2000_2025/adjusted
   source: yfinance_legacy
   universe_id: USER_SUPPLIED_LEGACY_NIFTY50_UNIVERSE
   universe_config: configs/nifty50_legacy_user_supplied.yaml

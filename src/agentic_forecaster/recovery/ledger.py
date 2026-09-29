@@ -57,6 +57,7 @@ LEDGER_COLUMNS: tuple[str, ...] = (
     "validation_brier",
     "validation_ece",
     "test_evaluated",
+    "epochs_run",
     "notes",
 )
 

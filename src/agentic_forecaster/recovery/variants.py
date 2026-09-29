@@ -121,12 +121,15 @@ SCALERS: dict[str, str] = {
 }
 DEFAULT_SCALER = "standard"
 
-#: Controlled volume preprocessing variants, fitted on TRAIN only either way.
+#: Controlled volume preprocessing variants. Volume preprocessing is an
+#: INVESTIGATED choice, not a silent default: the original/reconstruction
+#: pipeline used ordinary OHLCV, so ``raw`` is the Stage-A reference. ``log1p``
+#: is retained as an explicit Stage-B sensitivity option.
 VOLUME_MODES: dict[str, str] = {
-    "raw": "raw volume as supplied",
-    "log1p": "log1p(volume) before scaling",
+    "raw": "raw volume as supplied (Phase-1 reference)",
+    "log1p": "log1p(volume) before scaling (Stage-B sensitivity)",
 }
-DEFAULT_VOLUME_MODE = "log1p"
+DEFAULT_VOLUME_MODE = "raw"
 
 # ----------------------------------------------------------- architecture
 

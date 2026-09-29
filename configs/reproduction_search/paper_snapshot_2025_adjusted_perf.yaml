@@ -54,7 +54,7 @@ experiment:
 
 data:
   raw_root: ${AGENTIC_DATA_ROOT}/yfinance_paper_snapshot_2025_11_04/adjusted/csv
-  processed_root: ${AGENTIC_DATA_ROOT}/yfinance_paper_snapshot_2025_11_04/adjusted/processed
+  processed_root: ${AGENTIC_OUTPUT_ROOT}/reproduction_recovery/processed/yfinance_paper_snapshot_2025_11_04/adjusted
   source: yfinance_paper_snapshot
   universe_id: PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE
   universe_config: configs/nifty50_paper_snapshot_2025_11_04.yaml

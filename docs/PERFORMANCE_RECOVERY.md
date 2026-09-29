@@ -67,9 +67,27 @@ be measured.
 | **D** | calibration / seed stability | none/temperature/platt/isotonic × 5 seeds |
 | **E** | confirm on all 50 | best 2–3, pre-2022 validation only |
 
-**STAGE 0 is a hard gate.** If the model cannot overfit a tiny TRAIN subset, or
-if shuffled TRAIN labels do not fall to chance, the search stops and the
-pipeline is diagnosed. Numbers from a broken pipeline are uninterpretable.
+**STAGE 0 is a hard gate — but only its first two checks are.** The gate exists
+to protect the *interpretation* of later numbers, so it is scoped to questions
+that can be answered on a tiny subset with no risk of fooling us:
+
+| Stage-0 check | Kind | Criterion |
+|---|---|---|
+| tiny overfit | **HARD GATE** | the model can drive TRAIN loss toward zero |
+| shuffled-label control | **HARD GATE** | shuffled TRAIN labels must not beat chance on validation |
+| real-label reference | **NOT A GATE** | reported for context only; never blocks the search |
+
+If either hard gate fails, the search stops and the pipeline is diagnosed.
+Numbers from a broken pipeline are uninterpretable.
+
+The real-label reference is deliberately **not** a gate. One ticker over one
+pre-2022 validation window is not a test of predictive signal — it has neither
+the breadth nor the statistical power to establish it, so a low value is weak
+evidence, not disproof. Treating it as a gate would let a single noisy window
+discard an otherwise sound pipeline, and it would smuggle a signal requirement
+into a stage that exists to test *mechanics*. Whether signal exists at all is
+answered across stocks and windows by the **Stage-A pilot** (§ below), which is
+the first stage with the breadth to support the question.
 
 ### Training-length recovery is the first substantive experiment
 
@@ -202,3 +220,65 @@ uv run python scripts/freeze_recovered_config.py \
 FINAL_TEST=1 uv run python scripts/run_recovered_paper.py \
     --config configs/recovered_paper.yaml --device auto --run-id recovered_paper_final
 ```
+
+## The Stage-A pilot (what actually runs first)
+
+The full Stage-A grid is 3 training lengths × 2 feature families × 3 folds ×
+~10 stocks ≈ **180 fits**. That is a large bill to pay before knowing whether
+the pipeline has any pre-2022 signal at all, so Stage A is entered through a
+controlled pilot of **3 configurations × 3 folds × 8 stocks = 9 runs / 72 fits**
+(`scripts/run_stage_a_pilot.sh`).
+
+The three configurations are chosen to answer three specific questions rather
+than to sweep a grid:
+
+| Config | Training length | Features | Question it answers |
+|---|---|---|---|
+| **P0** | T3 (3 epochs) | F1 | was the original 3-epoch cap too restrictive? |
+| **P1** | T100, patience 10 | F1 | does proper early stopping change anything? |
+| **P2** | T100, patience 10 | F2 | do the paper's named features (SMA/Bollinger/OBV) help? |
+
+Everything else is held fixed: lookback 30, standard scaler, raw volume, A0
+(2×64), dropout 0.2, weight decay 1e-4, no class weighting, **calibration none**,
+seed 42. The stocks are RELIANCE, TCS, INFY, HDFCBANK, ITC, LT, SUNPHARMA and
+TATASTEEL.
+
+Calibration is `none` for all of Stages A–C so every validation metric is
+computed from the **raw** `p(up)`. Comparing calibration methods requires a
+calibrated score, which would confound the comparison with everything else, so
+it is deferred to Stage D (§ below).
+
+`scripts/summarize_stage_a_pilot.py` reduces the pilot to per-fold and
+cross-fold accuracy/F1/Brier/ECE, the majority baseline, cross-sectional P@3,
+the T100 best-epoch distribution (what fraction exceed 3 and 10 epochs), a
+P0→P1 and P1→P2 diagnostic, and a signal verdict. It reads **only** pilot
+artifacts; it never imports `PAPER_REFERENCE` and never reads 2022/2023, so the
+pilot cannot become a tuning target for the published numbers.
+
+### Stage-D calibration is nested, not reported on the same data
+
+Stage D fits a calibrator on validation scores and then reports how well that
+calibrator works. Doing both on the same validation set would report the
+calibrator's *training* error and make every method look perfect. So the
+validation window is split chronologically into an earlier **fit 60%** and a
+later **score 40%** (`temporal_calibration_split`), the calibrator is fit on the
+former and evaluated on the latter, and the split is enforced disjoint by test.
+The official 2022 validation and 2023 test windows stay untouched for the final
+calibration refit.
+
+## Late-listed constituents
+
+The paper-snapshot universe is the official NIFTY 50 as of 2025-11-04, and
+several of its members listed far later than the 2016 training start. A ticker
+with no price history before its listing date has no features to build at that
+date, and the usual fix — padding with synthetic or forward-filled history —
+would fabricate returns and leak future information backwards in time.
+
+The rule is therefore: **each fold uses only the tickers that actually have
+sufficient history for that fold's training window**, and the excluded tickers
+are reported explicitly rather than silently dropped. The minimum-history
+requirement is the fold's `lookback` plus enough sessions to form the feature
+window, so a ticker that only lists in 2024 contributes nothing to a fold whose
+training window ends in 2018 but may legitimately appear in later folds. The
+`ticker_subset` column in the experiment ledger records exactly which tickers
+each run actually scored, so per-ticker coverage is always auditable.
