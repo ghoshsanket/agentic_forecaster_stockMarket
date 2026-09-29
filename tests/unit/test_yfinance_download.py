@@ -138,7 +138,9 @@ def test_validate_frame_flags_high_below_low():
         {"Date": [pd.Timestamp("2020-01-01")], "Open": [1.0], "High": [0.5],
          "Low": [2.0], "Close": [1.0], "Volume": [1]}
     )
-    assert "high_below_low" in dl.validate_frame(df, "2019-01-01", "2021-01-01")
+    # a 1.5-unit breach is material, so it must still be reported
+    issues = dl.validate_frame(df, "2019-01-01", "2021-01-01")
+    assert any(i.startswith("high_below_low") for i in issues)
 
 
 def test_validate_frame_flags_negative_volume():

@@ -49,7 +49,9 @@ class Trainer:
         weight_decay: float = 1e-4,
         batch_size: int = 64,
         epochs: int = 3,
+        max_epochs: int | None = None,
         patience: int = 10,
+        restore_best_checkpoint: bool = True,
         beta1: float = 0.9,
         beta2: float = 0.999,
         gradient_clip_norm: float = 1.0,
@@ -60,8 +62,13 @@ class Trainer:
         self.lr = learning_rate
         self.wd = weight_decay
         self.batch_size = batch_size
-        self.epochs = epochs
+        # `max_epochs` is an explicit alias for `epochs`.  The publication
+        # specifies early-stopping patience 10 but does NOT specify an epoch
+        # cap, so a performance-recovery config can set `max_epochs` without
+        # the value being silently ignored.
+        self.epochs = int(max_epochs) if max_epochs is not None else int(epochs)
         self.patience = patience
+        self.restore_best_checkpoint = bool(restore_best_checkpoint)
         self.beta1 = beta1
         self.beta2 = beta2
         self.gradient_clip_norm = gradient_clip_norm
@@ -141,7 +148,7 @@ class Trainer:
                     logger.info("Early stopping at epoch %d (best=%d)", epoch, best_epoch)
                     break
 
-        if best_state is not None:
+        if best_state is not None and self.restore_best_checkpoint:
             self.model.load_state_dict(best_state)
 
         if checkpoint_path:

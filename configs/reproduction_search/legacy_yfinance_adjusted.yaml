@@ -21,7 +21,11 @@
 # DO NOT RUN AS PART OF DATA RECONSTRUCTION. The dataset must be inspected
 # first. When it is run deliberately:
 #
-#   uv run python scripts/run_experiment.py \
+#   uv run agentic-forecaster prepare-data \
+#       --config configs/reproduction_search/legacy_yfinance_adjusted.yaml \
+#       --ticker RELIANCE
+#   uv run agentic-forecaster train \
+#       --ticker RELIANCE \
 #       --config configs/reproduction_search/legacy_yfinance_adjusted.yaml
 #
 # SOURCE

@@ -60,6 +60,12 @@ _spec = importlib.util.spec_from_file_location(
 dl = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(dl)
 
+from agentic_forecaster.data.validation import (
+    DEFAULT_ATOL,
+    DEFAULT_RTOL,
+    ohlc_violations,
+)
+
 CANONICAL = dl.CANONICAL_COLUMNS
 VARIANTS = dl.VARIANTS
 UNIVERSE_CFG = "configs/nifty50_legacy_user_supplied.yaml"
@@ -374,6 +380,7 @@ def build_quality(root: Path, labels: list[str]) -> dict:
         "note": "vendor values reported as-is; nothing repaired or forward-filled"}}
     for variant in VARIANTS:
         issues, jumps = [], 0
+        tolerance_cleared_total = 0
         for label in labels:
             df = read_series(root, label, variant)
             if df is None or df.empty:
@@ -387,9 +394,12 @@ def build_quality(root: Path, labels: list[str]) -> dict:
                 p.append("nulls")
             if (df.Volume < 0).any():
                 p.append("negative_volume")
-            v = df.dropna(subset=["Open", "High", "Low", "Close"])
-            if (v.High < v.Low).any() or (v.High < v.Close).any() or (v.Low > v.Close).any():
-                p.append("ohlc_relation")
+            # OHLC ordering uses a numerical tolerance: back-adjusted float64
+            # data can place High a few ULP below Close when they are equal.
+            viol = ohlc_violations(df, atol=DEFAULT_ATOL, rtol=DEFAULT_RTOL)
+            if viol["total_material_violations"]:
+                p.append("ohlc_material_violation")
+            rounded = viol["total_tolerance_cleared"]
             if df.Date.min() < pd.Timestamp("2000-01-01"):
                 p.append("before_start")
             if df.Date.max() >= pd.Timestamp("2026-01-01"):
@@ -397,7 +407,18 @@ def build_quality(root: Path, labels: list[str]) -> dict:
             if p:
                 issues.append({"label": label, "issues": p})
             jumps += int((df.Close.pct_change().abs() > dl.JUMP_THRESHOLD).sum())
-        out[variant] = {"securities_with_issues": issues, "large_jumps": jumps}
+            tolerance_cleared_total += rounded
+        out[variant] = {
+            "securities_with_issues": issues,
+            "large_jumps": jumps,
+            "ohlc_tolerance": {
+                "atol": DEFAULT_ATOL,
+                "rtol": DEFAULT_RTOL,
+                "material_violations": 0 if not issues else "see securities_with_issues",
+                "breaches_cleared_as_rounding": tolerance_cleared_total,
+                "note": "OHLC ordering is compared with a numerical tolerance. Back-adjusted float64 data places High a few ULP below Close when the two are economically equal; those are cleared, not repaired. Prices are never modified. Material breaches remain visible.",
+            },
+        }
     return out
 
 

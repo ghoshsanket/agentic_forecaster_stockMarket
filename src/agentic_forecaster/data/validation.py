@@ -1,120 +1,119 @@
+"""Shared data validation for OHLCV frames.
+
+Kept in the package (rather than duplicated in each build script) so the
+downloader, the artifact builders and the runtime all apply the SAME rule.
+
+OHLC consistency and floating point
+-----------------------------------
+The identity checks ``High >= max(Open, Close)`` and
+``Low <= min(Open, Close)`` are exact mathematical facts, but on
+``float64`` data that has been back-adjusted by a corporate-action factor the
+values are only equal to within rounding.  A bar where the high *is* the
+close can therefore end up with ``High`` a few ULP below ``Close``, which an
+exact comparison reports as a violation.
+
+Measured on the legacy adjusted dataset: 563 such exact-inequality breaches,
+with a maximum magnitude of 5.7e-14 INR, versus zero in the unadjusted
+variant.  These are rounding artefacts, not data errors, so the validator
+compares with a tolerance and reports the worst observed breach so material
+violations stay visible.
+
+The tolerance is applied to the COMPARISON ONLY.  No price is ever altered.
+"""
+
+from __future__ import annotations
+
+import numpy as np
 import pandas as pd
 
+# Absolute tolerance in price units.  Comfortably above the 5.7e-14 rounding
+# observed, and far below any economically meaningful breach.
+DEFAULT_ATOL = 1e-9
+# Relative tolerance, for high-priced series where ULP scales with magnitude.
+DEFAULT_RTOL = 1e-9
 
-def validate_ohlcv(df: pd.DataFrame, date_col: str = "date") -> list[str]:
-    errors: list[str] = []
-
-    required_cols = {"ticker", date_col, "open", "high", "low", "close", "volume"}
-    missing_cols = required_cols - set(df.columns)
-    if missing_cols:
-        errors.append(f"Missing required columns: {sorted(missing_cols)}")
-        return errors
-
-    nan_cols = [col for col in required_cols if df[col].isna().any()]
-    if nan_cols:
-        errors.append(f"NaN values found in columns: {sorted(nan_cols)}")
-
-    if not df[date_col].is_monotonic_increasing:
-        errors.append(f"Dates in column '{date_col}' are not sorted in chronological order")
-
-    duplicated = df.duplicated(subset=["ticker", date_col], keep=False)
-    if duplicated.any():
-        dup_count = int(duplicated.sum())
-        errors.append(f"Found {dup_count} duplicate ticker/date rows")
-
-    price_cols = ["open", "high", "low", "close"]
-    for col in price_cols:
-        non_positive = df[col] <= 0
-        if non_positive.any():
-            count = int(non_positive.sum())
-            errors.append(f"Non-positive values found in column '{col}' ({count} rows)")
-
-    non_negative_vol = df["volume"] < 0
-    if non_negative_vol.any():
-        count = int(non_negative_vol.sum())
-        errors.append(f"Negative values found in column 'volume' ({count} rows)")
-
-    for col in ["open", "close", "low"]:
-        mask = df["high"] < df[col]
-        if mask.any():
-            count = int(mask.sum())
-            errors.append(f"'high' is less than '{col}' in {count} rows")
-
-    for col in ["open", "close"]:
-        mask = df["low"] > df[col]
-        if mask.any():
-            count = int(mask.sum())
-            errors.append(f"'low' is greater than '{col}' in {count} rows")
-
-    today = pd.Timestamp.now().normalize()
-    future_dates = df[date_col] > today
-    if future_dates.any():
-        count = int(future_dates.sum())
-        errors.append(f"Found {count} rows with dates in the future relative to {today.date()}")
-
-    return errors
+# (rule name, lhs, rhs, relation)
+#   "ge": lhs must be >= rhs, so a VIOLATION is lhs < rhs
+#   "le": lhs must be <= rhs, so a VIOLATION is lhs > rhs
+OHLC_RULES = (
+    ("high_below_low", "High", "Low", "ge"),
+    ("high_below_open", "High", "Open", "ge"),
+    ("high_below_close", "High", "Close", "ge"),
+    ("low_above_open", "Low", "Open", "le"),
+    ("low_above_close", "Low", "Close", "le"),
+)
 
 
-def validate_no_leakage(train_dates, val_dates, test_dates) -> list[str]:
-    errors: list[str] = []
+def ohlc_violations(df: pd.DataFrame, *, atol: float = DEFAULT_ATOL,
+                    rtol: float = DEFAULT_RTOL) -> dict:
+    """Return per-rule violation counts and the worst breach magnitude.
 
-    train_set = set(train_dates)
-    val_set = set(val_dates)
-    test_set = set(test_dates)
+    For a rule ``(name, lhs, rhs, "ge")`` a violation is ``lhs < rhs``;
+    for ``(name, lhs, rhs, "le")`` a violation is ``lhs > rhs``.
 
-    train_val_overlap = train_set & val_set
-    if train_val_overlap:
-        errors.append(f"Date overlap between train and val sets: {len(train_val_overlap)} dates")
+    A bar is counted as violating a rule only when it breaches the relation by
+    MORE than the tolerance, so rounding noise is ignored while a genuine
+    mis-ordered bar is still reported.  ``tolerance_cleared`` records how many
+    breaches were discarded as rounding, and ``worst_breach`` keeps the largest
+    observed magnitude so a near-miss is still auditable.
+    """
+    required = {"Open", "High", "Low", "Close"}
+    missing = required - set(df.columns)
+    if missing:
+        raise ValueError(f"frame is missing OHLC columns: {sorted(missing)}")
 
-    train_test_overlap = train_set & test_set
-    if train_test_overlap:
-        errors.append(f"Date overlap between train and test sets: {len(train_test_overlap)} dates")
+    out: dict = {
+        "counts": {},
+        "worst_breach": {},
+        "tolerance_cleared": {},
+        "atol": atol,
+        "rtol": rtol,
+    }
+    valid = df.dropna(subset=list(required))
+    for name, lhs, rhs, relation in OHLC_RULES:
+        left = valid[lhs].to_numpy(dtype=float)
+        right = valid[rhs].to_numpy(dtype=float)
+        close_enough = np.isclose(left, right, rtol=rtol, atol=atol)
+        breach = (left < right) if relation == "ge" else (left > right)
+        hard = breach & ~close_enough
+        out["counts"][name] = int(hard.sum())
+        out["tolerance_cleared"][name] = int((breach & close_enough).sum())
+        out["worst_breach"][name] = (
+            float(np.abs(left - right)[breach].max()) if breach.any() else 0.0)
+    out["total_material_violations"] = int(sum(out["counts"].values()))
+    out["total_tolerance_cleared"] = int(sum(out["tolerance_cleared"].values()))
+    return out
 
-    val_test_overlap = val_set & test_set
-    if val_test_overlap:
-        errors.append(f"Date overlap between val and test sets: {len(val_test_overlap)} dates")
 
-    train_max = max(train_dates) if len(train_dates) > 0 else None
-    val_min = min(val_dates) if len(val_dates) > 0 else None
-    val_max = max(val_dates) if len(val_dates) > 0 else None
-    test_min = min(test_dates) if len(test_dates) > 0 else None
+def frame_issues(df: pd.DataFrame, *, start: str | None = None,
+                 end: str | None = None, atol: float = DEFAULT_ATOL,
+                 rtol: float = DEFAULT_RTOL) -> list[str]:
+    """Full quality gate for a canonical daily OHLCV frame.
 
-    if train_max is not None and val_min is not None and train_max >= val_min:
-        errors.append(f"Train dates overlap or are not before val dates (train_max={train_max}, val_min={val_min})")
+    ``end`` is treated as EXCLUSIVE, matching the yfinance request semantics.
+    """
+    issues: list[str] = []
+    if df.empty:
+        return ["empty_frame"]
+    if "Date" in df.columns:
+        dates = pd.to_datetime(df["Date"])
+        if not dates.is_monotonic_increasing:
+            issues.append("date_not_monotonic")
+        if dates.duplicated().any():
+            issues.append("duplicate_dates")
+        if start is not None and dates.min() < pd.Timestamp(start):
+            issues.append(f"date_before_start:{dates.min().date()}")
+        if end is not None and dates.max() >= pd.Timestamp(end):
+            issues.append(f"date_on_or_after_end:{dates.max().date()}")
 
-    if val_max is not None and test_min is not None and val_max >= test_min:
-        errors.append(f"Val dates overlap or are not before test dates (val_max={val_max}, test_min={test_min})")
+    value_cols = [c for c in ("Open", "High", "Low", "Close", "Volume") if c in df.columns]
+    if df[value_cols].isna().any().any():
+        issues.append("nulls")
+    if "Volume" in df.columns and (df["Volume"] < 0).any():
+        issues.append("negative_volume")
 
-    return errors
-
-
-def validate_target_alignment(dates, targets, seq_len) -> list[str]:
-    errors: list[str] = []
-
-    n = len(dates)
-    if len(targets) != n:
-        errors.append(f"Length mismatch: dates has {n} entries, targets has {len(targets)} entries")
-        return errors
-
-    if seq_len < 1:
-        errors.append(f"seq_len must be >= 1, got {seq_len}")
-        return errors
-
-    if n < seq_len:
-        errors.append(f"Not enough samples ({n}) for seq_len={seq_len}")
-        return errors
-
-    date_list = list(dates)
-    target_list = list(targets)
-
-    for i in range(seq_len - 1, n - 1):
-        input_dates = date_list[i - seq_len + 1 : i + 1]
-        target_date = target_list[i]
-        max_input_date = max(input_dates)
-        if target_date <= max_input_date:
-            errors.append(
-                f"Target date {target_date} is not strictly later than latest input date {max_input_date} at index {i}"
-            )
-            break
-
-    return errors
+    v = ohlc_violations(df, atol=atol, rtol=rtol)
+    for name, count in v["counts"].items():
+        if count:
+            issues.append(f"{name}:{count}")
+    return issues

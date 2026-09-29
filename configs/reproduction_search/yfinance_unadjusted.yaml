@@ -11,8 +11,12 @@
 #   configs/paper.yaml against the Kaggle dataset.  Nothing is trained by this
 #   task; run it explicitly with:
 #
-#       uv run python scripts/run_experiment.py \
-#           --config configs/reproduction_search/yfinance_unadjusted.yaml
+#   uv run agentic-forecaster prepare-data \
+#       --config configs/reproduction_search/yfinance_unadjusted.yaml \
+#       --ticker RELIANCE
+#   uv run agentic-forecaster train \
+#       --ticker RELIANCE \
+#       --config configs/reproduction_search/yfinance_unadjusted.yaml
 #
 # SOURCE
 #   yfinance 1.7.0, yf.download(auto_adjust=False), start=2000-01-01,

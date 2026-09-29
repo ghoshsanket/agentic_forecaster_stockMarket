@@ -41,6 +41,8 @@ from pathlib import Path
 import pandas as pd
 import yaml
 
+from agentic_forecaster.data.validation import frame_issues
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
@@ -261,36 +263,16 @@ def canonicalize(df: pd.DataFrame, *, tz_strip: bool = True) -> pd.DataFrame:
 
 
 def validate_frame(df: pd.DataFrame, start: str, end: str) -> list[str]:
-    """Return a list of quality problems; empty means the frame is acceptable."""
-    issues: list[str] = []
-    if df.empty:
-        return ["empty_frame"]
-    if not df["Date"].is_monotonic_increasing:
-        issues.append("date_not_monotonic")
-    if df["Date"].duplicated().any():
-        issues.append("duplicate_dates")
-    if df["Date"].min() < pd.Timestamp(start):
-        issues.append(f"date_before_start:{df['Date'].min().date()}")
-    # end is exclusive in the request, so the last row must be strictly before it.
-    if df["Date"].max() >= pd.Timestamp(end):
-        issues.append(f"date_on_or_after_end:{df['Date'].max().date()}")
-    for col in CANONICAL_COLUMNS[1:]:
-        if df[col].isna().any():
-            issues.append(f"null_in_{col}")
-    if (df["Volume"] < 0).any():
-        issues.append("negative_volume")
-    valid = df.dropna(subset=["Open", "High", "Low", "Close"])
-    if (valid["High"] < valid["Low"]).any():
-        issues.append("high_below_low")
-    if (valid["High"] < valid["Open"]).any():
-        issues.append("high_below_open")
-    if (valid["High"] < valid["Close"]).any():
-        issues.append("high_below_close")
-    if (valid["Low"] > valid["Open"]).any():
-        issues.append("low_above_open")
-    if (valid["Low"] > valid["Close"]).any():
-        issues.append("low_above_close")
-    return issues
+    """Quality gate for a canonical daily OHLCV frame.
+
+    Delegates to the shared tolerant validator in
+    ``agentic_forecaster.data.validation`` so the downloader, the artifact
+    builders and the runtime all apply the same rule.  OHLC ordering is checked
+    with a numerical tolerance: back-adjusted float64 data can put ``High`` a
+    few ULP below ``Close`` when the two are economically equal.  Prices are
+    never modified.
+    """
+    return frame_issues(df, start=start, end=end)
 
 
 def corporate_action_jumps(df: pd.DataFrame) -> pd.DataFrame:

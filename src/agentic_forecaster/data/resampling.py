@@ -86,3 +86,55 @@ def resample_ohlcv(df: pd.DataFrame, date_col: str | None = None) -> pd.DataFram
 
     df_renamed = df.rename(columns=rename_map)
     return resample_intraday_to_daily(df_renamed, date_col=date_column)
+
+
+def normalize_daily_frame(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalise an ALREADY-DAILY OHLCV frame to the canonical daily schema.
+
+    Unlike :func:`resample_intraday_to_daily`, this performs **no aggregation
+    whatsoever**.  It only:
+      * resolves the date / open / high / low / close / volume columns,
+      * normalises the date to midnight (tz-naive),
+      * sorts ascending and drops duplicate dates,
+      * coerces the five value columns to numeric.
+
+    The Yahoo legacy dataset is one row per trading day, so passing it through
+    an intraday resampler would be both wrong and lossy.  This function keeps
+    ``len(out) == df["date"].nunique()``, which is what proves no resampling
+    took place.
+    """
+    if df.empty:
+        return pd.DataFrame(columns=["date", "open", "high", "low", "close", "volume"])
+
+    rename_map: dict[str, str] = {}
+    canonical = {
+        "date": _DATE_VARIANTS,
+        "open": _OPEN_VARIANTS,
+        "high": _HIGH_VARIANTS,
+        "low": _LOW_VARIANTS,
+        "close": _CLOSE_VARIANTS,
+        "volume": _VOLUME_VARIANTS,
+    }
+    for target, variants in canonical.items():
+        found = _find_column(df, variants)
+        if found is not None and found != target:
+            rename_map[found] = target
+
+    out = df.rename(columns=rename_map).copy()
+    missing = {"date", "open", "high", "low", "close", "volume"} - set(out.columns)
+    if missing:
+        raise ValueError(
+            f"Could not auto-detect daily columns for: {sorted(missing)}; "
+            f"present={list(df.columns)}"
+        )
+
+    out = out[["date", "open", "high", "low", "close", "volume"]]
+    out["date"] = pd.to_datetime(out["date"], errors="coerce")
+    if getattr(out["date"].dt, "tz", None) is not None:
+        out["date"] = out["date"].dt.tz_localize(None)
+    out["date"] = out["date"].dt.normalize()
+    out = out.dropna(subset=["date"])
+    out = out.sort_values("date").drop_duplicates(subset=["date"], keep="first")
+    for col in ("open", "high", "low", "close", "volume"):
+        out[col] = pd.to_numeric(out[col], errors="coerce")
+    return out.reset_index(drop=True)

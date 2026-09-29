@@ -135,18 +135,29 @@ securities:
     evidence_notes: Continuous NSE listing under the same name.
 
   - legacy_label: GAIL
-    historical_company_name: GAIL (India) Limited
+    historical_company_name: Gas Authority of India Limited
     current_or_final_company_name: GAIL (India) Limited
-    event_type: unchanged
+    event_type: same_security_rename
     primary_yahoo_candidate: GAIL.NS
     additional_yahoo_candidates: []
     same_legal_security: true
     successor_security: ""
-    event_date: ""
+    event_date: "2002-11-22"
     primary_download_policy: download_primary
     confidence: high
-    evidence_notes: Formerly Gujarat State Petronet Ltd; renamed to GAIL (India)
-      Ltd in 2002. Continuous NSE listing thereafter.
+    evidence_notes: >-
+      Incorporated 16-Aug-1984 as GAS AUTHORITY OF INDIA LIMITED, a
+      Government of India statutory corporation. The name was changed to
+      GAIL (India) LIMITED on a fresh certificate of incorporation dated
+      22-Nov-2002, with effect from that date. Renamed IN PLACE: the same legal
+      entity, same listed shell, so the historical series is continuous and
+      the Yahoo symbol GAIL.NS is correct and unchanged.
+      CORRECTION: an earlier version of this registry wrongly stated that GAIL
+      was formerly "Gujarat State Petronet Ltd". That is incorrect - Gujarat
+      State Petronet is a separate company (renamed GSPL in 2009) and has no
+      corporate-history relationship to GAIL. The only name change in GAIL's
+      own history is the 1984 Gas Authority of India -> 2002 GAIL (India)
+      sequence recorded above.
 
   - legacy_label: "GE SHIPPING"
     historical_company_name: The Great Eastern Shipping Company Limited

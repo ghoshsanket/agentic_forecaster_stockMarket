@@ -29,10 +29,15 @@ from sklearn.preprocessing import StandardScaler
 
 from agentic_forecaster.data.dataset import (
     discover_ticker_files,
+    find_file_name_map,
+    load_file_name_map,
     load_ticker_frame,
     make_synthetic_dataset,
 )
-from agentic_forecaster.data.resampling import resample_intraday_to_daily
+from agentic_forecaster.data.resampling import (
+    normalize_daily_frame,
+    resample_intraday_to_daily,
+)
 from agentic_forecaster.data.universe import Universe
 from agentic_forecaster.features.engineer import build_feature_frame
 from agentic_forecaster.utils import ensure_dir
@@ -63,6 +68,16 @@ class ProcessedDataset:
     feature_names: list[str]
     ticker: str = ""
     ticker_files: dict[str, Path] = field(default_factory=dict)
+    # Scientific identity of the security, kept SEPARATE from the
+    # filesystem-safe stem used for directories.  ``ticker`` always holds the
+    # ORIGINAL requested label (e.g. "BRITISH OXYGEN (BOC)"), never a sanitised
+    # filename, so reports and model ids are readable.
+    requested_label: str = ""
+    source_file: str = ""
+    yahoo_symbol: str = ""
+    historical_company_name: str = ""
+    source_level: str = ""
+    resampled: bool | None = None
 
     def save(self, root: str | Path) -> Path:
         root = ensure_dir(root)
@@ -80,7 +95,15 @@ class ProcessedDataset:
             np.savez_compressed(root / f"{name}.npz", **payload)
         joblib.dump(self.scaler, root / "scaler.joblib")
         (root / "feature_names.txt").write_text("\n".join(self.feature_names))
-        (root / "meta.json").write_text(json.dumps({"ticker": self.ticker}, indent=2))
+        (root / "meta.json").write_text(json.dumps({
+            "ticker": self.ticker,
+            "requested_label": self.requested_label or self.ticker,
+            "source_file": self.source_file,
+            "yahoo_symbol": self.yahoo_symbol,
+            "historical_company_name": self.historical_company_name,
+            "source_level": self.source_level,
+            "resampled": self.resampled,
+        }, indent=2))
         return root
 
     @classmethod
@@ -159,16 +182,155 @@ class DataAgent:
         if not path.is_absolute():
             path = Path(self.config.get("_config_dir", ".")) / path
         declared = load_universe_config(path)
-        return resolve_universe(declared, discover_ticker_files(self.data_cfg["raw_root"]))
+        return resolve_universe(declared,
+                                discover_ticker_files(self.data_cfg["raw_root"],
+                                                      file_name_map=self._load_file_map()))
+
+    def _file_name_map(self) -> dict[str, str]:
+        """Canonical ``{requested_label: file_stem}`` map for this dataset."""
+        return self._load_file_map()
+
+    def _load_file_map(self) -> dict[str, str]:
+        cached = getattr(self, "_fname_map_cache", None)
+        if cached is not None:
+            return cached
+        raw_root = self.data_cfg.get("raw_root")
+        explicit = self.data_cfg.get("file_name_map")
+        if explicit:
+            fmap = load_file_name_map(explicit)
+        elif raw_root:
+            map_path = find_file_name_map(raw_root)
+            fmap = load_file_name_map(map_path) if map_path else {}
+        else:
+            fmap = {}
+        self._fname_map_cache = fmap
+        return fmap
 
     def _discover(self) -> dict[str, Path]:
-        """Return ``{dataset_symbol: path}`` for every available universe member."""
+        """Return ``{requested_label: path}`` for every available universe member.
+
+        Keys are the ORIGINAL requested labels (e.g. ``BRITISH OXYGEN (BOC)``),
+        not the filesystem-safe stems of the corresponding files.
+        """
         raw_root = self.data_cfg["raw_root"]
-        ticker_files = discover_ticker_files(raw_root)
+        ticker_files = discover_ticker_files(raw_root, file_name_map=self._load_file_map())
         if not self.data_cfg.get("tickers"):
             return ticker_files
         resolved = self.universe()
         return {sym: ticker_files[sym] for sym in resolved.available.values()}
+
+    def _label_provenance(self, label: str, path: Path) -> dict:
+        """Scientific identity for a requested label, for the saved manifest.
+
+        Filesystem-safe naming and security identity are separate concepts: the
+        model may be stored under a safe directory name, but the manifest must
+        record the ORIGINAL label, the source file it came from, the Yahoo
+        symbol and the historical company name.
+        """
+        meta: dict = {
+            "requested_label": label,
+            "source_file": str(path),
+            "yahoo_symbol": "",
+            "historical_company_name": "",
+        }
+        lineage = self.data_cfg.get("lineage_config")
+        if not lineage:
+            return meta
+        import yaml as _yaml
+        p = Path(lineage)
+        if not p.is_absolute():
+            p = Path(self.config.get("_config_dir", ".")) / p
+        if not p.is_file():
+            return meta
+        try:
+            doc = _yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        except (OSError, ValueError):
+            return meta
+        for entry in doc.get("securities", []):
+            if str(entry.get("legacy_label")) == label:
+                meta["yahoo_symbol"] = str(entry.get("primary_yahoo_candidate") or "")
+                meta["historical_company_name"] = str(
+                    entry.get("historical_company_name") or "")
+                break
+        return meta
+
+    def _is_daily_source(self) -> bool:
+        """True when the configured source is ALREADY daily bars.
+
+        ``source_level: daily`` or ``resample_to_daily: false`` means the files
+        hold one row per trading day, so the intraday resampler must be skipped.
+        Anything else (notably the Kaggle minute feed) keeps the existing
+        minute -> daily behaviour.
+        """
+        if str(self.data_cfg.get("source_level", "")).strip().lower() == "daily":
+            return True
+        return self.data_cfg.get("resample_to_daily") is False
+
+    def _to_daily(self, ticker: str, path: Path, processed_root: Path) -> pd.DataFrame:
+        """Route to the daily loader or the intraday resampler as appropriate."""
+        if self._is_daily_source():
+            return self._load_daily_source(ticker, path, processed_root)
+        return self._resample_to_daily(ticker, path, processed_root)
+
+    def _load_daily_source(self, ticker: str, path: Path,
+                           processed_root: Path) -> pd.DataFrame:
+        """Load an ALREADY-DAILY OHLCV file, with no intraday resampling.
+
+        Used when the data config declares ``source_level: daily`` or
+        ``resample_to_daily: false``.  The Yahoo legacy dataset is already one
+        row per trading day, so calling ``resample_intraday_to_daily`` on it
+        would be wrong (and would lose the vendor's exact daily open/close).
+
+        Behaviour:
+          * read the CSV,
+          * normalise columns to the canonical daily schema,
+          * validate that dates are one-per-trading-day, ascending, unique,
+          * cache to Parquet with the same fingerprint-based invalidation used
+            by the resampling path.
+
+        The row count MUST equal the number of distinct dates in the source, so
+        a test can assert that no aggregation occurred.
+        """
+        daily_dir = ensure_dir(processed_root / "daily")
+        cache_path = daily_dir / f"{ticker}.parquet"
+        meta_path = daily_dir / f"{ticker}.meta.json"
+        source_fp = _fingerprint_file(path)
+
+        if cache_path.exists() and meta_path.exists():
+            try:
+                meta = json.loads(meta_path.read_text())
+                if (meta.get("source_fingerprint") == source_fp
+                        and meta.get("source_level") == "daily"):
+                    logger.info("Using cached daily data for %s", ticker)
+                    return pd.read_parquet(cache_path)
+                logger.info("Source changed for %s; reloading daily", ticker)
+            except Exception:
+                logger.warning("Corrupt cache for %s; reloading daily", ticker)
+
+        logger.info("Loading %s as already-daily OHLCV (no resampling)", ticker)
+        raw = load_ticker_frame(path)
+        daily = normalize_daily_frame(raw)
+
+        n_source_dates = int(pd.to_datetime(raw[raw.columns[0]]).dt.normalize().nunique())
+        if len(daily) != n_source_dates:
+            raise ValueError(
+                f"{ticker}: expected one row per source trading date "
+                f"({n_source_dates}) but produced {len(daily)}. "
+                "A daily source must not be resampled or aggregated."
+            )
+
+        daily.to_parquet(cache_path, index=False)
+        meta_path.write_text(json.dumps({
+            "source_fingerprint": source_fp,
+            "source_file": str(path),
+            "source_level": "daily",
+            "resampled": False,
+            "source_rows": len(raw),
+            "daily_rows": len(daily),
+            "start": str(daily["date"].min()),
+            "end": str(daily["date"].max()),
+        }))
+        return daily
 
     def _resample_to_daily(self, ticker: str, path: Path, processed_root: Path) -> pd.DataFrame:
         """Resample intraday CSV to daily OHLCV with caching and source-hash validation."""
@@ -371,8 +533,16 @@ class DataAgent:
                 )
             path = ticker_files[ticker]
             processed_root = Path(self.data_cfg.get("processed_root", "./data/processed"))
-            daily = self._resample_to_daily(ticker, path, processed_root)
-            return self.run_ticker(ticker, daily, indicators=indicators)
+            daily = self._to_daily(ticker, path, processed_root)
+            processed = self.run_ticker(ticker, daily, indicators=indicators)
+            prov = self._label_provenance(ticker, path)
+            processed.requested_label = prov["requested_label"]
+            processed.source_file = prov["source_file"]
+            processed.yahoo_symbol = prov["yahoo_symbol"]
+            processed.historical_company_name = prov["historical_company_name"]
+            processed.source_level = "daily" if self._is_daily_source() else "intraday"
+            processed.resampled = not self._is_daily_source()
+            return processed
 
         raise ValueError(
             "run() without a ticker is not supported in the one-model-per-stock design. "
