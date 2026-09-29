@@ -22,12 +22,23 @@
 # No model has been trained on this data. Creating this file changes nothing
 # until it is executed deliberately:
 #
-#   uv run agentic-forecaster train-all \
-#       --config configs/reproduction_search/legacy_yfinance_perf_unadjusted.yaml
+# DO NOT RUN THIS CONFIG DIRECTLY.
 #
-# Everything else (universe, data root, features, folds, evaluation) is
-# IDENTICAL to legacy_yfinance_unadjusted.yaml, so a metric change is
-# attributable to the training budget alone.
+# `agentic-forecaster train-all` trains a single fold_0 split and does NOT
+# execute the paper's two-fold evaluation. For the FINAL paper evaluation use
+# `reproduce-paper`, which calls run_walk_forward() and retrains every ticker
+# for BOTH folds:
+#
+#     fold_0: train 2016-2020, validation 2021, test 2022
+#     fold_1: train 2016-2021, validation 2022, test 2023
+#
+#   uv run python -m agentic_forecaster reproduce-paper \
+#       --config configs/reproduction_search/legacy_yfinance_perf_unadjusted.yaml \
+#       --device auto \
+#       --run-id <id>
+#
+# The 2022/2023 test years must stay unseen until one configuration is frozen
+# on pre-2022 validation. See docs/PERFORMANCE_RECOVERY.md.
 experiment:
   name: legacy_yfinance_perf_unadjusted_recollection_candidate
   seed: 42

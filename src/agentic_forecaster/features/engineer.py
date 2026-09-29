@@ -36,16 +36,65 @@ def realized_volatility(close: pd.Series, window: int = 20) -> pd.Series:
     return log_return(close).rolling(window).std()
 
 
-def rsi(close: pd.Series, period: int = 14) -> pd.Series:
-    """Relative Strength Index (Wilder's smoothing)."""
+def rsi_wilder(close: pd.Series, period: int = 14) -> pd.Series:
+    """RSI with Wilder's / RMA smoothing (alpha = 1/period).
+
+    This is the textbook definition and the default used by the Phase-1
+    reconstruction.  It is retained under an explicit name because the
+    publication's equations are ambiguous and the recovery search must be able
+    to compare RSI variants.
+    """
     delta = close.diff()
     gain = delta.clip(lower=0.0)
     loss = -delta.clip(upper=0.0)
     avg_gain = gain.ewm(alpha=1.0 / period, min_periods=period, adjust=False).mean()
     avg_loss = loss.ewm(alpha=1.0 / period, min_periods=period, adjust=False).mean()
+    return _rsi_from_averages(avg_gain, avg_loss)
+
+
+def rsi_rolling(close: pd.Series, period: int = 14) -> pd.Series:
+    """RSI from a SIMPLE rolling average of gains and losses.
+
+    This matches the displayed equations in the publication literally: a rolling
+    arithmetic mean of the up-moves and the down-moves over ``period`` bars,
+    rather than an exponentially smoothed average.  Causal: only past and
+    current bars are used.
+    """
+    delta = close.diff()
+    gain = delta.clip(lower=0.0)
+    loss = -delta.clip(upper=0.0)
+    avg_gain = gain.rolling(period, min_periods=period).mean()
+    avg_loss = loss.rolling(period, min_periods=period).mean()
+    return _rsi_from_averages(avg_gain, avg_loss)
+
+
+def rsi_ema(close: pd.Series, period: int = 14) -> pd.Series:
+    """RSI from an EMA-smoothed average of gains and losses."""
+    delta = close.diff()
+    gain = delta.clip(lower=0.0)
+    loss = -delta.clip(upper=0.0)
+    avg_gain = gain.ewm(span=period, min_periods=period, adjust=False).mean()
+    avg_loss = loss.ewm(span=period, min_periods=period, adjust=False).mean()
+    return _rsi_from_averages(avg_gain, avg_loss)
+
+
+def _rsi_from_averages(avg_gain: pd.Series, avg_loss: pd.Series) -> pd.Series:
     rs = avg_gain / avg_loss.replace(0.0, np.nan)
     out = 100.0 - 100.0 / (1.0 + rs)
     return out.fillna(50.0)
+
+
+#: RSI variants offered to the recovery search.  R1 is the Phase-1 default.
+RSI_METHODS: dict[str, str] = {
+    "R0_rolling": "rsi_rolling",
+    "R1_wilder": "rsi_wilder",
+    "R2_ema": "rsi_ema",
+}
+
+
+def rsi(close: pd.Series, period: int = 14) -> pd.Series:
+    """Relative Strength Index (Wilder's smoothing) - the Phase-1 default."""
+    return rsi_wilder(close, period)
 
 
 def macd(
@@ -95,6 +144,27 @@ def obv(close: pd.Series, volume: pd.Series) -> pd.Series:
     return (direction * volume).cumsum()
 
 
+def bollinger_percent_b(close: pd.Series, period: int = 20,
+                        num_std: float = 2.0) -> pd.Series:
+    """Bollinger %B: where the close sits inside the band, 0 = lower, 1 = upper.
+
+    %B = (close - lower) / (upper - lower).  Causal; uses a trailing window.
+    """
+    mid = close.rolling(period, min_periods=period).mean()
+    sd = close.rolling(period, min_periods=period).std(ddof=0)
+    upper, lower = mid + num_std * sd, mid - num_std * sd
+    width = (upper - lower).replace(0.0, np.nan)
+    return ((close - lower) / width).fillna(0.5)
+
+
+def sma5_minus_sma20(close: pd.Series) -> pd.Series:
+    """Distance between the 5- and 20-bar simple moving averages, normalised by
+    the 20-bar average so the scale is comparable across price levels."""
+    fast = close.rolling(5, min_periods=5).mean()
+    slow = close.rolling(20, min_periods=20).mean()
+    return (fast - slow) / slow.replace(0.0, np.nan)
+
+
 def build_feature_frame(
     df: pd.DataFrame,
     indicators: list[str] | None = None,
@@ -114,20 +184,26 @@ def build_feature_frame(
     close = df["close"].astype(float)
 
     all_indicators = {
-        "rsi_14": lambda: rsi(close, 14),
+        # --- RSI variants (recovery search) ---
+        "rsi_14": lambda: rsi_wilder(close, 14),
+        "rsi_14_rolling": lambda: rsi_rolling(close, 14),
+        "rsi_14_ema": lambda: rsi_ema(close, 14),
         "macd": lambda: macd(close)[0],
         "macd_signal": lambda: macd(close)[1],
         "macd_histogram": lambda: macd(close)[2],
         "atr_14": lambda: atr(df["high"], df["low"], close, 14),
         "realized_volatility_20": lambda: realized_volatility(close, 20),
         "log_return": lambda: log_return(close),
-        "sma_20": lambda: close.rolling(20).mean(),
-        "sma_50": lambda: close.rolling(50).mean(),
+        "sma_5": lambda: close.rolling(5, min_periods=5).mean(),
+        "sma_20": lambda: close.rolling(20, min_periods=20).mean(),
+        "sma_50": lambda: close.rolling(50, min_periods=50).mean(),
+        "sma_5_minus_sma_20": lambda: sma5_minus_sma20(close),
         "ema_12": lambda: close.ewm(span=12, adjust=False).mean(),
         "ema_26": lambda: close.ewm(span=26, adjust=False).mean(),
         "bb_upper": lambda: bollinger(close)[0],
         "bb_lower": lambda: bollinger(close)[1],
         "bb_width": lambda: bollinger(close)[2],
+        "bb_percent_b": lambda: bollinger_percent_b(close),
         "obv": lambda: obv(close, df["volume"].astype(float)),
         "returns_1": lambda: close.pct_change(1),
         "returns_5": lambda: close.pct_change(5),

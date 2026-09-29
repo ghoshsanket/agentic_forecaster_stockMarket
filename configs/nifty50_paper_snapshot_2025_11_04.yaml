@@ -53,7 +53,18 @@
 #               composition effective 2025-09-30 survived unchanged
 #               https://niftyindices.com/Press_Release/ind_prs23022026.pdf
 #
-#   => the composition in force on 2025-11-04 equals the current NSE file.
+#   => PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE represents the 50 ordinary
+#      listed/tradable security lines reconstructed for a fixed Yahoo workbook,
+#      EXCLUDING the temporary DUMMYTATAM index-only demerger placeholder.
+#
+#      Wording matters here. On 2025-11-04 the index methodology DID temporarily
+#      include DUMMYTATAM, so it is not literally true to say "the Nifty-50
+#      composition on 2025-11-04 equals the current 50-row NSE file". What is
+#      true is narrower: the current file yields the 50 ORDINARY, LISTED,
+#      TRADABLE security lines in force around 2025-11-04, with the synthetic
+#      zero-price demerger placeholder removed. DUMMYTATAM is an INDEX
+#      MAINTENANCE entity with no historical tradable Yahoo price series, so it
+#      cannot be a workbook sheet, and no price data is invented for it.
 #
 # The retrieved file was cross-checked against that bracket: it contains all
 # four 2025 entrants (JIOFIN, ETERNAL, INDIGO, MAXHEALTH) and none of the four

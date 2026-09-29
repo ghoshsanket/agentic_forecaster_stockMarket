@@ -62,6 +62,10 @@ def build_parser() -> argparse.ArgumentParser:
     train_all.add_argument("--config", required=True)
     train_all.add_argument("--device", default=None)
     train_all.add_argument("--baselines", action="store_true", help="Also train baselines")
+    # --tickers is read by _cmd_train_all().  It was previously undefined, so any
+    # invocation raised AttributeError.  Kept optional and comma-separated for
+    # consistency with walk-forward / reproduce-paper.
+    train_all.add_argument("--tickers", default=None, help="Comma-separated subset")
 
     ev = sub.add_parser("evaluate", help="Evaluate a saved model bundle")
     ev.add_argument("--model", required=True, help="Model bundle directory")

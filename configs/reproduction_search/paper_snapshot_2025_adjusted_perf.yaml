@@ -3,6 +3,8 @@
 # ROLE: CORPORATE-ACTION-ADJUSTED SENSITIVITY VARIANT
 #
 # *** CREATED BUT NOT RUN. NO MODEL HAS BEEN TRAINED ON THIS DATASET. ***
+# The 2022/2023 paper test years must stay unseen until a single configuration
+# is frozen on pre-2022 validation folds (SEARCH_FOLD_A/B/C).
 #
 # Universe
 #   PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE
@@ -25,9 +27,25 @@
 #   Any metric difference is therefore attributable to the DATA SOURCE or the
 #   TRAINING BUDGET, not to a different pipeline.
 #
-# Run deliberately with:
-#   uv run agentic-forecaster train-all \
-#       --config configs/reproduction_search/paper_snapshot_2025_adjusted_perf.yaml
+# DO NOT RUN THIS CONFIG DIRECTLY.
+#
+# `agentic-forecaster train-all` trains a single fold_0 split and does NOT
+# execute the paper's two-fold evaluation. For the FINAL paper evaluation the
+# correct command is `reproduce-paper`, which calls run_walk_forward() and
+# retrains every ticker for BOTH folds:
+#
+#     fold_0: train 2016-2020, validation 2021, test 2022
+#     fold_1: train 2016-2021, validation 2022, test 2023
+#
+#   uv run python -m agentic_forecaster reproduce-paper \
+#       --config configs/reproduction_search/paper_snapshot_2025_unadjusted_perf.yaml \
+#       --device auto \
+#       --run-id <id>
+#
+# That final command is NOT to be run until ONE configuration has been frozen on
+# pre-2022 validation. See docs/PERFORMANCE_RECOVERY.md and
+# docs/PAPER_UNIVERSE_RECOVERY.md.
+
 
 experiment:
   name: paper_snapshot_2025_adjusted_perf

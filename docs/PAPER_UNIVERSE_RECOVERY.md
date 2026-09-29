@@ -51,6 +51,81 @@ comparison, old-stock lineage research, and testing whether more training
 history helps — but it is labelled *LEGACY UNIVERSE SENSITIVITY DATASET* until
 evidence establishes it was the paper's universe. It has not been.
 
+## The 2025-11-04 snapshot candidate, and how DUMMYTATAM is handled
+
+`configs/nifty50_paper_snapshot_2025_11_04.yaml` adds a fourth, explicit
+candidate: `PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE`, built from official NSE
+Indices evidence and used for the new paper-snapshot dataset.
+
+The 50 names come from NSE's own constituent file
+(`nsearchives.nseindia.com/content/indices/ind_nifty50list.csv`), and the
+2025-11-04 composition is established by **bracketing** official press
+releases (2025-03-28, 2025-09-30, 2025-10-14, 2025-11-17) plus the 2026-03-30
+review confirming no Nifty 50 change.
+
+### Precise wording
+
+The correct statement is:
+
+> `PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE` represents the 50 ordinary
+> listed/tradable security lines reconstructed for a fixed Yahoo workbook,
+> **excluding the temporary DUMMYTATAM index-only demerger placeholder.**
+
+It is **not** accurate to say "the Nifty-50 composition on 2025-11-04 equals
+the current 50-row NSE file". On 2025-11-04 the index methodology *did*
+temporarily include `DUMMYTATAM`, so the index carried 51 lines. The candidate
+list is the 50 *tradable* lines with that synthetic entity removed.
+
+### DUMMYTATAM in detail
+
+Per NSE Indices press release `ind_prs07102025.pdf` (7 Oct 2025): following the
+Tata Motors demerger, "demerged entity TML Commercial Vehicles Ltd. (with a
+dummy Symbol 'DUMMYTATAM') shall be included at zero price without divisor
+adjustment" in Nifty 50 effective 2025-10-14 (close of 2025-10-13), alongside
+NSE circular NSE/CMTR/70614 of 2025-10-03.
+
+* It was **never a tradable listed security** and has **no price history**.
+* It is an **index-maintenance entity**, not a company.
+* Therefore it **cannot be a Yahoo Finance sheet**, and **no price data has
+  been fabricated** for it.
+* The parent was **not** removed: Tata Motors Ltd was renamed Tata Motors
+  Passenger Vehicles Ltd, kept its Nifty 50 slot and its **original ISIN
+  INE155A01022**, moving symbol `TATAMOTORS` -> `TMPV` on 2025-10-24. The ISIN
+  continuity proves the same listed entity under a new name, so **TMPV** is
+  retained as the continuing original Tata Motors security line.
+* `DUMMYTATAM` was cleared on 2025-11-17 when the CV entity failed the price
+  band. The 2025-12-05 HUL ice-cream demerger produced the same kind of dummy
+  (`DUMMYHDLVR`), which corroborates the mechanism.
+
+**Naming trap:** the name "Tata Motors Limited" now belongs to a *different*,
+newly incorporated company (`TMCV`, listed 2025-11-12) whose Yahoo history
+begins only on that date. `TATAMOTORS.NS` returns nothing on Yahoo; `TMPV.NS`
+carries the continuous history.
+
+## The 2000-2015 observations do not enter the paper folds
+
+The reconstructed Yahoo workbook now begins around **2000-01-03** for 37 of the
+50 paper-snapshot securities (13 list later, e.g. JIOFIN 2023-08-21).
+
+Equation 21's walk-forward training begins in **2016**. The paper's two folds
+are:
+
+* fold_0: train 2016-2020, validation 2021, test 2022
+* fold_1: train 2016-2021, validation 2022, test 2023
+
+**Therefore the extra 2000-2015 observations do not enter the paper walk-forward
+folds at all.** They cannot improve Table-II walk-forward performance. They
+remain useful for:
+
+* reproducing the original workbook faithfully,
+* historical sensitivity analysis,
+* investigating the publication's separate **85/15 chronological split**
+  description, which may cover a longer span and may correspond to the lost
+  original implementation. That protocol is evaluated separately under
+  `forensic_diagnostics/` and is labelled **FORENSIC / ALTERNATE PAPER
+  PROTOCOL**. It must not be mixed into the official walk-forward result, and
+  it must not be chosen merely because its test metric is closer to 0.815.
+
 ## Local search: what was actually found
 
 A read-only sweep of user-owned artifacts under
