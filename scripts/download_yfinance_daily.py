@@ -39,11 +39,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pandas as pd
+import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
-
-from agentic_forecaster.data.universe import load_universe_config
 
 CANONICAL_COLUMNS = ["Date", "Open", "High", "Low", "Close", "Volume"]
 VARIANTS = ("adjusted", "unadjusted")
@@ -80,7 +79,14 @@ logger = logging.getLogger("yfinance_daily")
 
 # ---------------------------------------------------------------- paths
 
-def dataset_root() -> Path:
+def dataset_root(override: str | None = None) -> Path:
+    """Resolve the dataset root.
+
+    Precedence: explicit ``--dataset-root`` > ``AGENTIC_YFINANCE_DAILY_ROOT``
+    (the modern-universe root) > ``$AGENTIC_DATA_ROOT/yfinance_daily_2000_2025``.
+    """
+    if override:
+        return Path(override)
     if os.environ.get("AGENTIC_YFINANCE_DAILY_ROOT"):
         return Path(os.environ["AGENTIC_YFINANCE_DAILY_ROOT"])
     research_root = os.environ.get("RESEARCH_ROOT")
@@ -105,23 +111,84 @@ def ensure_layout(root: Path) -> None:
 
 # ---------------------------------------------------------------- symbols
 
-def load_universe(repo_root: Path) -> list[str]:
-    return load_universe_config(repo_root / "configs" / "nifty50.yaml").requested
+def load_universe(repo_root: Path, config_path: str | None = None) -> list[str]:
+    """Load the security list from a universe config.
+
+    Default (``None``) preserves the original modern-universe behaviour and
+    reads ``configs/nifty50.yaml``.  Labels are returned exactly as spelled in
+    the config, because the legacy universe must preserve its original
+    human-readable labels.
+    """
+    path = Path(config_path) if config_path else repo_root / "configs" / "nifty50.yaml"
+    if not path.is_absolute():
+        candidate = repo_root / path
+        path = candidate if candidate.exists() else path
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    return [str(t) for t in raw.get("tickers", [])]
 
 
-def yahoo_symbol(canonical: str) -> str:
+def load_lineage(repo_root: Path, lineage_path: str | None) -> dict[str, dict]:
+    """Load the corporate-identity registry, if one is configured.
+
+    Returns a mapping of legacy_label -> entry.  An empty dict means no
+    registry, in which case the modern ``RENAMED_TICKERS`` behaviour applies.
+    """
+    if not lineage_path:
+        return {}
+    path = Path(lineage_path)
+    if not path.is_absolute():
+        candidate = repo_root / path
+        path = candidate if candidate.exists() else path
+    if not path.is_file():
+        raise FileNotFoundError(f"lineage registry not found: {path}")
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if raw.get("stitch_successors_into_canonical"):
+        raise ValueError(
+            "lineage registry sets stitch_successors_into_canonical=true; "
+            "successor prices must never be appended to a historical series")
+    return {str(s["legacy_label"]): s for s in raw.get("securities", [])}
+
+
+def safe_filename(label: str) -> str:
+    """Filesystem-safe canonical name that preserves the label as closely as
+    possible.  ``BRITISH OXYGEN (BOC)`` -> ``BRITISH_OXYGEN_BOC``;
+    ``L&T`` -> ``L_AND_T``; ``P&G`` -> ``P_AND_G``; ``POND'S`` -> ``PONDS``."""
+    name = label.strip()
+    name = name.replace("&", "_AND_")
+    name = name.replace("'", "").replace("(", "").replace(")", "")
+    name = name.replace(" ", "_").replace("/", "_").replace("\\", "_")
+    name = name.replace(".", "_").replace(",", "_").replace(":", "_")
+    while "__" in name:
+        name = name.replace("__", "_")
+    return name.strip("_") or "UNNAMED"
+
+
+def yahoo_symbol(canonical: str, lineage: dict[str, dict] | None = None) -> str:
     """Resolve a canonical project ticker to its Yahoo Finance symbol.
 
     Precedence:
 
+    0. a corporate-identity registry entry (configs/legacy_security_lineage.yaml)
+       -- authoritative for the legacy universe, and the ONLY source that may
+       map a legacy label onto a differently-named listed company
     1. an authorised same-security rename (``RENAMED_TICKERS``)
     2. a symbol that is already a Yahoo symbol (has a dot, a ``^`` index prefix
        or an ``=`` cross suffix)
     3. otherwise the NSE form ``<SYMBOL>.NS``
 
+    A registry entry whose ``primary_download_policy`` is ``do_not_download``
+    yields an empty string: that legacy security has no legitimate same-security
+    Yahoo history and MUST NOT be substituted.
+
     Punctuation is preserved verbatim: ``M&M`` -> ``M&M.NS``,
     ``BAJAJ-AUTO`` -> ``BAJAJ-AUTO.NS``.
     """
+    if lineage:
+        entry = lineage.get(canonical)
+        if entry is not None:
+            if entry.get("primary_download_policy") == "do_not_download":
+                return ""
+            return str(entry.get("primary_yahoo_candidate") or "")
     rename = RENAMED_TICKERS.get(canonical)
     if rename is not None:
         return rename["yahoo_symbol"]
@@ -130,10 +197,28 @@ def yahoo_symbol(canonical: str) -> str:
     return f"{canonical}.NS"
 
 
+# Excel sheet names are capped at 31 characters and cannot contain []:*?/ or a
+# backslash.
+_EXCEL_ILLEGAL = set("[]:*?/\\")
+
+
 def excel_sheet_name(ticker: str) -> str:
-    """Excel sheet names are capped at 31 characters and cannot contain []:*?/\\"""
+    """Sheet naming for the MODERN universe (unchanged historical behaviour)."""
     name = ticker.replace("&", "-").replace("/", "-")
     return name[:31]
+
+
+def legacy_sheet_name(label: str) -> str:
+    """Sheet name for a legacy label, preserving the EXACT label when Excel allows.
+
+    Every one of the 50 user-supplied labels is already a legal Excel sheet
+    name (max 31 chars, no ``[]:*?/\\``), so the labels are used verbatim and
+    ``metadata/sheet_name_map.csv`` records the mapping.  Sanitisation is kept
+    only as a defensive fallback.
+    """
+    if len(label) <= 31 and not (_EXCEL_ILLEGAL & set(label)):
+        return label
+    return safe_filename(label)[:31]
 
 
 # ------------------------------------------------------- canonicalisation
@@ -232,7 +317,7 @@ def _atomic_write_parquet(df: pd.DataFrame, path: Path) -> None:
 
 
 def _read_saved(variant: str, ticker: str, root: Path) -> pd.DataFrame | None:
-    path = root / variant / "parquet" / f"{ticker}.parquet"
+    path = root / variant / "parquet" / f"{safe_filename(ticker)}.parquet"
     if not path.is_file():
         return None
     try:
@@ -243,9 +328,10 @@ def _read_saved(variant: str, ticker: str, root: Path) -> pd.DataFrame | None:
 
 def _saved_matches(root: Path, ticker: str, variant: str, start: str, end: str) -> bool:
     """True when a completed file for these exact parameters already exists."""
-    manifest = root / variant / "csv" / f"{ticker}.manifest.json"
-    parquet = root / variant / "parquet" / f"{ticker}.parquet"
-    csv_file = root / variant / "csv" / f"{ticker}.csv"
+    stem = safe_filename(ticker)
+    manifest = root / variant / "csv" / f"{stem}.manifest.json"
+    parquet = root / variant / "parquet" / f"{stem}.parquet"
+    csv_file = root / variant / "csv" / f"{stem}.csv"
     if not (manifest.is_file() and parquet.is_file() and csv_file.is_file()):
         return False
     try:
@@ -297,12 +383,14 @@ def fetch_symbol(symbol: str, *, start: str, end: str, auto_adjust: bool):
 
 
 def download_ticker(ticker: str, symbol: str, variant: str, root: Path,
-                    start: str, end: str, force: bool, resume: bool) -> dict:
+                    start: str, end: str, force: bool, resume: bool,
+                    lineage: dict[str, dict] | None = None) -> dict:
     """Download and persist one ticker for one variant. Returns a status dict."""
-    csv_path = root / variant / "csv" / f"{ticker}.csv"
-    manifest_path = root / variant / "csv" / f"{ticker}.manifest.json"
-    snapshot_path = root / variant / "source_snapshots" / f"{ticker}.parquet"
-    parquet_path = root / variant / "parquet" / f"{ticker}.parquet"
+    stem = safe_filename(ticker)
+    csv_path = root / variant / "csv" / f"{stem}.csv"
+    manifest_path = root / variant / "csv" / f"{stem}.manifest.json"
+    snapshot_path = root / variant / "source_snapshots" / f"{stem}.parquet"
+    parquet_path = root / variant / "parquet" / f"{stem}.parquet"
 
     if resume and not force and _saved_matches(root, ticker, variant, start, end):
         df = _read_saved(variant, ticker, root)
@@ -334,6 +422,19 @@ def download_ticker(ticker: str, symbol: str, variant: str, root: Path,
             "canonical_name": rename["canonical_name"],
             "reason": rename["reason"],
         }
+    lineage_entry = (lineage or {}).get(ticker)
+    if lineage_entry is not None:
+        record["legacy_label"] = ticker
+        record["canonical_filename_stem"] = stem
+        record["historical_company_name"] = lineage_entry.get("historical_company_name")
+        record["current_or_final_company_name"] = lineage_entry.get("current_or_final_company_name")
+        record["event_type"] = lineage_entry.get("event_type")
+        record["same_legal_security"] = lineage_entry.get("same_legal_security")
+        record["successor_security"] = lineage_entry.get("successor_security")
+        record["event_date"] = lineage_entry.get("event_date")
+        record["confidence"] = lineage_entry.get("confidence")
+        # Explicitly record that no successor price was ever appended.
+        record["successor_prices_appended"] = False
 
     try:
         raw = fetch_symbol(symbol, start=start, end=end,
@@ -397,10 +498,28 @@ def main() -> int:
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--ticker", default=None, help="single canonical ticker")
     parser.add_argument("--all", action="store_true", help="all configured securities")
+    parser.add_argument(
+        "--universe-config", default=None,
+        help="universe YAML to read (default: configs/nifty50.yaml, the modern "
+             "reconstructed universe). Use configs/nifty50_legacy_user_supplied.yaml "
+             "for the legacy universe.")
+    parser.add_argument(
+        "--lineage-config", default=None,
+        help="corporate-identity registry YAML. Required for universes whose "
+             "labels are not tickers. Enables lineage-aware symbol resolution "
+             "and suppresses do_not_download securities.")
+    parser.add_argument(
+        "--dataset-root", default=None,
+        help="override the dataset root (default: $AGENTIC_YFINANCE_DAILY_ROOT). "
+             "Point this at $AGENTIC_YFINANCE_LEGACY_ROOT for the legacy run so "
+             "the existing modern dataset is never touched.")
     args = parser.parse_args()
 
-    root = dataset_root()
+    root = dataset_root(args.dataset_root)
     ensure_layout(root)
+    lineage = load_lineage(REPO_ROOT, args.lineage_config)
+    if args.lineage_config:
+        logger.info("lineage registry: %s (%d securities)", args.lineage_config, len(lineage))
 
     # Redirect the yfinance persistent cache BEFORE any request.
     import yfinance as yf
@@ -420,26 +539,38 @@ def main() -> int:
     logger.info("request: start=%s end=%s (exclusive) interval=1d variant=%s",
                 args.start, args.end, args.variant)
 
-    universe = load_universe(REPO_ROOT)
-    if args.ticker:
-        tickers = [args.ticker]
-    elif args.all or args.resume:
-        tickers = universe
-    else:
-        tickers = universe
+    universe = load_universe(REPO_ROOT, args.universe_config)
+    logger.info("universe config=%s | %d securities",
+                args.universe_config or "configs/nifty50.yaml", len(universe))
+    tickers = [args.ticker] if args.ticker else universe
 
     variants = list(VARIANTS) if args.variant == "both" else [args.variant]
 
     results: dict[str, dict] = {}
     for variant in variants:
         for i, ticker in enumerate(tickers, 1):
-            symbol = yahoo_symbol(ticker)
+            symbol = yahoo_symbol(ticker, lineage or None)
+            if not symbol:
+                # No legitimate same-security Yahoo history.  Record and move on.
+                # NOTHING is written, nothing is substituted, nothing invented.
+                results.setdefault(ticker, {})[variant] = {
+                    "status": "unavailable_from_yahoo", "reason":
+                        "lineage registry marks this security do_not_download; no "
+                        "same-security Yahoo history exists and no successor is "
+                        "appended", "rows": 0, "first": None, "last": None,
+                    "issues": [],
+                }
+                logger.info("[%d/%d] %-20s -> UNAVAILABLE_FROM_YAHOO (no substitution)",
+                            i, len(tickers), ticker)
+                continue
             res = download_ticker(ticker, symbol, variant, root,
                                  args.start, args.end,
-                                 force=args.force, resume=args.resume)
+                                 force=args.force, resume=args.resume,
+                                 lineage=lineage or None)
             results.setdefault(ticker, {})[variant] = res
-            logger.info("[%d/%d] %-12s yahoo=%-18s adj=%-8s unadj=%-8s rows=%s %s..%s",
-                        i, len(tickers), ticker, symbol,
+            logger.info("[%d/%d] %-20s file=%-22s yahoo=%-18s adj=%-8s unadj=%-8s "
+                        "rows=%s %s..%s",
+                        i, len(tickers), ticker, safe_filename(ticker), symbol,
                         results[ticker].get("adjusted", {}).get("status", "-"),
                         results[ticker].get("unadjusted", {}).get("status", "-"),
                         res.get("rows"), res.get("first"), res.get("last"))

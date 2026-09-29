@@ -1,0 +1,113 @@
+# USER-SUPPLIED LEGACY NIFTY-50 universe.
+#
+# PROVENANCE AND STATUS
+# ---------------------
+# universe_id: USER_SUPPLIED_LEGACY_NIFTY50_UNIVERSE
+#
+# This is the historical constituent list recovered by the user as the set
+# intended for the ORIGINAL project implementation.  It is AUTHORITATIVE for
+# reproduction purposes and is preserved EXACTLY as supplied, including its
+# original ordering and original label spellings.
+#
+# It is explicitly NOT the modern NIFTY-50 and must never be silently replaced
+# by today's constituents.  configs/nifty50.yaml (the modern reconstructed
+# universe) is a DIFFERENT universe and is left untouched.
+#
+# HISTORICAL-DATE ANOMALY (documented, deliberately NOT corrected)
+# --------------------------------------------------------------
+# The user recalls this list as the 2000-01-03 constituent snapshot, but it is
+# not claimed to be that.  POND'S (India) Limited appears in the list, and
+# POND'S India had already amalgamated into Hindustan Lever in 1998 -- i.e.
+# BEFORE the recalled snapshot date.  Therefore the constituent-date
+# attribution is historically uncertain.  The possibilities are:
+#
+#   (a) an older NIFTY-50 constituent set than 2000-01-03,
+#   (b) a legacy source whose labels were never refreshed after 1998, or
+#   (c) the exact list used by the lost original implementation, even though
+#       its own historical-date label was imperfect.
+#
+# The list is kept verbatim because it is the user's recovered EXPERIMENTAL
+# universe.  POND'S is NOT deleted and is NOT silently rewritten to
+# HINDUNILVR.  See docs/LEGACY_UNIVERSE_HISTORY.md.
+#
+# Labels are stored with their original human-readable spellings
+# (e.g. "BRITISH OXYGEN (BOC)", "L&T", "POND'S").  Filesystem-safe names are
+# derived in metadata/sheet_name_map.csv; the exact legacy_label is preserved
+# in every metadata record.
+
+universe_id: USER_SUPPLIED_LEGACY_NIFTY50_UNIVERSE
+
+user_recollection:
+  intended_snapshot_date: "2000-01-03"
+  date_confidence: "needs_independent_verification"
+  date_anomaly_detected: true
+  date_anomaly_detail: >-
+    POND'S (India) Limited amalgamated into Hindustan Lever in 1998, which
+    predates the recalled 2000-01-03 snapshot date. The constituent-date
+    attribution is therefore uncertain. List preserved exactly as supplied.
+
+requested_download_start: "2000-01-01"
+requested_download_end_exclusive: "2026-01-01"
+
+# The 50 user-supplied labels, EXACTLY as supplied, in the supplied order.
+tickers:
+  - ACC
+  - BAJAJ-AUTO
+  - BPCL
+  - BRITANNIA
+  - BRITISH OXYGEN (BOC)
+  - BSES
+  - BURROUGHS
+  - CIPLA
+  - COCHINREFN
+  - COLPAL
+  - DRREDDY
+  - EPL
+  - GAIL
+  - GE SHIPPING
+  - GLAXO
+  - GRASIM
+  - GUTRLCEMENT
+  - HDFC
+  - HDFCBANK
+  - HINDALCO
+  - HINDLEVER
+  - HPCL
+  - IBP
+  - ICICI
+  - IDBI
+  - IFCI
+  - INDIACEM
+  - INFOSYSTCH
+  - IOC
+  - ITC
+  - KNOLLPHARM
+  - L&T
+  - M&M
+  - MADRASCEM
+  - MTNL
+  - NESTLEIND
+  - NIIT
+  - NOCIL
+  - ONGC
+  - P&G
+  - POND'S
+  - RANBAXY
+  - RELIANCE
+  - RHONE-POUL
+  - SATYAMCOMP
+  - SBI
+  - TATACHEM
+  - TELCO
+  - TISCO
+  - VSTILL
+
+# No Kaggle-style vendor aliases are defined for this universe: the legacy
+# dataset is sourced from Yahoo Finance, and Yahoo symbol resolution is
+# governed by configs/legacy_security_lineage.yaml rather than by an alias map.
+
+known_unavailable: []
+
+# Labels flagged for a documented historical-date anomaly.
+date_anomaly_labels:
+  - POND'S

@@ -1,0 +1,1039 @@
+# CORPORATE-IDENTITY REGISTRY for the USER-SUPPLIED LEGACY NIFTY-50 universe.
+#
+# WHAT THIS FILE IS
+#   One entry per user-supplied legacy label.  For each label it records the
+#   historical legal entity, what happened to it, the Yahoo symbol that (if
+#   any) legitimately carries its SAME-SECURITY price history, and the policy
+#   the downloader must follow.
+#
+# THE CENTRAL RULE
+#   A successor company is NOT automatically the same security.  These are two
+#   different things:
+#
+#     (a) same legal security that changed its NAME or TICKER
+#         -> the historical series is CONTINUOUS and may be used.
+#     (b) a company that was MERGED INTO, ACQUIRED BY or DEMERGED FROM a
+#         different legal person
+#         -> the historical series ENDS.  The successor's prices are NOT
+#            appended.  Not forward-filled.  Not stitched.
+#
+#   Evidence standard (descending preference): court-approved scheme > NSE/BSE
+#   notice > SEBI filing > company annual report / investor-relations page >
+#   RoC/MCA record.  Yahoo company metadata is SUPPLEMENTARY only and is never
+#   the sole basis for accepting a mapping.
+#
+# EVENT TYPES (controlled vocabulary)
+#   unchanged | same_security_rename | statutory_continuation | demerger
+#   merger_into_other_company | acquired_and_merged | delisted | unresolved
+#
+# primary_download_policy values
+#   download_primary       download this symbol into the canonical dataset
+#   download_primary_flagged  same, but the series has a documented structural
+#                             break (demerger/statutory) inside the window
+#   do_not_download        no legitimate same-security Yahoo history exists;
+#                          the sheet is left EMPTY.  The successor is recorded
+#                          for a future optional experiment ONLY and is never
+#                          placed in the canonical workbook.
+#
+# GENERATED-AGAINST: yfinance_symbol_probe (metadata/yahoo_symbol_probe.csv),
+# 2026-09.  Every primary_yahoo_candidate below was confirmed to actually
+# return NSE data; every do_not_download label was probed across NSE and BSE
+# and returned nothing.
+
+registry_id: LEGACY_SECURITY_LINEAGE
+universe_id: USER_SUPPLIED_LEGACY_NIFTY50_UNIVERSE
+primary_exchange: NSE
+stitch_successors_into_canonical: false
+
+securities:
+
+  # ---------------------------------------------------------------- unchanged
+  - legacy_label: ACC
+    historical_company_name: The Associated Cement Companies Limited
+    current_or_final_company_name: ACC Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: ACC.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: "2006-09-01"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      Renamed in place from The Associated Cement Companies Limited w.e.f.
+      1-Sep-2006; continuous NSE listing as ACC. The 2022 Adani/Holcim
+      transaction was a CHANGE OF CONTROL only - not a rename, not a delisting.
+      NOTE: a Scheme of Amalgamation of ACC into Ambuja Cements was approved
+      on 22-Dec-2025 (appointed date 1-Jan-2026, 328:100) but is NOT yet
+      effective, so ACC.NS remains the listed entity for this window.
+
+  - legacy_label: BPCL
+    historical_company_name: Bharat Petroleum Corporation Limited
+    current_or_final_company_name: Bharat Petroleum Corporation Limited
+    event_type: unchanged
+    primary_yahoo_candidate: BPCL.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing; no name change in the window. Also the
+      absorber of Kochi Refineries in 2006 (see COCHINREFN).
+
+  - legacy_label: BRITANNIA
+    historical_company_name: Britannia Industries Limited
+    current_or_final_company_name: Britannia Industries Limited
+    event_type: unchanged
+    primary_yahoo_candidate: BRITANNIA.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing under the same name.
+
+  - legacy_label: CIPLA
+    historical_company_name: Cipla Limited
+    current_or_final_company_name: Cipla Limited
+    event_type: unchanged
+    primary_yahoo_candidate: CIPLA.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing under the same name.
+
+  - legacy_label: COLPAL
+    historical_company_name: Colgate-Palmolive (India) Limited
+    current_or_final_company_name: Colgate-Palmolive (India) Limited
+    event_type: unchanged
+    primary_yahoo_candidate: COLPAL.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing. Yahoo longName "Colgate-Palmolive
+      (India) Limited" matches the historical label.
+
+  - legacy_label: DRREDDY
+    historical_company_name: Dr. Reddy's Laboratories Limited
+    current_or_final_company_name: Dr. Reddy's Laboratories Limited
+    event_type: unchanged
+    primary_yahoo_candidate: DRREDDY.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing under the same name.
+
+  - legacy_label: GAIL
+    historical_company_name: GAIL (India) Limited
+    current_or_final_company_name: GAIL (India) Limited
+    event_type: unchanged
+    primary_yahoo_candidate: GAIL.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Formerly Gujarat State Petronet Ltd; renamed to GAIL (India)
+      Ltd in 2002. Continuous NSE listing thereafter.
+
+  - legacy_label: "GE SHIPPING"
+    historical_company_name: The Great Eastern Shipping Company Limited
+    current_or_final_company_name: The Great Eastern Shipping Company Limited
+    event_type: unchanged
+    primary_yahoo_candidate: GESHIP.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      Legacy label is a long-form name, not a ticker. Verified to the SAME legal
+      entity by Yahoo longName "The Great Eastern Shipping Company Limited" on
+      NSE/INR, continuous NSE listing as GESHIP.
+
+  - legacy_label: GLAXO
+    historical_company_name: GlaxoSmithKline Pharmaceuticals Limited
+    current_or_final_company_name: GlaxoSmithKline Pharmaceuticals Limited
+    event_type: unchanged
+    primary_yahoo_candidate: GLAXO.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      The same listed entity that absorbed Burroughs Wellcome (India) in 2004
+      (see BURROUGHS). The GSK series is used for the GLAXO label ONLY; it is
+      never appended to the Burroughs series.
+
+  - legacy_label: GRASIM
+    historical_company_name: Grasim Industries Limited
+    current_or_final_company_name: Grasim Industries Limited
+    event_type: unchanged
+    primary_yahoo_candidate: GRASIM.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing under the same name.
+
+  - legacy_label: HDFCBANK
+    historical_company_name: HDFC Bank Limited
+    current_or_final_company_name: HDFC Bank Limited
+    event_type: unchanged
+    primary_yahoo_candidate: HDFCBANK.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      Continuous NSE listing as HDFCBANK. This is the pre-merger HDFC Bank
+      (est. 1994) AND the post-2023-merger surviving entity. It is the ABSORBER
+      of HDFC Ltd, not HDFC's successor lineage (see HDFC).
+
+  - legacy_label: HINDALCO
+    historical_company_name: Hindalco Industries Limited
+    current_or_final_company_name: Hindalco Industries Limited
+    event_type: unchanged
+    primary_yahoo_candidate: HINDALCO.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing under the same name.
+
+  - legacy_label: IFCI
+    historical_company_name: IFCI Limited
+    current_or_final_company_name: IFCI Limited
+    event_type: unchanged
+    primary_yahoo_candidate: IFCI.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Industrial Finance Corporation of India; continuous NSE
+      listing. Renamed IFCI Venture Capital Ltd in 2022 - a subsidiary, unrelated.
+
+  - legacy_label: INDIACEM
+    historical_company_name: The India Cements Limited
+    current_or_final_company_name: The India Cements Limited
+    event_type: unchanged
+    primary_yahoo_candidate: INDIACEM.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing under the same name.
+
+  - legacy_label: IOC
+    historical_company_name: Indian Oil Corporation Limited
+    current_or_final_company_name: Indian Oil Corporation Limited
+    event_type: unchanged
+    primary_yahoo_candidate: IOC.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: The same listed entity that absorbed IBP Co. Ltd in 2007
+      (see IBP). Never used to extend the IBP series.
+
+  - legacy_label: ITC
+    historical_company_name: Imperial Tobacco Company of India Limited
+    current_or_final_company_name: ITC Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: ITC.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: "1974-09-18"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      Renamed in place to ITC Limited w.e.f. 18-Sep-1974, before the 2000 window,
+      so the series is continuous. Ticker unchanged.
+
+  - legacy_label: M&M
+    historical_company_name: Mahindra & Mahindra Limited
+    current_or_final_company_name: Mahindra & Mahindra Limited
+    event_type: unchanged
+    primary_yahoo_candidate: "M&M.NS"
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      Same legal entity as the legacy "M&M" label. Yahoo symbol is "M&M.NS" with
+      the ampersand preserved. NOTE: the Kaggle dataset used the alias "MM" for
+      this company; that alias is vendor-specific and is NOT applicable here.
+
+  - legacy_label: MTNL
+    historical_company_name: Mahanagar Telephone Nigam Limited
+    current_or_final_company_name: Mahanagar Telephone Nigam Limited
+    event_type: unchanged
+    primary_yahoo_candidate: MTNL.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Government of India undertaking; continuous NSE listing.
+
+  - legacy_label: NESTLEIND
+    historical_company_name: Nestlé India Limited
+    current_or_final_company_name: Nestlé India Limited
+    event_type: unchanged
+    primary_yahoo_candidate: NESTLEIND.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing under the same name.
+
+  - legacy_label: NOCIL
+    historical_company_name: NOCIL Limited
+    current_or_final_company_name: NOCIL Limited
+    event_type: unchanged
+    primary_yahoo_candidate: NOCIL.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing under the same name.
+
+  - legacy_label: ONGC
+    historical_company_name: Oil and Natural Gas Corporation Limited
+    current_or_final_company_name: Oil and Natural Gas Corporation Limited
+    event_type: unchanged
+    primary_yahoo_candidate: ONGC.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing under the same name.
+
+  - legacy_label: RELIANCE
+    historical_company_name: Reliance Industries Limited
+    current_or_final_company_name: Reliance Industries Limited
+    event_type: unchanged
+    primary_yahoo_candidate: RELIANCE.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing under the same name.
+
+  - legacy_label: TATACHEM
+    historical_company_name: Tata Chemicals Limited
+    current_or_final_company_name: Tata Chemicals Limited
+    event_type: unchanged
+    primary_yahoo_candidate: TATACHEM.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: Continuous NSE listing under the same name.
+
+  # ------------------------------------------------- same-security renames
+  - legacy_label: EPL
+    historical_company_name: Essel Propack Limited
+    current_or_final_company_name: EPL Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: EPL.NS
+    additional_yahoo_candidates: [ESSEPRO.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: "2020-10-09"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      RoC Mumbai fresh certificate dated 9-Oct-2020 (Companies Act 2013), CIN
+      L74950MH1982PLC028947 unchanged. Same legal entity, same listing, so the
+      historical series is continuous.
+
+  - legacy_label: "BRITISH OXYGEN (BOC)"
+    historical_company_name: BOC India Limited
+    current_or_final_company_name: Linde India Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: LINDEINDIA.NS
+    additional_yahoo_candidates: [BOCINDIA.NS, LINDE.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: "2013-02-18"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      RoC West Bengal fresh certificate consequent upon change of name, SRN
+      B67916783 dated 18-Feb-2013; Linde India Annual Report 2012 records the
+      change. CIN L40200WB1935PLC008184 UNCHANGED - renamed in place, same
+      listed shell, so the series is continuous. NOTE the Yahoo series begins
+      2000-05-31, so 2000-01-03..2000-05-28 is genuinely absent from the vendor
+      feed and is reported as a coverage gap, not filled.
+
+  - legacy_label: BSES
+    historical_company_name: Bombay Suburban Electric Supply Limited / BSES Limited
+    current_or_final_company_name: Reliance Infrastructure Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: RELINFRA.NS
+    additional_yahoo_candidates: [BSES.NS, REL.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: "2004-02-24; 2008-04-28"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      TWO successive same-entity renames on ONE continuing listed shell (CIN
+      L75100MH1929PLC001530, BSE 500390 unchanged): BSES Ltd -> Reliance Energy
+      Ltd (name effective 24-Feb-2004, symbol BSES->REL w.e.f. 12-Mar-2004) ->
+      Reliance Infrastructure Ltd (fresh certificate 28-Apr-2008, per the
+      company's own MO&A and Annual Report 2007-08). Because the legal person
+      never changed, the historical BSES series is continuous and may be used.
+
+  - legacy_label: GUTRLCEMENT
+    historical_company_name: Gujarat Ambuja Cements Limited
+    current_or_final_company_name: Ambuja Cements Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: AMBUJACEM.NS
+    additional_yahoo_candidates: [GUJRATCEM.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: "2007"
+    primary_download_policy: download_primary
+    confidence: medium
+    evidence_notes: >-
+      Same legal entity; CIN L26942GJ1981PLC004717 unchanged, continuous NSE
+      listing. ITAT orders style the party "Ambuja Cement Ltd. (Earlier known as
+      Gujarat Ambuja Cements Ltd.)". CONFIDENCE IS MEDIUM ONLY ON THE EXACT
+      DATE: the year 2007 is well supported, the specific day/month is not - the
+      RoC fresh certificate was not obtainable, and the widely repeated
+      "April 2007" rests on a single aggregator. The event TYPE and the identity
+      mapping are high confidence; only the day is unresolved.
+
+  - legacy_label: HINDLEVER
+    historical_company_name: Hindustan Lever Limited
+    current_or_final_company_name: Hindustan Unilever Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: HINDUNILVR.NS
+    additional_yahoo_candidates: [HINDLEVER.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: "2007-06-25"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      Hindustan Lever's own exchange release (reported 25-Jun-2007): the new
+      name Hindustan Unilever came into effect that day, following shareholder
+      approval at the 74th AGM on 18-May-2007. CIN L15140MH1933PLC002030
+      unchanged. The 1956 formation of HLL was an amalgamation, not a rename,
+      and lies before the window. NOTE: HINDUNILVR is used here ONLY for the
+      HINDLEVER label's own continuous history. It is never substituted for
+      POND'S, which had already been extinguished in 1998.
+
+  - legacy_label: INFOSYSTCH
+    historical_company_name: Infosys Technologies Limited
+    current_or_final_company_name: Infosys Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: INFY.NS
+    additional_yahoo_candidates: [INFOSYSTCH.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: "2011-06"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      Infosys' own investor FAQ records the change to "Infosys Limited" in
+      June 2011, following board approval 30-Apr-2011 and shareholder approval
+      at the 30th AGM on 11-Jun-2011. Ticker INFY never changed. CONFIDENCE IS
+      HIGH ON THE EVENT AND THE MONTH; the exact day of the fresh certificate
+      is not documented in the sources reached.
+
+  - legacy_label: KNOLLPHARM
+    historical_company_name: Knoll Pharmaceuticals Limited
+    current_or_final_company_name: Abbott India Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: ABBOTINDIA.NS
+    additional_yahoo_candidates: [KNOLLPHARM.NS, ABBOT.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: "1995-10-31; 2002-07-01"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      IMPORTANT - this is NOT a merger and databases that map KNOLL to ABBOT
+      as an acquisition are WRONG. Abbott India's own investor-relations page
+      states: incorporated 22-Aug-1944 as Boots Pure Drug Company (India) Ltd;
+      renamed The Boots Company (India) Ltd 1-Nov-1971; Boots Pharmaceuticals
+      Ltd 1-Jan-1991; KNOLL PHARMACEUTICALS LTD 31-Oct-1995; ABBOTT INDIA LTD
+      1-Jul-2002. One continuous legal entity that was renamed TO Knoll and
+      then renamed BACK. The listed shell never changed, so the series is
+      continuous. (A separate, unrelated event: Solvay Pharma India Ltd was
+      amalgamated INTO Abbott India in 2010-2011.)
+
+  - legacy_label: MADRASCEM
+    historical_company_name: Madras Cements Limited
+    current_or_final_company_name: The Ramco Cements Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: RAMCOCEM.NS
+    additional_yahoo_candidates: [MADRASCEM.NS, RAMCO.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: "unresolved"
+    primary_download_policy: download_primary
+    confidence: medium
+    evidence_notes: >-
+      Same legal entity; CIN L26941TN1957PLC003566 unchanged. The company's own
+      Memorandum and Articles of Association is headed "MADRAS CEMENTS LTD. /
+      THE RAMCO CEMENTS LIMITED" and retains the original name clause, with the
+      Articles reprinted under the new name - a continuous constitution.
+      CONFIDENCE IS MEDIUM ONLY ON THE DATE: sources conflict (Yahoo states
+      July 2013; the company's own MO&A records an EGM amendment dated
+      30-Nov-2000) and no RoC certificate was obtainable. The event TYPE and the
+      identity mapping are high confidence; the date is explicitly left
+      unresolved rather than guessed.
+
+  - legacy_label: "P&G"
+    historical_company_name: Procter & Gamble India Limited
+    current_or_final_company_name: Procter & Gamble Hygiene and Health Care Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: PGHH.NS
+    additional_yahoo_candidates: [P&G.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: "1988-04-04; 1999-07-01"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      Verified as a SAME-ENTITY rename chain, not a different company. Fresh
+      certificate 4-Apr-1988 (to Procter & Gamble India Ltd) and a further
+      fresh certificate to Procter & Gamble Hygiene and Health Care Ltd
+      (approved at the 1998 AGM; certificate dated 1-Jul, year digit truncated
+      in the scanned copy, 1999 is the only reading consistent with the primary
+      documents). CIN L24239MH1964PLC012971 UNCHANGED throughout; the company
+      traces back to Richardson Hindustan Limited (20-Jul-1964). Yahoo
+      longName "Procter & Gamble Hygiene and Health Care Limited" on NSE/INR
+      confirms the identity. IMPORTANT: Gillette India Limited is a DIFFERENT
+      company (CIN L28931MH1984PLC267130) and is NOT part of this lineage -
+      the connection is a promoter holding, not a rename. The widely repeated
+      "2015" date for this rename is incorrect.
+
+  - legacy_label: TISCO
+    historical_company_name: The Tata Iron and Steel Company Limited
+    current_or_final_company_name: Tata Steel Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: TATASTEEL.NS
+    additional_yahoo_candidates: [TISCO.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: "2005-08-12"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      Tata Steel's own Memorandum and Articles of Association reproduces the
+      RoC Maharashtra fresh certificate: name changed from THE TATA IRON AND
+      STEEL COMPANY LIMITED to TATA STEEL LIMITED, "Given under my hand at
+      Mumbai this TWELFTH day of AUGUST TWO THOUSAND FIVE". CIN
+      L27100MH1907PLC000260 unchanged; incorporated 26-Aug-1907. Board
+      resolution 19-May-2005, shareholder resolution 27-Jul-2005. Continuous
+      listing, so the series is continuous.
+
+  - legacy_label: VSTILL
+    historical_company_name: The Vazir Sultan Tobacco Company Limited
+    current_or_final_company_name: VST Industries Limited
+    event_type: same_security_rename
+    primary_yahoo_candidate: VSTIND.NS
+    additional_yahoo_candidates: [VSTILL.NS, VST.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: "1983/1984"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      Incorporated 10-Nov-1930 at Hyderabad as The Vazir Sultan Tobacco Company
+      Limited under the Hyderabad Companies Act; renamed VST Industries
+      Limited. NSE listing since 5-Sep-2003, symbol VSTIND, BSE 509966,
+      continuous and never interrupted. CONFIDENCE IS HIGH ON THE EVENT AND THE
+      IDENTITY; sources conflict on the exact date (30-Apr-1983 vs 10-Aug-1984)
+      so the year is recorded as a range rather than a single date.
+
+  # ------------------------------------------- ticker-format / symbol changes
+  - legacy_label: HPCL
+    historical_company_name: Hindustan Petroleum Corporation Limited
+    current_or_final_company_name: Hindustan Petroleum Corporation Limited
+    event_type: statutory_continuation
+    primary_yahoo_candidate: HINDPETRO.NS
+    additional_yahoo_candidates: [HPCL.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      NOT a rename - the legal name has NEVER changed. CIN
+      L23201MH1952GOI008858, a Government Company; HPCL's own Corporate
+      Governance Report lists "NSE Symbol HINDPETRO". The legacy label "HPCL" is
+      a ticker-format difference only, so the mapping is HINDPETRO.NS.
+      CAVEAT: per HPCL's own timeline, the 1952-incorporated company did not
+      become the modern HPCL until the 1974 amalgamation of Esso Standard
+      Refining of India, with the Caltex undertaking merged in 1978. That is a
+      business-level discontinuity inside one continuing legal entity, before
+      the 2000 window.
+
+  - legacy_label: "L&T"
+    historical_company_name: Larsen & Toubro Limited
+    current_or_final_company_name: Larsen & Toubro Limited
+    event_type: statutory_continuation
+    primary_yahoo_candidate: LT.NS
+    additional_yahoo_candidates: ["L&T.NS"]
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      NOT a rename - never renamed. CIN L99999MH1946PLC004768, incorporated
+      1946 under the Companies Act 1913; L&T's Integrated Annual Report 2025-26
+      SEBI LODR annexure confirms the CIN, the name and the year. NSE symbol LT
+      (BSE 500510). CRITICAL DISAMBIGUATION: Larsen & Toubro Infotech Limited
+      (NSE LTI, incorporated 23-Dec-1996, now LTM Limited) is a SEPARATE legal
+      entity and a subsidiary - the listed "L&T" label is NOT L&T Infotech and
+      there is no continuity between the LT price history and LTI/LTM.
+
+  - legacy_label: SBI
+    historical_company_name: State Bank of India
+    current_or_final_company_name: State Bank of India
+    event_type: unchanged
+    primary_yahoo_candidate: SBIN.NS
+    additional_yahoo_candidates: [SBI.NS]
+    same_legal_security: true
+    successor_security: ""
+    event_date: ""
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      Legacy label "SBI" is a ticker-format difference only. The listed entity
+      is State Bank of India, NSE symbol SBIN (BSE 500112). No name change.
+
+  - legacy_label: IDBI
+    historical_company_name: Industrial Development Bank of India
+    current_or_final_company_name: IDBI Bank Limited
+    event_type: statutory_continuation
+    primary_yahoo_candidate: IDBI.NS
+    additional_yahoo_candidates: []
+    same_legal_security: true
+    successor_security: ""
+    event_date: "2004-09-27; 2008-05-07"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      CLASSIFIED AS STATUTORY CONTINUATION, NOT A SPELLING RENAME, as required.
+      The Industrial Development Bank of India was a statutory body corporate
+      under the Industrial Development Bank of India Act 1964 - it had no CIN
+      and was not a Companies Act company, so there was no listed entity to
+      rename. The Industrial Development Bank (Transfer of Undertaking and
+      Repeal) Act 2003 (Act 53 of 2003) repealed the 1964 Act and created a NEW
+      company, Industrial Development Bank of India Limited, incorporated
+      27-Sep-2004 (CIN L65190MH2004G01148838 - the "G" marks a newly
+      incorporated body), banking from 1-Oct-2004. That new company absorbed
+      the pre-existing listed IDBI Bank Ltd under s.44A of the Banking
+      Regulation Act 1949 (effective date reported inconsistently as 1-Oct-2004
+      vs 2-Apr-2005 in IDBI's own documents) and was then RENAMED IN PLACE to
+      IDBI Bank Limited on 7-May-2008 on issue of a fresh certificate
+      (RBI notification DBOD.BP.BC.No.2101002/2007-08, Gazette 14-Jun-2008),
+      same CIN. So the continuing listed shell is real, and the series is used
+      from 2000 onward, with the pre-2004 statutory discontinuity noted.
+
+  - legacy_label: NIIT
+    historical_company_name: NIIT Limited (formerly Pace Education Private Limited)
+    current_or_final_company_name: NIIT Limited
+    event_type: demerger
+    primary_yahoo_candidate: NIITLTD.NS
+    additional_yahoo_candidates: [NIIT.NS]
+    same_legal_security: true
+    successor_security: "NLSL.NS (NIIT Learning Systems Ltd, demerger 2023)"
+    event_date: "2004-06-04; 2023-05-24"
+    primary_download_policy: download_primary
+    confidence: high
+    evidence_notes: >-
+      The listed entity SURVIVED both demergers and remains the same legal
+      person, so the series is continuous - but the business perimeter changed
+      twice, and that is recorded rather than smoothed over.
+      (i) 2004: the Global Solutions business was demerged OUT of NIIT Ltd into
+      newly listed NIIT Technologies Ltd, scheme approved by the Delhi High
+      Court, appointed date 1-Apr-2003, effective 4-Jun-2004, NTL listed
+      30-Aug-2004. NIIT Ltd itself was NOT extinguished.
+      (ii) 2023: the Corporate Learning Group was demerged OUT into NIIT
+      Learning Systems Ltd, NCLT Chandigarh order 19-May-2023, effective
+      24-May-2023, 1 NLSL share per 1 NIIT share, NLSL listed 8-Aug-2023.
+      The ticker STRING changed from NIIT to NIITLTD (symbol relabelling only);
+      same CIN, same BSE 500304, continuous listing since the 1990s.
+      Therefore NIITLTD.NS IS the legacy NIIT - it is not a successor company.
+      (The 2019-20 sale of the 23.10% NTL stake to Baring PE was a share sale,
+      not a demerger; NTL was later renamed CoForge Limited.)
+
+  - legacy_label: BAJAJ-AUTO
+    historical_company_name: Bajaj Auto Limited (erstwhile, pre-2008)
+    current_or_final_company_name: Bajaj Auto Limited (new, post-2008)
+    event_type: demerger
+    primary_yahoo_candidate: BAJAJ-AUTO.NS
+    additional_yahoo_candidates: []
+    same_legal_security: false
+    successor_security: "BAJAHOLDING (BHIL, the renamed erstwhile BAJAJ-AUTO); BAJAJFSL (Bajaj Finserv)"
+    event_date: "2008-02-20"
+    primary_download_policy: download_primary_flagged
+    confidence: high
+    evidence_notes: >-
+      CLASSIFIED AS A DEMERGER, NOT A SAME-SECURITY RENAME. The listed scrip
+      continued under the BAJAJ-AUTO symbol, but it is NOT one unchanged legal
+      security across 2008. Scheme of Arrangement of Demerger sanctioned by the
+      Bombay High Court by order dated 18-Dec-2007 (received 19-Feb-2008);
+      effective date 20-Feb-2008; appointed date closing hours of business on
+      31-Mar-2007; NSE Indices ex-date 14-Mar-2008.
+      MECHANICS: the erstwhile Bajaj Auto Ltd (BAL) was RENAMED to Bajaj
+      Holdings & Investment Ltd (BHIL) and kept only the residual investment
+      business; the MANUFACTURING undertaking was transferred to a NEW Bajaj
+      Auto Ltd, which inherited the BAJAJ-AUTO listing; the wind-farm and
+      financial-services undertaking went to Bajaj Finserv Ltd (BFS). Each
+      existing BAL share received 1 BAL + 1 BHIL + 1 BFL share (1:1:1).
+      CONSEQUENCE FOR THIS DATASET: the Yahoo BAJAJ-AUTO.NS series before
+      2008 covers the WHOLE old company (autos + wind + financial services),
+      while after 2008 it covers ONLY the manufacturing business. The value of
+      the financial-services and holding businesses is NOT in this price
+      series. The series therefore contains a STRUCTURAL BREAK at the 2008
+      ex-date and must not be read as one continuous comparable security.
+      NOTHING has been stitched, concatenated or adjusted to hide this; the
+      break is flagged here and in legacy_coverage.csv, and the post-2008 and
+      pre-2008 segments can be separated by any consumer using event_date.
+
+  - legacy_label: TELCO
+    historical_company_name: Tata Engineering and Locomotive Company Limited
+    current_or_final_company_name: Tata Motors Passenger Vehicles Limited
+    event_type: demerger
+    primary_yahoo_candidate: TMPV.NS
+    additional_yahoo_candidates: [TATAMOTORS.NS, TELCO.NS]
+    same_legal_security: true
+    successor_security: "TML Commercial Vehicles Ltd (the CV business demerged out 2025)"
+    event_date: "2003-07-29; 2025-10-01"
+    primary_download_policy: download_primary_flagged
+    confidence: high
+    evidence_notes: >-
+      TWO events, both on the SAME continuing legal shell.
+      (i) RENAME: Tata Locomotive and Engineering Company Ltd (1-Sep-1945) ->
+      Tata Engineering and Locomotive Company Ltd (24-Sep-1960) -> Tata Motors
+      Limited on 29-Jul-2003, per Tata Motors' own SEC Form F-3.
+      (ii) DEMERGER: Composite Scheme of Arrangement, NCLT Mumbai Bench-I,
+      CP(CAA)139/MB/2025, appointed date 1-Jul-2025, sanctioned 25-Aug-2025,
+      EFFECTIVE 1-Oct-2025. The Commercial Vehicles business was demerged into
+      TML Commercial Vehicles Ltd. Swap ratio 1 TMLCV : 1 Tata Motors.
+      (iii) SYMBOL MIGRATION: per NSE circulars CML70875 / FAOP70882, the name
+      and symbol of Tata Motors Limited changed w.e.f. 24-Oct-2025, TATAMOTORS
+      -> TMPV. CONSEQUENCE: the legacy label TELCO is one continuous legal
+      person - CIN L28920MH1945PLC004520 is the SAME for Tata Motors and for
+      Tata Motors Passenger Vehicles Ltd - so the history is continuous and
+      the series may be used. TATAMOTORS.NS now returns NO DATA; Yahoo serves
+      the full 2000-01-03..2025-12-31 history under TMPV.NS, verified by probe
+      (Yahoo longName "Tata Motors Passenger Vehicles Limited", NSE, INR,
+      Auto Manufacturers). The series has a STRUCTURAL BREAK at 2025-10-01:
+      before it, the entity was autos + CV + EV + JLR; after it, PV + EV + JLR
+      only, with the CV business in a different listed company. Flagged, not
+      stitched.
+      NAMING TRAP: the name "Tata Motors Limited" now belongs to a DIFFERENT,
+      newly incorporated company (formerly TML Commercial Vehicles Ltd,
+      incorporated 23-Jun-2024, listed 12-Nov-2025). TMPV.NS is the correct
+      symbol for the historical TELCO lineage.
+
+  # ------------------------------------- merger / acquisition: NO DATA
+  - legacy_label: BURROUGHS
+    historical_company_name: Burroughs Wellcome (India) Limited
+    current_or_final_company_name: dissolved into GlaxoSmithKline Pharmaceuticals Limited
+    event_type: merger_into_other_company
+    primary_yahoo_candidate: ""
+    additional_yahoo_candidates: [BURROUGHS.NS, BURROUGHSWELL.NS, BWIL.NS, GLAXOWELL.NS, BURROUGHS.BO, BWIL.BO]
+    same_legal_security: false
+    successor_security: "GLAXO.NS (GlaxoSmithKline Pharmaceuticals Ltd)"
+    event_date: "2004-01-01"
+    primary_download_policy: do_not_download
+    confidence: high
+    evidence_notes: >-
+      Burroughs Wellcome (India) Ltd, CIN L24110MH1948PLC006517, MCA status
+      "Amalgamated". Boards approved the amalgamation into GlaxoSmithKline
+      Pharmaceuticals Ltd on 17-Mar-2004, swap ratio 14 GSK : 10 BWIL, effective
+      RETROSPECTIVELY from 1-Jan-2004, sanctioned by the Bombay High Court and
+      completed by end-2004 (GSK India FY2004 executive summary). The BWIL
+      scrip was EXTINGUISHED - BWIL shares converted into GSK shares. GSK kept
+      its own name and listing.
+      POLICY APPLIED: GLAXO.NS is recorded as the shareholder successor for a
+      future optional experiment ONLY. It is NOT appended to a Burroughs series
+      and does NOT create one. Yahoo returns no data for any historical
+      Burroughs symbol on NSE or BSE, so this sheet is intentionally EMPTY.
+      (Whether BWIL was also NSE-listed is not independently confirmed; the
+      BSE listing 506747 is confirmed by the 2004 filings.)
+
+  - legacy_label: COCHINREFN
+    historical_company_name: Cochin Refineries Limited (later Kochi Refineries Limited)
+    current_or_final_company_name: dissolved into Bharat Petroleum Corporation Limited
+    event_type: merger_into_other_company
+    primary_yahoo_candidate: ""
+    additional_yahoo_candidates: [COCHINREFN.NS, KOCHIREF.NS, KERALAKERALA.NS, KRL.NS, COCHINREFN.BO, KERALAKERALA.BO]
+    same_legal_security: false
+    successor_security: "BPCL.NS (Bharat Petroleum Corporation Ltd)"
+    event_date: "2006-08-21"
+    primary_download_policy: do_not_download
+    confidence: high
+    evidence_notes: >-
+      TWO events. (i) Same-entity rename: Cochin Refineries Ltd -> Kochi
+      Refineries Ltd w.e.f. 29-May-2000, same CIN. (ii) MERGER: amalgamation
+      into Bharat Petroleum Corporation Ltd on a Government of India / Ministry
+      of Company Affairs order; BPCL board in-principle 17-Jan-2005, swap 4
+      BPCL : 9 KRL, DCA direction 28-Nov-2005, MCA sanction order 18-Aug-2006,
+      appointed date 1-Apr-2004, EFFECTIVE 21-Aug-2006, KRL record date
+      29-Sep-2006, KRL trading stopped from 22-Sep-2006.
+      POLICY APPLIED: the KRL scrip was EXTINGUISHED - BPCL did not take it
+      over, it issued 6,15,42,124 NEW BPCL shares (first listed 29-Nov-2006).
+      BPCL prices are therefore NOT appended to the Cochin Refineries series.
+      Yahoo returns no data for any Kochi/Cochin Refineries symbol on NSE or
+      BSE, so this sheet is intentionally EMPTY. (The Kochi refinery survives
+      as a BPCL division, "BPCL Kochi Refinery", which is a business line, not
+      a listed security.)
+
+  - legacy_label: IBP
+    historical_company_name: IBP Co. Limited (formerly Indo Burma Petroleum Co. Ltd)
+    current_or_final_company_name: dissolved into Indian Oil Corporation Limited
+    event_type: acquired_and_merged
+    primary_yahoo_candidate: ""
+    additional_yahoo_candidates: [IBP.NS, IBPIND.NS, IBPIL.NS, IBPCO.NS, IBP.BO, IBPIL.BO]
+    same_legal_security: false
+    successor_security: "IOC.NS (Indian Oil Corporation Ltd)"
+    event_date: "2007-05-02"
+    primary_download_policy: do_not_download
+    confidence: high
+    evidence_notes: >-
+      WAS a separately listed NSE company: the SEBI Public Announcement for the
+      IBP offer states IBP shares were "frequently traded on NSE, BSE and CSE".
+      BSE 500198, ISIN INE261A01010.
+      EVENT: IOC acquired the GoI's 33.58% (2002) and reached 53.58%; Scheme of
+      amalgamation under s.391, ratio finally 110 IOC : 100 IBP, Ministry of
+      Petroleum / MCA order 30-Apr-2007, IBP DISSOLVED w.e.f. 2-May-2007,
+      scheme effective RETROSPECTIVELY from 1-Apr-2004 (IOC Annual Report
+      2007-08: "erstwhile IBP Co. Ltd., merged with IndianOil w.e.f. 2nd May,
+      2007"; IOC-IBP Merger Scheme Trust Deed).
+      POLICY APPLIED: IOC prices are NOT appended to the IBP series. Yahoo
+      returns no data for any IBP symbol on NSE or BSE, so this sheet is
+      intentionally EMPTY. (Some broker databases now show "NSE: NA" for IBP;
+      that is post-2007 stale data, not evidence it was never NSE-listed.)
+
+  - legacy_label: ICICI
+    historical_company_name: ICICI Limited (the financial institution, not ICICI Bank)
+    current_or_final_company_name: dissolved into ICICI Bank Limited
+    event_type: merger_into_other_company
+    primary_yahoo_candidate: ""
+    additional_yahoo_candidates: [ICICI.NS, ICICILTD.NS, ICICI.BO]
+    same_legal_security: false
+    successor_security: "ICICIBANK.NS (ICICI Bank Ltd)"
+    event_date: "2002-05-03"
+    primary_download_policy: do_not_download
+    confidence: high
+    evidence_notes: >-
+      IDENTITY MATTERS HERE: the legacy constituent is ICICI LIMITED, the
+      financial institution, NOT ICICI Bank as a separate pre-merger security.
+      WAS separately listed on NSE - ICICI's own Oct-2001 SEC release states its
+      shares were "listed on the Stock Exchanges at Mumbai, Kolkata, New Delhi,
+      Chennai, Vadodara, Mangalore, Bangalore and on the National Stock
+      Exchange", ADSs on the NYSE; the NSE symbol was literally "ICICI".
+      EVENT: three-into-one Scheme of Amalgamation (ICICI Ltd + ICICI Capital
+      Services + ICICI Personal Financial Services) with and into ICICI Bank
+      Ltd under ss.391-394, boards 25-Oct-2001, ratio 1 ICICI Bank : 2 ICICI
+      (ADS 5 IBN : 4 IC), High Court of Gujarat 7-Mar-2002, Bombay HC 11-Apr-
+      2002, RBI no-objection 26-Apr-2002 (DBOD.No.PSBS.1183/16.01.128/2001-
+      2002), EFFECTIVE 3-May-2002, accounting from appointed date 30-Mar-2002.
+      POLICY APPLIED: ICICIBANK.NS is NOT substituted for the pre-merger ICICI
+      observations. ICICI Bank's own price history in Yahoo begins 2002-07-01
+      (i.e. after the merger), so accepting it would silently mis-date the
+      series. This sheet is intentionally EMPTY.
+
+  - legacy_label: HDFC
+    historical_company_name: Housing Development Finance Corporation Limited (the 1977 housing-finance company)
+    current_or_final_company_name: dissolved into HDFC Bank Limited
+    event_type: merger_into_other_company
+    primary_yahoo_candidate: ""
+    additional_yahoo_candidates: [HDFC.NS, HDFC.BO, HDFCLTD.NS]
+    same_legal_security: false
+    successor_security: "HDFCBANK.NS (HDFC Bank Ltd)"
+    event_date: "2023-07-01"
+    primary_download_policy: do_not_download
+    confidence: high
+    evidence_notes: >-
+      THE DISTINCTION FROM THE HDFCBANK LABEL IS ESSENTIAL. HDFC Ltd
+      (CIN L70100MH1977PLC019916, incorporated 1977, BSE 500010, NSE HDFC) and
+      HDFC Bank Ltd (CIN L65920MH1994PLC080618, incorporated 1994, BSE 500180)
+      were SEPARATE listed companies until 2023.
+      EVENT: Composite Scheme of Amalgamation - HDFC Investments Ltd and HDFC
+      Holdings Ltd into HDFC Ltd, then HDFC Ltd AND INTO HDFC BANK LTD.
+      HDFC Bank board 4-Apr-2022, shareholders 25-Nov-2022, NCLT Mumbai order
+      17-Mar-2023, EFFECTIVE 1-Jul-2023, record date 13-Jul-2023, ratio 42 HDFC
+      Bank (FV Rs 1) : 25 HDFC Ltd (FV Rs 2), 3,11,03,96,492 new HDFC Bank
+      shares allotted and listed ~17-Jul-2023. HDFC Bank's SEC Form 6-K of
+      1-Jul-2023: "HDFC Limited has been amalgamated with and into HDFC Bank,
+      and HDFC Limited has stood dissolved without being wound up".
+      The HDFC NSE scrip NO LONGER EXISTS. HDFC Credila is NOT the successor -
+      it is a different company (formerly HDFC Capital Advisors Ltd), sold by
+      HDFC Ltd in 2023-24 and now PE-controlled and unlisted.
+      POLICY APPLIED: HDFCBANK.NS is NOT appended. Yahoo's HDFCBANK.NS history
+      from 1996-01-01 is the PRE-merger HDFC Bank, a different security from
+      the legacy HDFC label, so it would be a silent substitution. This sheet is
+      intentionally EMPTY.
+
+  - legacy_label: "POND'S"
+    historical_company_name: Pond's (India) Limited
+    current_or_final_company_name: dissolved into Hindustan Lever Limited
+    event_type: merger_into_other_company
+    primary_yahoo_candidate: ""
+    additional_yahoo_candidates: [PONDS.NS, POND.NS, PONDSIND.NS, PONDS.BO, POONAMDAL.BO]
+    same_legal_security: false
+    successor_security: "HINDUNILVR.NS (Hindustan Unilever Ltd, via Hindustan Lever Ltd)"
+    event_date: "1998-10-15"
+    primary_download_policy: do_not_download
+    confidence: high
+    evidence_notes: >-
+      *** THIS IS THE DATE ANOMALY THAT QUALIFIES THE WHOLE UNIVERSE ***
+      POND'S (India) Ltd amalgamated into Hindustan Lever Ltd, boards
+      16-Mar-1998, swap ratio 3 HLL : 4 PIL, sanctioned by the Madras HC on
+      7-Aug-1998 and the Bombay HC on 10-Sep-1998, EFFECTIVE 15-Oct-1998
+      retrospective to the appointed date 1-Jan-1998, record date 15-Feb-1999.
+      The PIL scrip was separately listed on NSE and BSE and was extinguished
+      on 15-Oct-1998.
+      THE ANOMALY: 15-Oct-1998 PRECEDES the user's recalled snapshot date of
+      2000-01-03. A security that ceased to exist in 1998 cannot be a 2000
+      constituent. The supplied list is therefore either (a) an older NIFTY-50
+      set, (b) a legacy source whose labels were never refreshed after 1998, or
+      (c) the exact list the lost original implementation used even though its
+      own date label was imperfect. The list is PRESERVED EXACTLY as supplied
+      and the anomaly is DOCUMENTED rather than corrected.
+      POLICY APPLIED: POND'S is NOT replaced with HINDUNILVR. HINDUNILVR is
+      recorded as the shareholder successor for a future optional experiment
+      ONLY. Yahoo returns no data for any Pond's symbol on NSE or BSE, so this
+      sheet is intentionally EMPTY - which is the EXPECTED and correct outcome
+      for a 2000+ window.
+
+  - legacy_label: RANBAXY
+    historical_company_name: Ranbaxy Laboratories Limited
+    current_or_final_company_name: dissolved into Sun Pharmaceutical Industries Limited
+    event_type: acquired_and_merged
+    primary_yahoo_candidate: ""
+    additional_yahoo_candidates: [RANBAXY.NS, RANBAXYLAB.NS, RANBX.NS, RANBAXY.BO]
+    same_legal_security: false
+    successor_security: "SUNPHARMA.NS (Sun Pharmaceutical Industries Ltd)"
+    event_date: "2015-03-24"
+    primary_download_policy: do_not_download
+    confidence: high
+    evidence_notes: >-
+      WAS separately listed: BSE 500359, NSE RANBAXY, one of India's largest
+      listed pharma names.
+      EVENT: all-stock Scheme of Arrangement with and into Sun Pharmaceutical
+      Industries Ltd under ss.391-394; announced Apr-2014, boards 6-Apr-2014,
+      BSE no-objection 9-Jun-2014, NSE 11-Jun-2014, CCI approval 5-Dec-2014,
+      High Court of Punjab & Haryana order 9-Mar-2015, CONSUMMATED 24-Mar-2015
+      (certified copies filed with the RoCs 24-Mar-2015), effective from the
+      appointed date 1-Apr-2014, ratio 0.8 Sun Pharma : 1 Ranbaxy. Ranbaxy was
+      DISSOLVED without winding-up and DELISTED; trading stopped 6-Apr-2015.
+      POLICY APPLIED: SUNPHARMA.NS is NOT appended. Yahoo returns no data for
+      any Ranbaxy symbol on NSE or BSE, so this sheet is intentionally EMPTY.
+
+  - legacy_label: RHONE-POUL
+    historical_company_name: Rhone-Poulenc (India) Limited (earlier May & Baker (India) Ltd)
+    current_or_final_company_name: dissolved into Nicholas Piramal India Limited
+    event_type: acquired_and_merged
+    primary_yahoo_candidate: ""
+    additional_yahoo_candidates: [RHONEPOL.NS, RHONEP.NS, RPIL.NS, RHONEPUL.NS, RHONEPOL.BO]
+    same_legal_security: false
+    successor_security: "Piramal Enterprises Limited (CIN L24110MH1947PLC005719) - current listed scrip requires verification"
+    event_date: "2001-04-01"
+    primary_download_policy: do_not_download
+    confidence: high
+    evidence_notes: >-
+      *** THIS IS DELIBERATELY NOT SANOFI ***
+      The global French lineage Rhone-Poulenc -> Aventis -> Sanofi is IRRELEVANT
+      here. The INDIAN listed company Rhone-Poulenc (India) Ltd (BSE 506747, ISIN
+      INE223A01010) had its own Indian transaction:
+      Dec 2000: Nicholas Piramal India Ltd (NPIL) acquired Aventis Pharma's 60%
+      stake for ~Rs 236-240 crore. Scheme of arrangement boards 16-Apr-2001;
+      APPOINTED/EFFECTIVE DATE 1-Apr-2001; sanctioned by the Bombay High
+      Court; NPIL declared completion Oct 2001 ("Nicholas Piramal-Rhone merger
+      over"). The 60% was transferred and extinguished; the 40% public balance
+      received 7 NPIL shares for every 4 RPIL shares. Piramal Enterprises'
+      own filings record the allotment of shares "to shareholders of Rhone-
+      Poulenc (India) Limited pursuant to a scheme of arrangement u/s 391-394".
+      RPIL was a DIFFERENT CIN and was DISSOLVED into NPIL - so this is an
+      acquisition and amalgamation, NOT a same-security rename.
+      POLICY APPLIED: NO mapping to SANOFI.NS under any circumstance. A test
+      asserts this explicitly. The Piramal successor is recorded for a future
+      optional experiment ONLY and is not used canonically. Its current listed
+      scrip is itself UNRESOLVED (Piramal Enterprises was demerged from Piramal
+      Pharma in 2022 and then merged into Piramal Finance; sources conflict on
+      whether that was 2024 or Sept 2025, so the surviving scrip must be
+      re-verified against a current BSE/NSE circular before any use). Yahoo
+      returns no data for any Rhone-Poulenc India symbol on NSE or BSE, so this
+      sheet is intentionally EMPTY.
+
+  - legacy_label: SATYAMCOMP
+    historical_company_name: Satyam Computer Services Limited
+    current_or_final_company_name: dissolved into Tech Mahindra Limited
+    event_type: merger_into_other_company
+    primary_yahoo_candidate: ""
+    additional_yahoo_candidates: [SATYAMCOMP.NS, SAYAM.NS, SATYAM.NS, MAHINDSAT.NS, SATYAM.BO, MAHINDSAT.BO]
+    same_legal_security: false
+    successor_security: "TECHM.NS (Tech Mahindra Ltd)"
+    event_date: "2013-06-24"
+    primary_download_policy: do_not_download
+    confidence: high
+    evidence_notes: >-
+      TWO events. (i) SAME-ENTITY RENAME: after the Mahindra group won the
+      auction in Apr-2009, Satyam was renamed IN PLACE to Mahindra Satyam in
+      June 2009 - the listed shell did not change. (ii) MERGER: Scheme of
+      Amalgamation into Tech Mahindra Ltd (covering Venturbay Consultants, Satyam
+      Computer Services, C&S System Technologies, CanvasM Technologies and
+      Mahindra Logisoft), boards 21-Mar-2012, swap 2 Tech Mahindra : 17
+      Mahindra Satyam, Bombay HC 28-Sep-2012, Andhra Pradesh HC 11-Jun-2013,
+      EFFECTIVE 24-Jun-2013, record date 5-Jul-2013, Mahindra Satyam trading
+      ceased 3-Jul-2013 with no dealing from 4-Jul-2013, new Tech Mahindra
+      shares traded from 12-Jul-2013. TECH MAHINDRA KEPT ITS OWN NAME - the
+      acquirer was not renamed.
+      POLICY APPLIED: TECHM.NS is NOT appended. Yahoo returns no data for any
+      Satyam symbol on NSE or BSE, so this sheet is intentionally EMPTY.

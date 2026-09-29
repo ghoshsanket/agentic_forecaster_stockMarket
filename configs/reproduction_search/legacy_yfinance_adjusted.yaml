@@ -1,0 +1,166 @@
+# Reproduction-search config: LEGACY Yahoo Finance data, ADJUSTED.
+#
+# ROLE: CORPORATE-ACTION-ADJUSTED SENSITIVITY
+#
+# This config uses the CORPORATE-ACTION-ADJUSTED (auto_adjust=True) legacy
+# dataset. Its purpose is SENSITIVITY ANALYSIS against the unadjusted
+# variant, to measure how much the adjustment convention changes results.
+#
+#
+# *** NEITHER VARIANT IS THE PROVEN ORIGINAL. ***
+# "Corporate-action-adjusted sensitivity" describes INTENT, not established
+# fact. Do not call this the original until BOTH performance and provenance have
+# been examined. At the time of writing, NO model has been trained on this data
+# and NO metric has been produced.
+#
+# The adjusted series rescales history for dividends and splits. On the modern
+# universe that moved prices by 6-34% on average versus unadjusted, so this is
+# a first-order modelling choice, not a cosmetic one. It must be tested against
+# the unadjusted variant, never assumed to be better.
+#
+# DO NOT RUN AS PART OF DATA RECONSTRUCTION. The dataset must be inspected
+# first. When it is run deliberately:
+#
+#   uv run python scripts/run_experiment.py \
+#       --config configs/reproduction_search/legacy_yfinance_adjusted.yaml
+#
+# SOURCE
+#   yfinance, yf.download(auto_adjust=True), start=2000-01-01,
+#   end=2026-01-01 (exclusive), interval=1d, actions=False, repair=False,
+#   prepost=False, threads=False.
+#   Universe: USER_SUPPLIED_LEGACY_NIFTY50_UNIVERSE
+#   (configs/nifty50_legacy_user_supplied.yaml)
+#   See docs/YFINANCE_LEGACY_DATASET.md and docs/LEGACY_UNIVERSE_HISTORY.md.
+#
+# CRITICAL CAVEAT — READ BEFORE USING
+#   9 of the 50 legacy securities have NO same-security Yahoo history because
+#   they were merged into, or acquired by, a different legal issuer. Their
+#   sheets in this dataset are INTENTIONALLY EMPTY and their successor prices
+#   were NOT appended. Those securities are simply absent from training.
+#   No forward-filling or synthetic pre-listing data was created, so the
+#   effective universe is 41 of 50 and is NOT constant across securities.
+#   A cross-sectional model must therefore tolerate an uneven universe.
+
+experiment:
+  name: legacy_yfinance_adjusted_sensitivity
+  seed: 42
+  output_dir: ${AGENTIC_OUTPUT_ROOT}/reproduction_search/legacy_yfinance_adjusted
+
+data:
+  raw_root: ${AGENTIC_YFINANCE_LEGACY_ROOT}/adjusted/csv
+  processed_root: ${AGENTIC_YFINANCE_LEGACY_ROOT}/adjusted/processed
+  source: yfinance_legacy
+  universe_id: USER_SUPPLIED_LEGACY_NIFTY50_UNIVERSE
+  universe_config: configs/nifty50_legacy_user_supplied.yaml
+  lineage_config: configs/legacy_security_lineage.yaml
+  variant: adjusted
+  auto_adjust: true
+  source_level: daily                          # inputs are already daily bars
+  resample_to_daily: false                     # do not resample again
+  tickers: configs/nifty50_legacy_user_supplied.yaml
+  allow_empty_sheets: true                     # 9 securities are intentionally empty
+  expected_available_tickers: 41               # of 50 requested
+  sequence_length: 30
+  target_type: next_day_direction
+  scaler: standard
+  scaler_fit_scope: train_only
+  train_start: "2016-01-01"
+  train_end: "2020-12-31"
+  val_start: "2021-01-01"
+  val_end: "2021-12-31"
+  test_start: "2022-01-01"
+  test_end: "2022-12-31"
+
+features:
+  use_ohlcv: true
+  indicators:
+    - log_return
+    - realized_volatility_20
+    - rsi_14
+    - macd
+    - macd_signal
+    - macd_histogram
+    - atr_14
+  drop_na: true
+
+models:
+  attention_lstm:
+    enabled: true
+    hidden_size: 64
+    num_layers: 2
+    dropout: 0.2
+    learning_rate: 0.001
+    beta1: 0.9
+    beta2: 0.999
+    weight_decay: 0.0001
+    batch_size: 64
+    epochs: 3
+    patience: 10
+    gradient_clip_norm: 1.0
+  lstm:
+    enabled: true
+    hidden_size: 64
+    num_layers: 2
+    dropout: 0.2
+    learning_rate: 0.001
+    beta1: 0.9
+    beta2: 0.999
+    weight_decay: 0.0001
+    batch_size: 64
+    epochs: 3
+    patience: 10
+    gradient_clip_norm: 1.0
+  random_forest:
+    enabled: true
+    n_estimators: 300
+    max_depth: 8
+  logistic_regression:
+    enabled: true
+    C: 1.0
+    max_iter: 1000
+  majority:
+    enabled: true
+
+calibration:
+  method: temperature
+  fit_on: val
+
+evaluation:
+  walk_forward:
+    enabled: true
+    folds: paper_exact
+  metrics:
+    - accuracy
+    - brier
+    - ece
+    - precision_at_3
+    - f1
+    - roc_auc
+  ece_bins: 10
+  p_at_k: 3
+
+explainability:
+  method: gradient_shap
+  fallback: integrated_gradients
+  attention_evidence: true
+  top_k_features: 5
+  background_samples: 64
+
+risk:
+  enabled: true
+  formulation: atr_confidence_multiplier
+  confidence_bands:
+    HIGH:   {threshold: 0.80, lambda_sl: 0.8,  lambda_tp: 1.5}
+    MEDIUM: {threshold: 0.60, lambda_sl: 1.0,  lambda_tp: 1.0}
+    LOW:    {threshold: 0.0,  lambda_sl: 1.2,  lambda_tp: 0.8}
+
+reporting:
+  formats: [html, pdf]
+  llm:
+    enabled: false
+    provider: openai
+    model: gpt-4o-mini
+    fallback: deterministic
+
+orchestration:
+  export_final_results: true
