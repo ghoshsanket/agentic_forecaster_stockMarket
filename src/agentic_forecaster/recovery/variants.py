@@ -96,17 +96,55 @@ DEFAULT_RSI_METHOD = "R1_wilder"
 # --------------------------------------------------------------- training
 
 #: TRAINING-LENGTH RECOVERY - highest priority.  The publication specifies
-#: patience 10 but NO epoch cap; the reproduction's 3-epoch cap is a budget,
-#: not a property of the paper.
+#: TRAINING-LENGTH CATALOG
+#:
+#: AUTHOR-CONFIRMED (from the original author, 2026-09-29):
+#:     the original implementation trained for a MAXIMUM OF 10 EPOCHS.
+#:
+#: This supersedes the earlier assumption that no epoch cap was specified.
+#: Note that patience is also 10, so the 10-epoch cap binds at or before
+#: early stopping can fire: the cap is the effective schedule.
+#:
+#: The other entries are NOT the original schedule. They exist only to measure
+#: what the author-confirmed budget costs:
+#:     T3   - an early reconstruction shortcut, kept as a control
+#:     T100 - a recovery diagnostic, NOT a candidate reproduction
 TRAINING_LENGTHS: dict[str, dict] = {
-    "T3": {"max_epochs": 3, "patience": 10, "restore_best_checkpoint": False,
-           "description": "Phase-1 reproduction budget; included as a control."},
-    "T30": {"max_epochs": 30, "patience": 10, "restore_best_checkpoint": True},
-    "T50": {"max_epochs": 50, "patience": 10, "restore_best_checkpoint": True},
-    "T100": {"max_epochs": 100, "patience": 10, "restore_best_checkpoint": True},
+    "T10_AUTHOR_CONFIRMED": {
+        "max_epochs": 10, "patience": 10, "restore_best_checkpoint": True,
+        "role": "PRIMARY", "evidence": "AUTHOR-CONFIRMED",
+        "description": "Author-confirmed maximum of 10 training epochs. "
+                       "This is the faithful reconstruction candidate.",
+    },
+    "T3_RECONSTRUCTION_SHORTCUT": {
+        "max_epochs": 3, "patience": 10, "restore_best_checkpoint": False,
+        "role": "diagnostic", "evidence": "RECONSTRUCTION-SHORTCUT",
+        "description": "Early reconstruction budget. A shortcut, never the "
+                       "author's choice; retained only as a control.",
+    },
+    "T30": {
+        "max_epochs": 30, "patience": 10, "restore_best_checkpoint": True,
+        "role": "sensitivity", "evidence": "diagnostic",
+        "description": "Sensitivity check around the author-confirmed budget.",
+    },
+    "T50": {
+        "max_epochs": 50, "patience": 10, "restore_best_checkpoint": True,
+        "role": "sensitivity", "evidence": "diagnostic",
+        "description": "Sensitivity check around the author-confirmed budget.",
+    },
+    "T100_DIAGNOSTIC": {
+        "max_epochs": 100, "patience": 10, "restore_best_checkpoint": True,
+        "role": "diagnostic", "evidence": "diagnostic",
+        "description": "Recovery diagnostic only. NOT a reproduction candidate: "
+                       "outperforming T10 does not license selecting it.",
+    },
 }
 
-DEFAULT_TRAINING_LENGTH = "T100"
+#: The faithful reconstruction candidate. Changing this would contradict the
+#: author-confirmed evidence, so it is deliberately not a search axis.
+DEFAULT_TRAINING_LENGTH = "T10_AUTHOR_CONFIRMED"
+AUTHOR_CONFIRMED_TRAINING_LENGTH = "T10_AUTHOR_CONFIRMED"
+
 
 #: 30 is AUTHOR-CONFIRMED; the rest are validation-only sensitivity.
 LOOKBACKS: dict[str, int] = {"L10": 10, "L20": 20, "L30": 30, "L40": 40, "L60": 60}
@@ -243,8 +281,11 @@ def stage_plan() -> list[dict]:
          "folds": ["SEARCH_FOLD_A", "SEARCH_FOLD_B", "SEARCH_FOLD_C"],
          "axes": {"training_length": list(TRAINING_LENGTHS),
                   "feature_family": ["F1", "F2"]},
-         "gate": "Choose the training-length family. If best epochs cluster in "
-                 "12-25 the 3-epoch reproduction was demonstrably undertrained."},
+         "gate": "Epoch budget is AUTHOR-CONFIRMED at 10, so it is NOT a search "
+                 "axis. Stage A compares the compact (F1) and expanded (F2) "
+                 "feature sets at the confirmed 10-epoch schedule. T3 and T100 "
+                 "are diagnostics that measure what the confirmed budget costs; "
+                 "a diagnostic win does not license selecting it."},
         {"stage": "STAGE_B",
          "name": "rsi / scaler / lookback",
          "axes": {"rsi_method": list(RSI_METHODS),

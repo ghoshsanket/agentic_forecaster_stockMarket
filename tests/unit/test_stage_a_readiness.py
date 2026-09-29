@@ -346,3 +346,46 @@ def test_stages_a_to_c_default_to_no_calibration():
         assert out.returncode == 0, out.stderr[-2000:]
         assert f'"calibration": "{expect}"' in out.stdout, (
             f"stage {stage} default calibration was not {expect}")
+
+
+def test_ten_epochs_is_author_confirmed_primary():
+    """The author's confirmed schedule is 10 epochs; T3/T100 are diagnostics.
+
+    This is an evidence claim, not a preference, so it is pinned by test: a
+    future edit that promotes T100 or reinstates a 3-epoch default would
+    silently break faithfulness of the reconstruction.
+    """
+    from agentic_forecaster.recovery import variants
+
+    t10 = variants.TRAINING_LENGTHS["T10_AUTHOR_CONFIRMED"]
+    assert t10["max_epochs"] == 10
+    assert t10["patience"] == 10
+    assert t10["restore_best_checkpoint"] is True
+    assert t10["evidence"] == "AUTHOR-CONFIRMED"
+    assert t10["role"] == "PRIMARY"
+    assert variants.DEFAULT_TRAINING_LENGTH == "T10_AUTHOR_CONFIRMED"
+
+    # T3 must never be presented as the author's choice.
+    t3 = variants.TRAINING_LENGTHS["T3_RECONSTRUCTION_SHORTCUT"]
+    assert t3["max_epochs"] == 3
+    assert t3["role"] == "diagnostic"
+    assert t3["evidence"] == "RECONSTRUCTION-SHORTCUT"
+
+    t100 = variants.TRAINING_LENGTHS["T100_DIAGNOSTIC"]
+    assert t100["max_epochs"] == 100
+    assert t100["role"] == "diagnostic"
+    assert t100["evidence"] == "diagnostic"
+
+
+def test_author_confirmed_pilot_script_uses_ten_epochs_and_no_calibration():
+    """The pilot must run T10 x {F1,F2} with calibration off and no FINAL_TEST."""
+    script = (REPO_ROOT / "scripts" / "run_stage_a_pilot.sh").read_text()
+    assert "T10_AUTHOR_CONFIRMED F1" in script
+    assert "T10_AUTHOR_CONFIRMED F2" in script
+    assert "--calibration none" in script
+    # Strip comments: the header legitimately *documents* that FINAL_TEST is
+    # never set, so only executable lines are asserted on.
+    code = "\n".join(line for line in script.splitlines()
+                     if not line.lstrip().startswith("#"))
+    assert "FINAL_TEST" not in code
+    assert "run_recovered_paper" not in code

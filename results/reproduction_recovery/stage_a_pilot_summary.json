@@ -1,7 +1,7 @@
 {
   "source": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/reproduction_recovery",
-  "experiment_runs": 9,
-  "ticker_fits": 72,
+  "experiment_runs": 15,
+  "ticker_fits": 120,
   "folds": [
     "SEARCH_FOLD_A",
     "SEARCH_FOLD_B",
@@ -10,14 +10,14 @@
   "firewall": "no date >= 2022-01-01 was read or scored",
   "paper_reference_used": false,
   "summary": {
-    "P0": {
+    "T10-F1": {
       "per_fold": {
         "SEARCH_FOLD_A": {
           "n_tickers": 8,
-          "mean_accuracy": 0.5056818181818181,
-          "mean_f1": 0.4420183273936319,
-          "mean_brier_raw": 0.25054966099271403,
-          "mean_ece": 0.024429107746802035,
+          "mean_accuracy": 0.5025826446280992,
+          "mean_f1": 0.47348496851233224,
+          "mean_brier_raw": 0.2497400058787197,
+          "mean_ece": 0.02067866555053334,
           "mean_majority_accuracy": 0.5180785123966942,
           "beating_majority_pct": 0.0,
           "tickers": [
@@ -33,12 +33,12 @@
         },
         "SEARCH_FOLD_B": {
           "n_tickers": 8,
-          "mean_accuracy": 0.516,
-          "mean_f1": 0.5648524746532642,
-          "mean_brier_raw": 0.2490926497814175,
-          "mean_ece": 0.020499234855174974,
+          "mean_accuracy": 0.525,
+          "mean_f1": 0.5880153348164353,
+          "mean_brier_raw": 0.24854958475201222,
+          "mean_ece": 0.02244536702334876,
           "mean_majority_accuracy": 0.5295000000000001,
-          "beating_majority_pct": 12.5,
+          "beating_majority_pct": 25.0,
           "tickers": [
             "HDFCBANK",
             "INFY",
@@ -52,12 +52,12 @@
         },
         "SEARCH_FOLD_C": {
           "n_tickers": 8,
-          "mean_accuracy": 0.5050607287449393,
-          "mean_f1": 0.347785105910568,
-          "mean_brier_raw": 0.25042879629506476,
-          "mean_ece": 0.04133388567489647,
+          "mean_accuracy": 0.5227732793522267,
+          "mean_f1": 0.426611053955106,
+          "mean_brier_raw": 0.24890097635146474,
+          "mean_ece": 0.024733566185120074,
           "mean_majority_accuracy": 0.5369433198380567,
-          "beating_majority_pct": 0.0,
+          "beating_majority_pct": 12.5,
           "tickers": [
             "HDFCBANK",
             "INFY",
@@ -71,18 +71,18 @@
         }
       },
       "cross_fold": {
-        "mean_accuracy": 0.508914182308919,
-        "std_accuracy": 0.025291497688022066,
-        "mean_f1": 0.4515519693191547,
-        "std_f1": 0.26823347008863313,
-        "mean_brier_raw": 0.25002370235639876,
-        "std_brier_raw": 0.0017053743795100442,
-        "mean_ece": 0.02875407609229116,
+        "mean_accuracy": 0.5167853079934419,
+        "std_accuracy": 0.02970484371650442,
+        "mean_f1": 0.4960371190946245,
+        "std_f1": 0.24495605597048795,
+        "mean_brier_raw": 0.2490635223273989,
+        "std_brier_raw": 0.0016945577800528693,
+        "mean_ece": 0.022619199586334057,
         "mean_majority_accuracy": 0.5281739440782504,
-        "beating_majority_pct": 4.166666666666666,
+        "beating_majority_pct": 12.5,
         "n_cases": 24,
-        "precision_at_3_up": 0.5266354676689605,
-        "precision_at_3_down": 0.4967599141953209
+        "precision_at_3_up": 0.5366180464936446,
+        "precision_at_3_down": 0.507533933371254
       },
       "per_ticker": {
         "HDFCBANK": {
@@ -91,33 +91,33 @@
           "beating_majority_pct": 0.0
         },
         "INFY": {
-          "mean_accuracy": 0.5290642754374812,
-          "mean_f1": 0.6842219004719005,
-          "beating_majority_pct": 0.0
+          "mean_accuracy": 0.5412100244253355,
+          "mean_f1": 0.6965110254882981,
+          "beating_majority_pct": 33.33333333333333
         },
         "ITC": {
-          "mean_accuracy": 0.5035753337571519,
-          "mean_f1": 0.2951507028215967,
+          "mean_accuracy": 0.5008205128205128,
+          "mean_f1": 0.28441154004348085,
           "beating_majority_pct": 0.0
         },
         "LT": {
-          "mean_accuracy": 0.5197381247142013,
-          "mean_f1": 0.18302339260666936,
+          "mean_accuracy": 0.5115294275102887,
+          "mean_f1": 0.23930429381163135,
           "beating_majority_pct": 33.33333333333333
         },
         "RELIANCE": {
-          "mean_accuracy": 0.48306795596747754,
-          "mean_f1": 0.563729071365641,
-          "beating_majority_pct": 0.0
+          "mean_accuracy": 0.5326927872765194,
+          "mean_f1": 0.6198964017056001,
+          "beating_majority_pct": 33.33333333333333
         },
         "SUNPHARMA": {
-          "mean_accuracy": 0.48852901484480427,
-          "mean_f1": 0.0291970802919708,
+          "mean_accuracy": 0.48314709851551957,
+          "mean_f1": 0.18245614035087718,
           "beating_majority_pct": 0.0
         },
         "TATASTEEL": {
-          "mean_accuracy": 0.5043617180267898,
-          "mean_f1": 0.5719681342116363,
+          "mean_accuracy": 0.5219055776759126,
+          "mean_f1": 0.6605920785732856,
           "beating_majority_pct": 0.0
         },
         "TCS": {
@@ -128,19 +128,160 @@
       },
       "best_epoch": {
         "n": 24,
-        "median": 1.0,
-        "mean": 1.125,
-        "max": 2.0,
-        "pct_gt_3": 0.0,
+        "median": 2.0,
+        "mean": 3.2083333333333335,
+        "max": 9.0,
+        "pct_gt_3": 37.5,
         "pct_gt_10": 0.0,
         "histogram": {
-          "0": 7,
-          "1": 7,
-          "2": 10
+          "0": 6,
+          "1": 3,
+          "2": 6,
+          "4": 1,
+          "6": 4,
+          "8": 2,
+          "9": 2
         }
       }
     },
-    "P1": {
+    "T10-F2": {
+      "per_fold": {
+        "SEARCH_FOLD_A": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.5196280991735538,
+          "mean_f1": 0.5069096587270382,
+          "mean_brier_raw": 0.2494373150180362,
+          "mean_ece": 0.03325360431528284,
+          "mean_majority_accuracy": 0.5180785123966942,
+          "beating_majority_pct": 50.0,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        },
+        "SEARCH_FOLD_B": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.5255000000000001,
+          "mean_f1": 0.5773318336502617,
+          "mean_brier_raw": 0.24898740938235292,
+          "mean_ece": 0.029378392338752675,
+          "mean_majority_accuracy": 0.5295000000000001,
+          "beating_majority_pct": 50.0,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        },
+        "SEARCH_FOLD_C": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.5298582995951417,
+          "mean_f1": 0.5565895248270528,
+          "mean_brier_raw": 0.24872164431066396,
+          "mean_ece": 0.01928075261202894,
+          "mean_majority_accuracy": 0.5369433198380567,
+          "beating_majority_pct": 12.5,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        }
+      },
+      "cross_fold": {
+        "mean_accuracy": 0.5249954662562318,
+        "std_accuracy": 0.028592762346207133,
+        "mean_f1": 0.5469436724014509,
+        "std_f1": 0.1840872360458025,
+        "mean_brier_raw": 0.24904878957035104,
+        "std_brier_raw": 0.0014798764142517236,
+        "mean_ece": 0.02730424975535482,
+        "mean_majority_accuracy": 0.5281739440782504,
+        "beating_majority_pct": 37.5,
+        "n_cases": 24,
+        "precision_at_3_up": 0.533477550625876,
+        "precision_at_3_down": 0.5036190837339162
+      },
+      "per_ticker": {
+        "HDFCBANK": {
+          "mean_accuracy": 0.5004057951617761,
+          "mean_f1": 0.6146919709129588,
+          "beating_majority_pct": 0.0
+        },
+        "INFY": {
+          "mean_accuracy": 0.5438604967600184,
+          "mean_f1": 0.7013667417417416,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "ITC": {
+          "mean_accuracy": 0.5077075651621107,
+          "mean_f1": 0.31169486689929116,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "LT": {
+          "mean_accuracy": 0.534662071580732,
+          "mean_f1": 0.43383680605313685,
+          "beating_majority_pct": 100.0
+        },
+        "RELIANCE": {
+          "mean_accuracy": 0.523359453943186,
+          "mean_f1": 0.6262200064163016,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "SUNPHARMA": {
+          "mean_accuracy": 0.517059769576516,
+          "mean_f1": 0.41395759931229037,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "TATASTEEL": {
+          "mean_accuracy": 0.5151741336813106,
+          "mean_f1": 0.6157166104537053,
+          "beating_majority_pct": 0.0
+        },
+        "TCS": {
+          "mean_accuracy": 0.5577344441842049,
+          "mean_f1": 0.6580647774221816,
+          "beating_majority_pct": 66.66666666666666
+        }
+      },
+      "best_epoch": {
+        "n": 24,
+        "median": 2.5,
+        "mean": 3.5833333333333335,
+        "max": 9.0,
+        "pct_gt_3": 45.83333333333333,
+        "pct_gt_10": 0.0,
+        "histogram": {
+          "0": 5,
+          "1": 3,
+          "2": 4,
+          "3": 1,
+          "4": 1,
+          "5": 2,
+          "6": 3,
+          "7": 1,
+          "8": 3,
+          "9": 1
+        }
+      }
+    },
+    "T100-F1": {
       "per_fold": {
         "SEARCH_FOLD_A": {
           "n_tickers": 8,
@@ -278,7 +419,7 @@
         }
       }
     },
-    "P2": {
+    "T100-F2": {
       "per_fold": {
         "SEARCH_FOLD_A": {
           "n_tickers": 8,
@@ -415,59 +556,404 @@
           "37": 1
         }
       }
-    }
-  },
-  "diagnostics": {
-    "P0_vs_P1": {
-      "accuracy_delta": 0.011087379128049135,
-      "f1_delta": 0.04850057132756297,
-      "brier_delta": -0.0013548446197595987,
-      "beating_majority_delta_pct": 16.66666666666667,
-      "P1_best_epoch": {
+    },
+    "T3-F1": {
+      "per_fold": {
+        "SEARCH_FOLD_A": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.5056818181818181,
+          "mean_f1": 0.4420183273936319,
+          "mean_brier_raw": 0.25054966099271403,
+          "mean_ece": 0.024429107746802035,
+          "mean_majority_accuracy": 0.5180785123966942,
+          "beating_majority_pct": 0.0,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        },
+        "SEARCH_FOLD_B": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.516,
+          "mean_f1": 0.5648524746532642,
+          "mean_brier_raw": 0.2490926497814175,
+          "mean_ece": 0.020499234855174974,
+          "mean_majority_accuracy": 0.5295000000000001,
+          "beating_majority_pct": 12.5,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        },
+        "SEARCH_FOLD_C": {
+          "n_tickers": 8,
+          "mean_accuracy": 0.5050607287449393,
+          "mean_f1": 0.347785105910568,
+          "mean_brier_raw": 0.25042879629506476,
+          "mean_ece": 0.04133388567489647,
+          "mean_majority_accuracy": 0.5369433198380567,
+          "beating_majority_pct": 0.0,
+          "tickers": [
+            "HDFCBANK",
+            "INFY",
+            "ITC",
+            "LT",
+            "RELIANCE",
+            "SUNPHARMA",
+            "TATASTEEL",
+            "TCS"
+          ]
+        }
+      },
+      "cross_fold": {
+        "mean_accuracy": 0.508914182308919,
+        "std_accuracy": 0.025291497688022066,
+        "mean_f1": 0.4515519693191547,
+        "std_f1": 0.26823347008863313,
+        "mean_brier_raw": 0.25002370235639876,
+        "std_brier_raw": 0.0017053743795100442,
+        "mean_ece": 0.02875407609229116,
+        "mean_majority_accuracy": 0.5281739440782504,
+        "beating_majority_pct": 4.166666666666666,
+        "n_cases": 24,
+        "precision_at_3_up": 0.5266354676689605,
+        "precision_at_3_down": 0.4967599141953209
+      },
+      "per_ticker": {
+        "HDFCBANK": {
+          "mean_accuracy": 0.5113693133023276,
+          "mean_f1": 0.5910996105301761,
+          "beating_majority_pct": 0.0
+        },
+        "INFY": {
+          "mean_accuracy": 0.5290642754374812,
+          "mean_f1": 0.6842219004719005,
+          "beating_majority_pct": 0.0
+        },
+        "ITC": {
+          "mean_accuracy": 0.5035753337571519,
+          "mean_f1": 0.2951507028215967,
+          "beating_majority_pct": 0.0
+        },
+        "LT": {
+          "mean_accuracy": 0.5197381247142013,
+          "mean_f1": 0.18302339260666936,
+          "beating_majority_pct": 33.33333333333333
+        },
+        "RELIANCE": {
+          "mean_accuracy": 0.48306795596747754,
+          "mean_f1": 0.563729071365641,
+          "beating_majority_pct": 0.0
+        },
+        "SUNPHARMA": {
+          "mean_accuracy": 0.48852901484480427,
+          "mean_f1": 0.0291970802919708,
+          "beating_majority_pct": 0.0
+        },
+        "TATASTEEL": {
+          "mean_accuracy": 0.5043617180267898,
+          "mean_f1": 0.5719681342116363,
+          "beating_majority_pct": 0.0
+        },
+        "TCS": {
+          "mean_accuracy": 0.5316077224211195,
+          "mean_f1": 0.6940258622536469,
+          "beating_majority_pct": 0.0
+        }
+      },
+      "best_epoch": {
         "n": 24,
-        "median": 2.0,
-        "mean": 5.5,
-        "max": 24.0,
-        "pct_gt_3": 41.66666666666667,
-        "pct_gt_10": 16.666666666666664,
+        "median": 1.0,
+        "mean": 1.125,
+        "max": 2.0,
+        "pct_gt_3": 0.0,
+        "pct_gt_10": 0.0,
         "histogram": {
-          "0": 5,
-          "1": 3,
-          "2": 6,
-          "4": 1,
-          "6": 3,
-          "8": 1,
-          "10": 1,
-          "12": 1,
-          "19": 1,
-          "22": 1,
-          "24": 1
+          "0": 7,
+          "1": 7,
+          "2": 10
         }
       }
+    }
+  },
+  "series_order": [
+    "T10-F1",
+    "T10-F2",
+    "T3-F1",
+    "T100-F1",
+    "T100-F2"
+  ],
+  "series_roles": {
+    "T3-F1": "diagnostic",
+    "T10-F1": "PRIMARY",
+    "T10-F2": "PRIMARY",
+    "T100-F1": "diagnostic",
+    "T100-F2": "diagnostic"
+  },
+  "diagnostics": {
+    "T3_to_T10_F1": {
+      "from": "T3-F1",
+      "to": "T10-F1",
+      "accuracy_delta": 0.007871125684522862,
+      "f1_delta": 0.0444851497754698,
+      "brier_delta": -0.000960180028999863,
+      "ece_delta": -0.0061348765059571035,
+      "beating_majority_delta_pct": 8.333333333333334
     },
-    "P1_vs_P2": {
-      "accuracy_delta": 0.008827238152597006,
-      "f1_delta": 0.04043252583872725,
-      "brier_delta": 0.00015135110728667356,
-      "beating_majority_delta_pct": 20.833333333333336
+    "T10_to_T100_F1": {
+      "from": "T10-F1",
+      "to": "T100-F1",
+      "accuracy_delta": 0.0032162534435262735,
+      "f1_delta": 0.004015421552093168,
+      "brier_delta": -0.0003946645907597357,
+      "ece_delta": -0.00021115126254650854,
+      "beating_majority_delta_pct": 8.333333333333336
+    },
+    "F1_to_F2_at_T10": {
+      "from": "T10-F1",
+      "to": "T10-F2",
+      "accuracy_delta": 0.008210158262789924,
+      "f1_delta": 0.05090655330682642,
+      "brier_delta": -1.4732757047858369e-05,
+      "ece_delta": 0.004685050169020762,
+      "beating_majority_delta_pct": 25.0
+    },
+    "T3_best_epoch": {
+      "n": 24,
+      "median": 1.0,
+      "mean": 1.125,
+      "max": 2.0,
+      "pct_gt_3": 0.0,
+      "pct_gt_10": 0.0,
+      "histogram": {
+        "0": 7,
+        "1": 7,
+        "2": 10
+      }
+    },
+    "T10-F1_best_epoch": {
+      "n": 24,
+      "median": 2.0,
+      "mean": 3.2083333333333335,
+      "max": 9.0,
+      "pct_gt_3": 37.5,
+      "pct_gt_10": 0.0,
+      "histogram": {
+        "0": 6,
+        "1": 3,
+        "2": 6,
+        "4": 1,
+        "6": 4,
+        "8": 2,
+        "9": 2
+      }
+    },
+    "T10-F2_best_epoch": {
+      "n": 24,
+      "median": 2.5,
+      "mean": 3.5833333333333335,
+      "max": 9.0,
+      "pct_gt_3": 45.83333333333333,
+      "pct_gt_10": 0.0,
+      "histogram": {
+        "0": 5,
+        "1": 3,
+        "2": 4,
+        "3": 1,
+        "4": 1,
+        "5": 2,
+        "6": 3,
+        "7": 1,
+        "8": 3,
+        "9": 1
+      }
+    },
+    "T100-F1_best_epoch": {
+      "n": 24,
+      "median": 2.0,
+      "mean": 5.5,
+      "max": 24.0,
+      "pct_gt_3": 41.66666666666667,
+      "pct_gt_10": 16.666666666666664,
+      "histogram": {
+        "0": 5,
+        "1": 3,
+        "2": 6,
+        "4": 1,
+        "6": 3,
+        "8": 1,
+        "10": 1,
+        "12": 1,
+        "19": 1,
+        "22": 1,
+        "24": 1
+      }
+    },
+    "T100-F2_best_epoch": {
+      "n": 24,
+      "median": 2.5,
+      "mean": 5.208333333333333,
+      "max": 37.0,
+      "pct_gt_3": 45.83333333333333,
+      "pct_gt_10": 8.333333333333332,
+      "histogram": {
+        "0": 5,
+        "1": 3,
+        "2": 4,
+        "3": 1,
+        "4": 1,
+        "5": 2,
+        "6": 3,
+        "8": 2,
+        "9": 1,
+        "17": 1,
+        "37": 1
+      }
+    },
+    "highest_accuracy_series": "T100-F2",
+    "selection_policy": "The primary candidate remains T10 (AUTHOR-CONFIRMED) regardless of which series scores highest. A T100 win over T10 is evidence that some OTHER aspect of the reconstruction is unfaithful and warrants forensic diagnosis; it is not grounds to select T100."
+  },
+  "epoch_analysis": {
+    "T10-F1": {
+      "counts_by_epoch": {
+        "0": 6,
+        "1": 3,
+        "2": 6,
+        "4": 1,
+        "6": 4,
+        "8": 2,
+        "9": 2
+      },
+      "n_fits": 24,
+      "median_best_epoch": 2.0,
+      "mean_best_epoch": 3.2083333333333335,
+      "max_best_epoch": 9.0,
+      "frac_le_3": 0.625,
+      "frac_4_to_6": 0.20833333333333334,
+      "frac_7_to_10": 0.16666666666666666,
+      "frac_gt_10": 0.0,
+      "note": "A best epoch above 10 is impossible under a 10-epoch cap; a non-zero frac_gt_10 would indicate a cap that was not applied."
+    },
+    "T10-F2": {
+      "counts_by_epoch": {
+        "0": 5,
+        "1": 3,
+        "2": 4,
+        "3": 1,
+        "4": 1,
+        "5": 2,
+        "6": 3,
+        "7": 1,
+        "8": 3,
+        "9": 1
+      },
+      "n_fits": 24,
+      "median_best_epoch": 2.5,
+      "mean_best_epoch": 3.5833333333333335,
+      "max_best_epoch": 9.0,
+      "frac_le_3": 0.5416666666666666,
+      "frac_4_to_6": 0.25,
+      "frac_7_to_10": 0.20833333333333334,
+      "frac_gt_10": 0.0,
+      "note": "A best epoch above 10 is impossible under a 10-epoch cap; a non-zero frac_gt_10 would indicate a cap that was not applied."
+    },
+    "T3-F1": {
+      "counts_by_epoch": {
+        "0": 7,
+        "1": 7,
+        "2": 10
+      },
+      "n_fits": 24,
+      "median_best_epoch": 1.0,
+      "mean_best_epoch": 1.125,
+      "max_best_epoch": 2.0,
+      "frac_le_3": 1.0,
+      "frac_4_to_6": 0.0,
+      "frac_7_to_10": 0.0,
+      "frac_gt_10": 0.0,
+      "note": "A best epoch above 10 is impossible under a 10-epoch cap; a non-zero frac_gt_10 would indicate a cap that was not applied."
+    },
+    "T100-F1": {
+      "counts_by_epoch": {
+        "0": 5,
+        "1": 3,
+        "2": 6,
+        "4": 1,
+        "6": 3,
+        "8": 1,
+        "10": 1,
+        "12": 1,
+        "19": 1,
+        "22": 1,
+        "24": 1
+      },
+      "n_fits": 24,
+      "median_best_epoch": 2.0,
+      "mean_best_epoch": 5.5,
+      "max_best_epoch": 24.0,
+      "frac_le_3": 0.5833333333333334,
+      "frac_4_to_6": 0.16666666666666666,
+      "frac_7_to_10": 0.08333333333333333,
+      "frac_gt_10": 0.16666666666666666,
+      "note": "A best epoch above 10 is impossible under a 10-epoch cap; a non-zero frac_gt_10 would indicate a cap that was not applied."
+    },
+    "T100-F2": {
+      "counts_by_epoch": {
+        "0": 5,
+        "1": 3,
+        "2": 4,
+        "3": 1,
+        "4": 1,
+        "5": 2,
+        "6": 3,
+        "8": 2,
+        "9": 1,
+        "17": 1,
+        "37": 1
+      },
+      "n_fits": 24,
+      "median_best_epoch": 2.5,
+      "mean_best_epoch": 5.208333333333333,
+      "max_best_epoch": 37.0,
+      "frac_le_3": 0.5416666666666666,
+      "frac_4_to_6": 0.25,
+      "frac_7_to_10": 0.125,
+      "frac_gt_10": 0.08333333333333333,
+      "note": "A best epoch above 10 is impossible under a 10-epoch cap; a non-zero frac_gt_10 would indicate a cap that was not applied."
     }
   },
   "signal_gate": {
-    "best_configuration": "P2",
+    "PRE2022_T10_SIGNAL": "WEAK",
     "verdict": "WEAK",
-    "mean_accuracy": 0.5288287995895652,
+    "best_author_confirmed_series": "T10-F2",
+    "role": "AUTHOR-CONFIRMED PRIMARY (10 epochs)",
+    "mean_accuracy": 0.5249954662562318,
     "mean_majority_accuracy": 0.5281739440782504,
-    "accuracy_over_majority": 0.0006548555113148335,
-    "mean_f1": 0.5404850664854449,
-    "mean_brier_raw": 0.24882020884392583,
-    "beating_majority_pct": 41.66666666666667,
+    "accuracy_over_majority": -0.0031784778220185217,
+    "mean_f1": 0.5469436724014509,
+    "mean_brier_raw": 0.24904878957035104,
+    "beating_majority_pct": 37.5,
     "criteria": {
+      "accuracy_over_majority>0.005": false,
       "beats_majority_pct>=55": false,
       "f1>=0.52": true,
       "brier<0.25": true,
       "stable_across_tickers": true
     },
     "proceed_to_stage_b": false,
-    "note": "Judged on pre-2022 validation only. Deliberately NOT compared to the paper's published test metrics."
+    "recommendation": "RUN_PRE2022_FORENSICS",
+    "note": "Judged on pre-2022 validation at the author-confirmed 10-epoch schedule only. Deliberately NOT compared to the paper's published test metrics. T3/T100 are diagnostics and cannot promote the decision."
   }
 }

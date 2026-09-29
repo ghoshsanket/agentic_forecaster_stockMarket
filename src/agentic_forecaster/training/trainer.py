@@ -63,10 +63,11 @@ class Trainer:
         self.lr = learning_rate
         self.wd = weight_decay
         self.batch_size = batch_size
-        # `max_epochs` is an explicit alias for `epochs`.  The publication
-        # specifies early-stopping patience 10 but does NOT specify an epoch
-        # cap, so a performance-recovery config can set `max_epochs` without
-        # the value being silently ignored.
+        # `max_epochs` is an explicit alias for `epochs`.  The author has
+        # confirmed the original implementation capped training at 10 epochs
+        # (see recovery.variants.TRAINING_LENGTHS); this was previously assumed
+        # unspecified.  The alias still exists so a diagnostic config can set
+        # a different cap without the value being silently ignored.
         self.epochs = int(max_epochs) if max_epochs is not None else int(epochs)
         self.patience = patience
         self.restore_best_checkpoint = bool(restore_best_checkpoint)

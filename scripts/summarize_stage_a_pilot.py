@@ -30,12 +30,29 @@ import pandas as pd
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-#: P0/P1/P2 are identified from the experiment's resolved config, never guessed.
-PILOT_LABELS = {
-    "P0": {"training_length": "T3", "feature_family": "F1"},
-    "P1": {"training_length": "T100", "feature_family": "F1"},
-    "P2": {"training_length": "T100", "feature_family": "F2"},
+#: Series are identified from each experiment's RESOLVED CONFIG, never guessed
+#: from a directory name. `max_epochs` is the authoritative discriminator,
+#: because the T3/T10/T100 catalog keys changed names when 10 epochs became
+#: author-confirmed while the underlying runs were left untouched.
+#:
+#: 10 epochs is AUTHOR-CONFIRMED and is the PRIMARY reconstruction candidate.
+#: T3 and T100 are diagnostics: T3 was a reconstruction shortcut, T100 was a
+#: recovery diagnostic. Neither may be selected on performance alone.
+SERIES = {
+    "T3-F1":   {"max_epochs": 3,   "feature_family": "F1", "role": "diagnostic",
+                "label": "T3_RECONSTRUCTION_SHORTCUT"},
+    "T10-F1":  {"max_epochs": 10,  "feature_family": "F1", "role": "PRIMARY",
+                "label": "T10_AUTHOR_CONFIRMED"},
+    "T10-F2":  {"max_epochs": 10,  "feature_family": "F2", "role": "PRIMARY",
+                "label": "T10_AUTHOR_CONFIRMED"},
+    "T100-F1": {"max_epochs": 100, "feature_family": "F1", "role": "diagnostic",
+                "label": "T100_DIAGNOSTIC"},
+    "T100-F2": {"max_epochs": 100, "feature_family": "F2", "role": "diagnostic",
+                "label": "T100_DIAGNOSTIC"},
 }
+#: Report order: the author-confirmed schedule first, then diagnostics.
+SERIES_ORDER = ["T10-F1", "T10-F2", "T3-F1", "T100-F1", "T100-F2"]
+AUTHOR_CONFIRMED_SERIES = ("T10-F1", "T10-F2")
 FOLDS = ["SEARCH_FOLD_A", "SEARCH_FOLD_B", "SEARCH_FOLD_C"]
 
 
@@ -51,9 +68,9 @@ def pilot_experiments(root: Path) -> list[dict]:
         a = json.loads(agg.read_text())
         resolved = a.get("resolved", {})
         label = None
-        for name, spec in PILOT_LABELS.items():
-            if (resolved.get("max_epochs") == (3 if name == "P0" else 100)
-                    and spec["feature_family"] == resolved.get("feature_family")):
+        for name, spec in SERIES.items():
+            if (resolved.get("max_epochs") == spec["max_epochs"]
+                    and resolved.get("feature_family") == spec["feature_family"]):
                 label = name
                 break
         if label is None:
@@ -62,13 +79,9 @@ def pilot_experiments(root: Path) -> list[dict]:
             continue
         if m.get("test_rows", 0) != 0:
             continue
-        out.append({"label": name_label(label), "dir": d, "manifest": m,
+        out.append({"label": label, "dir": d, "manifest": m,
                     "aggregate": a, "resolved": resolved})
     return out
-
-
-def name_label(label: str) -> str:
-    return {"P0": "P0", "P1": "P1", "P2": "P2"}.get(label, label)
 
 
 def per_case(experiment: dict) -> list[dict]:
@@ -148,56 +161,64 @@ def summarise(cases: list[dict], experiments: list[dict]) -> dict:
     return out
 
 
-def diagnostics(summary: dict) -> dict:
-    """Training-length (P0 vs P1) and feature (P1 vs P2) diagnostics."""
-    d: dict = {}
-    if "P0" in summary and "P1" in summary:
-        a, b = summary["P0"]["cross_fold"], summary["P1"]["cross_fold"]
-        d["P0_vs_P1"] = {
-            "accuracy_delta": b["mean_accuracy"] - a["mean_accuracy"],
-            "f1_delta": b["mean_f1"] - a["mean_f1"],
-            "brier_delta": b["mean_brier_raw"] - a["mean_brier_raw"],
-            "beating_majority_delta_pct": (b["beating_majority_pct"]
-                                           - a["beating_majority_pct"]),
-            "P1_best_epoch": summary["P1"].get("best_epoch"),
-        }
-    if "P1" in summary and "P2" in summary:
-        a, b = summary["P1"]["cross_fold"], summary["P2"]["cross_fold"]
-        d["P1_vs_P2"] = {
-            "accuracy_delta": b["mean_accuracy"] - a["mean_accuracy"],
-            "f1_delta": b["mean_f1"] - a["mean_f1"],
-            "brier_delta": b["mean_brier_raw"] - a["mean_brier_raw"],
-            "beating_majority_delta_pct": (b["beating_majority_pct"]
-                                           - a["beating_majority_pct"]),
-        }
-    return d
+def epoch_buckets(summary: dict, series: str) -> dict:
+    """Best-epoch distribution, bucketed around the author-confirmed 10-epoch cap.
+
+    The question this answers is whether the confirmed 10-epoch budget was
+    materially different from the earlier 3-epoch shortcut. If most fits select
+    a best epoch <= 3, then 3 and 10 epochs are nearly the same experiment and
+    the earlier shortcut cost almost nothing.
+    """
+    be = summary.get(series, {}).get("best_epoch")
+    if not be or not be.get("histogram"):
+        return {}
+    hist = {int(k): int(v) for k, v in be["histogram"].items()}
+    n = sum(hist.values()) or 1
+    le3 = sum(v for k, v in hist.items() if k <= 3)
+    mid = sum(v for k, v in hist.items() if 4 <= k <= 6)
+    hi = sum(v for k, v in hist.items() if 7 <= k <= 10)
+    return {
+        "counts_by_epoch": {str(k): hist[k] for k in sorted(hist)},
+        "n_fits": n,
+        "median_best_epoch": be.get("median"),
+        "mean_best_epoch": be.get("mean"),
+        "max_best_epoch": be.get("max"),
+        "frac_le_3": le3 / n,
+        "frac_4_to_6": mid / n,
+        "frac_7_to_10": hi / n,
+        "frac_gt_10": sum(v for k, v in hist.items() if k > 10) / n,
+        "note": ("A best epoch above 10 is impossible under a 10-epoch cap; a "
+                 "non-zero frac_gt_10 would indicate a cap that was not applied."),
+    }
 
 
 def signal_gate(summary: dict) -> dict:
-    """Is a broad Stage-B/C search scientifically worthwhile?
+    """PRE2022_T10_SIGNAL: is signal present at the AUTHOR-CONFIRMED 10 epochs?
 
     This is NOT a target-to-paper gate. It asks only whether pre-2022
-    validation shows signal worth chasing: improvement over the majority
-    baseline and/or better F1, stability across tickers and folds, and Brier
-    better than the trivial ~0.25 behaviour of an uninformative constant-0.5
-    forecast. The published 0.815 accuracy is deliberately NOT used.
+    validation shows signal worth chasing at the confirmed schedule:
+    improvement over the majority baseline and/or better F1, stability across
+    tickers and folds, and Brier better than the trivial ~0.25 behaviour of an
+    uninformative constant-0.5 forecast. The published 0.815 test accuracy is
+    deliberately NOT used.
+
+    Only the T10 series are eligible. T3 and T100 are diagnostics and must not
+    drive the decision: the objective is faithful reconstruction, so a longer
+    diagnostic budget winning here is a forensic clue, not a promotion.
     """
-    best = None
-    for label in ("P1", "P2"):
-        if label in summary and (
-            best is None
-            or summary[label]["cross_fold"]["mean_accuracy"]
-            > summary[best]["cross_fold"]["mean_accuracy"]
-        ):
-            best = label
-    if best is None:
-        return {"verdict": "ABSENT", "reason": "no pilot configuration produced results",
-                "proceed_to_stage_b": False}
+    eligible = [s for s in AUTHOR_CONFIRMED_SERIES if s in summary]
+    if not eligible:
+        return {"PRE2022_T10_SIGNAL": "ABSENT", "verdict": "ABSENT",
+                "reason": "no author-confirmed T10 results present",
+                "proceed_to_stage_b": False,
+                "recommendation": "RUN_PRE2022_FORENSICS"}
+    best = max(eligible, key=lambda s: summary[s]["cross_fold"]["mean_accuracy"])
     c = summary[best]["cross_fold"]
     over_majority = c["mean_accuracy"] - c["mean_majority_accuracy"]
     beats_majority = c["beating_majority_pct"] >= 55.0
     f1_useful = c["mean_f1"] >= 0.52
     brier_useful = c["mean_brier_raw"] < 0.25
+    # PROMISING requires the effect to repeat, not just to average out positive.
     stable = c["beating_majority_pct"] > 0
     promising = (over_majority > 0.005 and (beats_majority or f1_useful)) and brier_useful
     if promising and stable:
@@ -206,22 +227,74 @@ def signal_gate(summary: dict) -> dict:
         verdict = "WEAK"
     else:
         verdict = "ABSENT"
+    proceed = bool(verdict == "PROMISING" and stable)
     return {
-        "best_configuration": best,
+        "PRE2022_T10_SIGNAL": verdict,
         "verdict": verdict,
+        "best_author_confirmed_series": best,
+        "role": "AUTHOR-CONFIRMED PRIMARY (10 epochs)",
         "mean_accuracy": c["mean_accuracy"],
         "mean_majority_accuracy": c["mean_majority_accuracy"],
         "accuracy_over_majority": over_majority,
         "mean_f1": c["mean_f1"],
         "mean_brier_raw": c["mean_brier_raw"],
         "beating_majority_pct": c["beating_majority_pct"],
-        "criteria": {"beats_majority_pct>=55": beats_majority,
+        "criteria": {"accuracy_over_majority>0.005": over_majority > 0.005,
+                     "beats_majority_pct>=55": beats_majority,
                      "f1>=0.52": f1_useful, "brier<0.25": brier_useful,
                      "stable_across_tickers": stable},
-        "proceed_to_stage_b": bool(promising and stable),
-        "note": ("Judged on pre-2022 validation only. Deliberately NOT compared "
-                 "to the paper's published test metrics."),
+        "proceed_to_stage_b": proceed,
+        "recommendation": ("PROCEED_TO_STAGE_B" if proceed
+                           else "RUN_PRE2022_FORENSICS"),
+        "note": ("Judged on pre-2022 validation at the author-confirmed 10-epoch "
+                 "schedule only. Deliberately NOT compared to the paper's "
+                 "published test metrics. T3/T100 are diagnostics and cannot "
+                 "promote the decision."),
     }
+
+
+def diagnostics(summary: dict) -> dict:
+    """T3 -> T10 -> T100, and the F1 -> F2 contrast at exactly 10 epochs."""
+    d: dict = {}
+
+    def cross(s):
+        return summary.get(s, {}).get("cross_fold")
+    pairs = {
+        "T3_to_T10_F1":   ("T3-F1", "T10-F1"),
+        "T10_to_T100_F1": ("T10-F1", "T100-F1"),
+        "F1_to_F2_at_T10": ("T10-F1", "T10-F2"),
+    }
+    for name, (a_key, b_key) in pairs.items():
+        a, b = cross(a_key), cross(b_key)
+        if not a or not b:
+            continue
+        d[name] = {
+            "from": a_key, "to": b_key,
+            "accuracy_delta": b["mean_accuracy"] - a["mean_accuracy"],
+            "f1_delta": b["mean_f1"] - a["mean_f1"],
+            "brier_delta": b["mean_brier_raw"] - a["mean_brier_raw"],
+            "ece_delta": b["mean_ece"] - a["mean_ece"],
+            "beating_majority_delta_pct": (b["beating_majority_pct"]
+                                           - a["beating_majority_pct"]),
+        }
+    if "T3-F1" in summary:
+        d["T3_best_epoch"] = summary["T3-F1"].get("best_epoch")
+    for s in AUTHOR_CONFIRMED_SERIES:
+        if s in summary:
+            d[f"{s}_best_epoch"] = summary[s].get("best_epoch")
+    for s in ("T100-F1", "T100-F2"):
+        if s in summary:
+            d[f"{s}_best_epoch"] = summary[s].get("best_epoch")
+    # A diagnostic win is a forensic clue, never a promotion.
+    best_any = max((s for s in summary if cross(s)),
+                   key=lambda s: cross(s)["mean_accuracy"], default=None)
+    d["highest_accuracy_series"] = best_any
+    d["selection_policy"] = (
+        "The primary candidate remains T10 (AUTHOR-CONFIRMED) regardless of "
+        "which series scores highest. A T100 win over T10 is evidence that some "
+        "OTHER aspect of the reconstruction is unfaithful and warrants forensic "
+        "diagnosis; it is not grounds to select T100.")
+    return d
 
 
 def main() -> int:
@@ -253,7 +326,11 @@ def main() -> int:
         "firewall": "no date >= 2022-01-01 was read or scored",
         "paper_reference_used": False,
         "summary": summary,
+        "series_order": SERIES_ORDER,
+        "series_roles": {k: SERIES[k]["role"] for k in SERIES},
         "diagnostics": diagnostics(summary),
+        "epoch_analysis": {s: epoch_buckets(summary, s) for s in SERIES_ORDER
+                           if s in summary},
         "signal_gate": signal_gate(summary),
     }
     text = json.dumps(report, indent=2, default=str)

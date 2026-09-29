@@ -271,11 +271,21 @@ def test_rsi_variants_differ_and_are_causal():
 
 
 def test_training_length_and_lookback_catalogues():
-    assert set(variants.TRAINING_LENGTHS) == {"T3", "T30", "T50", "T100"}
-    for key in ("T30", "T50", "T100"):
+    assert set(variants.TRAINING_LENGTHS) == {
+        "T10_AUTHOR_CONFIRMED", "T3_RECONSTRUCTION_SHORTCUT",
+        "T30", "T50", "T100_DIAGNOSTIC"}
+    for key in ("T30", "T50", "T100_DIAGNOSTIC"):
         assert variants.TRAINING_LENGTHS[key]["patience"] == 10
         assert variants.TRAINING_LENGTHS[key]["restore_best_checkpoint"] is True
         assert variants.TRAINING_LENGTHS[key]["max_epochs"] > 3
+    # The author-confirmed schedule: 10 epochs, patience 10, best restored.
+    author = variants.TRAINING_LENGTHS["T10_AUTHOR_CONFIRMED"]
+    assert author["max_epochs"] == 10
+    assert author["patience"] == 10
+    assert author["restore_best_checkpoint"] is True
+    assert author["role"] == "PRIMARY"
+    # It must be the default: a faithful reconstruction is the reference point.
+    assert variants.DEFAULT_TRAINING_LENGTH == "T10_AUTHOR_CONFIRMED"
     assert variants.LOOKBACKS == {"L10": 10, "L20": 20, "L30": 30, "L40": 40, "L60": 60}
     assert variants.DEFAULT_LOOKBACK == 30
 

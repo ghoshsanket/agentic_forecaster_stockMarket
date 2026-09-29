@@ -50,7 +50,7 @@ Every reconstruction decision is classified with one of three labels:
 
 | # | Item | Label | Choice / rationale |
 |---|---|---|---|
-| 24 | Epochs | AUTHOR-CONFIRMED | Maximum 3 epochs. **Not** paper-defined. |
+| 24 | Epochs | AUTHOR-CONFIRMED | Maximum **10 epochs** (confirmed by the original author, 2026-09-29). With patience also 10, the cap binds at or before early stopping fires, so 10 epochs is the effective schedule. The earlier 3-epoch value was a reconstruction shortcut, not the author's choice. |
 | 25 | Optimizer | PAPER-DEFINED | Adam, lr = 0.001 (weight decay is RECONSTRUCTION-ASSUMED). |
 | 26 | Adam betas | PAPER-DEFINED | beta1 = 0.9, beta2 = 0.999. |
 | 27 | Batch size | PAPER-DEFINED | 64. |

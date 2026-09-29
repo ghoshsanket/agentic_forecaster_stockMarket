@@ -89,13 +89,38 @@ into a stage that exists to test *mechanics*. Whether signal exists at all is
 answered across stocks and windows by the **Stage-A pilot** (§ below), which is
 the first stage with the breadth to support the question.
 
-### Training-length recovery is the first substantive experiment
+### Training length is AUTHOR-CONFIRMED at 10 epochs
 
-The publication specifies Adam lr 1e-3, beta1 0.9, beta2 0.999, batch 64 and
-early-stopping **patience 10**, but states **no epoch cap**. The reproduction's
-`max_epochs: 3` was a budget choice, not a property of the paper. If best
-epochs cluster in the 12–25 range, that immediately demonstrates the
-three-epoch reconstruction was undertrained.
+| Setting | Value | Evidence class |
+|---|---|---|
+| Adam learning rate | 1e-3 | **PAPER-DEFINED** |
+| Adam beta1 / beta2 | 0.9 / 0.999 | **PAPER-DEFINED** |
+| Batch size | 64 | **PAPER-DEFINED** |
+| Early-stopping patience | 10 | **PAPER-DEFINED** |
+| **Maximum training epochs** | **10** | **AUTHOR-CONFIRMED** |
+
+The original author confirmed on 2026-09-29 that the original implementation
+trained for **a maximum of 10 epochs**. This supersedes the earlier
+reconstruction assumption that no epoch cap was specified.
+
+Because patience is also 10, the epoch cap binds at or before early stopping can
+fire, so **10 epochs is the effective schedule** — the two settings do not
+compound into a longer budget.
+
+Two epoch values that appeared earlier are explicitly *not* the original:
+
+| Value | What it actually was |
+|---|---|
+| `T3` (3 epochs) | an early **reconstruction shortcut**, never the author's choice |
+| `T100` (100 epochs) | a **recovery diagnostic**, never a reproduction candidate |
+
+Consequently the epoch budget is **no longer a search axis**. Stage A compares
+the compact (F1) and expanded (F2) feature sets at the confirmed schedule, and
+T3/T100 are retained only to quantify what the confirmed budget costs. If a
+diagnostic configuration beats T10, that is a finding about the diagnostic — not
+grounds to select it. Faithful reconstruction of the original implementation is
+the objective, so **T10 remains the primary candidate unless new author evidence
+says otherwise**.
 
 ## Feature families
 
@@ -223,20 +248,47 @@ FINAL_TEST=1 uv run python scripts/run_recovered_paper.py \
 
 ## The Stage-A pilot (what actually runs first)
 
-The full Stage-A grid is 3 training lengths × 2 feature families × 3 folds ×
-~10 stocks ≈ **180 fits**. That is a large bill to pay before knowing whether
-the pipeline has any pre-2022 signal at all, so Stage A is entered through a
-controlled pilot of **3 configurations × 3 folds × 8 stocks = 9 runs / 72 fits**
-(`scripts/run_stage_a_pilot.sh`).
+Because the epoch budget is author-confirmed, Stage A is no longer an epoch
+search. It is entered through a controlled pilot, run in two generations. Both
+generations share the same 8 stocks and the same 3 folds, so every epoch budget
+is measured on identical data.
 
-The three configurations are chosen to answer three specific questions rather
-than to sweep a grid:
+**Generation 1 — epoch diagnostics (retained, relabelled).** These predate the
+author confirmation and are kept because they quantify what the confirmed budget
+costs. They are diagnostics, **not** candidates:
+
+| Config | Training length | Features | Status |
+|---|---|---|---|
+| **P0** | `T3_RECONSTRUCTION_SHORTCUT` (3 epochs) | F1 | reconstruction shortcut; a control |
+| **P1** | `T100_DIAGNOSTIC` (100 epochs) | F1 | recovery diagnostic only |
+| **P2** | `T100_DIAGNOSTIC` (100 epochs) | F2 | recovery diagnostic only |
+
+**Generation 2 — the author-confirmed pilot (primary).** Epoch budget fixed at
+the confirmed 10; the open question is the *feature set*, which is still not
+completely established because the original feature list was lost:
 
 | Config | Training length | Features | Question it answers |
 |---|---|---|---|
-| **P0** | T3 (3 epochs) | F1 | was the original 3-epoch cap too restrictive? |
-| **P1** | T100, patience 10 | F1 | does proper early stopping change anything? |
-| **P2** | T100, patience 10 | F2 | do the paper's named features (SMA/Bollinger/OBV) help? |
+| **P10-F1** | `T10_AUTHOR_CONFIRMED` (10 epochs) | F1 | does the compact methodology reconstruction discriminate? |
+| **P10-F2** | `T10_AUTHOR_CONFIRMED` (10 epochs) | F2 | do the paper's named features (SMA5/SMA20/SMA5−SMA20, Bollinger bands and %B, OBV) help? |
+
+This is **2 configurations × 3 folds × 8 stocks = 48 fits**
+(`scripts/run_stage_a_pilot.sh --generation author-confirmed`).
+
+The epoch budget is **held fixed** across F1 and F2 on purpose. Because F1 and
+F2 are compared at exactly 10 epochs, the F1→F2 difference is attributable to
+the features alone and cannot be confounded by a training-length difference.
+
+### A diagnostic win is not a selection criterion
+
+T100 and T3 are reported alongside T10 for completeness, and the comparison is
+reported honestly. But if T100 outperforms T10, the correct response is **not**
+to select T100. The objective is faithful reconstruction of the original
+implementation, and the author has confirmed 10 epochs. A longer budget
+performing better would be evidence that the *reconstruction* is not yet
+faithful in some other respect — a forensic finding to investigate, not a
+licence to substitute a different schedule. **T10 remains the primary candidate
+unless new author evidence says otherwise.**
 
 Everything else is held fixed: lookback 30, standard scaler, raw volume, A0
 (2×64), dropout 0.2, weight decay 1e-4, no class weighting, **calibration none**,

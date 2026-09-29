@@ -1,25 +1,33 @@
 #!/usr/bin/env bash
 # Stage-A PILOT: a small, controlled, PRE-2022 comparison.
 #
-# 3 candidate families x 3 search folds x 8 representative stocks = 9 experiment
-# runs / 72 model fits. Every fit scores a PRE-2022 validation window only.
+# The epoch budget is AUTHOR-CONFIRMED at 10, so it is NOT a search axis. The
+# pilot runs in two generations over the same 8 stocks and the same 3 folds:
 #
-# This is deliberately NOT the full Stage-A grid (which would multiply the
-# training-length axis across every ticker and fold). The pilot exists to answer
-# three questions before an expensive search is worth running:
+#   --generation author-confirmed   PRIMARY
+#       T10 x {F1,F2}                     2 x 3 x 8 = 48 fits
+#       Asks: at the confirmed schedule, does the compact F1 feature set or the
+#       expanded F2 set (SMA5/SMA20/SMA5-SMA20, Bollinger bands and %B, OBV)
+#       discriminate on pre-2022 validation? F1 and F2 are held at EXACTLY 10
+#       epochs so any difference is attributable to features alone.
 #
-#   P0 vs P1  -> was the 3-epoch cap too restrictive?
-#   P1 vs P2  -> do the paper-evidence features (SMA/Bollinger/OBV) help?
-#   P1/P2     -> is there any pre-2022 predictive signal at all?
+#   --generation diagnostic         RETAINED, NOT candidates
+#       T3 x F1, T100 x {F1,F2}            3 x 3 x 8 = 72 fits
+#       Measures what the confirmed 10-epoch budget costs. T3 was a
+#       reconstruction shortcut and T100 was a recovery diagnostic; neither was
+#       the author's schedule and a diagnostic win does not license selecting it.
+#
+#   --generation all                both
 #
 # HARD CONSTRAINTS
 #   * no date >= 2022-01-01 is ever scored (the firewall enforces this)
-#   * calibration is NONE, so validation metrics are from RAW p(up); Stage D
-#     compares calibration methods separately
+#   * calibration is NONE, so validation metrics are from RAW p(up); calibration
+#     is recovered separately once the model configuration is selected
 #   * volume_mode is raw, the Phase-1 reference; log1p is a Stage-B option
 #   * run_recovered_paper.py is never invoked and FINAL_TEST is never set
 #
-# Usage:  bash scripts/run_stage_a_pilot.sh
+# Usage:  bash scripts/run_stage_a_pilot.sh [--generation author-confirmed|diagnostic|all]
+
 
 set -Eeuo pipefail
 
@@ -62,6 +70,31 @@ echo "$$" >&9
 # ---- helpers --------------------------------------------------------------
 log() { printf '%s  %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*" | tee -a "$LOG"; }
 
+# ---------------------------------------------------------------------------
+# Generation selection
+#
+#   author-confirmed  PRIMARY  : T10 x {F1,F2}  = 2 x 3 x 8 = 48 fits
+#   diagnostic        RETAINED : T3 x F1, T100 x {F1,F2} = 3 x 3 x 8 = 72 fits
+#   all               both generations
+#
+# The epoch budget is AUTHOR-CONFIRMED at 10, so it is not a search axis. T3 and
+# T100 are retained ONLY to measure what the confirmed budget costs; neither is
+# a reproduction candidate and a diagnostic win does not license selecting it.
+# ---------------------------------------------------------------------------
+GENERATION="author-confirmed"
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --generation) GENERATION="$2"; shift 2 ;;
+    -h|--help) sed -n '2,30p' "$0"; exit 0 ;;
+    *) echo "unknown argument: $1" >&2; exit 2 ;;
+  esac
+done
+case "$GENERATION" in
+  author-confirmed|diagnostic|all) ;;
+  *) echo "unknown generation: $GENERATION" >&2; exit 2 ;;
+esac
+
+
 # run_one <label> <training_length> <feature_family>
 run_one() {
   local label="$1" tl="$2" fam="$3" fold="$4"
@@ -91,15 +124,31 @@ run_one() {
 trap 'log "FAILED at line $LINENO"; exit 1' ERR
 
 log "=== Stage-A pilot start (pre-2022 only) ==="
+log "generation: $GENERATION"
 log "tickers: $TICKERS"
 log "folds  : ${FOLDS[*]}"
 
-# 3 configurations x 3 folds = 9 experiment runs (72 model fits)
-for fold in "${FOLDS[@]}"; do
-  run_one "P0_T3_F1"     T3   F1 "$fold"   # original 3-epoch control
-  run_one "P1_T100_F1"  T100 F1 "$fold"   # proper early stopping
-  run_one "P2_T100_F2"  T100 F2 "$fold"   # + paper-evidence features
-done
+# ---- generation 2: the author-confirmed 10-epoch pilot (PRIMARY) -----------
+# F1 and F2 are compared at EXACTLY 10 epochs so the difference is attributable
+# to the feature set alone and cannot be confounded by training length.
+if [[ "$GENERATION" == "author-confirmed" || "$GENERATION" == "all" ]]; then
+  for fold in "${FOLDS[@]}"; do
+    run_one "P10_T10_F1" T10_AUTHOR_CONFIRMED F1 "$fold"
+    run_one "P10_T10_F2" T10_AUTHOR_CONFIRMED F2 "$fold"
+  done
+  log "author-confirmed generation complete: 6 experiment runs / 48 model fits"
+fi
 
-log "=== Stage-A pilot complete: 9 experiment runs / 72 model fits ==="
+# ---- generation 1: epoch diagnostics (retained, NOT candidates) ------------
+if [[ "$GENERATION" == "diagnostic" || "$GENERATION" == "all" ]]; then
+  for fold in "${FOLDS[@]}"; do
+    run_one "P0_T3_F1"        T3_RECONSTRUCTION_SHORTCUT F1 "$fold"
+    run_one "P1_T100_F1"      T100_DIAGNOSTIC          F1 "$fold"
+    run_one "P2_T100_F2"      T100_DIAGNOSTIC          F2 "$fold"
+  done
+  log "diagnostic generation complete: 9 experiment runs / 72 model fits"
+fi
+
+log "=== Stage-A pilot complete ==="
 log "Next: uv run --frozen python scripts/summarize_stage_a_pilot.py"
+

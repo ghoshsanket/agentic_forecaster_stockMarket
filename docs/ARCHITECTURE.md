@@ -18,7 +18,7 @@ Runtime policy: **Python 3.11**, **PyTorch**.
 | Agent | Module | Responsibility |
 |---|---|---|
 | **Data Agent** | `data/agent.py` | Discover raw 1-minute CSVs, resolve the NIFTY-50 universe, resample intraday → **daily** OHLCV (cached, source-hash validated), build the Phase-1 feature set, construct the next-day target and `target_date`, build 30-day sequences whose window **ends on the prediction-origin day**, and fit **one StandardScaler per stock per fold on training rows only**. |
-| **Model Agent** | `agents/model_agent.py` | Train one Attention-LSTM per stock (binary logit, `BCEWithLogitsLoss`, max 3 epochs, gradient clipping) plus the four baselines, and fit temperature calibration on that stock's validation split. |
+| **Model Agent** | `agents/model_agent.py` | Train one Attention-LSTM per stock (binary logit, `BCEWithLogitsLoss`, max 10 epochs (author-confirmed), gradient clipping) plus the four baselines, and fit temperature calibration on that stock's validation split. |
 | **Explainer Agent** | `agents/explainer_agent.py` | Per-prediction SHAP (`GradientExplainer` over a binary-logit wrapper, Integrated Gradients fallback) + attention evidence + reason codes + narrative. |
 | **Risk Agent** | `risk/risk_agent.py` | **ATR-based** stop-loss / take-profit from confidence bands, plus RRR and RiskScore. **No position sizing.** |
 | **Report Agent** | `agents/report_agent.py` | Per-stock HTML + PDF reports. This is the **only** reporting system. |

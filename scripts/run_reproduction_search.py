@@ -497,7 +497,7 @@ def main() -> int:
     parser.add_argument("--search-fold", default="SEARCH_FOLD_C")
     parser.add_argument("--tickers", default=None, help="comma-separated subset")
     parser.add_argument("--stage", default="A")
-    parser.add_argument("--training-length", default=None, help="T3/T30/T50/T100")
+    parser.add_argument("--training-length", default=None, help="T10_AUTHOR_CONFIRMED (primary) / T3_RECONSTRUCTION_SHORTCUT / T30 / T50 / T100_DIAGNOSTIC")
     parser.add_argument("--feature-family", default=None, help="F0/F1/F2/F3")
     parser.add_argument("--rsi-method", default=None, help="R0_rolling/R1_wilder/R2_ema")
     parser.add_argument("--lookback", type=int, default=None)

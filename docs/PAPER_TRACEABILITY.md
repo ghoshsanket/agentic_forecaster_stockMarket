@@ -63,7 +63,7 @@ evidence that the exact original constituent list has been recovered.
 | ATR-14 | PAPER-DEFINED | `features/engineer.py:atr` | `test_features.py` |
 | Attention formulation | PAPER-DEFINED | `models/attention_lstm.py` | `test_models.py` |
 | `Linear(hidden,1)` + BCE | PAPER-DEFINED | `models/attention_lstm.py`, `training/trainer.py` | `test_models.py` |
-| 3 epochs max | AUTHOR-CONFIRMED | `training/trainer.py` | `test_training_3_epochs.py` |
+| **max 10 epochs** | AUTHOR-CONFIRMED | `training/trainer.py` | `test_training_3_epochs.py`, `variants.TRAINING_LENGTHS['T10_AUTHOR_CONFIRMED']` |
 | Adam lr 1e-3, wd 1e-4 | PAPER-DEFINED | `training/trainer.py` | `test_training_3_epochs.py` |
 | batch size 64 | PAPER-DEFINED | `configs/paper.yaml` | — |
 | patience 10 | PAPER-DEFINED | `training/trainer.py` | `test_training_3_epochs.py` |
