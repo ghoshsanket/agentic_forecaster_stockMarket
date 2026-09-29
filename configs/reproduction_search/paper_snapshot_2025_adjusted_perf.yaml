@@ -17,7 +17,8 @@
 #   The publication specifies early-stopping patience 10 but does NOT specify an
 #   epoch cap. The 3-epoch cap used in the reproduction configs is a TRAINING
 #   BUDGET, not a property of the paper, so this config removes it:
-#       max_epochs: 100, patience: 10, restore_best_checkpoint: true
+#       max_epochs: 10 (AUTHOR-CONFIRMED), patience: 10,
+#       restore_best_checkpoint: true
 #   restore_best_checkpoint keeps the best-validation-epoch weights, which is
 #   what makes a 100-epoch budget safe.
 #
@@ -101,7 +102,7 @@ models:
     beta2: 0.999
     weight_decay: 0.0001
     batch_size: 64
-    max_epochs: 100
+    max_epochs: 10
     patience: 10
     restore_best_checkpoint: true
     gradient_clip_norm: 1.0
@@ -115,7 +116,7 @@ models:
     beta2: 0.999
     weight_decay: 0.0001
     batch_size: 64
-    max_epochs: 100
+    max_epochs: 10
     patience: 10
     restore_best_checkpoint: true
     gradient_clip_norm: 1.0

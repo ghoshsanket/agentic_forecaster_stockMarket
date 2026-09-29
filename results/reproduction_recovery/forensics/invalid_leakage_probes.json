@@ -1,0 +1,36 @@
+{
+  "diagnostic": "L_INVALID_PROBES",
+  "probes": {
+    "L0": {
+      "mean_validation_accuracy": 0.5034283653613797,
+      "mean_train_accuracy": 0.9933131312308139,
+      "scientifically_invalid": false
+    },
+    "L1": {
+      "mean_validation_accuracy": 0.5203802470788117,
+      "mean_train_accuracy": 0.9918809468602721,
+      "scientifically_invalid": true
+    },
+    "L2": {
+      "mean_validation_accuracy": 0.9936749311294766,
+      "mean_train_accuracy": 1.0,
+      "scientifically_invalid": true
+    },
+    "L3": {
+      "mean_validation_accuracy": 0.5058132159455988,
+      "mean_train_accuracy": 0.9985277485277485,
+      "scientifically_invalid": true
+    },
+    "L4": {
+      "mean_validation_accuracy": 0.5034283653613797,
+      "mean_train_accuracy": 0.9934032456761595,
+      "scientifically_invalid": true
+    },
+    "L5": {
+      "mean_validation_accuracy": 0.5034283653613797,
+      "mean_train_accuracy": 0.9933131312308139,
+      "scientifically_invalid": false
+    }
+  },
+  "NOTE": "L1-L4 are INTENTIONALLY WRONG and exist only to explain possible historical reporting artefacts. They are never valid models."
+}

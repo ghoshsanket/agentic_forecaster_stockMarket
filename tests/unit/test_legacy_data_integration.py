@@ -105,7 +105,7 @@ def test_perf_configs_use_max_epochs_not_the_smoke_cap():
             (REPO_ROOT / "configs" / "reproduction_search" / f"{name}.yaml").read_text())
         for model in ("attention_lstm", "lstm"):
             cfg = raw["models"][model]
-            assert cfg["max_epochs"] == 100, name
+            assert cfg["max_epochs"] == 10, name
             assert cfg["patience"] == 10, name
             assert cfg["restore_best_checkpoint"] is True, name
             assert "epochs" not in cfg, f"{name}:{model} should not pin the 3-epoch cap"

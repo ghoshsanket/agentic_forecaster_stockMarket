@@ -1,0 +1,47 @@
+{
+  "diagnostic": "C_POOLED_MODEL",
+  "label": "FORENSIC_POOLED_NOT_AUTHOR_CONFIRMED",
+  "aggregate": {
+    "accuracy": 0.5100691381983248,
+    "f1": 0.6086651273171656,
+    "brier": 0.2497388012846601,
+    "best_epochs": [
+      2,
+      2,
+      2
+    ]
+  },
+  "per_fold": [
+    {
+      "fold": "SEARCH_FOLD_A",
+      "model": "FORENSIC_POOLED_NOT_AUTHOR_CONFIRMED",
+      "accuracy": 0.5139462809917356,
+      "f1": 0.6151329243353784,
+      "brier": 0.2497357944708666,
+      "best_epoch": 2,
+      "n_train": 5912,
+      "n_val": 1936
+    },
+    {
+      "fold": "SEARCH_FOLD_B",
+      "model": "FORENSIC_POOLED_NOT_AUTHOR_CONFIRMED",
+      "accuracy": 0.4945,
+      "f1": 0.5251291686237671,
+      "brier": 0.249843444612606,
+      "best_epoch": 2,
+      "n_train": 7856,
+      "n_val": 2000
+    },
+    {
+      "fold": "SEARCH_FOLD_C",
+      "model": "FORENSIC_POOLED_NOT_AUTHOR_CONFIRMED",
+      "accuracy": 0.5217611336032388,
+      "f1": 0.6857332889923512,
+      "brier": 0.24963716477050785,
+      "best_epoch": 2,
+      "n_train": 9864,
+      "n_val": 1976
+    }
+  ],
+  "LABEL": "FORENSIC_POOLED_NOT_AUTHOR_CONFIRMED"
+}

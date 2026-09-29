@@ -15,7 +15,7 @@
 #                patience = 10; ATR risk equations and confidence multipliers;
 #                the two published walk-forward folds; published metric set.
 # AUTHOR-CONFIRMED: one independent model per stock; 30-day lookback window;
-#                maximum 3 training epochs; Python 3.11; PyTorch; LLM
+#                maximum 10 training epochs; Python 3.11; PyTorch; LLM
 #                explanation usage.
 # RECONSTRUCTION-ASSUMED: StandardScaler convention; exact Phase-1 feature
 #                subset; two LSTM layers; hidden size 64; dropout 0.2; weight
@@ -70,7 +70,7 @@ models:
     beta2: 0.999                             # PAPER-DEFINED
     weight_decay: 0.0001                     # RECONSTRUCTION-ASSUMED
     batch_size: 64                           # PAPER-DEFINED
-    epochs: 3                                # AUTHOR-CONFIRMED
+    epochs: 10                               # AUTHOR-CONFIRMED
     patience: 10                             # PAPER-DEFINED
     gradient_clip_norm: 1.0                  # RECONSTRUCTION-ASSUMED
   lstm:
@@ -83,7 +83,7 @@ models:
     beta2: 0.999                             # PAPER-DEFINED
     weight_decay: 0.0001                     # RECONSTRUCTION-ASSUMED
     batch_size: 64                           # PAPER-DEFINED
-    epochs: 3                                # AUTHOR-CONFIRMED
+    epochs: 10                               # AUTHOR-CONFIRMED
     patience: 10                             # PAPER-DEFINED
     gradient_clip_norm: 1.0                  # RECONSTRUCTION-ASSUMED
   random_forest:

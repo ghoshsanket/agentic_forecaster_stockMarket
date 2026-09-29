@@ -1,0 +1,106 @@
+{
+  "diagnostic": "B_BASELINE_PANEL",
+  "anchor": {
+    "training_length": "T10_AUTHOR_CONFIRMED",
+    "feature_family": "F2",
+    "rsi_method": "R1_wilder",
+    "lookback": 30,
+    "scaler": "standard",
+    "volume_mode": "raw",
+    "architecture": "A0",
+    "dropout": 0.2,
+    "weight_decay": 0.0001,
+    "class_weighting": "none",
+    "calibration": "none",
+    "seed": 42
+  },
+  "aggregate": {
+    "AttentionLSTM_T10F2": {
+      "accuracy": 0.5249954662562318,
+      "f1": 0.5469436724014509,
+      "brier": 0.24904878957035106,
+      "n_cases": 24,
+      "delta_vs_majority": 0.007827801385217659
+    },
+    "LogisticRegression": {
+      "accuracy": 0.5103354580029221,
+      "f1": 0.42012398312418214,
+      "brier": 0.2624229572018482,
+      "n_cases": 24,
+      "delta_vs_majority": -0.00683220686809205
+    },
+    "Majority": {
+      "accuracy": 0.5171676648710142,
+      "f1": 0.429272000229078,
+      "brier": 0.4828323351289859,
+      "n_cases": 24,
+      "delta_vs_majority": 0.0
+    },
+    "PlainLSTM": {
+      "accuracy": 0.5210726012424577,
+      "f1": 0.47253698540208644,
+      "brier": 0.24919777200876805,
+      "n_cases": 24,
+      "delta_vs_majority": 0.0039049363714435126
+    },
+    "RandomForest": {
+      "accuracy": 0.5078800593346048,
+      "f1": 0.3674773693353955,
+      "brier": 0.2599317720852088,
+      "n_cases": 24,
+      "delta_vs_majority": -0.009287605536409393
+    }
+  },
+  "per_ticker": {
+    "AttentionLSTM_T10F2": {
+      "HDFCBANK": 0.5004057951617761,
+      "INFY": 0.5438604967600184,
+      "ITC": 0.5077075651621107,
+      "LT": 0.534662071580732,
+      "RELIANCE": 0.523359453943186,
+      "SUNPHARMA": 0.517059769576516,
+      "TATASTEEL": 0.5151741336813108,
+      "TCS": 0.5577344441842049
+    },
+    "LogisticRegression": {
+      "HDFCBANK": 0.5166001271455817,
+      "INFY": 0.5137571519389702,
+      "ITC": 0.5236724997490548,
+      "LT": 0.5035222449002353,
+      "RELIANCE": 0.49387403664915625,
+      "SUNPHARMA": 0.5182627006167676,
+      "TATASTEEL": 0.5022698832268211,
+      "TCS": 0.5107250197967902
+    },
+    "Majority": {
+      "HDFCBANK": 0.5073764959123811,
+      "INFY": 0.5398604967600183,
+      "ITC": 0.530330154693791,
+      "LT": 0.5063724027169003,
+      "RELIANCE": 0.5166927872765193,
+      "SUNPHARMA": 0.483195681511471,
+      "TATASTEEL": 0.5219055776759126,
+      "TCS": 0.5316077224211195
+    },
+    "PlainLSTM": {
+      "HDFCBANK": 0.5141960941769554,
+      "INFY": 0.5493260614983103,
+      "ITC": 0.5252100244253355,
+      "LT": 0.5090669521865695,
+      "RELIANCE": 0.5046118156166003,
+      "SUNPHARMA": 0.4952505994802645,
+      "TATASTEEL": 0.5329644326964901,
+      "TCS": 0.5379548298591361
+    },
+    "RandomForest": {
+      "HDFCBANK": 0.5104111263537101,
+      "INFY": 0.5116706706371779,
+      "ITC": 0.5592252149764111,
+      "LT": 0.5159585103891323,
+      "RELIANCE": 0.4931344062635929,
+      "SUNPHARMA": 0.4980404858299596,
+      "TATASTEEL": 0.49526496470037146,
+      "TCS": 0.47933509552648307
+    }
+  }
+}

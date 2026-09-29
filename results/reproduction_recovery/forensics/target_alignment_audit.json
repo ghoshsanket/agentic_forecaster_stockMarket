@@ -1,0 +1,16 @@
+{
+  "diagnostic": "E_TARGET_ALIGNMENT",
+  "n_samples": 900,
+  "mismatch_count": 0,
+  "tickers": [
+    "RELIANCE",
+    "TCS",
+    "INFY"
+  ],
+  "folds": [
+    "SEARCH_FOLD_A",
+    "SEARCH_FOLD_B",
+    "SEARCH_FOLD_C"
+  ],
+  "expected_mismatch_count": 0
+}

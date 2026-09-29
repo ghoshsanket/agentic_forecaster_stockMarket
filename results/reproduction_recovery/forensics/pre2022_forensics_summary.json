@@ -1,0 +1,404 @@
+{
+  "firewall": {
+    "cutoff": "2022-01-01",
+    "max_target_date_in_legitimate_predictions": "2021-12-31",
+    "max_target_date_observed": "2021-12-31",
+    "no_protected_date_accessed": true
+  },
+  "A_adjusted_vs_unadjusted": {
+    "unadjusted_accuracy": 0.5249954662562318,
+    "adjusted_accuracy": 0.5243091199072061,
+    "delta": -0.0006863463490257571,
+    "per_fold": {
+      "SEARCH_FOLD_A": {
+        "accuracy": 0.5191115702479339,
+        "f1": 0.5148292664419124,
+        "brier": 0.2493972526240214,
+        "ece": 0.027890487135318685,
+        "majority_accuracy": 0.5191115702479339
+      },
+      "SEARCH_FOLD_B": {
+        "accuracy": 0.5275000000000001,
+        "f1": 0.5711827390796163,
+        "brier": 0.24891643373365763,
+        "ece": 0.031217424660921124,
+        "majority_accuracy": 0.531
+      },
+      "SEARCH_FOLD_C": {
+        "accuracy": 0.5263157894736843,
+        "f1": 0.552324117093267,
+        "brier": 0.24851962564276875,
+        "ece": 0.025208724323313208,
+        "majority_accuracy": 0.5379554655870444
+      }
+    },
+    "per_ticker": {
+      "HDFCBANK": {
+        "accuracy": 0.5060548510500663,
+        "f1": 0.6445435995428316,
+        "brier": 0.24983325405803633,
+        "ece": 0.019521480709997447
+      },
+      "INFY": {
+        "accuracy": 0.5330966641014488,
+        "f1": 0.6891159655204598,
+        "brier": 0.24704646396255772,
+        "ece": 0.01698021782259167
+      },
+      "ITC": {
+        "accuracy": 0.5090247041634601,
+        "f1": 0.25351879450240106,
+        "brier": 0.2497915731222681,
+        "ece": 0.017223619170184716
+      },
+      "LT": {
+        "accuracy": 0.5235780105062402,
+        "f1": 0.4559873783174753,
+        "brier": 0.24959351171357466,
+        "ece": 0.034058532111790524
+      },
+      "RELIANCE": {
+        "accuracy": 0.527359453943186,
+        "f1": 0.6168937117958894,
+        "brier": 0.24983224403466778,
+        "ece": 0.041973045505442265
+      },
+      "SUNPHARMA": {
+        "accuracy": 0.5197075651621107,
+        "f1": 0.43649097345911114,
+        "brier": 0.2496222983833666,
+        "ece": 0.02737582313879351
+      },
+      "TATASTEEL": {
+        "accuracy": 0.5112065223452783,
+        "f1": 0.6036909284534694,
+        "brier": 0.24885056507826872,
+        "ece": 0.034693780933031285
+      },
+      "TCS": {
+        "accuracy": 0.564445187985858,
+        "f1": 0.6686549753811506,
+        "brier": 0.24698558831512094,
+        "ece": 0.03301786359364331
+      }
+    }
+  },
+  "B_baseline_panel": {
+    "AttentionLSTM_T10F2": {
+      "accuracy": 0.5249954662562318,
+      "f1": 0.5469436724014509,
+      "brier": 0.24904878957035106,
+      "n_cases": 24,
+      "delta_vs_majority": 0.007827801385217659
+    },
+    "LogisticRegression": {
+      "accuracy": 0.5103354580029221,
+      "f1": 0.42012398312418214,
+      "brier": 0.2624229572018482,
+      "n_cases": 24,
+      "delta_vs_majority": -0.00683220686809205
+    },
+    "Majority": {
+      "accuracy": 0.5171676648710142,
+      "f1": 0.429272000229078,
+      "brier": 0.4828323351289859,
+      "n_cases": 24,
+      "delta_vs_majority": 0.0
+    },
+    "PlainLSTM": {
+      "accuracy": 0.5210726012424577,
+      "f1": 0.47253698540208644,
+      "brier": 0.24919777200876805,
+      "n_cases": 24,
+      "delta_vs_majority": 0.0039049363714435126
+    },
+    "RandomForest": {
+      "accuracy": 0.5078800593346048,
+      "f1": 0.3674773693353955,
+      "brier": 0.2599317720852088,
+      "n_cases": 24,
+      "delta_vs_majority": -0.009287605536409393
+    }
+  },
+  "C_pooled": {
+    "label": "FORENSIC_POOLED_NOT_AUTHOR_CONFIRMED",
+    "aggregate": {
+      "accuracy": 0.5100691381983248,
+      "f1": 0.6086651273171656,
+      "brier": 0.2497388012846601,
+      "best_epochs": [
+        2,
+        2,
+        2
+      ]
+    }
+  },
+  "D_pre2022_85_15": {
+    "label": "FORENSIC_PRE2022_85_15",
+    "aggregate": {
+      "accuracy": 0.5197963800904977,
+      "f1": 0.48372014049819223,
+      "brier": 0.2484486522625996,
+      "majority_accuracy": 0.5407239819004525,
+      "n_tickers": 8
+    },
+    "windows": [
+      {
+        "ticker": "RELIANCE",
+        "n_train_dates": 1258,
+        "n_val_dates": 222,
+        "train_first": "2016-01-01",
+        "train_last": "2021-02-05",
+        "val_first": "2021-02-08",
+        "val_last": "2021-12-30"
+      },
+      {
+        "ticker": "TCS",
+        "n_train_dates": 1258,
+        "n_val_dates": 222,
+        "train_first": "2016-01-01",
+        "train_last": "2021-02-05",
+        "val_first": "2021-02-08",
+        "val_last": "2021-12-30"
+      },
+      {
+        "ticker": "INFY",
+        "n_train_dates": 1258,
+        "n_val_dates": 222,
+        "train_first": "2016-01-01",
+        "train_last": "2021-02-05",
+        "val_first": "2021-02-08",
+        "val_last": "2021-12-30"
+      },
+      {
+        "ticker": "HDFCBANK",
+        "n_train_dates": 1258,
+        "n_val_dates": 222,
+        "train_first": "2016-01-01",
+        "train_last": "2021-02-05",
+        "val_first": "2021-02-08",
+        "val_last": "2021-12-30"
+      },
+      {
+        "ticker": "ITC",
+        "n_train_dates": 1258,
+        "n_val_dates": 222,
+        "train_first": "2016-01-01",
+        "train_last": "2021-02-05",
+        "val_first": "2021-02-08",
+        "val_last": "2021-12-30"
+      },
+      {
+        "ticker": "LT",
+        "n_train_dates": 1258,
+        "n_val_dates": 222,
+        "train_first": "2016-01-01",
+        "train_last": "2021-02-05",
+        "val_first": "2021-02-08",
+        "val_last": "2021-12-30"
+      },
+      {
+        "ticker": "SUNPHARMA",
+        "n_train_dates": 1258,
+        "n_val_dates": 222,
+        "train_first": "2016-01-01",
+        "train_last": "2021-02-05",
+        "val_first": "2021-02-08",
+        "val_last": "2021-12-30"
+      },
+      {
+        "ticker": "TATASTEEL",
+        "n_train_dates": 1258,
+        "n_val_dates": 222,
+        "train_first": "2016-01-01",
+        "train_last": "2021-02-05",
+        "val_first": "2021-02-08",
+        "val_last": "2021-12-30"
+      }
+    ]
+  },
+  "E_target_alignment": {
+    "diagnostic": "E_TARGET_ALIGNMENT",
+    "n_samples": 900,
+    "mismatch_count": 0,
+    "tickers": [
+      "RELIANCE",
+      "TCS",
+      "INFY"
+    ],
+    "folds": [
+      "SEARCH_FOLD_A",
+      "SEARCH_FOLD_B",
+      "SEARCH_FOLD_C"
+    ],
+    "expected_mismatch_count": 0
+  },
+  "P_aggregation": {
+    "micro": {
+      "accuracy": 0.5250338294993234,
+      "f1": 0.6003415883859948,
+      "n": 5912
+    },
+    "macro_ticker": {
+      "accuracy": 0.5250338294993234,
+      "n_tickers": 8
+    },
+    "macro_date": {
+      "accuracy": 0.5250338294993234,
+      "n_dates": 739
+    },
+    "equal_fold_average": {
+      "accuracy": 0.5249954662562318,
+      "f1": 0.5978019620714413,
+      "n_folds": 3
+    },
+    "sample_weighted_fold_average": {
+      "accuracy": 0.5250338294993233,
+      "f1": 0.598158745390498,
+      "n_folds": 3
+    },
+    "note": "All conventions are reported so a spread between them is visible. The largest value is NOT selected: a convention that flatters the result is an aggregation artefact, not evidence of signal."
+  },
+  "Q_confidence_subsets": {
+    "all_predictions": {
+      "threshold": 0.0,
+      "n": 5912,
+      "retained_pct": 100.0,
+      "accuracy": 0.5250338294993234,
+      "f1": 0.6003415883859948
+    },
+    ">=0.55": {
+      "threshold": 0.55,
+      "n": 669,
+      "retained_pct": 11.31596752368065,
+      "accuracy": 0.5754857997010463,
+      "f1": 0.6467661691542288
+    },
+    ">=0.60": {
+      "threshold": 0.6,
+      "n": 62,
+      "retained_pct": 1.0487144790257106,
+      "accuracy": 0.6290322580645161,
+      "f1": 0.7722772277227723
+    },
+    ">=0.70": {
+      "threshold": 0.7,
+      "n": 0,
+      "retained_pct": 0.0,
+      "accuracy": null,
+      "f1": null
+    },
+    ">=0.80": {
+      "threshold": 0.8,
+      "n": 0,
+      "retained_pct": 0.0,
+      "accuracy": null,
+      "f1": null
+    },
+    "note": "These are CONDITIONAL accuracies on the retained subset. They are not overall accuracy and must never be quoted as the model's accuracy. A high value with low retention is a small-sample artefact, not signal."
+  },
+  "L_leakage_probes": {
+    "probes": [
+      {
+        "probe": "L1",
+        "mean_validation_accuracy": 0.5203802470788117,
+        "inflation_vs_L0": 0.016951881717432005,
+        "scientifically_invalid": true
+      },
+      {
+        "probe": "L2",
+        "mean_validation_accuracy": 0.9936749311294766,
+        "inflation_vs_L0": 0.4902465657680969,
+        "scientifically_invalid": true
+      },
+      {
+        "probe": "L3",
+        "mean_validation_accuracy": 0.5058132159455988,
+        "inflation_vs_L0": 0.0023848505842191114,
+        "scientifically_invalid": true
+      },
+      {
+        "probe": "L4",
+        "mean_validation_accuracy": 0.5034283653613797,
+        "inflation_vs_L0": 0.0,
+        "scientifically_invalid": true
+      }
+    ],
+    "L0_correct_control": 0.5034283653613797,
+    "max_inflation": 0.4902465657680969,
+    "max_inflation_probe": "L2",
+    "verdict": "EXPLAINS_INFLATION",
+    "note": "L1-L4 are INTENTIONALLY WRONG. They show how a lost implementation could have produced an inflated number; they are never valid models and never candidates for selection."
+  },
+  "W_train_vs_validation": {
+    "mean_train_accuracy": 0.9933131312308139,
+    "mean_validation_accuracy": 0.5034283653613797,
+    "train_minus_validation": 0.4898847658694342,
+    "verdict": "EXPLAINS_INFLATION",
+    "note": "Training is unaltered in L5; only the reporting differs. A large gap shows a train/validation mix-up could inflate a reported number."
+  },
+  "cause_ranking": [
+    {
+      "cause": "LEAKAGE/OFF_BY_ONE",
+      "accuracy_delta_vs_legitimate": 0.4902465657680969,
+      "material": true,
+      "verdict": "EXPLAINS_INFLATION",
+      "evidence": "max invalid-probe inflation 0.4902465657680969 via L2"
+    },
+    {
+      "cause": "CONFIDENCE_FILTERING",
+      "accuracy_delta_vs_legitimate": 0.10403679180828429,
+      "material": true,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "best confidence floor >=0.60 -> 0.6290 but on only 1.0% of predictions (min required 20.0%); conditional accuracy, not overall (delta +0.1040)"
+    },
+    {
+      "cause": "AGGREGATION",
+      "accuracy_delta_vs_legitimate": 3.836324309158812e-05,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "conventions span 0.5250..0.5250 (spread 0.0000); best convention vs legitimate +0.0000"
+    },
+    {
+      "cause": "DATA_ADJUSTMENT",
+      "accuracy_delta_vs_legitimate": -0.0006863463490257571,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "adjusted 0.5243 vs unadjusted 0.5250 (delta -0.0007, material threshold 0.02)"
+    },
+    {
+      "cause": "MODEL_FORM",
+      "accuracy_delta_vs_legitimate": -0.003922865013774146,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "best simple model PlainLSTM=0.5211 vs Attention 0.5250 (delta -0.0039)"
+    },
+    {
+      "cause": "SPLIT_PROTOCOL",
+      "accuracy_delta_vs_legitimate": -0.005199086165734168,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "pre-2022 85/15 analog 0.5198 vs walk-forward 0.5250 (delta -0.0052)"
+    },
+    {
+      "cause": "PER_STOCK_VS_POOLED",
+      "accuracy_delta_vs_legitimate": -0.014926328057907057,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "pooled 0.5101 vs per-stock 0.5250 (delta -0.0149); pooled is NOT author-confirmed"
+    },
+    {
+      "cause": "TARGET_ALIGNMENT",
+      "accuracy_delta_vs_legitimate": null,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "target-alignment mismatch_count=0 over 900 raw-OHLCV samples; next-day target construction is proven correct"
+    }
+  ],
+  "supported_causes": [
+    "LEAKAGE/OFF_BY_ONE"
+  ],
+  "likely_cause": "LEAKAGE/OFF_BY_ONE",
+  "recommendation": "INVESTIGATE_ORIGINAL_PROTOCOL_FURTHER",
+  "recommendation_executed": false
+}

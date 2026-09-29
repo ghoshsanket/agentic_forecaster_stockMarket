@@ -210,7 +210,9 @@ def test_paper_perf_config(name):
     assert cfg["evaluation"]["walk_forward"]["folds"] == "paper_exact"
     for model in ("attention_lstm", "lstm"):
         m = cfg["models"][model]
-        assert m["max_epochs"] == 100, name
+        # AUTHOR-CONFIRMED schedule: the author confirmed a 10-epoch cap.
+        # 100 was a recovery diagnostic and must not be the faithful budget.
+        assert m["max_epochs"] == 10, name
         assert m["patience"] == 10, name
         assert m["restore_best_checkpoint"] is True, name
         assert "epochs" not in m, f"{name}:{model} must not pin the 3-epoch cap"

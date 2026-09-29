@@ -10,7 +10,7 @@
 #   Capping recovery runs at 3 epochs can only under-train the model, so this
 #   config removes the artificial cap:
 #
-#       max_epochs: 100
+#       max_epochs: 10 (AUTHOR-CONFIRMED)
 #       patience: 10
 #       restore_best_checkpoint: true
 #
@@ -93,7 +93,7 @@ models:
     beta2: 0.999
     weight_decay: 0.0001
     batch_size: 64
-    max_epochs: 100
+    max_epochs: 10
     patience: 10
     restore_best_checkpoint: true
     gradient_clip_norm: 1.0
@@ -107,7 +107,7 @@ models:
     beta2: 0.999
     weight_decay: 0.0001
     batch_size: 64
-    max_epochs: 100
+    max_epochs: 10
     patience: 10
     restore_best_checkpoint: true
     gradient_clip_norm: 1.0
