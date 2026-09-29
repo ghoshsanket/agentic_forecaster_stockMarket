@@ -57,7 +57,7 @@ Uses a small synthetic dataset to verify the full pipeline end-to-end.
 | `AGENTIC_RAW_DATA_ROOT` | `$RESEARCH_ROOT/dataset/agentic-forecaster/raw` | Raw Kaggle data (Category B) |
 | `AGENTIC_PROCESSED_DATA_ROOT` | `$RESEARCH_ROOT/dataset/agentic-forecaster/processed` | Processed sequences (Category B) |
 | `AGENTIC_MODEL_ROOT` | `$RESEARCH_ROOT/models/agentic-forecaster` | Trained checkpoints (Category B) |
-| `AGENTIC_OUTPUT_ROOT` | `$RESEARCH_ROOT/outputs/agentic-forecaster` | Run outputs (Category B) |
+| `AGENTIC_OUTPUT_ROOT` | `$RESEARCH_ROOT/output/agentic-forecaster` | Run outputs (Category B) |
 | `AGENTIC_REPO_RESULTS_ROOT` | `<repo>/results` | Exported results (Category A) |
 | `AGENTIC_REPO_REPORTS_ROOT` | `<repo>/reports` | Exported reports (Category A) |
 | `AGENTIC_REPO_FIGURES_ROOT` | `<repo>/figures` | Exported figures (Category A) |

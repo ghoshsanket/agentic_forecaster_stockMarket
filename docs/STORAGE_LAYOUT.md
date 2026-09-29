@@ -90,7 +90,7 @@ $RESEARCH_ROOT/
 │   ├── raw/                    # Kaggle download (NOT in Git)
 │   └── processed/              # Sequences + scaler (NOT in Git)
 ├── models/agentic-forecaster/  # Trained checkpoints (NOT in Git)
-├── outputs/agentic-forecaster/ # Run outputs (NOT in Git)
+├── output/agentic-forecaster/  # Run outputs (NOT in Git, canonical default)
 ├── cache/                      # pip, torch, HF, ... (NOT in Git)
 ├── environments/               # (NOT in Git)
 └── secrets/                    # Credentials (NEVER in Git)

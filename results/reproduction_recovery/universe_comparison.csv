@@ -1,0 +1,95 @@
+security,modern_reconstructed,legacy_user_supplied,paper_snapshot_2025_11_04,yahoo_symbol,first_available_date,notes
+RELIANCE,Y,Y,Y,RELIANCE.NS,2000-01-03,all three
+TCS,Y,,Y,TCS.NS,2002-08-12,"paper+modern, not legacy"
+HDFCBANK,Y,Y,Y,HDFCBANK.NS,2000-01-03,all three
+INFY,Y,,Y,INFY.NS,2000-01-03,"paper+modern, not legacy"
+ICICIBANK,Y,,Y,ICICIBANK.NS,2002-07-01,"paper+modern, not legacy"
+HINDUNILVR,Y,,Y,HINDUNILVR.NS,2000-01-03,"paper+modern, not legacy"
+ITC,Y,Y,Y,ITC.NS,2000-01-03,all three
+SBIN,Y,,Y,SBIN.NS,2000-01-03,"paper+modern, not legacy"
+BAJFINANCE,Y,,Y,BAJFINANCE.NS,2002-07-01,"paper+modern, not legacy"
+KOTAKBANK,Y,,Y,KOTAKBANK.NS,2001-07-02,"paper+modern, not legacy"
+LT,Y,,Y,LT.NS,2002-07-01,"paper+modern, not legacy"
+BHARTIARTL,Y,,Y,BHARTIARTL.NS,2002-07-01,"paper+modern, not legacy"
+AXISBANK,Y,,Y,AXISBANK.NS,2000-01-03,"paper+modern, not legacy"
+MARUTI,Y,,Y,MARUTI.NS,2003-07-09,"paper+modern, not legacy"
+SUNPHARMA,Y,,Y,SUNPHARMA.NS,2000-01-03,"paper+modern, not legacy"
+TITAN,Y,,Y,TITAN.NS,2000-01-03,"paper+modern, not legacy"
+ULTRACEMCO,Y,,Y,ULTRACEMCO.NS,2002-08-12,"paper+modern, not legacy"
+ASIANPAINT,Y,,Y,ASIANPAINT.NS,2002-07-01,"paper+modern, not legacy"
+NTPC,Y,,Y,NTPC.NS,2004-11-05,"paper+modern, not legacy"
+NESTLEIND,Y,Y,Y,NESTLEIND.NS,2002-08-12,all three
+POWERGRID,Y,,Y,POWERGRID.NS,2007-10-05,"paper+modern, not legacy"
+M&M,Y,Y,Y,M&M.NS,2000-01-03,all three
+TATASTEEL,Y,,Y,TATASTEEL.NS,2000-01-03,"paper+modern, not legacy"
+ADANIENT,Y,,Y,ADANIENT.NS,2002-07-01,"paper+modern, not legacy"
+HCLTECH,Y,,Y,HCLTECH.NS,2002-08-12,"paper+modern, not legacy"
+ONGC,Y,Y,Y,ONGC.NS,2000-01-03,all three
+COALINDIA,Y,,Y,COALINDIA.NS,2010-11-04,"paper+modern, not legacy"
+WIPRO,Y,,Y,WIPRO.NS,2000-01-03,"paper+modern, not legacy"
+TECHM,Y,,Y,TECHM.NS,2006-08-28,"paper+modern, not legacy"
+INDUSINDBK,Y,,,INDUSINDBK.NS,,modern only
+SBILIFE,Y,,Y,SBILIFE.NS,2017-10-03,"paper+modern, not legacy"
+HINDALCO,Y,Y,Y,HINDALCO.NS,2000-01-03,all three
+CIPLA,Y,Y,Y,CIPLA.NS,2000-01-03,all three
+DRREDDY,Y,Y,Y,DRREDDY.NS,2000-01-03,all three
+EICHERMOT,Y,,Y,EICHERMOT.NS,2000-01-03,"paper+modern, not legacy"
+BRITANNIA,Y,Y,,BRITANNIA.NS,,"modern+legacy, not paper"
+DIVISLAB,Y,,,DIVISLAB.NS,,modern only
+GRASIM,Y,Y,Y,GRASIM.NS,2002-07-01,all three
+HEROMOTOCO,Y,,,HEROMOTOCO.NS,,modern only
+BAJAJFINSV,Y,,Y,BAJAJFINSV.NS,2002-08-12,"paper+modern, not legacy"
+APOLLOHOSP,Y,,Y,APOLLOHOSP.NS,2002-07-01,"paper+modern, not legacy"
+TATACONSUM,Y,,Y,TATACONSUM.NS,2000-01-03,"paper+modern, not legacy"
+SHRIRAMFIN,Y,,Y,SHRIRAMFIN.NS,2002-07-01,"paper+modern, not legacy"
+BAJAJ-AUTO,Y,Y,Y,BAJAJ-AUTO.NS,2002-07-01,all three
+TRENT,Y,,Y,TRENT.NS,2002-07-01,"paper+modern, not legacy"
+INDIGO,Y,,Y,INDIGO.NS,2015-11-10,"paper+modern, not legacy"
+JSWSTEEL,Y,,Y,JSWSTEEL.NS,2003-05-08,"paper+modern, not legacy"
+BPCL,Y,Y,,BPCL.NS,,"modern+legacy, not paper"
+UPL,Y,,,UPL.NS,,modern only
+ZOMATO,Y,,,ETERNAL.NS,,modern only
+ACC,,Y,,ACC.NS,,legacy only
+BRITISH OXYGEN (BOC),,Y,,LINDEINDIA.NS,,legacy only
+BSES,,Y,,RELINFRA.NS,,legacy only
+BURROUGHS,,Y,,,,legacy only
+COCHINREFN,,Y,,,,legacy only
+COLPAL,,Y,,COLPAL.NS,,legacy only
+EPL,,Y,,EPL.NS,,legacy only
+GAIL,,Y,,GAIL.NS,,legacy only
+GE SHIPPING,,Y,,GESHIP.NS,,legacy only
+GLAXO,,Y,,GLAXO.NS,,legacy only
+GUTRLCEMENT,,Y,,AMBUJACEM.NS,,legacy only
+HDFC,,Y,,,,legacy only; merged into HDFCBANK 2023-07-01; listed scrip gone
+HINDLEVER,,Y,,HINDUNILVR.NS,,legacy only; same issuer as HINDUNILVR (renamed 2007)
+HPCL,,Y,,HINDPETRO.NS,,legacy only; ticker-format variant of HINDPETRO
+IBP,,Y,,,,legacy only
+ICICI,,Y,,,,legacy only
+IDBI,,Y,,IDBI.NS,,legacy only
+IFCI,,Y,,IFCI.NS,,legacy only
+INDIACEM,,Y,,INDIACEM.NS,,legacy only
+INFOSYSTCH,,Y,,INFY.NS,,legacy only; same issuer as INFY (renamed 2011)
+IOC,,Y,,IOC.NS,,legacy only
+KNOLLPHARM,,Y,,ABBOTINDIA.NS,,legacy only
+L&T,,Y,,LT.NS,,legacy only; same issuer as LT
+MADRASCEM,,Y,,RAMCOCEM.NS,,legacy only
+MTNL,,Y,,MTNL.NS,,legacy only
+NIIT,,Y,,NIITLTD.NS,,legacy only
+NOCIL,,Y,,NOCIL.NS,,legacy only
+P&G,,Y,,PGHH.NS,,legacy only
+POND'S,,Y,,,,"legacy only; DATE ANOMALY: ceased 1998-10-15, before the 2000 window"
+RANBAXY,,Y,,,,legacy only
+RHONE-POUL,,Y,,,,legacy only
+SATYAMCOMP,,Y,,,,legacy only
+SBI,,Y,,SBIN.NS,,legacy only; same issuer as SBIN
+TATACHEM,,Y,,TATACHEM.NS,,legacy only
+TELCO,,Y,,TMPV.NS,,legacy only; same issuer as TMPV/Tata Motors (renamed 2003)
+TISCO,,Y,,TATASTEEL.NS,,legacy only; same issuer as TATASTEEL (renamed 2005)
+VSTILL,,Y,,VSTIND.NS,,legacy only
+JIOFIN,,,Y,JIOFIN.NS,2023-08-21,paper only
+TMPV,,,Y,TMPV.NS,2000-01-03,paper only; Tata Motors PV; ISIN INE155A01022 continuity; DUMMYTATAM excluded as an index entity
+ADANIPORTS,,,Y,ADANIPORTS.NS,2007-11-27,paper only
+ETERNAL,,,Y,ETERNAL.NS,2021-07-23,paper only; formerly ZOMATO (renamed 2025-02-24 effective per NSE circular)
+HDFCLIFE,,,Y,HDFCLIFE.NS,2017-11-17,paper only
+MAXHEALTH,,,Y,MAXHEALTH.NS,2020-08-21,paper only
+BEL,,,Y,BEL.NS,2002-07-01,paper only

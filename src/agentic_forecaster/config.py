@@ -43,7 +43,7 @@ def _env_defaults() -> dict:
         "AGENTIC_YFINANCE_DAILY_ROOT": str(data_root / "yfinance_daily_2000_2025"),
         "AGENTIC_YFINANCE_LEGACY_ROOT": str(data_root / "yfinance_legacy_nifty50_2000_2025"),
         "AGENTIC_MODEL_ROOT": str(research_root / "models" / "agentic-forecaster"),
-        "AGENTIC_OUTPUT_ROOT": str(research_root / "outputs" / "agentic-forecaster"),
+        "AGENTIC_OUTPUT_ROOT": str(research_root / "output" / "agentic-forecaster"),
         "AGENTIC_PROJECT_ROOT": str(project_root),
         "AGENTIC_REPO_RESULTS_ROOT": str(project_root / "results"),
         "AGENTIC_REPO_REPORTS_ROOT": str(project_root / "reports"),

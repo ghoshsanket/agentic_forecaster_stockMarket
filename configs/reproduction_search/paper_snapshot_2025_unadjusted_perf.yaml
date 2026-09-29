@@ -1,0 +1,157 @@
+# PERFORMANCE config: PAPER-SNAPSHOT NIFTY-50 (2025-11-04 candidate) - UNADJUSTED.
+#
+# ROLE: ORIGINAL-RECOLLECTION CANDIDATE
+#
+# *** CREATED BUT NOT RUN. NO MODEL HAS BEEN TRAINED ON THIS DATASET. ***
+#
+# Universe
+#   PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE
+#   (configs/nifty50_paper_snapshot_2025_11_04.yaml)
+#   Reconstructed from official NSE / NSE Indices evidence. This is a
+#   RECONSTRUCTION HYPOTHESIS, not the proven original universe: see
+#   docs/PAPER_UNIVERSE_RECOVERY.md.
+#
+# Why a 100-epoch budget
+#   The publication specifies early-stopping patience 10 but does NOT specify an
+#   epoch cap. The 3-epoch cap used in the reproduction configs is a TRAINING
+#   BUDGET, not a property of the paper, so this config removes it:
+#       max_epochs: 100, patience: 10, restore_best_checkpoint: true
+#   restore_best_checkpoint keeps the best-validation-epoch weights, which is
+#   what makes a 100-epoch budget safe.
+#
+# Design carried over unchanged from configs/paper.yaml
+#   one model per stock, 30-day lookback, daily input, the paper's two exact
+#   walk-forward folds, same features / calibration / risk / evaluation.
+#   Any metric difference is therefore attributable to the DATA SOURCE or the
+#   TRAINING BUDGET, not to a different pipeline.
+#
+# Run deliberately with:
+#   uv run agentic-forecaster train-all \
+#       --config configs/reproduction_search/paper_snapshot_2025_unadjusted_perf.yaml
+
+experiment:
+  name: paper_snapshot_2025_unadjusted_perf
+  seed: 42
+  output_dir: ${AGENTIC_OUTPUT_ROOT}/reproduction_search/paper_snapshot_2025_unadjusted_perf
+
+data:
+  raw_root: ${AGENTIC_DATA_ROOT}/yfinance_paper_snapshot_2025_11_04/unadjusted/csv
+  processed_root: ${AGENTIC_DATA_ROOT}/yfinance_paper_snapshot_2025_11_04/unadjusted/processed
+  source: yfinance_paper_snapshot
+  universe_id: PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE
+  universe_config: configs/nifty50_paper_snapshot_2025_11_04.yaml
+  variant: unadjusted
+  auto_adjust: false
+  source_level: daily
+  resample_to_daily: false
+  tickers: configs/nifty50_paper_snapshot_2025_11_04.yaml
+  allow_empty_sheets: true
+  expected_available_tickers: 50
+  allow_late_listings: true          # 13 of 50 list after 2000; never backfilled
+  one_model_per_stock: true
+  sequence_length: 30
+  target_type: next_day_direction
+  scaler: standard
+  scaler_fit_scope: train_only
+  train_start: "2016-01-01"
+  train_end: "2020-12-31"
+  val_start: "2021-01-01"
+  val_end: "2021-12-31"
+  test_start: "2022-01-01"
+  test_end: "2022-12-31"
+
+features:
+  use_ohlcv: true
+  indicators:
+    - log_return
+    - realized_volatility_20
+    - rsi_14
+    - macd
+    - macd_signal
+    - macd_histogram
+    - atr_14
+  drop_na: true
+
+models:
+  attention_lstm:
+    enabled: true
+    hidden_size: 64
+    num_layers: 2
+    dropout: 0.2
+    learning_rate: 0.001
+    beta1: 0.9
+    beta2: 0.999
+    weight_decay: 0.0001
+    batch_size: 64
+    max_epochs: 100
+    patience: 10
+    restore_best_checkpoint: true
+    gradient_clip_norm: 1.0
+  lstm:
+    enabled: true
+    hidden_size: 64
+    num_layers: 2
+    dropout: 0.2
+    learning_rate: 0.001
+    beta1: 0.9
+    beta2: 0.999
+    weight_decay: 0.0001
+    batch_size: 64
+    max_epochs: 100
+    patience: 10
+    restore_best_checkpoint: true
+    gradient_clip_norm: 1.0
+  random_forest:
+    enabled: true
+    n_estimators: 300
+    max_depth: 8
+  logistic_regression:
+    enabled: true
+    C: 1.0
+    max_iter: 1000
+  majority:
+    enabled: true
+
+calibration:
+  method: temperature
+  fit_on: val
+
+evaluation:
+  walk_forward:
+    enabled: true
+    folds: paper_exact
+  metrics:
+    - accuracy
+    - brier
+    - ece
+    - precision_at_3
+    - f1
+    - roc_auc
+  ece_bins: 10
+  p_at_k: 3
+
+explainability:
+  method: gradient_shap
+  fallback: integrated_gradients
+  attention_evidence: true
+  top_k_features: 5
+  background_samples: 64
+
+risk:
+  enabled: true
+  formulation: atr_confidence_multiplier
+  confidence_bands:
+    HIGH:   {threshold: 0.80, lambda_sl: 0.8,  lambda_tp: 1.5}
+    MEDIUM: {threshold: 0.60, lambda_sl: 1.0,  lambda_tp: 1.0}
+    LOW:    {threshold: 0.0,  lambda_sl: 1.2,  lambda_tp: 0.8}
+
+reporting:
+  formats: [html, pdf]
+  llm:
+    enabled: false
+    provider: openai
+    model: gpt-4o-mini
+    fallback: deterministic
+
+orchestration:
+  export_final_results: true

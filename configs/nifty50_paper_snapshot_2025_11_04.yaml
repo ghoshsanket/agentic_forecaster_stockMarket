@@ -1,0 +1,192 @@
+# PAPER-SNAPSHOT CANDIDATE UNIVERSE: fixed NIFTY-50 snapshot around the
+# publication's data-collection date.
+#
+# universe_id: PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE
+# status:      RECONSTRUCTED_FROM_OFFICIAL_NSE_EVIDENCE
+#
+# ---------------------------------------------------------------------------
+# STATUS: RECONSTRUCTION HYPOTHESIS, NOT PROVEN FACT
+# ---------------------------------------------------------------------------
+# This is NOT the recovered original universe. No artefact that transcribes the
+# publication's exact 50-sheet list has been found. See
+# docs/PAPER_UNIVERSE_RECOVERY.md.
+#
+# WHAT THIS FILE IS:
+#   The publication describes its dataset as ending around 2025-11-04, and the
+#   user recalls generating it as ONE Excel workbook with ONE SHEET PER
+#   selected NIFTY-50 stock, daily OHLCV, history requested back to about 2000,
+#   with individual stocks naturally starting later if not yet listed. That
+#   structure is more consistent with a FIXED NIFTY-50 SNAPSHOT SELECTED AROUND
+#   DATA-COLLECTION TIME than with the 50 companies that constituted the index
+#   on 2000-01-03. This file encodes that hypothesis.
+#
+# WHAT THIS FILE IS NOT:
+#   It is not proven, not confirmed, and not a claim that the original used this
+#   exact list. It is the best documented candidate.
+#
+# ---------------------------------------------------------------------------
+# PROVENANCE
+# ---------------------------------------------------------------------------
+# The 50-name list below is taken from NSE's OFFICIAL index-constituent file:
+#
+#   https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+#   (retrieved 2026-09-29; exactly 50 rows, 50 unique symbols)
+#
+# Because that file is a LIVE file rather than a point-in-time snapshot, the
+# 2025-11-04 composition was established by BRACKETING, using official NSE
+# Indices press releases for every index event that could have changed it:
+#
+#   2025-03-28  Nifty 50: BPCL, BRITANNIA excluded; JIOFIN, ZOMATO included
+#               https://nsearchives.nseindia.com/web/sites/default/files/2025-02/ind_prs21022025.pdf
+#   2025-09-30  Nifty 50: HEROMOTOCO, INDUSINDBK excluded; INDIGO, MAXHEALTH
+#               included
+#               https://www.niftyindices.com/Press_Release/ind_prs22082025.pdf
+#   2025-10-14  Tata Motors demerger: synthetic entity DUMMYTATAM added to
+#               Nifty 50 at zero price (see the note below) - DUMMYTATAM is NOT
+#               a listed security and is deliberately NOT in this list
+#               https://www.niftyindices.com/Press_Release/ind_prs07102025.pdf
+#   2025-11-17  TMCV excluded (failed the price band); no replacement, so the
+#               count returns to 50
+#               https://niftyindices.com/Press_Release/ind_prs13112025.pdf
+#   2026-02-20  Nifty 50 review: "No changes are being made in Nifty 50" at the
+#               2026-03-30 rebalance, which bounds the window END - the
+#               composition effective 2025-09-30 survived unchanged
+#               https://niftyindices.com/Press_Release/ind_prs23022026.pdf
+#
+#   => the composition in force on 2025-11-04 equals the current NSE file.
+#
+# The retrieved file was cross-checked against that bracket: it contains all
+# four 2025 entrants (JIOFIN, ETERNAL, INDIGO, MAXHEALTH) and none of the four
+# 2025 exits (BPCL, BRITANNIA, HEROMOTOCO, INDUSINDBK).
+#
+# LIMITATION: no point-in-time constituent file dated 2025-11-04 is publicly
+# archived (the Wayback Machine has no capture of the NSE list between
+# 2024-08-19 and 2026-06-21). The reconstruction is therefore by bracketing,
+# not by direct capture. A hard primary artefact for that exact date would
+# require NSE's paid EOD historical index data.
+#
+# ---------------------------------------------------------------------------
+# DUMMYTATAM: INDEX ENTITY vs WORKBOOK REALITY
+# ---------------------------------------------------------------------------
+# On 2025-10-14 NSE Indices placed a synthetic entity "DUMMYTATAM" in Nifty 50
+# at zero price, with no divisor adjustment, standing in for the not-yet-listed
+# commercial-vehicle demerged entity. It was NEVER a tradable listed security
+# and has NO price history, so it CANNOT be a Yahoo Finance sheet and is NOT
+# included here. Inventing a price series for it would be fabrication.
+#
+# The parent entity was not removed. Tata Motors Ltd was renamed Tata Motors
+# Passenger Vehicles Ltd and kept its Nifty 50 slot and its ORIGINAL ISIN
+# INE155A01022, moving from symbol TATAMOTORS to TMPV effective 2025-10-24.
+# The ISIN continuity proves the same listed entity under a new name.
+#
+# For a Yahoo workbook the economically appropriate representation of the Tata
+# Motors line is therefore TMPV.NS, which carries the continuous history
+# (including the 2025-10-14 step-down for the demerged CV business). Note the
+# naming trap: the name "Tata Motors Limited" now belongs to a DIFFERENT,
+# newly incorporated company (TMCV, listed 2025-11-12) whose Yahoo history
+# begins only on that date.
+#
+# See docs/PAPER_UNIVERSE_RECOVERY.md for the full audit.
+
+universe_id: PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE
+status: RECONSTRUCTED_FROM_OFFICIAL_NSE_EVIDENCE
+snapshot_date: "2025-11-04"
+
+provenance:
+  evidence_standard: official NSE / NSE Indices only
+  primary_list_source: >-
+    https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    (retrieved 2026-09-29; 50 rows, 50 unique symbols)
+  reconstruction_method: bracketing between official NSE Indices press releases
+  bracketing_events:
+    - date: "2025-03-28"
+      event: "BPCL, BRITANNIA excluded; JIOFIN, ZOMATO included"
+      source: "https://nsearchives.nseindia.com/web/sites/default/files/2025-02/ind_prs21022025.pdf"
+    - date: "2025-09-30"
+      event: "HEROMOTOCO, INDUSINDBK excluded; INDIGO, MAXHEALTH included"
+      source: "https://www.niftyindices.com/Press_Release/ind_prs22082025.pdf"
+    - date: "2025-10-14"
+      event: "DUMMYTATAM (synthetic, zero price) added to Nifty 50 for the Tata Motors demerger; not a listed security and deliberately excluded from this list"
+      source: "https://www.niftyindices.com/Press_Release/ind_prs07102025.pdf"
+    - date: "2025-11-17"
+      event: "TMCV excluded for failing the price band; no replacement, count returns to 50"
+      source: "https://niftyindices.com/Press_Release/ind_prs13112025.pdf"
+    - date: "2026-03-30"
+      event: "Nifty 50 review with no changes; bounds the window end"
+      source: "https://niftyindices.com/Press_Release/ind_prs23022026.pdf"
+  known_limitation: >-
+    No publicly archived point-in-time constituent file dated 2025-11-04 was
+    found; the list is established by bracketing official press releases.
+  synthetic_index_entities_excluded:
+    - symbol: DUMMYTATAM
+      reason: >-
+        Index-only placeholder for the Tata Motors commercial-vehicle demerger,
+        added 2025-10-14 at zero price. Never a tradable listed security and
+        has no price history, so it cannot be a Yahoo Finance sheet.
+
+paper_example_tickers_required: [RELIANCE, TCS, INFY, HDFCBANK, ITC]
+
+requested_download_start: "2000-01-01"
+requested_download_end_exclusive: "2026-01-01"
+
+# NSE symbols, exactly as published in ind_nifty50list.csv.
+tickers:
+  - RELIANCE
+  - TCS
+  - HDFCBANK
+  - ICICIBANK
+  - INFY
+  - BHARTIARTL
+  - LT
+  - ITC
+  - SBIN
+  - AXISBANK
+  - KOTAKBANK
+  - BAJFINANCE
+  - MARUTI
+  - "M&M"
+  - TATASTEEL
+  - SUNPHARMA
+  - HINDUNILVR
+  - ASIANPAINT
+  - JIOFIN
+  - WIPRO
+  - TMPV
+  - ADANIENT
+  - BAJAJFINSV
+  - ADANIPORTS
+  - DRREDDY
+  - CIPLA
+  - POWERGRID
+  - NTPC
+  - ONGC
+  - COALINDIA
+  - BAJAJ-AUTO
+  - EICHERMOT
+  - ULTRACEMCO
+  - GRASIM
+  - HINDALCO
+  - JSWSTEEL
+  - NESTLEIND
+  - TATACONSUM
+  - TITAN
+  - TRENT
+  - ETERNAL
+  - INDIGO
+  - HDFCLIFE
+  - SBILIFE
+  - SHRIRAMFIN
+  - APOLLOHOSP
+  - MAXHEALTH
+  - TECHM
+  - HCLTECH
+  - BEL
+
+# Yahoo-symbol overrides where the NSE symbol is not the Yahoo symbol.
+yahoo_symbol_overrides:
+  ETERNAL: ETERNAL.NS
+  TMPV: TMPV.NS
+
+# A constituent may have listed after 2000.  Nothing is backfilled, synthesised
+# or forward-filled; the actual first date is recorded per security.
+allow_late_listings: true

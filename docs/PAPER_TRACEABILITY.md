@@ -10,12 +10,44 @@
 | **PAPER-DEFINED** | Explicitly present in the publication |
 | **AUTHOR-CONFIRMED** | Confirmed by the authors, not verbatim in the publication |
 | **RECONSTRUCTION-ASSUMED** | Chosen by the reconstruction team where the paper is silent |
+| **NOT YET RECOVERED** | Known to be required by the paper, but the original artefact has not been found |
+
+## The universe is two separate claims
+
+The publication supports **one** statement about its stock universe:
+
+* the study is framed around a **NIFTY-50 / 50-stock universe** — this is
+  **PAPER-DEFINED**.
+
+It does **not** support a claim about the **exact 50 constituent symbols**. The
+constituent list is **RECONSTRUCTION-ASSUMED** and remains
+**NOT YET RECOVERED**. A fixed list does exist in this repository
+(`configs/nifty50.yaml`), but it is a reconstruction-team choice — its own
+header says NIFTY-50 membership is time-varying and the publication states no
+as-of date — and it is **not** the proven original list.
+
+Two further constraints are documented and unresolved:
+
+* The paper's representative predictions for 2023-07-05 name
+  `RELIANCE, TCS, INFY, HDFCBANK, ITC`. `TCS` is absent from
+  `configs/nifty50_legacy_user_supplied.yaml`, so the user-supplied legacy
+  universe **cannot** be the paper's evaluation universe.
+* Because the paper's dataset ends around **2025-11-04**, a snapshot taken near
+  data-collection time is a more plausible reconstruction target than a
+  2000-01-03 snapshot. `configs/nifty50_paper_snapshot_2025_11_04.yaml` is that
+  candidate, built from official NSE Indices evidence. It is a
+  **reconstruction hypothesis, not a proven fact.**
+
+See **`docs/PAPER_UNIVERSE_RECOVERY.md`** for the full audit, the local
+evidence sweep, and the candidate policies. Do not read any row below as
+evidence that the exact original constituent list has been recovered.
 
 ## Traceability table
 
 | Paper component | Label | Implementation | Test |
 |---|---|---|---|
-| 50 NIFTY-50 stocks | PAPER-DEFINED | `configs/nifty50.yaml`, `data/universe.py` | `test_universe.py` |
+| NIFTY-50 / 50-stock framing (the *count* and the *index*) | PAPER-DEFINED | `data/universe.py` | `test_universe.py` |
+| Exact 50 constituent symbols | RECONSTRUCTION-ASSUMED / **NOT YET RECOVERED** | `configs/nifty50.yaml` (reconstruction), `configs/nifty50_paper_snapshot_2025_11_04.yaml` (snapshot candidate) — **not** the proven original list; see `docs/PAPER_UNIVERSE_RECOVERY.md` | `test_universe.py` (count only) |
 | Intraday → daily OHLCV | PAPER-DEFINED | `data/resampling.py:resample_intraday_to_daily` | `test_daily_resampling.py` |
 | Next-day direction target | PAPER-DEFINED | `features/engineer.py:build_feature_frame` | `test_target_next_day.py` |
 | `target_date` = next trading date | PAPER-DEFINED | `data/agent.py:run_ticker` | `test_target_date_metadata.py` |

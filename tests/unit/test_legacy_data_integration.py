@@ -122,17 +122,102 @@ def test_trainer_accepts_max_epochs():
 
 # -------------------------------------------------- 2. safe filename mapping
 
-def test_file_name_map_is_derived_from_the_sheet_name_map():
-    from agentic_forecaster.data.dataset import find_file_name_map, load_file_name_map
-    map_path = find_file_name_map(LEGACY_ROOT / "unadjusted" / "csv")
+# A synthetic map mirroring the shape the legacy downloader writes.  Used so an
+# ordinary `uv run pytest` never depends on the external Yahoo dataset.
+SYNTHETIC_MAP_ROWS = [
+    ("BRITISH OXYGEN (BOC)", "BRITISH_OXYGEN_BOC.csv"),
+    ("GE SHIPPING", "GE_SHIPPING.csv"),
+    ("L&T", "L_AND_T.csv"),
+    ("M&M", "M_AND_M.csv"),
+    ("P&G", "P_AND_G.csv"),
+    ("POND'S", "PONDS.csv"),
+    ("RHONE-POUL", "RHONE-POUL.csv"),
+]
+
+
+@pytest.fixture
+def synthetic_legacy_tree(tmp_path: Path) -> Path:
+    """Minimal legacy-style dataset tree: csv/ + metadata/sheet_name_map.csv."""
+    csv_dir = tmp_path / "unadjusted" / "csv"
+    csv_dir.mkdir(parents=True)
+    meta_dir = tmp_path / "metadata"
+    meta_dir.mkdir(parents=True)
+    (meta_dir / "sheet_name_map.csv").write_text(
+        "legacy_label,canonical_filename_stem,csv_filename,"
+        "parquet_filename,excel_sheet_name,sheet_name_equals_legacy_label\n"
+        + "\n".join(
+            f"{label},{Path(csv).stem},{csv},{Path(csv).with_suffix('.parquet')},"
+            f"{label},True"
+            for label, csv in SYNTHETIC_MAP_ROWS
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    # one real file per mapped label, plus one label with no data at all
+    for label, csv in SYNTHETIC_MAP_ROWS:
+        pd.DataFrame({
+            "Date": ["2020-01-01", "2020-01-02"],
+            "Open": [1.0, 2.0], "High": [2.0, 3.0], "Low": [0.5, 1.5],
+            "Close": [1.5, 2.5], "Volume": [10, 20],
+        }).to_csv(csv_dir / csv, index=False)
+    return tmp_path
+
+
+def test_file_name_map_is_found_by_walking_up_from_the_csv_dir(synthetic_legacy_tree):
+    """No external dataset required: a synthetic tree exercises the lookup."""
+    from agentic_forecaster.data.dataset import find_file_name_map
+    map_path = find_file_name_map(synthetic_legacy_tree / "unadjusted" / "csv")
     assert map_path is not None
     assert map_path.name == "sheet_name_map.csv"
-    fmap = load_file_name_map(map_path)
+    assert map_path.parent.name == "metadata"
+
+
+def test_load_file_name_map_maps_labels_to_sanitised_stems(synthetic_legacy_tree):
+    from agentic_forecaster.data.dataset import find_file_name_map, load_file_name_map
+    fmap = load_file_name_map(
+        find_file_name_map(synthetic_legacy_tree / "unadjusted" / "csv"))
     assert fmap["BRITISH OXYGEN (BOC)"] == "BRITISH_OXYGEN_BOC"
     assert fmap["L&T"] == "L_AND_T"
     assert fmap["M&M"] == "M_AND_M"
     assert fmap["P&G"] == "P_AND_G"
     assert fmap["GE SHIPPING"] == "GE_SHIPPING"
+    assert fmap["POND'S"] == "PONDS"
+    # the key is the ORIGINAL label, never the sanitised stem
+    assert "BRITISH_OXYGEN_BOC" not in fmap
+    assert "L_AND_T" not in fmap
+
+
+def test_discover_uses_the_map_and_keeps_requested_labels(synthetic_legacy_tree):
+    """The 5 special names resolve, keyed by the exact requested label."""
+    from agentic_forecaster.data.dataset import (
+        discover_ticker_files,
+        find_file_name_map,
+        load_file_name_map,
+    )
+    csv_dir = synthetic_legacy_tree / "unadjusted" / "csv"
+    fmap = load_file_name_map(find_file_name_map(csv_dir))
+    files = discover_ticker_files(csv_dir, file_name_map=fmap)
+    for label, csv in SYNTHETIC_MAP_ROWS:
+        assert label in files, label
+        assert files[label].name == csv
+    # nothing is keyed by a sanitised stem
+    assert "BRITISH_OXYGEN_BOC" not in files
+    assert "L_AND_T" not in files
+
+
+def test_discover_without_a_map_keeps_legacy_kaggle_behaviour(tmp_path):
+    """No metadata/ dir -> Kaggle-style stems are used unchanged."""
+    from agentic_forecaster.data.dataset import discover_ticker_files, find_file_name_map
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    for stem in ("RELIANCE_minute", "MM_minute", "TCS_minute_new"):
+        pd.DataFrame({"date": ["2020-01-01 09:15:00"], "open": [1.0],
+                      "high": [1.0], "low": [1.0], "close": [1.0],
+                      "volume": [1]}).to_csv(raw / f"{stem}.csv", index=False)
+    assert find_file_name_map(raw) is None
+    files = discover_ticker_files(raw)
+    assert set(files) == {"RELIANCE", "MM", "TCS"}
+    assert files["MM"].name == "MM_minute.csv"
 
 
 @requires_dataset
@@ -291,7 +376,7 @@ def test_original_label_is_preserved_not_the_filename():
 
 @requires_dataset
 def test_manifest_records_security_identity(tmp_path):
-    import json  # noqa: F401
+    import json
 
     from agentic_forecaster.config import load_config
     from agentic_forecaster.data.agent import DataAgent
