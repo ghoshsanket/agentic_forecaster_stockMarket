@@ -1,0 +1,11 @@
+# PRE-V2-A -- SHARED LSTM on the expanded PRE-COVID supervised universe.
+#
+#   shared LSTM + ticker embedding + direction head
+#   no Transformer, no context, no multi-task, no FiLM, no meta
+#
+# The only change from V2-A is the REGIME (everything <= 2019-12-31) and the
+# SUPERVISED UNIVERSE (every PRE-COVID-eligible security, not eight).
+base: base.yaml
+variant: V2-A
+experiment:
+  name: precovid_v2_a_shared_lstm

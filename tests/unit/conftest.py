@@ -107,9 +107,20 @@ def arrays(universe_stock_features: pd.DataFrame, context_frame: pd.DataFrame,
     return make_arrays(universe_stock_features, context_frame, sector_map)
 
 
+#: alias, so a test can take both ``arrays`` and a renamed parameter
+@pytest.fixture
+def arrays_fixture(arrays: FeatureArrays) -> FeatureArrays:
+    return arrays
+
+
 @pytest.fixture
 def targets(context_frame: pd.DataFrame, arrays: FeatureArrays) -> pd.DataFrame:
     return make_targets(context_frame, context_frame, arrays)
+
+
+@pytest.fixture
+def targets_fixture(targets: pd.DataFrame) -> pd.DataFrame:
+    return targets
 
 
 @pytest.fixture

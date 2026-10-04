@@ -96,6 +96,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--variant", default="adjusted",
                         choices=["adjusted", "unadjusted"])
     parser.add_argument("--max-date", default="2021-12-31")
+    parser.add_argument("--store-root", type=Path, default=None,
+                        help="processed BRANCH that holds context_store/ "
+                             "(default: $AGENTIC_PROCESSED_DATA_ROOT/v2). Use "
+                             "$AGENTIC_PROCESSED_DATA_ROOT/v2/pre_covid for the "
+                             "PRE-COVID track so the physical store is separate.")
+    parser.add_argument("--experiment-regime", default="ORDINARY_V2",
+                        help="recorded in metadata.json (e.g. PRE_COVID)")
+    parser.add_argument("--final-allowed-date", default=None,
+                        help="regime boundary; the build refuses to write anything "
+                             "after it (PRE-COVID uses 2019-12-31)")
     parser.add_argument("--sector-yaml", type=Path, default=DEFAULT_SECTOR_YAML)
     parser.add_argument("--no-download", action="store_true",
                         help="refuse to fetch the official NSE file; a previously "
@@ -114,8 +124,9 @@ def main(argv: list[str] | None = None) -> int:
         logger.error("no %s parquet directory under %s", args.variant, dataset_root)
         return 2
 
-    logger.info("V2 processed root : %s", v2_processed_root())
-    logger.info("V2 store root     : %s", store_root())
+    processed_root = Path(args.store_root) if args.store_root else v2_processed_root()
+    logger.info("processed branch   : %s", processed_root)
+    logger.info("V2 store root     : %s", store_root(processed_root))
     logger.info("source dataset    : %s (%s)", dataset_root, args.variant)
 
     coverage = build_sector_mapping(
@@ -128,8 +139,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.verify:
         current = store_is_current(dataset_root=dataset_root, variant=args.variant,
                                    universe_id=universe_id, tickers=tickers,
-                                   sector_map=sector_map, max_date=args.max_date)
-        fingerprints = store_fingerprints()
+                                   sector_map=sector_map, max_date=args.max_date,
+                                   root=processed_root,
+                                   experiment_regime=args.experiment_regime,
+                                   final_allowed_date=args.final_allowed_date)
+        fingerprints = store_fingerprints(processed_root)
         logger.info("fingerprints: %s", json.dumps(fingerprints, indent=2))
         if not current:
             logger.error("store is stale or missing: rebuild without --verify")
@@ -139,8 +153,12 @@ def main(argv: list[str] | None = None) -> int:
 
     store = build_store(dataset_root, variant=args.variant, universe_id=universe_id,
                         tickers=tickers, sector_map=sector_map, max_date=args.max_date,
-                        force=args.force)
-    summary = store.summary() | {"sector_map_coverage": coverage}
+                        root=processed_root, force=args.force,
+                        experiment_regime=args.experiment_regime,
+                        final_allowed_date=args.final_allowed_date)
+    summary = store.summary() | {"sector_map_coverage": coverage,
+                                 "experiment_regime": args.experiment_regime,
+                                 "final_allowed_date": args.final_allowed_date}
     print(json.dumps(summary, indent=2))
     logger.info("sector coverage: %d/%d mapped (%s)", coverage["n_mapped"],
                 coverage["n_tickers"], coverage["source_sha256"][:12])

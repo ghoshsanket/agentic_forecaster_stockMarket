@@ -27,11 +27,16 @@ from pathlib import Path
 
 LEDGER_RELATIVE = Path("results/v2/experiment_ledger.csv")
 
+#: PRE-COVID tracks keep their own ledger so the historical V2 record is never
+#: appended to or reinterpreted.
+PRECOVID_LEDGER_RELATIVE = Path("results/v2/pre_covid/experiment_ledger.csv")
+
 LEDGER_COLUMNS: tuple[str, ...] = (
     "experiment_id",
     "timestamp",
     "git_commit",
     "experiment_dir",
+    "experiment_regime",
     "variant",
     "fold",
     "seed",
@@ -78,18 +83,33 @@ def repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
 
-def ledger_path(root: Path | None = None) -> Path:
+def ledger_path(root: Path | None = None, *, results_root: Path | str | None = None
+                ) -> Path:
+    """Resolve the ledger for a track.
+
+    ``results_root`` selects a track-specific ledger (the PRE-COVID track uses
+    ``results/v2/pre_covid/experiment_ledger.csv``); without it the historical
+    V2 ledger is used.
+    """
+    if results_root is not None:
+        return Path(results_root) / "experiment_ledger.csv"
     return (root or repo_root()) / LEDGER_RELATIVE
 
 
-def runtime_v2_root() -> Path:
+def precovid_ledger_path() -> Path:
+    return repo_root() / PRECOVID_LEDGER_RELATIVE
+
+
+def runtime_v2_root(sub: str = "") -> Path:
     """``$AGENTIC_OUTPUT_ROOT/v2`` -- runtime experiments, outside Git."""
     from agentic_forecaster.config import get_env_roots
-    return Path(get_env_roots()["AGENTIC_OUTPUT_ROOT"]) / "v2"
+    root = Path(get_env_roots()["AGENTIC_OUTPUT_ROOT"]) / "v2"
+    return root / sub if sub else root
 
 
-def experiment_dir(experiment_id: str) -> Path:
-    path = runtime_v2_root() / experiment_id
+def experiment_dir(experiment_id: str, *, runtime_root: Path | str | None = None) -> Path:
+    base = Path(runtime_root) if runtime_root is not None else runtime_v2_root()
+    path = base / experiment_id
     path.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -115,8 +135,9 @@ def new_experiment_id(prefix: str = "V2") -> str:
     return f"{prefix}-{stamp}-{uuid.uuid4().hex[:6]}"
 
 
-def read_ledger(path: Path | None = None) -> list[dict]:
-    path = path or ledger_path()
+def read_ledger(path: Path | None = None, *, results_root: Path | str | None = None
+                ) -> list[dict]:
+    path = path or ledger_path(results_root=results_root)
     if not path.is_file():
         return []
     with path.open(newline="", encoding="utf-8") as fh:
@@ -124,9 +145,14 @@ def read_ledger(path: Path | None = None) -> list[dict]:
 
 
 def append_experiment(record: dict, path: Path | None = None, *,
-                      root: Path | None = None) -> dict:
-    """Append one immutable V2 experiment row and return the completed record."""
-    path = path or ledger_path(root)
+                      root: Path | None = None,
+                      results_root: Path | str | None = None) -> dict:
+    """Append one immutable V2 experiment row and return the completed record.
+
+    ``results_root`` selects a track-specific ledger, so the PRE-COVID track never
+    appends to the historical V2 ledger (and vice versa).
+    """
+    path = path or ledger_path(root, results_root=results_root)
     path.parent.mkdir(parents=True, exist_ok=True)
 
     row = {c: record.get(c, "") for c in LEDGER_COLUMNS}

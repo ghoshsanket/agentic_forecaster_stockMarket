@@ -50,7 +50,11 @@ from agentic_forecaster.utils import atomic_json_dump, ensure_dir
 
 from . import context as ctx
 from . import features as feat
-from .firewall import V2_PAPER_TEST_FIREWALL_START, assert_no_paper_test_targets
+from .firewall import (
+    V2_PAPER_TEST_FIREWALL_START,
+    assert_no_paper_test_targets,
+    assert_pre_covid_dates,
+)
 from .sectors import SectorMap
 
 logger = logging.getLogger("agentic_forecaster.v2.store")
@@ -131,8 +135,21 @@ def v2_metadata_dir() -> Path:
 
 
 def store_root(root: str | Path | None = None) -> Path:
+    """Resolve the physical store directory.
+
+    ``root`` is the PROCESSED BRANCH (for example
+    ``$AGENTIC_PROCESSED_DATA_ROOT/v2`` or ``.../v2/pre_covid``); the
+    ``context_store`` child is appended.  A PRE-COVID run therefore resolves to
+    ``.../v2/pre_covid/context_store`` and can never fall back to the ordinary
+    V2 store, which physically contains 2020-2021 rows.
+    """
     base = Path(root) if root is not None else v2_processed_root()
     return base / STORE_DIRNAME
+
+
+def precovid_processed_root() -> Path:
+    """``$AGENTIC_PROCESSED_DATA_ROOT/v2/pre_covid``."""
+    return v2_processed_root() / "pre_covid"
 
 
 def _source_manifest_hash(dataset_root: Path) -> tuple[str, dict]:
@@ -345,8 +362,15 @@ def build_target_frame(dataset_root: Path, variant: str, tickers: list[str],
 def build_store(dataset_root: str | Path, *, variant: str, universe_id: str,
                 tickers: list[str], sector_map: SectorMap, max_date: str = "2021-12-31",
                 root: str | Path | None = None, force: bool = False,
-                config_extra: dict | None = None) -> FeatureStore:
-    """Build (or reuse) the V2 context store."""
+                config_extra: dict | None = None,
+                experiment_regime: str = "ORDINARY_V2",
+                final_allowed_date: str | None = None) -> FeatureStore:
+    """Build (or reuse) a V2 context store under the given processed branch.
+
+    ``max_date`` caps every table physically, so a PRE-COVID store
+    (``max_date = 2019-12-31``) contains no post-2019 row at all rather than
+    being filtered at training time.
+    """
     dataset_root = Path(dataset_root)
     out_root = store_root(root)
     ensure_dir(out_root)
@@ -359,7 +383,8 @@ def build_store(dataset_root: str | Path, *, variant: str, universe_id: str,
         dataset_root=dataset_root, variant=variant, universe_id=universe_id,
         tickers=tickers, sector_map=sector_map, max_date=max_date,
         manifest_hash=manifest_hash, config_extra=config_extra,
-    )
+    ) | {"experiment_regime": experiment_regime,
+         "final_allowed_date": final_allowed_date}
     config_hash = _hash_config(config_payload)
 
     metadata_path = out_root / "metadata.json"
@@ -410,6 +435,8 @@ def build_store(dataset_root: str | Path, *, variant: str, universe_id: str,
 
     metadata = {
         "created_at": datetime.now(UTC).isoformat(),
+        "experiment_regime": experiment_regime,
+        "final_allowed_date": final_allowed_date,
         "source_dataset_root": str(dataset_root),
         "universe_id": universe_id,
         "data_variant": variant,
@@ -430,6 +457,10 @@ def build_store(dataset_root: str | Path, *, variant: str, universe_id: str,
             "first_target_date": str(pd.Timestamp(targets["target_date"].min()).date()),
             "last_target_date": str(pd.Timestamp(targets["target_date"].max()).date()),
         },
+        "first_feature_date": str(pd.Timestamp(stock["date"].min()).date()),
+        "last_feature_date": str(pd.Timestamp(stock["date"].max()).date()),
+        "first_target_date": str(pd.Timestamp(targets["target_date"].min()).date()),
+        "last_target_date": str(pd.Timestamp(targets["target_date"].max()).date()),
         "feature_schema": {
             "stock_features": list(feat.STOCK_FEATURE_NAMES),
             "context_features": list(ctx.CONTEXT_FEATURES),
@@ -452,15 +483,34 @@ def build_store(dataset_root: str | Path, *, variant: str, universe_id: str,
             "paper_test_firewall_start": str(V2_PAPER_TEST_FIREWALL_START.date()),
             "store_capped_at": str(max_date),
             "no_2022_or_2023_label_in_store": True,
+            "experiment_regime": experiment_regime,
         },
     }
     atomic_json_dump(metadata, metadata_path)
-    logger.info("V2 feature store written to %s", out_root)
+    # the content hash is part of the audit record, so it is computed from the
+    # files that were just written rather than left for the reader to guess
+    metadata["store_sha256"] = FeatureStore(
+        root=out_root, stock=pd.DataFrame(), market=pd.DataFrame(), sector=pd.DataFrame(),
+        cross_sectional=pd.DataFrame(), targets=pd.DataFrame(), metadata=metadata,
+    ).store_sha256
+    atomic_json_dump(metadata, metadata_path)
+    if final_allowed_date is not None:
+        assert_pre_covid_dates(
+            feature_dates=[metadata["last_feature_date"]],
+            target_dates=[metadata["last_target_date"]],
+            final_allowed_date=final_allowed_date, where="precovid store build")
+    logger.info("V2 feature store written to %s (regime %s)", out_root, experiment_regime)
     return load_store(root)
 
 
-def load_store(root: str | Path | None = None) -> FeatureStore:
-    """Load a previously built store (no rebuild, no network, no writes)."""
+def load_store(root: str | Path | None = None, *,
+               final_allowed_date: str | None = None) -> FeatureStore:
+    """Load a previously built store (no rebuild, no network, no writes).
+
+    ``final_allowed_date`` makes the load itself regime-aware: a PRE-COVID run
+    refuses a store whose own metadata shows a post-2019 row, which is what stops
+    an accidental fallback to the ordinary 2021 store.
+    """
     base = store_root(root)
     metadata_path = base / "metadata.json"
     if not metadata_path.is_file():
@@ -478,7 +528,36 @@ def load_store(root: str | Path | None = None) -> FeatureStore:
         metadata=metadata,
     )
     assert_no_paper_test_targets(store.targets["target_date"], where="v2 store load")
+    if final_allowed_date is not None:
+        assert_store_within_pre_covid(store.metadata, final_allowed_date=final_allowed_date)
     return store
+
+
+def assert_store_within_pre_covid(metadata: dict, *,
+                                  final_allowed_date: str = "2019-12-31") -> dict:
+    """Prove a loaded store contains nothing after the PRE-COVID boundary.
+
+    The check FAILS CLOSED: when the metadata carries no verifiable date (an older
+    store written before the flat keys existed), the nested ``date_range`` block is
+    used, and if neither is present the load is refused rather than assumed safe.
+    """
+    boundary = str(final_allowed_date)
+    date_range = metadata.get("date_range") or {}
+    feature_date = metadata.get("last_feature_date") or date_range.get("last_input_date")
+    target_date = metadata.get("last_target_date") or date_range.get("last_target_date")
+    if feature_date is None or target_date is None:
+        raise ValueError(
+            "the loaded store metadata carries no verifiable date range, so it cannot be "
+            "proven PRE-COVID safe. Refusing to use it in a PRE-COVID run.")
+    assert_pre_covid_dates(feature_dates=[feature_date], target_dates=[target_date],
+                           final_allowed_date=boundary, where="precovid store")
+    return {
+        "store_last_feature_date": feature_date,
+        "store_last_target_date": target_date,
+        "final_allowed_date": boundary,
+        "experiment_regime": metadata.get("experiment_regime"),
+        "store_max_target_date_within_regime": True,
+    }
 
 
 def store_fingerprints(root: str | Path | None = None) -> dict:
@@ -512,7 +591,9 @@ def store_fingerprints(root: str | Path | None = None) -> dict:
 def store_is_current(root: str | Path | None = None, *,
                      dataset_root: str | Path, variant: str, universe_id: str,
                      tickers: list[str], sector_map: SectorMap,
-                     max_date: str = "2021-12-31") -> bool:
+                     max_date: str = "2021-12-31",
+                     experiment_regime: str = "ORDINARY_V2",
+                     final_allowed_date: str | None = None) -> bool:
     """True when the cached store matches every current fingerprint."""
     base = store_root(root)
     metadata_path = base / "metadata.json"
@@ -525,5 +606,5 @@ def store_is_current(root: str | Path | None = None, *,
         dataset_root=Path(dataset_root), variant=variant, universe_id=universe_id,
         tickers=tickers, sector_map=sector_map, max_date=max_date,
         manifest_hash=manifest_hash, config_extra=None,
-    )
+    ) | {"experiment_regime": experiment_regime, "final_allowed_date": final_allowed_date}
     return json.loads(metadata_path.read_text()).get("config_sha256") == _hash_config(payload)

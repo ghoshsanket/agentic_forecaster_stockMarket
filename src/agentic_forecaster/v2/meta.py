@@ -50,7 +50,11 @@ import torch
 from torch import nn
 
 from .dataset import SampleTable, V2SequenceDataset
-from .firewall import assert_no_lockbox_targets, assert_no_paper_test_targets
+from .firewall import (
+    assert_no_lockbox_targets,
+    assert_no_paper_test_targets,
+    assert_pre_covid_dates,
+)
 from .losses import MultiTaskWeights, V2MultiTaskLoss
 from .model import ContextualLSTMTransformer
 
@@ -119,7 +123,8 @@ class MetaEpisode:
 
 def build_meta_episodes(samples: SampleTable, *, config: MetaConfig,
                         train_mask: np.ndarray, max_episodes: int | None = None,
-                        seed: int = 42, where: str = "meta episodes") -> list[MetaEpisode]:
+                        seed: int = 42, where: str = "meta episodes",
+                        final_allowed_date: str | None = None) -> list[MetaEpisode]:
     """Chronological episodes inside the TRAIN window only.
 
     Episodes are enumerated per security over the ordered TRAIN samples and then
@@ -167,6 +172,13 @@ def build_meta_episodes(samples: SampleTable, *, config: MetaConfig,
     assert_no_paper_test_targets(covered_frame["target_date"], where=f"{where}/target")
     assert_no_paper_test_targets(covered_frame["origin_date"], where=f"{where}/origin")
     assert_no_lockbox_targets(covered_frame["target_date"], where=f"{where}/target")
+    if final_allowed_date is not None:
+        # PRE-COVID regime: no episode may reach past the boundary, and the
+        # rejection happens here rather than as a metric filter later
+        assert_pre_covid_dates(origin_dates=covered_frame["origin_date"],
+                               target_dates=covered_frame["target_date"],
+                               final_allowed_date=final_allowed_date,
+                               where=f"{where}/target")
     return episodes
 
 
@@ -276,9 +288,11 @@ class ReptileMetaTrainer:
 
     def __init__(self, model: ContextualLSTMTransformer, config: MetaConfig, *,
                  loss_weights: MultiTaskWeights | None = None,
-                 device: torch.device | str = "cpu", batch_size: int = 32) -> None:
+                 device: torch.device | str = "cpu", batch_size: int = 32,
+                 final_allowed_date: str | None = None) -> None:
         self.model = model
         self.config = config
+        self.final_allowed_date = final_allowed_date
         self.device = torch.device(device)
         self.criterion = V2MultiTaskLoss(loss_weights)
         self.batch_size = batch_size
@@ -297,7 +311,8 @@ class ReptileMetaTrainer:
         against the shared encoder's tens of epochs of full-batch training.
         """
         episodes = build_meta_episodes(samples, config=self.config, train_mask=train_mask,
-                                       seed=seed, where=where)
+                                       seed=seed, where=where,
+                                       final_allowed_date=self.final_allowed_date)
         if not episodes:
             raise RuntimeError("no chronological meta episode could be built from TRAIN data")
         rng = np.random.default_rng(seed)

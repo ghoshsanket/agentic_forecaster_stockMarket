@@ -288,3 +288,86 @@ a meaningful coverage. **65 % is not required for success.**
   forecasting study, not a profitability claim.
 * The context gate is a **diagnostic** about whether same-data context carries
   signal, not evidence of economic value.
+---
+
+## 13. The PRE-COVID EXPERIMENTAL REGIME (separate track)
+
+`PRE_COVID_EXPERIMENTAL_REGIME` — **not** a claim about causation.  This track
+establishes one thing only: whether a model trained and evaluated entirely
+before 2020 behaves differently.  It does **not** claim that COVID caused any
+earlier failure; that would be a causal claim this design cannot support.
+
+Everything about the 2020+ period lives in a **separate future task**.  Nothing
+from 2020 onward is consumed here: not for features, market/sector context,
+cross-sectional ranks, scaler fitting, training, validation, early stopping,
+architecture selection, meta-learning episodes, confidence selection, metrics or
+model selection.  The PRE-COVID processed store is physically capped at
+`2019-12-31`, and `PostCovidDataAccessError` fires at the point of access.
+
+| | ordinary V2 | PRE-COVID |
+|---|---|---|
+| horizon | … 2021-12-31 | … **2019-12-31** |
+| store | `…/v2/context_store` | `…/v2/pre_covid/context_store` |
+| configs | `configs/v2/*.yaml` | `configs/v2/pre_covid/*.yaml` |
+| ledger | `results/v2/experiment_ledger.csv` | `results/v2/pre_covid/experiment_ledger.csv` |
+| report | `results/v2/V2_DEV_REPORT.md` | `results/v2/pre_covid/PRE_COVID_V2_REPORT.md` |
+| selection folds | 2019, 2020 | **2017, 2018** |
+| lockbox | 2021 (`V2_LOCKBOX=1`) | **2019** (`PRECOVID_LOCKBOX=1`) |
+
+A `2019-12-31` origin paired with a `2020-01-01` target **cannot exist**: the
+target frame itself stops at 2019-12-31, and a post-boundary row is rejected
+rather than filtered.
+
+### Survivorship bias label
+
+Every PRE-COVID number carries
+`SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK`.  The universe is a fixed,
+later-reconstructed constituent list projected backwards; reports say
+"available securities from the reconstructed fixed universe", never "the NIFTY-50
+constituents on that historical date".  This limitation does not invalidate the
+architecture experiment, but it travels with every result.
+
+### Two populations, kept separate
+
+* **SUPERVISED** — only securities passing every eligibility rule (≥ 1000 usable
+  TRAIN samples through 2016, ≥ 180 usable samples in each of 2017, 2018 and
+  2019, causal features throughout).  The count is derived and frozen in
+  `configs/v2/pre_covid/supervised_universe.yaml` **before** any training.
+* **CONTEXT** — every security of the reconstructed fixed universe with a valid
+  bar on date `t`, so a later listing contributes from the day it exists and is
+  never backfilled.
+
+---
+
+## 14. Roadmap: the future post-2019 EVENT / REGIME / SENTIMENT MODEL
+
+**DOCUMENT ONLY.  Nothing in this section is implemented, downloaded or trained
+by the PRE-COVID programme.**  The 2020+ period is a separate task with separate
+data provenance.
+
+Motivation: the PRE-COVID regime behaves differently from the later regime.  The
+2020+ model is a *different* problem — event-driven and regime-aware — not a
+continuation of the pre-2020 forecasting problem, and it must be evaluated as
+such.
+
+Potential **point-in-time** inputs, each of which must be timestamp-clean
+(an observation is usable only from the moment it became public, never
+back-dated):
+
+* news sentiment (timestamped article flow, not article date)
+* India VIX (and comparable implied-volatility series)
+* global index stress (S&P/Nasdaq/other EM drawdowns at the close of `t`)
+* realized market volatility and breadth at higher frequency
+* macro-event indicators (policy decisions, CPI, GDP prints, with release times)
+* pandemic / event indicators (lockdowns, restrictions, wave dates)
+* sector-specific news and event signals
+
+Engineering requirements for that future track:
+
+1. an event store with an explicit `available_at` timestamp per observation, and
+   a unit test that no observation can be consumed before its `available_at`;
+2. a regime-aware evaluation protocol (the 2020+ window must not be used to tune
+   the pre-2020 architecture, and vice versa);
+3. its own firewall and ledger, exactly as the PRE-COVID track has its own;
+4. an honest comparison against the PRE-COVID model on the SAME dates, reported
+   as two regimes rather than as one time series.

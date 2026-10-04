@@ -1,0 +1,6 @@
+# PRE-V2-C -- PRE-V2-B + market / sector / cross-sectional context,
+#             sector embedding and the regime encoder.
+base: base.yaml
+variant: V2-C
+experiment:
+  name: precovid_v2_c_contextual

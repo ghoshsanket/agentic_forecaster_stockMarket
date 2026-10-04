@@ -1,0 +1,185 @@
+# =============================================================================
+# MODEL V2 -- PRE-COVID EXPERIMENTAL REGIME (shared base configuration)
+#
+# MODEL V2 IS NOT THE ORIGINAL PAPER MODEL.
+# Classification: NEW_EXPERIMENTAL_ARCHITECTURE.  See docs/MODEL_V2.md.
+#
+# This is a SEPARATE TRACK from configs/v2/*.yaml.  Nothing here modifies,
+# reinterprets or overwrites the original V2 programme, its store, its ledger or
+# its report.
+#
+# WHAT THIS TRACK ESTABLISHES
+#   Whether a model trained AND evaluated entirely before 2020 behaves
+#   differently.  It does NOT claim that COVID caused any earlier failure: that
+#   would be a causal claim this experiment cannot support.
+#
+# THE COMPLETE USABLE HORIZON ENDS AT 2019-12-31.
+#   Nothing from 2020 onward may be used for training, validation, testing,
+#   feature-store construction, market/sector context, cross-sectional ranks,
+#   scaler fitting, early stopping, architecture selection, meta-learning
+#   episodes, confidence selection, metrics or model selection.  The PRE-COVID
+#   store is physically capped, so a post-2019 row cannot even be loaded, and
+#   any attempt raises PostCovidDataAccessError.
+#
+# SURVIVORSHIP BIAS (stated, not hidden):
+#   SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK -- a fixed, later
+#   reconstructed constituent list projected backwards.  Reports say "available
+#   securities from the reconstructed fixed universe", never "the NIFTY-50
+#   constituents on that historical date".
+# =============================================================================
+
+experiment_regime: PRE_COVID
+pre_covid_mode: true
+final_allowed_date: "2019-12-31"
+
+# Track-isolated locations.  The ordinary V2 store, ledger and report stay
+# exactly where they are and are never written by this track.
+results_root: results/v2/pre_covid
+runtime_root: ${AGENTIC_OUTPUT_ROOT}/v2/pre_covid
+
+variant: V2-A
+fold: PRECOVID_DEV_A
+
+experiment:
+  name: precovid_base
+  seed: 42
+  device: auto
+  classification: NEW_EXPERIMENTAL_ARCHITECTURE
+  is_original_paper_model: false
+  regime_label: PRE_COVID_EXPERIMENTAL_REGIME
+  survivorship_bias_label: SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK
+
+data:
+  # Same already-downloaded adjusted Yahoo daily data as the V2 programme.  No
+  # re-download; adjusted and unadjusted are never mixed.
+  dataset_root: ${AGENTIC_DATA_ROOT}/yfinance_paper_snapshot_2025_11_04
+  dataset_variant: adjusted
+  universe_config: configs/nifty50_paper_snapshot_2025_11_04.yaml
+  universe_id: PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE
+  sector_map_csv: ${AGENTIC_PROCESSED_DATA_ROOT}/v2/metadata/sector_map.csv
+  # PRE-COVID processed branch: physically separate from the ordinary V2 store.
+  store_root: ${AGENTIC_PROCESSED_DATA_ROOT}/v2/pre_covid
+  max_date: "2019-12-31"
+  final_allowed_date: "2019-12-31"
+  # Supervised population: the frozen PRE-COVID eligible universe.  It is
+  # DERIVED (see scripts/build_v2_precovid_universe.py), never guessed.
+  supervised_universe: configs/v2/pre_covid/supervised_universe.yaml
+  # Context population: every security of the reconstructed fixed universe with a
+  # valid bar on date t.  Later listings contribute from the day they exist and
+  # are never backfilled.
+  context_population: fixed_universe_with_valid_bar_on_date_t
+  sequence_length: 60
+  balanced_by_ticker: true
+
+# Fixed architecture settings: IDENTICAL to the ordinary V2 programme.  This
+# experiment changes the REGIME and the SUPERVISED UNIVERSE, nothing else.
+model:
+  hidden_size: 96
+  lstm_layers: 2
+  lstm_dropout: 0.20
+  context_dim: 32
+  d_model: 64
+  fusion_temporal_dim: 64
+  transformer_layers: 2
+  n_heads: 4
+  dim_feedforward: 128
+  transformer_dropout: 0.10
+  max_sequence_length: 128
+  ticker_embedding_dim: 16
+  sector_embedding_dim: 8
+  regime_embedding_dim: 16
+  regime_hidden: 32
+  fusion_hidden: 128
+  z_dim: 64
+  fusion_dropout: 0.10
+  head_hidden: 32
+
+training:
+  learning_rate: 0.0003
+  beta1: 0.9
+  beta2: 0.999
+  weight_decay: 0.0001
+  batch_size: 256
+  max_epochs: 30
+  early_stopping_patience: 6
+  gradient_clip_norm: 1.0
+  balanced_by_ticker: true
+  use_amp: false
+  num_workers: 0
+
+loss:
+  direction: 1.00
+  return: 0.50
+  rank: 0.25
+  return_target_clip: 5.0
+
+meta:
+  support_size: 120
+  query_size: 20
+  stride: 20
+  inner_steps: 3
+  inner_lr: 0.001
+  meta_step_size: 0.10
+  episodes_per_meta_batch: 8
+  meta_epochs: 5
+  validation_support_size: 120
+  validation_inner_steps: 3
+
+evaluation:
+  ece_bins: 10
+  p_at_k: 3
+  coverage_levels: [1.0, 0.75, 0.5, 0.3, 0.2, 0.1]
+  # A selective result counts as meaningful only with coverage >= 20% AND at
+  # least 500 retained observations pooled across 2017 + 2018.
+  min_meaningful_coverage: 0.20
+  min_meaningful_observations: 500
+
+folds:
+  # Config-driven windows: changing these YAML dates changes the resolved
+  # SplitWindow.  Selection sees 2017 and 2018 ONLY; 2019 is the ONE lockbox,
+  # opened exclusively by scripts/run_v2_precovid_lockbox.py.
+  PRECOVID_DEV_A:
+    train_start: "2005-01-01"
+    train_end: "2016-12-31"
+    val_start: "2017-01-01"
+    val_end: "2017-12-31"
+    selectable: true
+  PRECOVID_DEV_B:
+    train_start: "2005-01-01"
+    train_end: "2017-12-31"
+    val_start: "2018-01-01"
+    val_end: "2018-12-31"
+    selectable: true
+  PRECOVID_LOCKBOX:
+    train_start: "2005-01-01"
+    train_end: "2018-12-31"
+    val_start: "2019-01-01"
+    val_end: "2019-12-31"
+    selectable: false
+    note: >-
+      The single 2019 architecture lockbox. Requires PRECOVID_LOCKBOX=1 (NOT
+      V2_LOCKBOX=1) and a frozen pre_covid_dev_selection.json. Opened exactly
+      once, after the architecture is frozen.
+
+# PRE-COVID signal gate (diagnostic thresholds, NOT a 65% target).
+signal_gate:
+  min_mean_macro_accuracy: 0.54
+  min_mean_roc_auc: 0.53
+  min_fraction_tickers_beating_baseline: 0.55
+  require_baseline_win_both_years: true
+  require_auc_above_50_both_years: true
+  candidates: [V2-B, V2-C]
+
+# Multi-task continuation gate: D must improve on the ACTUAL winning base by at
+# least one of these, with no fold deteriorating by more than 1 pp.
+multitask_gate:
+  min_macro_gain: 0.005
+  min_auc_gain: 0.01
+  min_brier_gain: 0.002
+  max_fold_deterioration: 0.01
+
+# Seed stability: an unstable selection must NOT open 2019.
+seed_stability:
+  seeds: [11, 42, 73]
+  lockbox_seed: 42
+  max_macro_std: 0.015

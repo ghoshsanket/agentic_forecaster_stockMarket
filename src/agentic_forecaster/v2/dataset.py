@@ -46,7 +46,11 @@ from torch.utils.data import Dataset
 
 from . import context as ctx
 from . import features as feat
-from .firewall import assert_no_lockbox_targets, assert_no_paper_test_targets
+from .firewall import (
+    assert_no_lockbox_targets,
+    assert_no_paper_test_targets,
+    assert_pre_covid_dates,
+)
 from .sectors import UNKNOWN_LABEL, SectorMap, build_vocabulary, vocabulary_index
 
 logger = logging.getLogger("agentic_forecaster.v2.dataset")
@@ -81,11 +85,47 @@ V2_DEV_FOLD_B = SplitWindow("V2_DEV_FOLD_B", "2005-01-01", "2019-12-31",
 V2_LOCKBOX = SplitWindow("V2_LOCKBOX", "2005-01-01", "2020-12-31",
                          "2021-01-01", "2021-12-31")
 
+#: Backward-compatible defaults for the ORIGINAL V2 configs and tests.  New
+#: tracks (for example the PRE-COVID regime) declare their own windows under
+#: ``folds:`` in their config and are resolved by :func:`resolve_fold_window`,
+#: so no new hard-coded global fold set is ever added here.
 V2_FOLDS: dict[str, SplitWindow] = {
     V2_DEV_FOLD_A.name: V2_DEV_FOLD_A,
     V2_DEV_FOLD_B.name: V2_DEV_FOLD_B,
     V2_LOCKBOX.name: V2_LOCKBOX,
 }
+
+
+def resolve_fold_window(name: str, declared: dict | None = None) -> SplitWindow:
+    """Resolve a split window for ``name``.
+
+    A config-declared ``folds:`` block WINS over the built-in defaults, which is
+    what makes the fold definitions genuinely config-driven: changing the YAML
+    changes the resolved ``SplitWindow``.
+    """
+    key = str(name).upper()
+    if declared:
+        lowered = {str(k).lower(): v for k, v in declared.items()}
+        block = (declared.get(key) or declared.get(name)
+                 or lowered.get(key.lower()) or lowered.get(str(name).lower()))
+        if block:
+            missing = [f for f in ("train_start", "train_end", "val_start", "val_end")
+                       if f not in block]
+            if missing:
+                raise ValueError(f"fold {key!r} is missing {missing}")
+            return SplitWindow(
+                name=key,
+                train_start=str(block["train_start"]),
+                train_end=str(block["train_end"]),
+                val_start=str(block["val_start"]),
+                val_end=str(block["val_end"]),
+            )
+    if key not in V2_FOLDS:
+        raise ValueError(
+            f"unknown fold {key!r}: declare it under `folds:` in the config or use one "
+            f"of the built-in defaults {sorted(V2_FOLDS)}"
+        )
+    return V2_FOLDS[key]
 
 #: Supervised development securities. Broad sector coverage, manageable compute.
 V2_DEV_TICKERS: tuple[str, ...] = (
@@ -262,16 +302,31 @@ def _window_is_usable(matrices: TickerMatrices, row: int, sequence_length: int,
 def build_sample_table(arrays: FeatureArrays, targets: pd.DataFrame, *,
                        sequence_length: int = DEFAULT_SEQUENCE_LENGTH,
                        require_targets: Sequence[str] = ("y_direction",),
-                       max_date: str | None = None) -> SampleTable:
+                       max_date: str | None = None,
+                       final_allowed_date: str | None = None) -> SampleTable:
     """Enumerate every usable supervised sample.
 
     ``targets`` is the store's target frame.  A sample is created only when the
     security has a full window of finite inputs at the origin, the regime vector
     is finite, and every requested target is present.
+
+    ``final_allowed_date`` activates the PRE-COVID regime guard: a candidate
+    sample whose origin OR target falls after that boundary is REJECTED with
+    :class:`PostCovidDataAccessError` rather than silently dropped, so a
+    2019-12-31 origin paired with a 2020-01-01 target cannot exist even by
+    accident.  ``None`` keeps the ordinary V2 behaviour unchanged.
     """
     merged = targets.merge(
         pd.DataFrame({"ticker": list(arrays.matrices)}), on="ticker", how="inner")
     merged = merged.sort_values(["ticker", "origin_date"]).reset_index(drop=True)
+    if final_allowed_date is not None:
+        # Guard the WHOLE incoming frame BEFORE any filtering: in the PRE-COVID
+        # regime a post-boundary row is an error to surface, not a row to hide
+        # behind a filter.
+        assert_pre_covid_dates(origin_dates=merged["origin_date"],
+                               target_dates=merged["target_date"],
+                               final_allowed_date=final_allowed_date,
+                               where="precovid target frame")
     if max_date is not None:
         merged = merged.loc[merged["target_date"] <= pd.Timestamp(max_date)]
 
@@ -280,13 +335,22 @@ def build_sample_table(arrays: FeatureArrays, targets: pd.DataFrame, *,
         "no_full_window": 0,
         "non_finite_inputs": 0,
         "missing_target": 0,
+        "rejected_post_regime": 0,
     }
+    boundary = pd.Timestamp(final_allowed_date) if final_allowed_date else None
     for ticker, group in merged.groupby("ticker", sort=True):
         matrices = arrays.matrices[str(ticker)]
         positions = matrices.position_of
         n_context = matrices.context.shape[1]
         for origin, target_row in zip(group["origin_date"], group.itertuples(),
                                       strict=True):
+            if boundary is not None:
+                assert_pre_covid_dates(
+                    origin_dates=[origin], target_dates=[target_row.target_date],
+                    feature_dates=[matrices.dates[
+                        positions.get(str(pd.Timestamp(origin).date()), 0)]],
+                    final_allowed_date=boundary,
+                    where=f"precovid sample {ticker}")
             row = positions.get(str(pd.Timestamp(origin).date()))
             if row is None or row < sequence_length - 1:
                 dropped["no_full_window"] += 1
@@ -325,6 +389,11 @@ def build_sample_table(arrays: FeatureArrays, targets: pd.DataFrame, *,
         "last_origin_date": str(frame["origin_date"].max().date()) if len(frame) else None,
         "last_target_date": str(frame["target_date"].max().date()) if len(frame) else None,
         "direction_positive_rate": float(frame["y_direction"].mean()) if len(frame) else None,
+        "final_allowed_date": (None if boundary is None else str(boundary.date())),
+        "max_origin_date_consumed": (str(pd.Timestamp(frame["origin_date"].max()).date())
+                                     if len(frame) else None),
+        "max_target_date_consumed": (str(pd.Timestamp(frame["target_date"].max()).date())
+                                     if len(frame) else None),
     }
     return SampleTable(frame=frame, arrays=arrays, sequence_length=int(sequence_length),
                        diagnostics=diagnostics)
@@ -349,13 +418,23 @@ def split_masks(samples: SampleTable, window: SplitWindow) -> dict[str, np.ndarr
 
 
 def assert_split_targets_legal(masks: dict[str, np.ndarray], samples: SampleTable,
-                               *, where: str, unlocked: bool | None = None) -> None:
-    """Apply both V2 firewalls to the target dates of every split."""
+                               *, where: str, unlocked: bool | None = None,
+                               final_allowed_date: str | None = None) -> None:
+    """Apply the V2 firewalls to the target dates of every split.
+
+    When ``final_allowed_date`` is given (the PRE-COVID regime) the post-2019
+    rejection runs as well, so the split itself is proved clean rather than
+    assumed clean.
+    """
     frame = samples.frame
     for name, mask in masks.items():
         dates = frame.loc[mask, "target_date"]
         assert_no_paper_test_targets(dates, where=f"{where}/{name}")
         assert_no_lockbox_targets(dates, where=f"{where}/{name}", unlocked=unlocked)
+        if final_allowed_date is not None:
+            assert_pre_covid_dates(
+                origin_dates=frame.loc[mask, "origin_date"], target_dates=dates,
+                final_allowed_date=final_allowed_date, where=f"{where}/{name}")
 
 
 # ---------------------------------------------------------------------------

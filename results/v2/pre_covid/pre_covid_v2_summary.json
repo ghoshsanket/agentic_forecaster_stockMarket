@@ -1,0 +1,3472 @@
+{
+  "generated_at": "2026-10-04T06:48:18.999132+00:00",
+  "experiment_regime": "PRE_COVID",
+  "regime_label": "PRE_COVID_EXPERIMENTAL_REGIME",
+  "survivorship_bias_label": "SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK",
+  "universe_phrase": "available securities from the reconstructed fixed universe",
+  "is_original_paper_model": false,
+  "classification": "NEW_EXPERIMENTAL_ARCHITECTURE",
+  "development_folds": [
+    "PRECOVID_DEV_A",
+    "PRECOVID_DEV_B"
+  ],
+  "lockbox_fold_used": false,
+  "seed": 42,
+  "n_supervised_tickers": 41,
+  "eligible_tickers": [
+    "ADANIENT",
+    "APOLLOHOSP",
+    "ASIANPAINT",
+    "AXISBANK",
+    "BAJAJ-AUTO",
+    "BAJAJFINSV",
+    "BAJFINANCE",
+    "BEL",
+    "BHARTIARTL",
+    "CIPLA",
+    "COALINDIA",
+    "DRREDDY",
+    "EICHERMOT",
+    "GRASIM",
+    "HCLTECH",
+    "HDFCBANK",
+    "HINDALCO",
+    "HINDUNILVR",
+    "ICICIBANK",
+    "INFY",
+    "ITC",
+    "JSWSTEEL",
+    "KOTAKBANK",
+    "M&M",
+    "MARUTI",
+    "NESTLEIND",
+    "NTPC",
+    "ONGC",
+    "POWERGRID",
+    "RELIANCE",
+    "SBIN",
+    "SHRIRAMFIN",
+    "SUNPHARMA",
+    "TATACONSUM",
+    "TATASTEEL",
+    "TCS",
+    "TECHM",
+    "TITAN",
+    "TMPV",
+    "TRENT",
+    "ULTRACEMCO"
+  ],
+  "cohort": {
+    "n_candidates": 47,
+    "n_eligible": 41,
+    "n_excluded": 6,
+    "eligible_tickers": [
+      "ADANIENT",
+      "APOLLOHOSP",
+      "ASIANPAINT",
+      "AXISBANK",
+      "BAJAJ-AUTO",
+      "BAJAJFINSV",
+      "BAJFINANCE",
+      "BEL",
+      "BHARTIARTL",
+      "CIPLA",
+      "COALINDIA",
+      "DRREDDY",
+      "EICHERMOT",
+      "GRASIM",
+      "HCLTECH",
+      "HDFCBANK",
+      "HINDALCO",
+      "HINDUNILVR",
+      "ICICIBANK",
+      "INFY",
+      "ITC",
+      "JSWSTEEL",
+      "KOTAKBANK",
+      "M&M",
+      "MARUTI",
+      "NESTLEIND",
+      "NTPC",
+      "ONGC",
+      "POWERGRID",
+      "RELIANCE",
+      "SBIN",
+      "SHRIRAMFIN",
+      "SUNPHARMA",
+      "TATACONSUM",
+      "TATASTEEL",
+      "TCS",
+      "TECHM",
+      "TITAN",
+      "TMPV",
+      "TRENT",
+      "ULTRACEMCO"
+    ],
+    "excluded_tickers": [
+      "ADANIPORTS",
+      "HDFCLIFE",
+      "INDIGO",
+      "LT",
+      "SBILIFE",
+      "WIPRO"
+    ],
+    "eligible_by_sector": {
+      "CONSUMER": 7,
+      "ENERGY_AND_MATERIALS": 9,
+      "FINANCIALS": 8,
+      "HEALTHCARE": 4,
+      "INDUSTRIALS": 8,
+      "IT_AND_TELECOM": 5
+    },
+    "lockbox_year_usable_by_every_eligible": true,
+    "survivorship_bias_label": "SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK"
+  },
+  "universe_sha256": "25ccf6300dc9c6116dd69afbda4a5c19fec60a1aafdfb676ec4582f94c770282",
+  "variants": {
+    "V2-A": {
+      "per_fold": {
+        "PRECOVID_DEV_A": {
+          "experiment_id": "V2A-20261004T061356-336738",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/pre_covid/V2A-20261004T061356-336738",
+          "config_sha256": "d7d60a48156794c0a41d0741e9c6233b592ea3ded11a2473769c7a1a04957dff",
+          "seed": 42,
+          "accuracy_macro_ticker": 0.5133800730719857,
+          "accuracy_micro": 0.5133800730719857,
+          "f1": 0.6607462481068429,
+          "balanced_accuracy": 0.5058601642962188,
+          "roc_auc": 0.5202198921291551,
+          "brier": 0.24969778155431094,
+          "ece": 0.003391944771240942,
+          "train_majority_baseline": 0.5035352930098783,
+          "delta_vs_train_majority_macro": 0.009844780062107428,
+          "precision_at_3_up": 0.5465587044534413,
+          "precision_at_3_down": 0.5114709851551957,
+          "n_predictions": 10127,
+          "n_tickers": 41,
+          "per_ticker": {
+            "ADANIENT": {
+              "n": 247,
+              "accuracy": 0.5141700404858299,
+              "positive_rate": 0.5668016194331984
+            },
+            "APOLLOHOSP": {
+              "n": 247,
+              "accuracy": 0.4817813765182186,
+              "positive_rate": 0.4777327935222672
+            },
+            "ASIANPAINT": {
+              "n": 247,
+              "accuracy": 0.46963562753036436,
+              "positive_rate": 0.46963562753036436
+            },
+            "AXISBANK": {
+              "n": 247,
+              "accuracy": 0.5748987854251012,
+              "positive_rate": 0.5263157894736842
+            },
+            "BAJAJ-AUTO": {
+              "n": 247,
+              "accuracy": 0.5263157894736842,
+              "positive_rate": 0.5263157894736842
+            },
+            "BAJAJFINSV": {
+              "n": 247,
+              "accuracy": 0.5789473684210527,
+              "positive_rate": 0.5506072874493927
+            },
+            "BAJFINANCE": {
+              "n": 247,
+              "accuracy": 0.5668016194331984,
+              "positive_rate": 0.5465587044534413
+            },
+            "BEL": {
+              "n": 247,
+              "accuracy": 0.5263157894736842,
+              "positive_rate": 0.5344129554655871
+            },
+            "BHARTIARTL": {
+              "n": 247,
+              "accuracy": 0.48582995951417,
+              "positive_rate": 0.4979757085020243
+            },
+            "CIPLA": {
+              "n": 247,
+              "accuracy": 0.46153846153846156,
+              "positive_rate": 0.46558704453441296
+            },
+            "COALINDIA": {
+              "n": 247,
+              "accuracy": 0.4331983805668016,
+              "positive_rate": 0.44534412955465585
+            },
+            "DRREDDY": {
+              "n": 247,
+              "accuracy": 0.44129554655870445,
+              "positive_rate": 0.4331983805668016
+            },
+            "EICHERMOT": {
+              "n": 247,
+              "accuracy": 0.5141700404858299,
+              "positive_rate": 0.5101214574898786
+            },
+            "GRASIM": {
+              "n": 247,
+              "accuracy": 0.5101214574898786,
+              "positive_rate": 0.4898785425101215
+            },
+            "HCLTECH": {
+              "n": 247,
+              "accuracy": 0.5384615384615384,
+              "positive_rate": 0.5384615384615384
+            },
+            "HDFCBANK": {
+              "n": 247,
+              "accuracy": 0.6032388663967612,
+              "positive_rate": 0.6032388663967612
+            },
+            "HINDALCO": {
+              "n": 247,
+              "accuracy": 0.5263157894736842,
+              "positive_rate": 0.5384615384615384
+            },
+            "HINDUNILVR": {
+              "n": 247,
+              "accuracy": 0.5465587044534413,
+              "positive_rate": 0.5465587044534413
+            },
+            "ICICIBANK": {
+              "n": 247,
+              "accuracy": 0.4939271255060729,
+              "positive_rate": 0.4817813765182186
+            },
+            "INFY": {
+              "n": 247,
+              "accuracy": 0.5182186234817814,
+              "positive_rate": 0.5060728744939271
+            },
+            "ITC": {
+              "n": 247,
+              "accuracy": 0.48582995951417,
+              "positive_rate": 0.4939271255060729
+            },
+            "JSWSTEEL": {
+              "n": 247,
+              "accuracy": 0.5141700404858299,
+              "positive_rate": 0.5384615384615384
+            },
+            "KOTAKBANK": {
+              "n": 247,
+              "accuracy": 0.5384615384615384,
+              "positive_rate": 0.5263157894736842
+            },
+            "M&M": {
+              "n": 247,
+              "accuracy": 0.48582995951417,
+              "positive_rate": 0.4817813765182186
+            },
+            "MARUTI": {
+              "n": 247,
+              "accuracy": 0.5141700404858299,
+              "positive_rate": 0.5141700404858299
+            },
+            "NESTLEIND": {
+              "n": 247,
+              "accuracy": 0.5182186234817814,
+              "positive_rate": 0.5101214574898786
+            },
+            "NTPC": {
+              "n": 247,
+              "accuracy": 0.48582995951417,
+              "positive_rate": 0.4777327935222672
+            },
+            "ONGC": {
+              "n": 247,
+              "accuracy": 0.5182186234817814,
+              "positive_rate": 0.5020242914979757
+            },
+            "POWERGRID": {
+              "n": 247,
+              "accuracy": 0.4979757085020243,
+              "positive_rate": 0.4979757085020243
+            },
+            "RELIANCE": {
+              "n": 247,
+              "accuracy": 0.5020242914979757,
+              "positive_rate": 0.5141700404858299
+            },
+            "SBIN": {
+              "n": 247,
+              "accuracy": 0.5060728744939271,
+              "positive_rate": 0.4898785425101215
+            },
+            "SHRIRAMFIN": {
+              "n": 247,
+              "accuracy": 0.5141700404858299,
+              "positive_rate": 0.5263157894736842
+            },
+            "SUNPHARMA": {
+              "n": 247,
+              "accuracy": 0.4898785425101215,
+              "positive_rate": 0.4777327935222672
+            },
+            "TATACONSUM": {
+              "n": 247,
+              "accuracy": 0.5303643724696356,
+              "positive_rate": 0.5425101214574899
+            },
+            "TATASTEEL": {
+              "n": 247,
+              "accuracy": 0.5708502024291497,
+              "positive_rate": 0.5222672064777328
+            },
+            "TCS": {
+              "n": 247,
+              "accuracy": 0.5182186234817814,
+              "positive_rate": 0.5141700404858299
+            },
+            "TECHM": {
+              "n": 247,
+              "accuracy": 0.5060728744939271,
+              "positive_rate": 0.5141700404858299
+            },
+            "TITAN": {
+              "n": 247,
+              "accuracy": 0.5344129554655871,
+              "positive_rate": 0.4979757085020243
+            },
+            "TMPV": {
+              "n": 247,
+              "accuracy": 0.5020242914979757,
+              "positive_rate": 0.4777327935222672
+            },
+            "TRENT": {
+              "n": 247,
+              "accuracy": 0.4939271255060729,
+              "positive_rate": 0.4777327935222672
+            },
+            "ULTRACEMCO": {
+              "n": 247,
+              "accuracy": 0.5101214574898786,
+              "positive_rate": 0.5101214574898786
+            }
+          },
+          "coverage_curve": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5389930898321816
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5389930898321816
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5389930898321816
+            }
+          },
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5389930898321816
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5389930898321816
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5389930898321816
+            }
+          },
+          "complexity": {
+            "total_parameters": 156898,
+            "trainable_parameters": 156898,
+            "adaptable_parameters": 2113,
+            "peak_gpu_memory_mb": 296.90087890625,
+            "training_seconds": 132.78788363200147,
+            "best_epoch": 3,
+            "epochs_run": 9,
+            "stopped_early": true,
+            "sequence_length": 60,
+            "n_train_samples": 116822,
+            "n_val_samples": 10127,
+            "batch_size": 256,
+            "max_epochs": 30,
+            "device": "cuda"
+          },
+          "best_epoch": 3,
+          "n_parameters": 156898,
+          "training_seconds": 132.78788363200147
+        },
+        "PRECOVID_DEV_B": {
+          "experiment_id": "V2A-20261004T061617-2c7da9",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/pre_covid/V2A-20261004T061617-2c7da9",
+          "config_sha256": "23de68fe09ec535371dd873444395c481ca4f32265d63fdb7dd8dc45dfb2461a",
+          "seed": 42,
+          "accuracy_macro_ticker": 0.5165754106520657,
+          "accuracy_micro": 0.5165754106520657,
+          "f1": 0.2737062518695782,
+          "balanced_accuracy": 0.5132005283779544,
+          "roc_auc": 0.5323388265261337,
+          "brier": 0.2495732119388456,
+          "ece": 0.012635992164353623,
+          "train_majority_baseline": 0.5040081896212301,
+          "delta_vs_train_majority_macro": 0.01256722103083563,
+          "precision_at_3_up": 0.5061224489795918,
+          "precision_at_3_down": 0.5374149659863946,
+          "n_predictions": 10045,
+          "n_tickers": 41,
+          "per_ticker": {
+            "ADANIENT": {
+              "n": 245,
+              "accuracy": 0.4816326530612245,
+              "positive_rate": 0.5469387755102041
+            },
+            "APOLLOHOSP": {
+              "n": 245,
+              "accuracy": 0.5469387755102041,
+              "positive_rate": 0.4530612244897959
+            },
+            "ASIANPAINT": {
+              "n": 245,
+              "accuracy": 0.5551020408163265,
+              "positive_rate": 0.4816326530612245
+            },
+            "AXISBANK": {
+              "n": 245,
+              "accuracy": 0.5346938775510204,
+              "positive_rate": 0.46530612244897956
+            },
+            "BAJAJ-AUTO": {
+              "n": 245,
+              "accuracy": 0.49387755102040815,
+              "positive_rate": 0.5061224489795918
+            },
+            "BAJAJFINSV": {
+              "n": 245,
+              "accuracy": 0.5224489795918368,
+              "positive_rate": 0.5224489795918368
+            },
+            "BAJFINANCE": {
+              "n": 245,
+              "accuracy": 0.49387755102040815,
+              "positive_rate": 0.5428571428571428
+            },
+            "BEL": {
+              "n": 245,
+              "accuracy": 0.5306122448979592,
+              "positive_rate": 0.4204081632653061
+            },
+            "BHARTIARTL": {
+              "n": 245,
+              "accuracy": 0.5387755102040817,
+              "positive_rate": 0.42448979591836733
+            },
+            "CIPLA": {
+              "n": 245,
+              "accuracy": 0.5673469387755102,
+              "positive_rate": 0.42857142857142855
+            },
+            "COALINDIA": {
+              "n": 245,
+              "accuracy": 0.46938775510204084,
+              "positive_rate": 0.5183673469387755
+            },
+            "DRREDDY": {
+              "n": 245,
+              "accuracy": 0.5265306122448979,
+              "positive_rate": 0.5020408163265306
+            },
+            "EICHERMOT": {
+              "n": 245,
+              "accuracy": 0.5591836734693878,
+              "positive_rate": 0.4489795918367347
+            },
+            "GRASIM": {
+              "n": 245,
+              "accuracy": 0.6081632653061224,
+              "positive_rate": 0.4326530612244898
+            },
+            "HCLTECH": {
+              "n": 245,
+              "accuracy": 0.5102040816326531,
+              "positive_rate": 0.5795918367346938
+            },
+            "HDFCBANK": {
+              "n": 245,
+              "accuracy": 0.5102040816326531,
+              "positive_rate": 0.5020408163265306
+            },
+            "HINDALCO": {
+              "n": 245,
+              "accuracy": 0.5510204081632653,
+              "positive_rate": 0.46938775510204084
+            },
+            "HINDUNILVR": {
+              "n": 245,
+              "accuracy": 0.4816326530612245,
+              "positive_rate": 0.5224489795918368
+            },
+            "ICICIBANK": {
+              "n": 245,
+              "accuracy": 0.5673469387755102,
+              "positive_rate": 0.46122448979591835
+            },
+            "INFY": {
+              "n": 245,
+              "accuracy": 0.5142857142857142,
+              "positive_rate": 0.5673469387755102
+            },
+            "ITC": {
+              "n": 245,
+              "accuracy": 0.4775510204081633,
+              "positive_rate": 0.4816326530612245
+            },
+            "JSWSTEEL": {
+              "n": 245,
+              "accuracy": 0.49795918367346936,
+              "positive_rate": 0.5061224489795918
+            },
+            "KOTAKBANK": {
+              "n": 245,
+              "accuracy": 0.4489795918367347,
+              "positive_rate": 0.5591836734693878
+            },
+            "M&M": {
+              "n": 245,
+              "accuracy": 0.49795918367346936,
+              "positive_rate": 0.5428571428571428
+            },
+            "MARUTI": {
+              "n": 245,
+              "accuracy": 0.5469387755102041,
+              "positive_rate": 0.4489795918367347
+            },
+            "NESTLEIND": {
+              "n": 245,
+              "accuracy": 0.46530612244897956,
+              "positive_rate": 0.5428571428571428
+            },
+            "NTPC": {
+              "n": 245,
+              "accuracy": 0.5102040816326531,
+              "positive_rate": 0.46938775510204084
+            },
+            "ONGC": {
+              "n": 245,
+              "accuracy": 0.5306122448979592,
+              "positive_rate": 0.46122448979591835
+            },
+            "POWERGRID": {
+              "n": 245,
+              "accuracy": 0.4775510204081633,
+              "positive_rate": 0.49387755102040815
+            },
+            "RELIANCE": {
+              "n": 245,
+              "accuracy": 0.4775510204081633,
+              "positive_rate": 0.563265306122449
+            },
+            "SBIN": {
+              "n": 245,
+              "accuracy": 0.5061224489795918,
+              "positive_rate": 0.47346938775510206
+            },
+            "SHRIRAMFIN": {
+              "n": 245,
+              "accuracy": 0.5428571428571428,
+              "positive_rate": 0.49795918367346936
+            },
+            "SUNPHARMA": {
+              "n": 245,
+              "accuracy": 0.5265306122448979,
+              "positive_rate": 0.4530612244897959
+            },
+            "TATACONSUM": {
+              "n": 245,
+              "accuracy": 0.5428571428571428,
+              "positive_rate": 0.4857142857142857
+            },
+            "TATASTEEL": {
+              "n": 245,
+              "accuracy": 0.4857142857142857,
+              "positive_rate": 0.5061224489795918
+            },
+            "TCS": {
+              "n": 245,
+              "accuracy": 0.46938775510204084,
+              "positive_rate": 0.5387755102040817
+            },
+            "TECHM": {
+              "n": 245,
+              "accuracy": 0.46122448979591835,
+              "positive_rate": 0.5469387755102041
+            },
+            "TITAN": {
+              "n": 245,
+              "accuracy": 0.5224489795918368,
+              "positive_rate": 0.5142857142857142
+            },
+            "TMPV": {
+              "n": 245,
+              "accuracy": 0.5836734693877551,
+              "positive_rate": 0.45714285714285713
+            },
+            "TRENT": {
+              "n": 245,
+              "accuracy": 0.5387755102040817,
+              "positive_rate": 0.46122448979591835
+            },
+            "ULTRACEMCO": {
+              "n": 245,
+              "accuracy": 0.5061224489795918,
+              "positive_rate": 0.4897959183673469
+            }
+          },
+          "coverage_curve": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5667330677290837
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5667330677290837
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5667330677290837
+            }
+          },
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5667330677290837
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5667330677290837
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5667330677290837
+            }
+          },
+          "complexity": {
+            "total_parameters": 156898,
+            "trainable_parameters": 156898,
+            "adaptable_parameters": 2113,
+            "peak_gpu_memory_mb": 296.90087890625,
+            "training_seconds": 222.72468482202385,
+            "best_epoch": 8,
+            "epochs_run": 14,
+            "stopped_early": true,
+            "sequence_length": 60,
+            "n_train_samples": 126990,
+            "n_val_samples": 10045,
+            "batch_size": 256,
+            "max_epochs": 30,
+            "device": "cuda"
+          },
+          "best_epoch": 8,
+          "n_parameters": 156898,
+          "training_seconds": 222.72468482202385
+        }
+      },
+      "mean": {
+        "accuracy_macro_ticker": 0.5149777418620257,
+        "accuracy_micro": 0.5149777418620257,
+        "f1": 0.46722624998821055,
+        "balanced_accuracy": 0.5095303463370866,
+        "roc_auc": 0.5262793593276445,
+        "brier": 0.24963549674657826,
+        "ece": 0.008013968467797283,
+        "train_majority_baseline": 0.5037717413155542,
+        "delta_vs_train_majority_macro": 0.011206000546471528,
+        "precision_at_3_up": 0.5263405767165166,
+        "precision_at_3_down": 0.5244429755707951
+      },
+      "beats_baseline_both_folds": true,
+      "roc_auc_above_50_both_folds": true,
+      "n_folds": 2,
+      "ticker_stability": {
+        "available": true,
+        "n_eligible_tickers_scored": 41,
+        "n_beating_baseline": 13,
+        "n_beating_baseline_all_folds": 3,
+        "fraction_beating_baseline": 0.3170731707317073,
+        "fraction_beating_baseline_all_folds": 0.07317073170731707,
+        "median_ticker_accuracy": 0.5143600760142113,
+        "p25_ticker_accuracy": 0.4979013467735272,
+        "p75_ticker_accuracy": 0.5303395852268032,
+        "worst_5": {
+          "COALINDIA": {
+            "accuracy": 0.4513,
+            "baseline": 0.5365,
+            "n": 2
+          },
+          "ITC": {
+            "accuracy": 0.4817,
+            "baseline": 0.5122,
+            "n": 2
+          },
+          "TECHM": {
+            "accuracy": 0.4836,
+            "baseline": 0.5306,
+            "n": 2
+          },
+          "DRREDDY": {
+            "accuracy": 0.4839,
+            "baseline": 0.5344,
+            "n": 2
+          },
+          "POWERGRID": {
+            "accuracy": 0.4878,
+            "baseline": 0.5041,
+            "n": 2
+          }
+        },
+        "best_5": {
+          "GRASIM": {
+            "accuracy": 0.5591,
+            "baseline": 0.5387,
+            "n": 2
+          },
+          "HDFCBANK": {
+            "accuracy": 0.5567,
+            "baseline": 0.5526,
+            "n": 2
+          },
+          "AXISBANK": {
+            "accuracy": 0.5548,
+            "baseline": 0.5305,
+            "n": 2
+          },
+          "BAJAJFINSV": {
+            "accuracy": 0.5507,
+            "baseline": 0.5365,
+            "n": 2
+          },
+          "TMPV": {
+            "accuracy": 0.5428,
+            "baseline": 0.5326,
+            "n": 2
+          }
+        },
+        "per_ticker": {
+          "ADANIENT": {
+            "accuracy": 0.4979,
+            "baseline": 0.5569,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "APOLLOHOSP": {
+            "accuracy": 0.5144,
+            "baseline": 0.5346,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "ASIANPAINT": {
+            "accuracy": 0.5124,
+            "baseline": 0.5244,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "AXISBANK": {
+            "accuracy": 0.5548,
+            "baseline": 0.5305,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "BAJAJ-AUTO": {
+            "accuracy": 0.5101,
+            "baseline": 0.5162,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "BAJAJFINSV": {
+            "accuracy": 0.5507,
+            "baseline": 0.5365,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "BAJFINANCE": {
+            "accuracy": 0.5303,
+            "baseline": 0.5447,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "BEL": {
+            "accuracy": 0.5285,
+            "baseline": 0.557,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "BHARTIARTL": {
+            "accuracy": 0.5123,
+            "baseline": 0.5388,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "CIPLA": {
+            "accuracy": 0.5144,
+            "baseline": 0.5529,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "COALINDIA": {
+            "accuracy": 0.4513,
+            "baseline": 0.5365,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "DRREDDY": {
+            "accuracy": 0.4839,
+            "baseline": 0.5344,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "EICHERMOT": {
+            "accuracy": 0.5367,
+            "baseline": 0.5306,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": true
+          },
+          "GRASIM": {
+            "accuracy": 0.5591,
+            "baseline": 0.5387,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": true
+          },
+          "HCLTECH": {
+            "accuracy": 0.5243,
+            "baseline": 0.559,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "HDFCBANK": {
+            "accuracy": 0.5567,
+            "baseline": 0.5526,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "HINDALCO": {
+            "accuracy": 0.5387,
+            "baseline": 0.5345,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "HINDUNILVR": {
+            "accuracy": 0.5141,
+            "baseline": 0.5345,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "ICICIBANK": {
+            "accuracy": 0.5306,
+            "baseline": 0.5285,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "INFY": {
+            "accuracy": 0.5163,
+            "baseline": 0.5367,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "ITC": {
+            "accuracy": 0.4817,
+            "baseline": 0.5122,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "JSWSTEEL": {
+            "accuracy": 0.5061,
+            "baseline": 0.5223,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "KOTAKBANK": {
+            "accuracy": 0.4937,
+            "baseline": 0.5427,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "M&M": {
+            "accuracy": 0.4919,
+            "baseline": 0.5305,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "MARUTI": {
+            "accuracy": 0.5306,
+            "baseline": 0.5326,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "NESTLEIND": {
+            "accuracy": 0.4918,
+            "baseline": 0.5265,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "NTPC": {
+            "accuracy": 0.498,
+            "baseline": 0.5264,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "ONGC": {
+            "accuracy": 0.5244,
+            "baseline": 0.5204,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "POWERGRID": {
+            "accuracy": 0.4878,
+            "baseline": 0.5041,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "RELIANCE": {
+            "accuracy": 0.4898,
+            "baseline": 0.5387,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "SBIN": {
+            "accuracy": 0.5061,
+            "baseline": 0.5183,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "SHRIRAMFIN": {
+            "accuracy": 0.5285,
+            "baseline": 0.5142,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "SUNPHARMA": {
+            "accuracy": 0.5082,
+            "baseline": 0.5346,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "TATACONSUM": {
+            "accuracy": 0.5366,
+            "baseline": 0.5284,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "TATASTEEL": {
+            "accuracy": 0.5283,
+            "baseline": 0.5142,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "TCS": {
+            "accuracy": 0.4938,
+            "baseline": 0.5265,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "TECHM": {
+            "accuracy": 0.4836,
+            "baseline": 0.5306,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "TITAN": {
+            "accuracy": 0.5284,
+            "baseline": 0.5082,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": true
+          },
+          "TMPV": {
+            "accuracy": 0.5428,
+            "baseline": 0.5326,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "TRENT": {
+            "accuracy": 0.5164,
+            "baseline": 0.5305,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "ULTRACEMCO": {
+            "accuracy": 0.5081,
+            "baseline": 0.5102,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          }
+        }
+      }
+    },
+    "V2-B": {
+      "per_fold": {
+        "PRECOVID_DEV_A": {
+          "experiment_id": "V2B-20261004T062007-18632a",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/pre_covid/V2B-20261004T062007-18632a",
+          "config_sha256": "6ff0675f9d12c326afcdcc785300f7f0c676d26edf016768756394e1b8fd595f",
+          "seed": 42,
+          "accuracy_macro_ticker": 0.5129850893650637,
+          "accuracy_micro": 0.5129850893650637,
+          "f1": 0.5719493143551466,
+          "balanced_accuracy": 0.5107098343561954,
+          "roc_auc": 0.5179343609474487,
+          "brier": 0.24969090177814945,
+          "ece": 0.0038333719212499855,
+          "train_majority_baseline": 0.5035352930098783,
+          "delta_vs_train_majority_macro": 0.009449796355185391,
+          "precision_at_3_up": 0.5411605937921729,
+          "precision_at_3_down": 0.5101214574898786,
+          "n_predictions": 10127,
+          "n_tickers": 41,
+          "per_ticker": {
+            "ADANIENT": {
+              "n": 247,
+              "accuracy": 0.46558704453441296,
+              "positive_rate": 0.5668016194331984
+            },
+            "APOLLOHOSP": {
+              "n": 247,
+              "accuracy": 0.46963562753036436,
+              "positive_rate": 0.4777327935222672
+            },
+            "ASIANPAINT": {
+              "n": 247,
+              "accuracy": 0.47368421052631576,
+              "positive_rate": 0.46963562753036436
+            },
+            "AXISBANK": {
+              "n": 247,
+              "accuracy": 0.5587044534412956,
+              "positive_rate": 0.5263157894736842
+            },
+            "BAJAJ-AUTO": {
+              "n": 247,
+              "accuracy": 0.5303643724696356,
+              "positive_rate": 0.5263157894736842
+            },
+            "BAJAJFINSV": {
+              "n": 247,
+              "accuracy": 0.5303643724696356,
+              "positive_rate": 0.5506072874493927
+            },
+            "BAJFINANCE": {
+              "n": 247,
+              "accuracy": 0.5141700404858299,
+              "positive_rate": 0.5465587044534413
+            },
+            "BEL": {
+              "n": 247,
+              "accuracy": 0.5303643724696356,
+              "positive_rate": 0.5344129554655871
+            },
+            "BHARTIARTL": {
+              "n": 247,
+              "accuracy": 0.5546558704453441,
+              "positive_rate": 0.4979757085020243
+            },
+            "CIPLA": {
+              "n": 247,
+              "accuracy": 0.5384615384615384,
+              "positive_rate": 0.46558704453441296
+            },
+            "COALINDIA": {
+              "n": 247,
+              "accuracy": 0.46153846153846156,
+              "positive_rate": 0.44534412955465585
+            },
+            "DRREDDY": {
+              "n": 247,
+              "accuracy": 0.5222672064777328,
+              "positive_rate": 0.4331983805668016
+            },
+            "EICHERMOT": {
+              "n": 247,
+              "accuracy": 0.4817813765182186,
+              "positive_rate": 0.5101214574898786
+            },
+            "GRASIM": {
+              "n": 247,
+              "accuracy": 0.4979757085020243,
+              "positive_rate": 0.4898785425101215
+            },
+            "HCLTECH": {
+              "n": 247,
+              "accuracy": 0.5384615384615384,
+              "positive_rate": 0.5384615384615384
+            },
+            "HDFCBANK": {
+              "n": 247,
+              "accuracy": 0.5708502024291497,
+              "positive_rate": 0.6032388663967612
+            },
+            "HINDALCO": {
+              "n": 247,
+              "accuracy": 0.5303643724696356,
+              "positive_rate": 0.5384615384615384
+            },
+            "HINDUNILVR": {
+              "n": 247,
+              "accuracy": 0.5182186234817814,
+              "positive_rate": 0.5465587044534413
+            },
+            "ICICIBANK": {
+              "n": 247,
+              "accuracy": 0.5141700404858299,
+              "positive_rate": 0.4817813765182186
+            },
+            "INFY": {
+              "n": 247,
+              "accuracy": 0.5182186234817814,
+              "positive_rate": 0.5060728744939271
+            },
+            "ITC": {
+              "n": 247,
+              "accuracy": 0.48582995951417,
+              "positive_rate": 0.4939271255060729
+            },
+            "JSWSTEEL": {
+              "n": 247,
+              "accuracy": 0.4898785425101215,
+              "positive_rate": 0.5384615384615384
+            },
+            "KOTAKBANK": {
+              "n": 247,
+              "accuracy": 0.4939271255060729,
+              "positive_rate": 0.5263157894736842
+            },
+            "M&M": {
+              "n": 247,
+              "accuracy": 0.5020242914979757,
+              "positive_rate": 0.4817813765182186
+            },
+            "MARUTI": {
+              "n": 247,
+              "accuracy": 0.4777327935222672,
+              "positive_rate": 0.5141700404858299
+            },
+            "NESTLEIND": {
+              "n": 247,
+              "accuracy": 0.5303643724696356,
+              "positive_rate": 0.5101214574898786
+            },
+            "NTPC": {
+              "n": 247,
+              "accuracy": 0.5344129554655871,
+              "positive_rate": 0.4777327935222672
+            },
+            "ONGC": {
+              "n": 247,
+              "accuracy": 0.5668016194331984,
+              "positive_rate": 0.5020242914979757
+            },
+            "POWERGRID": {
+              "n": 247,
+              "accuracy": 0.5263157894736842,
+              "positive_rate": 0.4979757085020243
+            },
+            "RELIANCE": {
+              "n": 247,
+              "accuracy": 0.4817813765182186,
+              "positive_rate": 0.5141700404858299
+            },
+            "SBIN": {
+              "n": 247,
+              "accuracy": 0.5182186234817814,
+              "positive_rate": 0.4898785425101215
+            },
+            "SHRIRAMFIN": {
+              "n": 247,
+              "accuracy": 0.5708502024291497,
+              "positive_rate": 0.5263157894736842
+            },
+            "SUNPHARMA": {
+              "n": 247,
+              "accuracy": 0.5101214574898786,
+              "positive_rate": 0.4777327935222672
+            },
+            "TATACONSUM": {
+              "n": 247,
+              "accuracy": 0.5141700404858299,
+              "positive_rate": 0.5425101214574899
+            },
+            "TATASTEEL": {
+              "n": 247,
+              "accuracy": 0.5465587044534413,
+              "positive_rate": 0.5222672064777328
+            },
+            "TCS": {
+              "n": 247,
+              "accuracy": 0.4898785425101215,
+              "positive_rate": 0.5141700404858299
+            },
+            "TECHM": {
+              "n": 247,
+              "accuracy": 0.48582995951417,
+              "positive_rate": 0.5141700404858299
+            },
+            "TITAN": {
+              "n": 247,
+              "accuracy": 0.5020242914979757,
+              "positive_rate": 0.4979757085020243
+            },
+            "TMPV": {
+              "n": 247,
+              "accuracy": 0.46153846153846156,
+              "positive_rate": 0.4777327935222672
+            },
+            "TRENT": {
+              "n": 247,
+              "accuracy": 0.5425101214574899,
+              "positive_rate": 0.4777327935222672
+            },
+            "ULTRACEMCO": {
+              "n": 247,
+              "accuracy": 0.4817813765182186,
+              "positive_rate": 0.5101214574898786
+            }
+          },
+          "coverage_curve": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5380059230009872
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5380059230009872
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5380059230009872
+            }
+          },
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5380059230009872
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5380059230009872
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5380059230009872
+            }
+          },
+          "complexity": {
+            "total_parameters": 223842,
+            "trainable_parameters": 223842,
+            "adaptable_parameters": 2113,
+            "peak_gpu_memory_mb": 297.93603515625,
+            "training_seconds": 208.4778176700347,
+            "best_epoch": 6,
+            "epochs_run": 12,
+            "stopped_early": true,
+            "sequence_length": 60,
+            "n_train_samples": 116822,
+            "n_val_samples": 10127,
+            "batch_size": 256,
+            "max_epochs": 30,
+            "device": "cuda"
+          },
+          "best_epoch": 6,
+          "n_parameters": 223842,
+          "training_seconds": 208.4778176700347
+        },
+        "PRECOVID_DEV_B": {
+          "experiment_id": "V2B-20261004T062344-b9b943",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/pre_covid/V2B-20261004T062344-b9b943",
+          "config_sha256": "8d4f00be7a5cb991ec4e6a99e60a4e03632047760795ebdfc129b7ceaec79adc",
+          "seed": 42,
+          "accuracy_macro_ticker": 0.5053260328521652,
+          "accuracy_micro": 0.5053260328521653,
+          "f1": 0.31509303928325294,
+          "balanced_accuracy": 0.5025308595133604,
+          "roc_auc": 0.5060652137145146,
+          "brier": 0.25002233999067786,
+          "ece": 0.0053016153721889715,
+          "train_majority_baseline": 0.5040081896212301,
+          "delta_vs_train_majority_macro": 0.0013178432309350896,
+          "precision_at_3_up": 0.4843537414965986,
+          "precision_at_3_down": 0.5183673469387755,
+          "n_predictions": 10045,
+          "n_tickers": 41,
+          "per_ticker": {
+            "ADANIENT": {
+              "n": 245,
+              "accuracy": 0.46938775510204084,
+              "positive_rate": 0.5469387755102041
+            },
+            "APOLLOHOSP": {
+              "n": 245,
+              "accuracy": 0.5510204081632653,
+              "positive_rate": 0.4530612244897959
+            },
+            "ASIANPAINT": {
+              "n": 245,
+              "accuracy": 0.5102040816326531,
+              "positive_rate": 0.4816326530612245
+            },
+            "AXISBANK": {
+              "n": 245,
+              "accuracy": 0.5061224489795918,
+              "positive_rate": 0.46530612244897956
+            },
+            "BAJAJ-AUTO": {
+              "n": 245,
+              "accuracy": 0.49387755102040815,
+              "positive_rate": 0.5061224489795918
+            },
+            "BAJAJFINSV": {
+              "n": 245,
+              "accuracy": 0.45714285714285713,
+              "positive_rate": 0.5224489795918368
+            },
+            "BAJFINANCE": {
+              "n": 245,
+              "accuracy": 0.47346938775510206,
+              "positive_rate": 0.5428571428571428
+            },
+            "BEL": {
+              "n": 245,
+              "accuracy": 0.5183673469387755,
+              "positive_rate": 0.4204081632653061
+            },
+            "BHARTIARTL": {
+              "n": 245,
+              "accuracy": 0.5306122448979592,
+              "positive_rate": 0.42448979591836733
+            },
+            "CIPLA": {
+              "n": 245,
+              "accuracy": 0.5714285714285714,
+              "positive_rate": 0.42857142857142855
+            },
+            "COALINDIA": {
+              "n": 245,
+              "accuracy": 0.46530612244897956,
+              "positive_rate": 0.5183673469387755
+            },
+            "DRREDDY": {
+              "n": 245,
+              "accuracy": 0.5265306122448979,
+              "positive_rate": 0.5020408163265306
+            },
+            "EICHERMOT": {
+              "n": 245,
+              "accuracy": 0.5510204081632653,
+              "positive_rate": 0.4489795918367347
+            },
+            "GRASIM": {
+              "n": 245,
+              "accuracy": 0.5795918367346938,
+              "positive_rate": 0.4326530612244898
+            },
+            "HCLTECH": {
+              "n": 245,
+              "accuracy": 0.49795918367346936,
+              "positive_rate": 0.5795918367346938
+            },
+            "HDFCBANK": {
+              "n": 245,
+              "accuracy": 0.5142857142857142,
+              "positive_rate": 0.5020408163265306
+            },
+            "HINDALCO": {
+              "n": 245,
+              "accuracy": 0.5142857142857142,
+              "positive_rate": 0.46938775510204084
+            },
+            "HINDUNILVR": {
+              "n": 245,
+              "accuracy": 0.5061224489795918,
+              "positive_rate": 0.5224489795918368
+            },
+            "ICICIBANK": {
+              "n": 245,
+              "accuracy": 0.5020408163265306,
+              "positive_rate": 0.46122448979591835
+            },
+            "INFY": {
+              "n": 245,
+              "accuracy": 0.4816326530612245,
+              "positive_rate": 0.5673469387755102
+            },
+            "ITC": {
+              "n": 245,
+              "accuracy": 0.5102040816326531,
+              "positive_rate": 0.4816326530612245
+            },
+            "JSWSTEEL": {
+              "n": 245,
+              "accuracy": 0.46938775510204084,
+              "positive_rate": 0.5061224489795918
+            },
+            "KOTAKBANK": {
+              "n": 245,
+              "accuracy": 0.46122448979591835,
+              "positive_rate": 0.5591836734693878
+            },
+            "M&M": {
+              "n": 245,
+              "accuracy": 0.46530612244897956,
+              "positive_rate": 0.5428571428571428
+            },
+            "MARUTI": {
+              "n": 245,
+              "accuracy": 0.49795918367346936,
+              "positive_rate": 0.4489795918367347
+            },
+            "NESTLEIND": {
+              "n": 245,
+              "accuracy": 0.46530612244897956,
+              "positive_rate": 0.5428571428571428
+            },
+            "NTPC": {
+              "n": 245,
+              "accuracy": 0.49795918367346936,
+              "positive_rate": 0.46938775510204084
+            },
+            "ONGC": {
+              "n": 245,
+              "accuracy": 0.5183673469387755,
+              "positive_rate": 0.46122448979591835
+            },
+            "POWERGRID": {
+              "n": 245,
+              "accuracy": 0.49795918367346936,
+              "positive_rate": 0.49387755102040815
+            },
+            "RELIANCE": {
+              "n": 245,
+              "accuracy": 0.4857142857142857,
+              "positive_rate": 0.563265306122449
+            },
+            "SBIN": {
+              "n": 245,
+              "accuracy": 0.5061224489795918,
+              "positive_rate": 0.47346938775510206
+            },
+            "SHRIRAMFIN": {
+              "n": 245,
+              "accuracy": 0.49387755102040815,
+              "positive_rate": 0.49795918367346936
+            },
+            "SUNPHARMA": {
+              "n": 245,
+              "accuracy": 0.5469387755102041,
+              "positive_rate": 0.4530612244897959
+            },
+            "TATACONSUM": {
+              "n": 245,
+              "accuracy": 0.4816326530612245,
+              "positive_rate": 0.4857142857142857
+            },
+            "TATASTEEL": {
+              "n": 245,
+              "accuracy": 0.49387755102040815,
+              "positive_rate": 0.5061224489795918
+            },
+            "TCS": {
+              "n": 245,
+              "accuracy": 0.5061224489795918,
+              "positive_rate": 0.5387755102040817
+            },
+            "TECHM": {
+              "n": 245,
+              "accuracy": 0.49795918367346936,
+              "positive_rate": 0.5469387755102041
+            },
+            "TITAN": {
+              "n": 245,
+              "accuracy": 0.5306122448979592,
+              "positive_rate": 0.5142857142857142
+            },
+            "TMPV": {
+              "n": 245,
+              "accuracy": 0.5428571428571428,
+              "positive_rate": 0.45714285714285713
+            },
+            "TRENT": {
+              "n": 245,
+              "accuracy": 0.5387755102040817,
+              "positive_rate": 0.46122448979591835
+            },
+            "ULTRACEMCO": {
+              "n": 245,
+              "accuracy": 0.4897959183673469,
+              "positive_rate": 0.4897959183673469
+            }
+          },
+          "coverage_curve": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5169322709163346
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5169322709163346
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5169322709163346
+            }
+          },
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5169322709163346
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5169322709163346
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5169322709163346
+            }
+          },
+          "complexity": {
+            "total_parameters": 223842,
+            "trainable_parameters": 223842,
+            "adaptable_parameters": 2113,
+            "peak_gpu_memory_mb": 297.93603515625,
+            "training_seconds": 172.34491649497068,
+            "best_epoch": 3,
+            "epochs_run": 9,
+            "stopped_early": true,
+            "sequence_length": 60,
+            "n_train_samples": 126990,
+            "n_val_samples": 10045,
+            "batch_size": 256,
+            "max_epochs": 30,
+            "device": "cuda"
+          },
+          "best_epoch": 3,
+          "n_parameters": 223842,
+          "training_seconds": 172.34491649497068
+        }
+      },
+      "mean": {
+        "accuracy_macro_ticker": 0.5091555611086145,
+        "accuracy_micro": 0.5091555611086145,
+        "f1": 0.4435211768191998,
+        "balanced_accuracy": 0.5066203469347779,
+        "roc_auc": 0.5119997873309816,
+        "brier": 0.24985662088441365,
+        "ece": 0.004567493646719479,
+        "train_majority_baseline": 0.5037717413155542,
+        "delta_vs_train_majority_macro": 0.0053838197930602405,
+        "precision_at_3_up": 0.5127571676443857,
+        "precision_at_3_down": 0.5142444022143271
+      },
+      "beats_baseline_both_folds": true,
+      "roc_auc_above_50_both_folds": true,
+      "n_folds": 2,
+      "ticker_stability": {
+        "available": true,
+        "n_eligible_tickers_scored": 41,
+        "n_beating_baseline": 10,
+        "n_beating_baseline_all_folds": 0,
+        "fraction_beating_baseline": 0.24390243902439024,
+        "fraction_beating_baseline_all_folds": 0.0,
+        "median_ticker_accuracy": 0.5121209617450219,
+        "p25_ticker_accuracy": 0.49375361480624635,
+        "p75_ticker_accuracy": 0.5243658597042056,
+        "worst_5": {
+          "COALINDIA": {
+            "accuracy": 0.4634,
+            "baseline": 0.5365,
+            "n": 2
+          },
+          "ADANIENT": {
+            "accuracy": 0.4675,
+            "baseline": 0.5569,
+            "n": 2
+          },
+          "KOTAKBANK": {
+            "accuracy": 0.4776,
+            "baseline": 0.5427,
+            "n": 2
+          },
+          "JSWSTEEL": {
+            "accuracy": 0.4796,
+            "baseline": 0.5223,
+            "n": 2
+          },
+          "M&M": {
+            "accuracy": 0.4837,
+            "baseline": 0.5305,
+            "n": 2
+          }
+        },
+        "best_5": {
+          "CIPLA": {
+            "accuracy": 0.5549,
+            "baseline": 0.5529,
+            "n": 2
+          },
+          "BHARTIARTL": {
+            "accuracy": 0.5426,
+            "baseline": 0.5388,
+            "n": 2
+          },
+          "ONGC": {
+            "accuracy": 0.5426,
+            "baseline": 0.5204,
+            "n": 2
+          },
+          "HDFCBANK": {
+            "accuracy": 0.5426,
+            "baseline": 0.5526,
+            "n": 2
+          },
+          "TRENT": {
+            "accuracy": 0.5406,
+            "baseline": 0.5305,
+            "n": 2
+          }
+        },
+        "per_ticker": {
+          "ADANIENT": {
+            "accuracy": 0.4675,
+            "baseline": 0.5569,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "APOLLOHOSP": {
+            "accuracy": 0.5103,
+            "baseline": 0.5346,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "ASIANPAINT": {
+            "accuracy": 0.4919,
+            "baseline": 0.5244,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "AXISBANK": {
+            "accuracy": 0.5324,
+            "baseline": 0.5305,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "BAJAJ-AUTO": {
+            "accuracy": 0.5121,
+            "baseline": 0.5162,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "BAJAJFINSV": {
+            "accuracy": 0.4938,
+            "baseline": 0.5365,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "BAJFINANCE": {
+            "accuracy": 0.4938,
+            "baseline": 0.5447,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "BEL": {
+            "accuracy": 0.5244,
+            "baseline": 0.557,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "BHARTIARTL": {
+            "accuracy": 0.5426,
+            "baseline": 0.5388,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "CIPLA": {
+            "accuracy": 0.5549,
+            "baseline": 0.5529,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "COALINDIA": {
+            "accuracy": 0.4634,
+            "baseline": 0.5365,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "DRREDDY": {
+            "accuracy": 0.5244,
+            "baseline": 0.5344,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "EICHERMOT": {
+            "accuracy": 0.5164,
+            "baseline": 0.5306,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "GRASIM": {
+            "accuracy": 0.5388,
+            "baseline": 0.5387,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "HCLTECH": {
+            "accuracy": 0.5182,
+            "baseline": 0.559,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "HDFCBANK": {
+            "accuracy": 0.5426,
+            "baseline": 0.5526,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "HINDALCO": {
+            "accuracy": 0.5223,
+            "baseline": 0.5345,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "HINDUNILVR": {
+            "accuracy": 0.5122,
+            "baseline": 0.5345,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "ICICIBANK": {
+            "accuracy": 0.5081,
+            "baseline": 0.5285,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "INFY": {
+            "accuracy": 0.4999,
+            "baseline": 0.5367,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "ITC": {
+            "accuracy": 0.498,
+            "baseline": 0.5122,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "JSWSTEEL": {
+            "accuracy": 0.4796,
+            "baseline": 0.5223,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "KOTAKBANK": {
+            "accuracy": 0.4776,
+            "baseline": 0.5427,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "M&M": {
+            "accuracy": 0.4837,
+            "baseline": 0.5305,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "MARUTI": {
+            "accuracy": 0.4878,
+            "baseline": 0.5326,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "NESTLEIND": {
+            "accuracy": 0.4978,
+            "baseline": 0.5265,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "NTPC": {
+            "accuracy": 0.5162,
+            "baseline": 0.5264,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "ONGC": {
+            "accuracy": 0.5426,
+            "baseline": 0.5204,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "POWERGRID": {
+            "accuracy": 0.5121,
+            "baseline": 0.5041,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "RELIANCE": {
+            "accuracy": 0.4837,
+            "baseline": 0.5387,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "SBIN": {
+            "accuracy": 0.5122,
+            "baseline": 0.5183,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "SHRIRAMFIN": {
+            "accuracy": 0.5324,
+            "baseline": 0.5142,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "SUNPHARMA": {
+            "accuracy": 0.5285,
+            "baseline": 0.5346,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "TATACONSUM": {
+            "accuracy": 0.4979,
+            "baseline": 0.5284,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "TATASTEEL": {
+            "accuracy": 0.5202,
+            "baseline": 0.5142,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "TCS": {
+            "accuracy": 0.498,
+            "baseline": 0.5265,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "TECHM": {
+            "accuracy": 0.4919,
+            "baseline": 0.5306,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "TITAN": {
+            "accuracy": 0.5163,
+            "baseline": 0.5082,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "TMPV": {
+            "accuracy": 0.5022,
+            "baseline": 0.5326,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "TRENT": {
+            "accuracy": 0.5406,
+            "baseline": 0.5305,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "ULTRACEMCO": {
+            "accuracy": 0.4858,
+            "baseline": 0.5102,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          }
+        }
+      }
+    },
+    "V2-C": {
+      "per_fold": {
+        "PRECOVID_DEV_A": {
+          "experiment_id": "V2C-20261004T062645-7dcdec",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/pre_covid/V2C-20261004T062645-7dcdec",
+          "config_sha256": "590d1d89bd09787c35c2258bc9441c69c334207c8e0bb8b7a48771784aae2a98",
+          "seed": 42,
+          "accuracy_macro_ticker": 0.5112076626839144,
+          "accuracy_micro": 0.5112076626839143,
+          "f1": 0.5276717557251909,
+          "balanced_accuracy": 0.5107511124605176,
+          "roc_auc": 0.5192286909199328,
+          "brier": 0.2499196507268535,
+          "ece": 0.014653232803204512,
+          "train_majority_baseline": 0.5035654901691894,
+          "delta_vs_train_majority_macro": 0.0076421725147249875,
+          "precision_at_3_up": 0.5479082321187584,
+          "precision_at_3_down": 0.5222672064777328,
+          "n_predictions": 10127,
+          "n_tickers": 41,
+          "per_ticker": {
+            "ADANIENT": {
+              "n": 247,
+              "accuracy": 0.46963562753036436,
+              "positive_rate": 0.5668016194331984
+            },
+            "APOLLOHOSP": {
+              "n": 247,
+              "accuracy": 0.5101214574898786,
+              "positive_rate": 0.4777327935222672
+            },
+            "ASIANPAINT": {
+              "n": 247,
+              "accuracy": 0.46153846153846156,
+              "positive_rate": 0.46963562753036436
+            },
+            "AXISBANK": {
+              "n": 247,
+              "accuracy": 0.562753036437247,
+              "positive_rate": 0.5263157894736842
+            },
+            "BAJAJ-AUTO": {
+              "n": 247,
+              "accuracy": 0.5222672064777328,
+              "positive_rate": 0.5263157894736842
+            },
+            "BAJAJFINSV": {
+              "n": 247,
+              "accuracy": 0.5546558704453441,
+              "positive_rate": 0.5506072874493927
+            },
+            "BAJFINANCE": {
+              "n": 247,
+              "accuracy": 0.4898785425101215,
+              "positive_rate": 0.5465587044534413
+            },
+            "BEL": {
+              "n": 247,
+              "accuracy": 0.5060728744939271,
+              "positive_rate": 0.5344129554655871
+            },
+            "BHARTIARTL": {
+              "n": 247,
+              "accuracy": 0.4898785425101215,
+              "positive_rate": 0.4979757085020243
+            },
+            "CIPLA": {
+              "n": 247,
+              "accuracy": 0.5060728744939271,
+              "positive_rate": 0.46558704453441296
+            },
+            "COALINDIA": {
+              "n": 247,
+              "accuracy": 0.4817813765182186,
+              "positive_rate": 0.44534412955465585
+            },
+            "DRREDDY": {
+              "n": 247,
+              "accuracy": 0.46153846153846156,
+              "positive_rate": 0.4331983805668016
+            },
+            "EICHERMOT": {
+              "n": 247,
+              "accuracy": 0.5101214574898786,
+              "positive_rate": 0.5101214574898786
+            },
+            "GRASIM": {
+              "n": 247,
+              "accuracy": 0.46558704453441296,
+              "positive_rate": 0.4898785425101215
+            },
+            "HCLTECH": {
+              "n": 247,
+              "accuracy": 0.5587044534412956,
+              "positive_rate": 0.5384615384615384
+            },
+            "HDFCBANK": {
+              "n": 247,
+              "accuracy": 0.5668016194331984,
+              "positive_rate": 0.6032388663967612
+            },
+            "HINDALCO": {
+              "n": 247,
+              "accuracy": 0.5303643724696356,
+              "positive_rate": 0.5384615384615384
+            },
+            "HINDUNILVR": {
+              "n": 247,
+              "accuracy": 0.5344129554655871,
+              "positive_rate": 0.5465587044534413
+            },
+            "ICICIBANK": {
+              "n": 247,
+              "accuracy": 0.5465587044534413,
+              "positive_rate": 0.4817813765182186
+            },
+            "INFY": {
+              "n": 247,
+              "accuracy": 0.5546558704453441,
+              "positive_rate": 0.5060728744939271
+            },
+            "ITC": {
+              "n": 247,
+              "accuracy": 0.5101214574898786,
+              "positive_rate": 0.4939271255060729
+            },
+            "JSWSTEEL": {
+              "n": 247,
+              "accuracy": 0.48582995951417,
+              "positive_rate": 0.5384615384615384
+            },
+            "KOTAKBANK": {
+              "n": 247,
+              "accuracy": 0.5384615384615384,
+              "positive_rate": 0.5263157894736842
+            },
+            "M&M": {
+              "n": 247,
+              "accuracy": 0.5263157894736842,
+              "positive_rate": 0.4817813765182186
+            },
+            "MARUTI": {
+              "n": 247,
+              "accuracy": 0.5101214574898786,
+              "positive_rate": 0.5141700404858299
+            },
+            "NESTLEIND": {
+              "n": 247,
+              "accuracy": 0.5344129554655871,
+              "positive_rate": 0.5101214574898786
+            },
+            "NTPC": {
+              "n": 247,
+              "accuracy": 0.44534412955465585,
+              "positive_rate": 0.4777327935222672
+            },
+            "ONGC": {
+              "n": 247,
+              "accuracy": 0.5222672064777328,
+              "positive_rate": 0.5020242914979757
+            },
+            "POWERGRID": {
+              "n": 247,
+              "accuracy": 0.5222672064777328,
+              "positive_rate": 0.4979757085020243
+            },
+            "RELIANCE": {
+              "n": 247,
+              "accuracy": 0.46153846153846156,
+              "positive_rate": 0.5141700404858299
+            },
+            "SBIN": {
+              "n": 247,
+              "accuracy": 0.5182186234817814,
+              "positive_rate": 0.4898785425101215
+            },
+            "SHRIRAMFIN": {
+              "n": 247,
+              "accuracy": 0.47368421052631576,
+              "positive_rate": 0.5263157894736842
+            },
+            "SUNPHARMA": {
+              "n": 247,
+              "accuracy": 0.5303643724696356,
+              "positive_rate": 0.4777327935222672
+            },
+            "TATACONSUM": {
+              "n": 247,
+              "accuracy": 0.48582995951417,
+              "positive_rate": 0.5425101214574899
+            },
+            "TATASTEEL": {
+              "n": 247,
+              "accuracy": 0.5870445344129555,
+              "positive_rate": 0.5222672064777328
+            },
+            "TCS": {
+              "n": 247,
+              "accuracy": 0.5141700404858299,
+              "positive_rate": 0.5141700404858299
+            },
+            "TECHM": {
+              "n": 247,
+              "accuracy": 0.4777327935222672,
+              "positive_rate": 0.5141700404858299
+            },
+            "TITAN": {
+              "n": 247,
+              "accuracy": 0.5060728744939271,
+              "positive_rate": 0.4979757085020243
+            },
+            "TMPV": {
+              "n": 247,
+              "accuracy": 0.5141700404858299,
+              "positive_rate": 0.4777327935222672
+            },
+            "TRENT": {
+              "n": 247,
+              "accuracy": 0.562753036437247,
+              "positive_rate": 0.4777327935222672
+            },
+            "ULTRACEMCO": {
+              "n": 247,
+              "accuracy": 0.4493927125506073,
+              "positive_rate": 0.5101214574898786
+            }
+          },
+          "coverage_curve": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5498519249753209
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5498519249753209
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5498519249753209
+            }
+          },
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5498519249753209
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5498519249753209
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5498519249753209
+            }
+          },
+          "complexity": {
+            "total_parameters": 231274,
+            "trainable_parameters": 231274,
+            "adaptable_parameters": 2113,
+            "peak_gpu_memory_mb": 300.53076171875,
+            "training_seconds": 245.16794491902692,
+            "best_epoch": 4,
+            "epochs_run": 10,
+            "stopped_early": true,
+            "sequence_length": 60,
+            "n_train_samples": 116674,
+            "n_val_samples": 10127,
+            "batch_size": 256,
+            "max_epochs": 30,
+            "device": "cuda"
+          },
+          "best_epoch": 4,
+          "n_parameters": 231274,
+          "training_seconds": 245.16794491902692
+        },
+        "PRECOVID_DEV_B": {
+          "experiment_id": "V2C-20261004T063059-57e55c",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/pre_covid/V2C-20261004T063059-57e55c",
+          "config_sha256": "cc9bcb80cb7952fdf300a7a48b45fead91794134cdf3b7f639fd4ed26a43d078",
+          "seed": 42,
+          "accuracy_macro_ticker": 0.5088103534096565,
+          "accuracy_micro": 0.5088103534096565,
+          "f1": 0.5476714338100477,
+          "balanced_accuracy": 0.5097448924693455,
+          "roc_auc": 0.5086281076677525,
+          "brier": 0.25022206990452106,
+          "ece": 0.010591338538579782,
+          "train_majority_baseline": 0.5040365178726289,
+          "delta_vs_train_majority_macro": 0.004773835537027593,
+          "precision_at_3_up": 0.5360544217687075,
+          "precision_at_3_down": 0.4897959183673469,
+          "n_predictions": 10045,
+          "n_tickers": 41,
+          "per_ticker": {
+            "ADANIENT": {
+              "n": 245,
+              "accuracy": 0.4897959183673469,
+              "positive_rate": 0.5469387755102041
+            },
+            "APOLLOHOSP": {
+              "n": 245,
+              "accuracy": 0.46122448979591835,
+              "positive_rate": 0.4530612244897959
+            },
+            "ASIANPAINT": {
+              "n": 245,
+              "accuracy": 0.49795918367346936,
+              "positive_rate": 0.4816326530612245
+            },
+            "AXISBANK": {
+              "n": 245,
+              "accuracy": 0.5224489795918368,
+              "positive_rate": 0.46530612244897956
+            },
+            "BAJAJ-AUTO": {
+              "n": 245,
+              "accuracy": 0.46938775510204084,
+              "positive_rate": 0.5061224489795918
+            },
+            "BAJAJFINSV": {
+              "n": 245,
+              "accuracy": 0.4775510204081633,
+              "positive_rate": 0.5224489795918368
+            },
+            "BAJFINANCE": {
+              "n": 245,
+              "accuracy": 0.5306122448979592,
+              "positive_rate": 0.5428571428571428
+            },
+            "BEL": {
+              "n": 245,
+              "accuracy": 0.5224489795918368,
+              "positive_rate": 0.4204081632653061
+            },
+            "BHARTIARTL": {
+              "n": 245,
+              "accuracy": 0.4489795918367347,
+              "positive_rate": 0.42448979591836733
+            },
+            "CIPLA": {
+              "n": 245,
+              "accuracy": 0.4326530612244898,
+              "positive_rate": 0.42857142857142855
+            },
+            "COALINDIA": {
+              "n": 245,
+              "accuracy": 0.5061224489795918,
+              "positive_rate": 0.5183673469387755
+            },
+            "DRREDDY": {
+              "n": 245,
+              "accuracy": 0.5061224489795918,
+              "positive_rate": 0.5020408163265306
+            },
+            "EICHERMOT": {
+              "n": 245,
+              "accuracy": 0.5020408163265306,
+              "positive_rate": 0.4489795918367347
+            },
+            "GRASIM": {
+              "n": 245,
+              "accuracy": 0.5387755102040817,
+              "positive_rate": 0.4326530612244898
+            },
+            "HCLTECH": {
+              "n": 245,
+              "accuracy": 0.5795918367346938,
+              "positive_rate": 0.5795918367346938
+            },
+            "HDFCBANK": {
+              "n": 245,
+              "accuracy": 0.5061224489795918,
+              "positive_rate": 0.5020408163265306
+            },
+            "HINDALCO": {
+              "n": 245,
+              "accuracy": 0.4857142857142857,
+              "positive_rate": 0.46938775510204084
+            },
+            "HINDUNILVR": {
+              "n": 245,
+              "accuracy": 0.5510204081632653,
+              "positive_rate": 0.5224489795918368
+            },
+            "ICICIBANK": {
+              "n": 245,
+              "accuracy": 0.49795918367346936,
+              "positive_rate": 0.46122448979591835
+            },
+            "INFY": {
+              "n": 245,
+              "accuracy": 0.5673469387755102,
+              "positive_rate": 0.5673469387755102
+            },
+            "ITC": {
+              "n": 245,
+              "accuracy": 0.4857142857142857,
+              "positive_rate": 0.4816326530612245
+            },
+            "JSWSTEEL": {
+              "n": 245,
+              "accuracy": 0.5102040816326531,
+              "positive_rate": 0.5061224489795918
+            },
+            "KOTAKBANK": {
+              "n": 245,
+              "accuracy": 0.4530612244897959,
+              "positive_rate": 0.5591836734693878
+            },
+            "M&M": {
+              "n": 245,
+              "accuracy": 0.49387755102040815,
+              "positive_rate": 0.5428571428571428
+            },
+            "MARUTI": {
+              "n": 245,
+              "accuracy": 0.4857142857142857,
+              "positive_rate": 0.4489795918367347
+            },
+            "NESTLEIND": {
+              "n": 245,
+              "accuracy": 0.5591836734693878,
+              "positive_rate": 0.5428571428571428
+            },
+            "NTPC": {
+              "n": 245,
+              "accuracy": 0.45714285714285713,
+              "positive_rate": 0.46938775510204084
+            },
+            "ONGC": {
+              "n": 245,
+              "accuracy": 0.5428571428571428,
+              "positive_rate": 0.46122448979591835
+            },
+            "POWERGRID": {
+              "n": 245,
+              "accuracy": 0.5061224489795918,
+              "positive_rate": 0.49387755102040815
+            },
+            "RELIANCE": {
+              "n": 245,
+              "accuracy": 0.5061224489795918,
+              "positive_rate": 0.563265306122449
+            },
+            "SBIN": {
+              "n": 245,
+              "accuracy": 0.5224489795918368,
+              "positive_rate": 0.47346938775510206
+            },
+            "SHRIRAMFIN": {
+              "n": 245,
+              "accuracy": 0.5346938775510204,
+              "positive_rate": 0.49795918367346936
+            },
+            "SUNPHARMA": {
+              "n": 245,
+              "accuracy": 0.4530612244897959,
+              "positive_rate": 0.4530612244897959
+            },
+            "TATACONSUM": {
+              "n": 245,
+              "accuracy": 0.5224489795918368,
+              "positive_rate": 0.4857142857142857
+            },
+            "TATASTEEL": {
+              "n": 245,
+              "accuracy": 0.5142857142857142,
+              "positive_rate": 0.5061224489795918
+            },
+            "TCS": {
+              "n": 245,
+              "accuracy": 0.5428571428571428,
+              "positive_rate": 0.5387755102040817
+            },
+            "TECHM": {
+              "n": 245,
+              "accuracy": 0.5387755102040817,
+              "positive_rate": 0.5469387755102041
+            },
+            "TITAN": {
+              "n": 245,
+              "accuracy": 0.5183673469387755,
+              "positive_rate": 0.5142857142857142
+            },
+            "TMPV": {
+              "n": 245,
+              "accuracy": 0.563265306122449,
+              "positive_rate": 0.45714285714285713
+            },
+            "TRENT": {
+              "n": 245,
+              "accuracy": 0.5020408163265306,
+              "positive_rate": 0.46122448979591835
+            },
+            "ULTRACEMCO": {
+              "n": 245,
+              "accuracy": 0.5551020408163265,
+              "positive_rate": 0.4897959183673469
+            }
+          },
+          "coverage_curve": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5100876028670029
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5100876028670029
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5100876028670029
+            }
+          },
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5100876028670029
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5100876028670029
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5100876028670029
+            }
+          },
+          "complexity": {
+            "total_parameters": 231274,
+            "trainable_parameters": 231274,
+            "adaptable_parameters": 2113,
+            "peak_gpu_memory_mb": 300.53076171875,
+            "training_seconds": 186.6447567740106,
+            "best_epoch": 1,
+            "epochs_run": 7,
+            "stopped_early": true,
+            "sequence_length": 60,
+            "n_train_samples": 126842,
+            "n_val_samples": 10045,
+            "batch_size": 256,
+            "max_epochs": 30,
+            "device": "cuda"
+          },
+          "best_epoch": 1,
+          "n_parameters": 231274,
+          "training_seconds": 186.6447567740106
+        }
+      },
+      "mean": {
+        "accuracy_macro_ticker": 0.5100090080467854,
+        "accuracy_micro": 0.5100090080467854,
+        "f1": 0.5376715947676193,
+        "balanced_accuracy": 0.5102480024649316,
+        "roc_auc": 0.5139283992938426,
+        "brier": 0.25007086031568726,
+        "ece": 0.012622285670892148,
+        "train_majority_baseline": 0.5038010040209091,
+        "delta_vs_train_majority_macro": 0.00620800402587629,
+        "precision_at_3_up": 0.541981326943733,
+        "precision_at_3_down": 0.5060315624225399
+      },
+      "beats_baseline_both_folds": true,
+      "roc_auc_above_50_both_folds": true,
+      "n_folds": 2,
+      "ticker_stability": {
+        "available": true,
+        "n_eligible_tickers_scored": 41,
+        "n_beating_baseline": 13,
+        "n_beating_baseline_all_folds": 4,
+        "fraction_beating_baseline": 0.3170731707317073,
+        "fraction_beating_baseline_all_folds": 0.0975609756097561,
+        "median_ticker_accuracy": 0.5080393290919607,
+        "p25_ticker_accuracy": 0.4957613814756672,
+        "p75_ticker_accuracy": 0.5285135916714864,
+        "worst_5": {
+          "NTPC": {
+            "accuracy": 0.4512,
+            "baseline": 0.5264,
+            "n": 2
+          },
+          "CIPLA": {
+            "accuracy": 0.4694,
+            "baseline": 0.5529,
+            "n": 2
+          },
+          "BHARTIARTL": {
+            "accuracy": 0.4694,
+            "baseline": 0.5388,
+            "n": 2
+          },
+          "ADANIENT": {
+            "accuracy": 0.4797,
+            "baseline": 0.5569,
+            "n": 2
+          },
+          "ASIANPAINT": {
+            "accuracy": 0.4797,
+            "baseline": 0.5244,
+            "n": 2
+          }
+        },
+        "best_5": {
+          "HCLTECH": {
+            "accuracy": 0.5691,
+            "baseline": 0.559,
+            "n": 2
+          },
+          "INFY": {
+            "accuracy": 0.561,
+            "baseline": 0.5367,
+            "n": 2
+          },
+          "TATASTEEL": {
+            "accuracy": 0.5507,
+            "baseline": 0.5142,
+            "n": 2
+          },
+          "NESTLEIND": {
+            "accuracy": 0.5468,
+            "baseline": 0.5265,
+            "n": 2
+          },
+          "HINDUNILVR": {
+            "accuracy": 0.5427,
+            "baseline": 0.5345,
+            "n": 2
+          }
+        },
+        "per_ticker": {
+          "ADANIENT": {
+            "accuracy": 0.4797,
+            "baseline": 0.5569,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "APOLLOHOSP": {
+            "accuracy": 0.4857,
+            "baseline": 0.5346,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "ASIANPAINT": {
+            "accuracy": 0.4797,
+            "baseline": 0.5244,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "AXISBANK": {
+            "accuracy": 0.5426,
+            "baseline": 0.5305,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "BAJAJ-AUTO": {
+            "accuracy": 0.4958,
+            "baseline": 0.5162,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "BAJAJFINSV": {
+            "accuracy": 0.5161,
+            "baseline": 0.5365,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "BAJFINANCE": {
+            "accuracy": 0.5102,
+            "baseline": 0.5447,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "BEL": {
+            "accuracy": 0.5143,
+            "baseline": 0.557,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "BHARTIARTL": {
+            "accuracy": 0.4694,
+            "baseline": 0.5388,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "CIPLA": {
+            "accuracy": 0.4694,
+            "baseline": 0.5529,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "COALINDIA": {
+            "accuracy": 0.494,
+            "baseline": 0.5365,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "DRREDDY": {
+            "accuracy": 0.4838,
+            "baseline": 0.5344,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "EICHERMOT": {
+            "accuracy": 0.5061,
+            "baseline": 0.5306,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "GRASIM": {
+            "accuracy": 0.5022,
+            "baseline": 0.5387,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "HCLTECH": {
+            "accuracy": 0.5691,
+            "baseline": 0.559,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "HDFCBANK": {
+            "accuracy": 0.5365,
+            "baseline": 0.5526,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "HINDALCO": {
+            "accuracy": 0.508,
+            "baseline": 0.5345,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "HINDUNILVR": {
+            "accuracy": 0.5427,
+            "baseline": 0.5345,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "ICICIBANK": {
+            "accuracy": 0.5223,
+            "baseline": 0.5285,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "INFY": {
+            "accuracy": 0.561,
+            "baseline": 0.5367,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "ITC": {
+            "accuracy": 0.4979,
+            "baseline": 0.5122,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "JSWSTEEL": {
+            "accuracy": 0.498,
+            "baseline": 0.5223,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "KOTAKBANK": {
+            "accuracy": 0.4958,
+            "baseline": 0.5427,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "M&M": {
+            "accuracy": 0.5101,
+            "baseline": 0.5305,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "MARUTI": {
+            "accuracy": 0.4979,
+            "baseline": 0.5326,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "NESTLEIND": {
+            "accuracy": 0.5468,
+            "baseline": 0.5265,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": true
+          },
+          "NTPC": {
+            "accuracy": 0.4512,
+            "baseline": 0.5264,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "ONGC": {
+            "accuracy": 0.5326,
+            "baseline": 0.5204,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": true
+          },
+          "POWERGRID": {
+            "accuracy": 0.5142,
+            "baseline": 0.5041,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "RELIANCE": {
+            "accuracy": 0.4838,
+            "baseline": 0.5387,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "SBIN": {
+            "accuracy": 0.5203,
+            "baseline": 0.5183,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "SHRIRAMFIN": {
+            "accuracy": 0.5042,
+            "baseline": 0.5142,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "SUNPHARMA": {
+            "accuracy": 0.4917,
+            "baseline": 0.5346,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "TATACONSUM": {
+            "accuracy": 0.5041,
+            "baseline": 0.5284,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "TATASTEEL": {
+            "accuracy": 0.5507,
+            "baseline": 0.5142,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": true
+          },
+          "TCS": {
+            "accuracy": 0.5285,
+            "baseline": 0.5265,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "TECHM": {
+            "accuracy": 0.5083,
+            "baseline": 0.5306,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          },
+          "TITAN": {
+            "accuracy": 0.5122,
+            "baseline": 0.5082,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": true
+          },
+          "TMPV": {
+            "accuracy": 0.5387,
+            "baseline": 0.5326,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "TRENT": {
+            "accuracy": 0.5324,
+            "baseline": 0.5305,
+            "n": 2,
+            "folds": 2,
+            "beats": true,
+            "beats_all_folds": false
+          },
+          "ULTRACEMCO": {
+            "accuracy": 0.5022,
+            "baseline": 0.5102,
+            "n": 2,
+            "folds": 2,
+            "beats": false,
+            "beats_all_folds": false
+          }
+        }
+      }
+    }
+  },
+  "component_deltas": {
+    "transformer_B_minus_A": {
+      "accuracy_macro_ticker": -0.005822180753411232,
+      "accuracy_micro": -0.005822180753411232,
+      "roc_auc": -0.014279571996662854,
+      "brier": 0.00022112413783539897,
+      "f1": -0.02370507316901077,
+      "current_variant": "V2-B",
+      "previous_variant": "V2-A",
+      "note": "a Brier delta is an IMPROVEMENT when negative; reported as-is without sign flipping"
+    },
+    "context_C_minus_B": {
+      "accuracy_macro_ticker": 0.0008534469381709098,
+      "accuracy_micro": 0.0008534469381709098,
+      "roc_auc": 0.0019286119628609821,
+      "brier": 0.00021423943127360512,
+      "f1": 0.0941504179484195,
+      "current_variant": "V2-C",
+      "previous_variant": "V2-B",
+      "note": "a Brier delta is an IMPROVEMENT when negative; reported as-is without sign flipping"
+    }
+  },
+  "winning_base": {
+    "selected": "V2-C",
+    "rule": "higher mean macro-ticker accuracy across 2017 and 2018; context is NOT favoured by construction",
+    "b_macro": 0.5091555611086145,
+    "c_macro": 0.5100090080467854,
+    "margin": 0.0008534469381709098,
+    "consistent_in_both_years": {
+      "per_fold": {
+        "PRECOVID_DEV_A": {
+          "b_minus_c": 0.00177742668114933,
+          "b": 0.5129850893650637,
+          "c": 0.5112076626839144
+        },
+        "PRECOVID_DEV_B": {
+          "b_minus_c": -0.0034843205574913716,
+          "b": 0.5053260328521652,
+          "c": 0.5088103534096565
+        }
+      },
+      "same_winner_in_both_years": false
+    }
+  },
+  "signal_gate": {
+    "evaluated": true,
+    "passed": false,
+    "best_candidate": "V2-C",
+    "per_variant": {
+      "V2-B": {
+        "conditions": {
+          "mean_macro_accuracy": {
+            "value": 0.5091555611086145,
+            "threshold": 0.54,
+            "passed": false
+          },
+          "mean_roc_auc": {
+            "value": 0.5119997873309816,
+            "threshold": 0.53,
+            "passed": false
+          },
+          "beats_baseline_both_years": {
+            "value": true,
+            "threshold": true,
+            "passed": true
+          },
+          "roc_auc_above_0.50_both_years": {
+            "value": true,
+            "threshold": 0.5,
+            "passed": true
+          },
+          "min_auc_per_fold": {
+            "value": 0.5,
+            "threshold": 0.5,
+            "passed": true
+          },
+          "ticker_fraction_beating_baseline": {
+            "value": 0.24390243902439024,
+            "threshold": 0.55,
+            "passed": false
+          }
+        },
+        "passed": false
+      },
+      "V2-C": {
+        "conditions": {
+          "mean_macro_accuracy": {
+            "value": 0.5100090080467854,
+            "threshold": 0.54,
+            "passed": false
+          },
+          "mean_roc_auc": {
+            "value": 0.5139283992938426,
+            "threshold": 0.53,
+            "passed": false
+          },
+          "beats_baseline_both_years": {
+            "value": true,
+            "threshold": true,
+            "passed": true
+          },
+          "roc_auc_above_0.50_both_years": {
+            "value": true,
+            "threshold": 0.5,
+            "passed": true
+          },
+          "min_auc_per_fold": {
+            "value": 0.5,
+            "threshold": 0.5,
+            "passed": true
+          },
+          "ticker_fraction_beating_baseline": {
+            "value": 0.3170731707317073,
+            "threshold": 0.55,
+            "passed": false
+          }
+        },
+        "passed": false
+      }
+    },
+    "thresholds": {
+      "min_mean_macro_accuracy": 0.54,
+      "min_mean_roc_auc": 0.53,
+      "min_auc_per_fold": 0.5,
+      "min_fraction_tickers_beating_baseline": 0.55
+    },
+    "meaning": "the PRE-COVID signal gate FAILED: stop successfully and do NOT open 2019",
+    "not_a_65_percent_target": true,
+    "not_a_profitability_claim": true
+  },
+  "multitask_gate": {
+    "evaluated": false,
+    "reason": "V2-D or its base V2-C is unavailable"
+  },
+  "selective_coverage": {
+    "V2-A": {
+      "at_60pct": {
+        "coverage": null,
+        "accuracy": null,
+        "fold": null,
+        "n_in_fold": null,
+        "pooled_n_across_2017_2018": 2017,
+        "meaningful": false
+      },
+      "at_62pct": {
+        "coverage": null,
+        "accuracy": null,
+        "fold": null,
+        "n_in_fold": null,
+        "pooled_n_across_2017_2018": 2017,
+        "meaningful": false
+      },
+      "at_65pct": {
+        "coverage": null,
+        "accuracy": null,
+        "fold": null,
+        "n_in_fold": null,
+        "pooled_n_across_2017_2018": 2017,
+        "meaningful": false
+      }
+    },
+    "V2-B": {
+      "at_60pct": {
+        "coverage": null,
+        "accuracy": null,
+        "fold": null,
+        "n_in_fold": null,
+        "pooled_n_across_2017_2018": 2017,
+        "meaningful": false
+      },
+      "at_62pct": {
+        "coverage": null,
+        "accuracy": null,
+        "fold": null,
+        "n_in_fold": null,
+        "pooled_n_across_2017_2018": 2017,
+        "meaningful": false
+      },
+      "at_65pct": {
+        "coverage": null,
+        "accuracy": null,
+        "fold": null,
+        "n_in_fold": null,
+        "pooled_n_across_2017_2018": 2017,
+        "meaningful": false
+      }
+    },
+    "V2-C": {
+      "at_60pct": {
+        "coverage": null,
+        "accuracy": null,
+        "fold": null,
+        "n_in_fold": null,
+        "pooled_n_across_2017_2018": 2017,
+        "meaningful": false
+      },
+      "at_62pct": {
+        "coverage": null,
+        "accuracy": null,
+        "fold": null,
+        "n_in_fold": null,
+        "pooled_n_across_2017_2018": 2017,
+        "meaningful": false
+      },
+      "at_65pct": {
+        "coverage": null,
+        "accuracy": null,
+        "fold": null,
+        "n_in_fold": null,
+        "pooled_n_across_2017_2018": 2017,
+        "meaningful": false
+      }
+    },
+    "policy": {
+      "min_coverage": 0.2,
+      "min_pooled_observations": 500,
+      "confidence_score": "abs(p_up - 0.5)",
+      "note": "selective accuracy is NEVER called overall accuracy"
+    }
+  },
+  "data_access_audit": {
+    "experiment_regime": "PRE_COVID",
+    "regime_label": "PRE_COVID_EXPERIMENTAL_REGIME",
+    "final_allowed_date": "2019-12-31",
+    "store_root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/pre_covid",
+    "store_last_feature_date": "2019-12-31",
+    "store_last_target_date": "2019-12-31",
+    "store_sha256": "9ef053533ab05cfe27c919316503f80b4239e7b97a98acda603d98d29d97ce32",
+    "max_feature_date_consumed": "2018-12-28",
+    "max_origin_date_consumed": "2018-12-28",
+    "max_target_date_consumed": "2018-12-31",
+    "rows_from_2020_plus_present_in_source_files": 72900,
+    "rows_from_2020_plus_loaded_into_pre_covid_store": 0,
+    "rows_from_2020_plus_consumed_by_any_model": 0,
+    "post_2019_dates_rejected_by_firewall_test": true,
+    "firewall_error": "PostCovidDataAccessError",
+    "rejection_is_at_access_time": true,
+    "development_folds_scored": [
+      "PRECOVID_DEV_A",
+      "PRECOVID_DEV_B"
+    ],
+    "lockbox_fold_scored": false,
+    "firewall": {
+      "regime": "PRE_COVID_EXPERIMENTAL_REGIME",
+      "final_allowed_date": "2019-12-31",
+      "first_forbidden_date": "2020-01-01",
+      "error": "PostCovidDataAccessError",
+      "lockbox_env_var": "PRECOVID_LOCKBOX",
+      "lockbox_year": 2019,
+      "note": "the raw source files still contain 2020-2025 bars; this firewall rejects them at the point of access, and the PRE-COVID processed store is physically capped so no post-2019 row is ever loaded"
+    },
+    "note": "the raw source files still contain 2020-2025 bars; the PRE-COVID store is physically capped and the firewall rejects any post-2019 date before it can reach a scaler, loss, episode or metric"
+  },
+  "store": {
+    "root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/pre_covid/context_store",
+    "built": true,
+    "config_sha256": "14575c5326bb598535750c84ce201ca7ab286800307584afa15458502fc83f50",
+    "source_manifest_sha256": "9c8f66bd5db5b7bc6751747f5d6a091a20bd9fc2c7dbe50b1ce4e5290ed9cd25",
+    "feature_code_sha256": "0c90f570c2f295437eaf8a91ea091e4e8f2559cc4deee5b4156037dd0e855bd7",
+    "sector_map_sha256": "e1c7567c4770e4efc30a02f85e45f8896eeff270563f8b8887d9e0e7602895b3",
+    "store_sha256": "9ef053533ab05cfe27c919316503f80b4239e7b97a98acda603d98d29d97ce32",
+    "max_target_date": "2019-12-31"
+  },
+  "component_flags": {
+    "V2-A": {},
+    "V2-B": {
+      "use_transformer": true
+    },
+    "V2-C": {
+      "use_transformer": true,
+      "use_context": true,
+      "use_sector_embedding": true,
+      "use_regime": true
+    },
+    "V2-D": {
+      "use_transformer": true,
+      "use_context": true,
+      "use_sector_embedding": true,
+      "use_regime": true,
+      "use_multitask": true
+    },
+    "V2-E": {
+      "use_transformer": true,
+      "use_context": true,
+      "use_sector_embedding": true,
+      "use_regime": true,
+      "use_multitask": true,
+      "use_film": true
+    },
+    "V2-F": {
+      "use_transformer": true,
+      "use_context": true,
+      "use_sector_embedding": true,
+      "use_regime": true,
+      "use_multitask": true,
+      "use_film": true,
+      "use_adapter": true
+    }
+  },
+  "lockbox_authorization_env": "PRECOVID_LOCKBOX",
+  "test_2022_2023_evaluated": false,
+  "paper_reference_used": false,
+  "rows_considered": 6,
+  "lockbox_not_opened_reason": "the PRE-COVID signal gate failed, so the staged programme stopped before winner selection and the architecture lockbox was never opened",
+  "recommended_next_action": "Do NOT open 2019. The PRE-COVID signal gate failed, which means the available features do not support a directional model in this regime either. The next useful step is a target/objective question rather than an architecture question: measure how much signal exists at all (the logistic ceiling check above is the reference), and re-target the evaluation towards ranking / volatility metrics if directional accuracy stays near the majority baseline. The 2020+ regime-aware track remains a separate future task.",
+  "verification": {
+    "experiment_regime": "PRE_COVID",
+    "pytest": "pass",
+    "pytest_command": "uv run --frozen python -m pytest -p no:warnings -q",
+    "pytest_exit_code": 0,
+    "pytest_result": "668 passed, 2 skipped",
+    "recorded_at": "2026-10-04T06:45:25.875426+00:00",
+    "ruff": "pass",
+    "ruff_command": "uv run --frozen python -m ruff check .",
+    "store_verified": true,
+    "universe_verified": true
+  }
+}

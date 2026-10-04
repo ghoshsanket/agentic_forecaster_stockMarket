@@ -1,0 +1,33 @@
+{
+  "experiment_regime": "PRE_COVID",
+  "regime_label": "PRE_COVID_EXPERIMENTAL_REGIME",
+  "final_allowed_date": "2019-12-31",
+  "store_root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/pre_covid",
+  "store_last_feature_date": "2019-12-31",
+  "store_last_target_date": "2019-12-31",
+  "store_sha256": "9ef053533ab05cfe27c919316503f80b4239e7b97a98acda603d98d29d97ce32",
+  "max_feature_date_consumed": "2018-12-28",
+  "max_origin_date_consumed": "2018-12-28",
+  "max_target_date_consumed": "2018-12-31",
+  "rows_from_2020_plus_present_in_source_files": 72900,
+  "rows_from_2020_plus_loaded_into_pre_covid_store": 0,
+  "rows_from_2020_plus_consumed_by_any_model": 0,
+  "post_2019_dates_rejected_by_firewall_test": true,
+  "firewall_error": "PostCovidDataAccessError",
+  "rejection_is_at_access_time": true,
+  "development_folds_scored": [
+    "PRECOVID_DEV_A",
+    "PRECOVID_DEV_B"
+  ],
+  "lockbox_fold_scored": false,
+  "firewall": {
+    "regime": "PRE_COVID_EXPERIMENTAL_REGIME",
+    "final_allowed_date": "2019-12-31",
+    "first_forbidden_date": "2020-01-01",
+    "error": "PostCovidDataAccessError",
+    "lockbox_env_var": "PRECOVID_LOCKBOX",
+    "lockbox_year": 2019,
+    "note": "the raw source files still contain 2020-2025 bars; this firewall rejects them at the point of access, and the PRE-COVID processed store is physically capped so no post-2019 row is ever loaded"
+  },
+  "note": "the raw source files still contain 2020-2025 bars; the PRE-COVID store is physically capped and the firewall rejects any post-2019 date before it can reach a scaler, loss, episode or metric"
+}

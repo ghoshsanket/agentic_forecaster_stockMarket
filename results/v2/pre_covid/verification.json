@@ -1,0 +1,12 @@
+{
+  "experiment_regime": "PRE_COVID",
+  "pytest": "pass",
+  "pytest_command": "uv run --frozen python -m pytest -p no:warnings -q",
+  "pytest_exit_code": 0,
+  "pytest_result": "668 passed, 2 skipped",
+  "recorded_at": "2026-10-04T06:45:25.875426+00:00",
+  "ruff": "pass",
+  "ruff_command": "uv run --frozen python -m ruff check .",
+  "store_verified": true,
+  "universe_verified": true
+}

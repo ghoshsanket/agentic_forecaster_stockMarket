@@ -1,0 +1,80 @@
+experiment_regime: PRE_COVID
+regime_label: PRE_COVID_EXPERIMENTAL_REGIME
+survivorship_bias_label: SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK
+universe_phrase: available securities from the reconstructed fixed universe
+final_allowed_date: '2019-12-31'
+n_candidates: 47
+n_eligible: 41
+eligible_tickers:
+- ADANIENT
+- APOLLOHOSP
+- ASIANPAINT
+- AXISBANK
+- BAJAJ-AUTO
+- BAJAJFINSV
+- BAJFINANCE
+- BEL
+- BHARTIARTL
+- CIPLA
+- COALINDIA
+- DRREDDY
+- EICHERMOT
+- GRASIM
+- HCLTECH
+- HDFCBANK
+- HINDALCO
+- HINDUNILVR
+- ICICIBANK
+- INFY
+- ITC
+- JSWSTEEL
+- KOTAKBANK
+- M&M
+- MARUTI
+- NESTLEIND
+- NTPC
+- ONGC
+- POWERGRID
+- RELIANCE
+- SBIN
+- SHRIRAMFIN
+- SUNPHARMA
+- TATACONSUM
+- TATASTEEL
+- TCS
+- TECHM
+- TITAN
+- TMPV
+- TRENT
+- ULTRACEMCO
+excluded:
+  ADANIPORTS: 'A/B: only 219 usable TRAIN samples through 2016-12-31 (need 1000)'
+  HDFCLIFE: 'A/B: only 0 usable TRAIN samples through 2016-12-31 (need 1000); C: only 0 samples in 2017
+    (need 180); D: only 157 samples in 2018 (need 180)'
+  INDIGO: 'A/B: only 160 usable TRAIN samples through 2016-12-31 (need 1000)'
+  LT: 'A/B: only 219 usable TRAIN samples through 2016-12-31 (need 1000)'
+  SBILIFE: 'A/B: only 0 usable TRAIN samples through 2016-12-31 (need 1000); C: only 0 samples in 2017
+    (need 180)'
+  WIPRO: 'A-F: no usable supervised sample at all (insufficient causal history, or no sector peer for
+    the leave-one-out sector context)'
+rules:
+  min_train_samples: 1000
+  min_year_samples: 180
+  train_end: '2016-12-31'
+  dev_year_a: '2017'
+  dev_year_b: '2018'
+  lockbox_year: '2019'
+  final_allowed_date: '2019-12-31'
+  criteria:
+  - A. sufficient TRAIN history by the first fold's train end
+  - B. >= 1000 usable TRAIN samples in PRECOVID_DEV_A
+  - C. >= 180 usable samples in 2017
+  - D. >= 180 usable samples in 2018
+  - E. >= 180 usable samples in 2019
+  - F. all required stationary features generated causally (finite window)
+store_sha256: 9ef053533ab05cfe27c919316503f80b4239e7b97a98acda603d98d29d97ce32
+universe_sha256: 25ccf6300dc9c6116dd69afbda4a5c19fec60a1aafdfb676ec4582f94c770282
+context_population: every security of the reconstructed fixed universe with a valid bar on date t; later
+  listings contribute from the day they genuinely exist and are never backfilled
+frozen: true
+note: frozen BEFORE any PRE-COVID variant was trained; the count is derived, never guessed

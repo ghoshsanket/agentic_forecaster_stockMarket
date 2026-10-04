@@ -1,0 +1,526 @@
+{
+  "label": "PRECOVID_LOGISTIC_BASELINE",
+  "experiment_regime": "PRE_COVID",
+  "survivorship_bias_label": "SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK",
+  "purpose": "diagnostic ceiling: do the V2 features expose any simple linear directional signal in 2017/2018? Not a competitor to the sequence model",
+  "context_features_used": true,
+  "folds": {
+    "PRECOVID_DEV_A": {
+      "label": "PRECOVID_LOGISTIC_BASELINE",
+      "fold": "PRECOVID_DEV_A",
+      "n_train": 116674,
+      "n_val": 10127,
+      "n_features": 61,
+      "n_stock_features": 27,
+      "n_context_features": 34,
+      "percentile_features_passthrough": [
+        "rank_log_return_1",
+        "rank_log_return_20",
+        "rank_log_return_5",
+        "rank_realized_vol_20",
+        "rank_rsi_14_centered",
+        "rank_stock_minus_market_return",
+        "rank_stock_minus_sector_return",
+        "rank_volume_z_20"
+      ],
+      "preprocessing_fit_on": "TRAIN_ONLY",
+      "c": 1.0,
+      "max_iter": 2000,
+      "accuracy_macro_ticker": 0.5117013923175668,
+      "accuracy_micro": 0.511701392317567,
+      "f1": 0.52665837082416,
+      "balanced_accuracy": 0.5113026121236992,
+      "roc_auc": 0.5198108760548057,
+      "brier": 0.24962326935219717,
+      "ece": 0.007715390660744025,
+      "train_majority_baseline": 0.5035654901691894,
+      "delta_vs_train_majority_macro": 0.00813590214837745,
+      "precision_at_3_up": 0.5560053981106612,
+      "precision_at_3_down": 0.5411605937921729,
+      "per_ticker": {
+        "ADANIENT": {
+          "n": 247,
+          "accuracy": 0.4493927125506073,
+          "positive_rate": 0.5668016194331984
+        },
+        "APOLLOHOSP": {
+          "n": 247,
+          "accuracy": 0.5344129554655871,
+          "positive_rate": 0.4777327935222672
+        },
+        "ASIANPAINT": {
+          "n": 247,
+          "accuracy": 0.4979757085020243,
+          "positive_rate": 0.46963562753036436
+        },
+        "AXISBANK": {
+          "n": 247,
+          "accuracy": 0.5101214574898786,
+          "positive_rate": 0.5263157894736842
+        },
+        "BAJAJ-AUTO": {
+          "n": 247,
+          "accuracy": 0.5182186234817814,
+          "positive_rate": 0.5263157894736842
+        },
+        "BAJAJFINSV": {
+          "n": 247,
+          "accuracy": 0.5344129554655871,
+          "positive_rate": 0.5506072874493927
+        },
+        "BAJFINANCE": {
+          "n": 247,
+          "accuracy": 0.46558704453441296,
+          "positive_rate": 0.5465587044534413
+        },
+        "BEL": {
+          "n": 247,
+          "accuracy": 0.5020242914979757,
+          "positive_rate": 0.5344129554655871
+        },
+        "BHARTIARTL": {
+          "n": 247,
+          "accuracy": 0.5060728744939271,
+          "positive_rate": 0.4979757085020243
+        },
+        "CIPLA": {
+          "n": 247,
+          "accuracy": 0.5748987854251012,
+          "positive_rate": 0.46558704453441296
+        },
+        "COALINDIA": {
+          "n": 247,
+          "accuracy": 0.5546558704453441,
+          "positive_rate": 0.44534412955465585
+        },
+        "DRREDDY": {
+          "n": 247,
+          "accuracy": 0.5141700404858299,
+          "positive_rate": 0.4331983805668016
+        },
+        "EICHERMOT": {
+          "n": 247,
+          "accuracy": 0.5303643724696356,
+          "positive_rate": 0.5101214574898786
+        },
+        "GRASIM": {
+          "n": 247,
+          "accuracy": 0.5263157894736842,
+          "positive_rate": 0.4898785425101215
+        },
+        "HCLTECH": {
+          "n": 247,
+          "accuracy": 0.5303643724696356,
+          "positive_rate": 0.5384615384615384
+        },
+        "HDFCBANK": {
+          "n": 247,
+          "accuracy": 0.5060728744939271,
+          "positive_rate": 0.6032388663967612
+        },
+        "HINDALCO": {
+          "n": 247,
+          "accuracy": 0.5506072874493927,
+          "positive_rate": 0.5384615384615384
+        },
+        "HINDUNILVR": {
+          "n": 247,
+          "accuracy": 0.5182186234817814,
+          "positive_rate": 0.5465587044534413
+        },
+        "ICICIBANK": {
+          "n": 247,
+          "accuracy": 0.5344129554655871,
+          "positive_rate": 0.4817813765182186
+        },
+        "INFY": {
+          "n": 247,
+          "accuracy": 0.5141700404858299,
+          "positive_rate": 0.5060728744939271
+        },
+        "ITC": {
+          "n": 247,
+          "accuracy": 0.5222672064777328,
+          "positive_rate": 0.4939271255060729
+        },
+        "JSWSTEEL": {
+          "n": 247,
+          "accuracy": 0.5101214574898786,
+          "positive_rate": 0.5384615384615384
+        },
+        "KOTAKBANK": {
+          "n": 247,
+          "accuracy": 0.5101214574898786,
+          "positive_rate": 0.5263157894736842
+        },
+        "M&M": {
+          "n": 247,
+          "accuracy": 0.5141700404858299,
+          "positive_rate": 0.4817813765182186
+        },
+        "MARUTI": {
+          "n": 247,
+          "accuracy": 0.5020242914979757,
+          "positive_rate": 0.5141700404858299
+        },
+        "NESTLEIND": {
+          "n": 247,
+          "accuracy": 0.5303643724696356,
+          "positive_rate": 0.5101214574898786
+        },
+        "NTPC": {
+          "n": 247,
+          "accuracy": 0.4898785425101215,
+          "positive_rate": 0.4777327935222672
+        },
+        "ONGC": {
+          "n": 247,
+          "accuracy": 0.4534412955465587,
+          "positive_rate": 0.5020242914979757
+        },
+        "POWERGRID": {
+          "n": 247,
+          "accuracy": 0.5384615384615384,
+          "positive_rate": 0.4979757085020243
+        },
+        "RELIANCE": {
+          "n": 247,
+          "accuracy": 0.4817813765182186,
+          "positive_rate": 0.5141700404858299
+        },
+        "SBIN": {
+          "n": 247,
+          "accuracy": 0.5222672064777328,
+          "positive_rate": 0.4898785425101215
+        },
+        "SHRIRAMFIN": {
+          "n": 247,
+          "accuracy": 0.5020242914979757,
+          "positive_rate": 0.5263157894736842
+        },
+        "SUNPHARMA": {
+          "n": 247,
+          "accuracy": 0.5101214574898786,
+          "positive_rate": 0.4777327935222672
+        },
+        "TATACONSUM": {
+          "n": 247,
+          "accuracy": 0.46963562753036436,
+          "positive_rate": 0.5425101214574899
+        },
+        "TATASTEEL": {
+          "n": 247,
+          "accuracy": 0.5182186234817814,
+          "positive_rate": 0.5222672064777328
+        },
+        "TCS": {
+          "n": 247,
+          "accuracy": 0.5060728744939271,
+          "positive_rate": 0.5141700404858299
+        },
+        "TECHM": {
+          "n": 247,
+          "accuracy": 0.46153846153846156,
+          "positive_rate": 0.5141700404858299
+        },
+        "TITAN": {
+          "n": 247,
+          "accuracy": 0.5789473684210527,
+          "positive_rate": 0.4979757085020243
+        },
+        "TMPV": {
+          "n": 247,
+          "accuracy": 0.5101214574898786,
+          "positive_rate": 0.4777327935222672
+        },
+        "TRENT": {
+          "n": 247,
+          "accuracy": 0.48582995951417,
+          "positive_rate": 0.4777327935222672
+        },
+        "ULTRACEMCO": {
+          "n": 247,
+          "accuracy": 0.4898785425101215,
+          "positive_rate": 0.5101214574898786
+        }
+      },
+      "beats_baseline_both_folds": null,
+      "n_tickers": 41
+    },
+    "PRECOVID_DEV_B": {
+      "label": "PRECOVID_LOGISTIC_BASELINE",
+      "fold": "PRECOVID_DEV_B",
+      "n_train": 126842,
+      "n_val": 10045,
+      "n_features": 61,
+      "n_stock_features": 27,
+      "n_context_features": 34,
+      "percentile_features_passthrough": [
+        "rank_log_return_1",
+        "rank_log_return_20",
+        "rank_log_return_5",
+        "rank_realized_vol_20",
+        "rank_rsi_14_centered",
+        "rank_stock_minus_market_return",
+        "rank_stock_minus_sector_return",
+        "rank_volume_z_20"
+      ],
+      "preprocessing_fit_on": "TRAIN_ONLY",
+      "c": 1.0,
+      "max_iter": 2000,
+      "accuracy_macro_ticker": 0.5111000497760079,
+      "accuracy_micro": 0.511100049776008,
+      "f1": 0.4933457134014237,
+      "balanced_accuracy": 0.5107944366644631,
+      "roc_auc": 0.5178011972792611,
+      "brier": 0.24982929209631036,
+      "ece": 0.006895179244082912,
+      "train_majority_baseline": 0.5040365178726289,
+      "delta_vs_train_majority_macro": 0.007063531903378939,
+      "precision_at_3_up": 0.5306122448979591,
+      "precision_at_3_down": 0.5414965986394559,
+      "per_ticker": {
+        "ADANIENT": {
+          "n": 245,
+          "accuracy": 0.44081632653061226,
+          "positive_rate": 0.5469387755102041
+        },
+        "APOLLOHOSP": {
+          "n": 245,
+          "accuracy": 0.5183673469387755,
+          "positive_rate": 0.4530612244897959
+        },
+        "ASIANPAINT": {
+          "n": 245,
+          "accuracy": 0.5183673469387755,
+          "positive_rate": 0.4816326530612245
+        },
+        "AXISBANK": {
+          "n": 245,
+          "accuracy": 0.5142857142857142,
+          "positive_rate": 0.46530612244897956
+        },
+        "BAJAJ-AUTO": {
+          "n": 245,
+          "accuracy": 0.46938775510204084,
+          "positive_rate": 0.5061224489795918
+        },
+        "BAJAJFINSV": {
+          "n": 245,
+          "accuracy": 0.49795918367346936,
+          "positive_rate": 0.5224489795918368
+        },
+        "BAJFINANCE": {
+          "n": 245,
+          "accuracy": 0.5265306122448979,
+          "positive_rate": 0.5428571428571428
+        },
+        "BEL": {
+          "n": 245,
+          "accuracy": 0.47346938775510206,
+          "positive_rate": 0.4204081632653061
+        },
+        "BHARTIARTL": {
+          "n": 245,
+          "accuracy": 0.4489795918367347,
+          "positive_rate": 0.42448979591836733
+        },
+        "CIPLA": {
+          "n": 245,
+          "accuracy": 0.5183673469387755,
+          "positive_rate": 0.42857142857142855
+        },
+        "COALINDIA": {
+          "n": 245,
+          "accuracy": 0.5142857142857142,
+          "positive_rate": 0.5183673469387755
+        },
+        "DRREDDY": {
+          "n": 245,
+          "accuracy": 0.5510204081632653,
+          "positive_rate": 0.5020408163265306
+        },
+        "EICHERMOT": {
+          "n": 245,
+          "accuracy": 0.5142857142857142,
+          "positive_rate": 0.4489795918367347
+        },
+        "GRASIM": {
+          "n": 245,
+          "accuracy": 0.5510204081632653,
+          "positive_rate": 0.4326530612244898
+        },
+        "HCLTECH": {
+          "n": 245,
+          "accuracy": 0.5714285714285714,
+          "positive_rate": 0.5795918367346938
+        },
+        "HDFCBANK": {
+          "n": 245,
+          "accuracy": 0.5469387755102041,
+          "positive_rate": 0.5020408163265306
+        },
+        "HINDALCO": {
+          "n": 245,
+          "accuracy": 0.5102040816326531,
+          "positive_rate": 0.46938775510204084
+        },
+        "HINDUNILVR": {
+          "n": 245,
+          "accuracy": 0.5061224489795918,
+          "positive_rate": 0.5224489795918368
+        },
+        "ICICIBANK": {
+          "n": 245,
+          "accuracy": 0.5102040816326531,
+          "positive_rate": 0.46122448979591835
+        },
+        "INFY": {
+          "n": 245,
+          "accuracy": 0.49795918367346936,
+          "positive_rate": 0.5673469387755102
+        },
+        "ITC": {
+          "n": 245,
+          "accuracy": 0.5265306122448979,
+          "positive_rate": 0.4816326530612245
+        },
+        "JSWSTEEL": {
+          "n": 245,
+          "accuracy": 0.5387755102040817,
+          "positive_rate": 0.5061224489795918
+        },
+        "KOTAKBANK": {
+          "n": 245,
+          "accuracy": 0.46938775510204084,
+          "positive_rate": 0.5591836734693878
+        },
+        "M&M": {
+          "n": 245,
+          "accuracy": 0.4816326530612245,
+          "positive_rate": 0.5428571428571428
+        },
+        "MARUTI": {
+          "n": 245,
+          "accuracy": 0.5591836734693878,
+          "positive_rate": 0.4489795918367347
+        },
+        "NESTLEIND": {
+          "n": 245,
+          "accuracy": 0.47346938775510206,
+          "positive_rate": 0.5428571428571428
+        },
+        "NTPC": {
+          "n": 245,
+          "accuracy": 0.47346938775510206,
+          "positive_rate": 0.46938775510204084
+        },
+        "ONGC": {
+          "n": 245,
+          "accuracy": 0.5183673469387755,
+          "positive_rate": 0.46122448979591835
+        },
+        "POWERGRID": {
+          "n": 245,
+          "accuracy": 0.5183673469387755,
+          "positive_rate": 0.49387755102040815
+        },
+        "RELIANCE": {
+          "n": 245,
+          "accuracy": 0.46938775510204084,
+          "positive_rate": 0.563265306122449
+        },
+        "SBIN": {
+          "n": 245,
+          "accuracy": 0.46530612244897956,
+          "positive_rate": 0.47346938775510206
+        },
+        "SHRIRAMFIN": {
+          "n": 245,
+          "accuracy": 0.5183673469387755,
+          "positive_rate": 0.49795918367346936
+        },
+        "SUNPHARMA": {
+          "n": 245,
+          "accuracy": 0.5387755102040817,
+          "positive_rate": 0.4530612244897959
+        },
+        "TATACONSUM": {
+          "n": 245,
+          "accuracy": 0.5346938775510204,
+          "positive_rate": 0.4857142857142857
+        },
+        "TATASTEEL": {
+          "n": 245,
+          "accuracy": 0.5265306122448979,
+          "positive_rate": 0.5061224489795918
+        },
+        "TCS": {
+          "n": 245,
+          "accuracy": 0.5183673469387755,
+          "positive_rate": 0.5387755102040817
+        },
+        "TECHM": {
+          "n": 245,
+          "accuracy": 0.5428571428571428,
+          "positive_rate": 0.5469387755102041
+        },
+        "TITAN": {
+          "n": 245,
+          "accuracy": 0.4857142857142857,
+          "positive_rate": 0.5142857142857142
+        },
+        "TMPV": {
+          "n": 245,
+          "accuracy": 0.5306122448979592,
+          "positive_rate": 0.45714285714285713
+        },
+        "TRENT": {
+          "n": 245,
+          "accuracy": 0.5428571428571428,
+          "positive_rate": 0.46122448979591835
+        },
+        "ULTRACEMCO": {
+          "n": 245,
+          "accuracy": 0.5224489795918368,
+          "positive_rate": 0.4897959183673469
+        }
+      },
+      "beats_baseline_both_folds": null,
+      "n_tickers": 41
+    }
+  },
+  "mean": {
+    "accuracy_macro_ticker": 0.5114007210467874,
+    "accuracy_micro": 0.5114007210467875,
+    "f1": 0.5100020421127919,
+    "balanced_accuracy": 0.5110485243940812,
+    "roc_auc": 0.5188060366670334,
+    "brier": 0.24972628072425376,
+    "ece": 0.007305284952413469,
+    "train_majority_baseline": 0.5038010040209091,
+    "delta_vs_train_majority_macro": 0.007599717025878194,
+    "precision_at_3_up": 0.5433088215043101,
+    "precision_at_3_down": 0.5413285962158143
+  },
+  "beats_baseline_both_folds": true,
+  "n_supervised_tickers": 41,
+  "data_access": {
+    "final_allowed_date": "2019-12-31",
+    "folds_scored": [
+      "PRECOVID_DEV_A",
+      "PRECOVID_DEV_B"
+    ],
+    "lockbox_scored": false
+  },
+  "store": {
+    "root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/pre_covid/context_store",
+    "built": true,
+    "config_sha256": "14575c5326bb598535750c84ce201ca7ab286800307584afa15458502fc83f50",
+    "source_manifest_sha256": "9c8f66bd5db5b7bc6751747f5d6a091a20bd9fc2c7dbe50b1ce4e5290ed9cd25",
+    "feature_code_sha256": "0c90f570c2f295437eaf8a91ea091e4e8f2559cc4deee5b4156037dd0e855bd7",
+    "sector_map_sha256": "e1c7567c4770e4efc30a02f85e45f8896eeff270563f8b8887d9e0e7602895b3",
+    "store_sha256": "9ef053533ab05cfe27c919316503f80b4239e7b97a98acda603d98d29d97ce32",
+    "max_target_date": "2019-12-31"
+  }
+}

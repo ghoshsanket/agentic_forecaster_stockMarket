@@ -38,7 +38,6 @@ from . import context as ctx
 from . import features as feat
 from .checkpoint import save_checkpoint
 from .dataset import (
-    V2_FOLDS,
     FeatureArrays,
     SampleTable,
     SplitWindow,
@@ -48,15 +47,21 @@ from .dataset import (
     build_feature_arrays,
     build_sample_table,
     fit_scalers_on_train,
+    resolve_fold_window,
     sample_metadata,
     split_masks,
 )
 from .firewall import (
+    PRECOVID_LOCKBOX_ENV,
+    PRECOVID_LOCKBOX_YEAR,
     V2_LOCKBOX_YEAR,
     assert_no_lockbox_targets,
     assert_no_paper_test_targets,
+    assert_pre_covid_dates,
     describe_firewall,
+    describe_precovid_firewall,
     lockbox_unlocked,
+    pre_covid_lockbox_unlocked,
 )
 from .ledger import (
     V2_VARIANT_LABELS,
@@ -64,6 +69,9 @@ from .ledger import (
     experiment_dir,
     hash_payload,
     new_experiment_id,
+)
+from .ledger import (
+    runtime_v2_root as v2_runtime_root,
 )
 from .losses import MultiTaskWeights
 from .metrics import (
@@ -79,8 +87,16 @@ from .metrics import (
 )
 from .model import ContextualLSTMTransformer, V2ModelConfig
 from .sectors import load_sector_map
-from .store import load_store, store_fingerprints
+from .store import (
+    assert_store_within_pre_covid,
+    load_store,
+    store_fingerprints,
+    v2_processed_root,
+)
 from .trainer import V2TrainConfig, V2Trainer, resolve_device
+
+REPO_ROOT_DIR = Path(__file__).resolve().parents[3]
+REPO_RESULTS_ROOT = REPO_ROOT_DIR / "results" / "v2"
 
 logger = logging.getLogger("agentic_forecaster.v2.experiment")
 
@@ -162,6 +178,30 @@ class V2RunConfig:
 
     @property
     def supervised_tickers(self) -> list[str]:
+        """The SUPERVISED population.
+
+        A frozen ``data.supervised_universe`` declaration wins (the PRE-COVID
+        eligible list is derived and frozen before training); an explicit
+        ``data.supervised_tickers`` list is the ordinary V2 behaviour.
+        """
+        declared = self.payload["data"].get("supervised_universe")
+        if declared:
+            import yaml
+
+            path = Path(declared)
+            if not path.is_absolute() and not path.exists():
+                path = Path(__file__).resolve().parents[3] / path
+            if not path.is_file():
+                raise FileNotFoundError(
+                    f"frozen supervised universe not found: {path}. Run "
+                    "scripts/build_v2_precovid_universe.py first; the list is derived, "
+                    "never guessed."
+                )
+            frozen = yaml.safe_load(path.read_text()) or {}
+            tickers = [str(x).upper() for x in frozen.get("eligible_tickers", [])]
+            if not tickers:
+                raise ValueError(f"{path}: eligible_tickers is empty")
+            return tickers
         return [str(t).upper() for t in self.payload["data"]["supervised_tickers"]]
 
     @property
@@ -170,11 +210,73 @@ class V2RunConfig:
 
     @property
     def window(self) -> SplitWindow:
-        return V2_FOLDS[self.fold]
+        """The resolved split window: config-declared folds win over defaults."""
+        return resolve_fold_window(self.fold, self.payload.get("folds"))
+
+    @property
+    def pre_covid_mode(self) -> bool:
+        return bool(self.payload.get("pre_covid_mode", False))
+
+    @property
+    def experiment_regime(self) -> str:
+        return str(self.payload.get("experiment_regime", "ORDINARY_V2"))
+
+    @property
+    def final_allowed_date(self) -> str | None:
+        """PRE-COVID boundary; ``None`` for the ordinary V2 programme."""
+        if not self.pre_covid_mode:
+            return None
+        value = self.payload.get("final_allowed_date") or self.payload[
+            "data"].get("final_allowed_date")
+        return str(value) if value else None
+
+    @property
+    def processed_root(self) -> Path:
+        """Processed branch that holds the feature store for this track."""
+        declared = self.payload["data"].get("store_root")
+        return Path(declared) if declared else v2_processed_root()
+
+    @property
+    def results_root(self) -> Path:
+        """Track results directory, resolved against the repository root.
+
+        A relative declaration must not depend on the caller's working
+        directory: the ledger and the freeze file have to land in the same place
+        however the script was invoked.
+        """
+        declared = self.payload.get("results_root")
+        if not declared:
+            return REPO_RESULTS_ROOT
+        path = Path(declared)
+        return path if path.is_absolute() else (REPO_ROOT_DIR / path)
+
+    @property
+    def runtime_root(self) -> Path:
+        declared = self.payload.get("runtime_root")
+        if declared:
+            return Path(declared)
+        return v2_runtime_root()
+
+    @property
+    def is_lockbox_fold(self) -> bool:
+        return "LOCKBOX" in self.fold.upper()
 
     @property
     def flags(self) -> dict[str, bool]:
-        return dict(VARIANT_FLAGS[self.variant])
+        """Component switches: the variant ladder, then any config override.
+
+        The override exists so a multi-task continuation can inherit the ACTUAL
+        winning base (for example PRE-V2-D on top of PRE-V2-B without silently
+        re-enabling the context block that PRE-V2-C needed).  The historical
+        V2 variant definitions are never mutated.
+        """
+        flags = dict(VARIANT_FLAGS[self.variant])
+        for key, value in (self.payload.get("components") or {}).items():
+            if key not in flags:
+                raise ValueError(
+                    f"unknown component flag {key!r}; known flags are {sorted(flags)}")
+            flags[key] = bool(value)
+        return flags
 
     @property
     def sector_map_path(self) -> Path:
@@ -236,26 +338,49 @@ def load_run_config(path: str | Path, *, variant: str | None = None,
     payload["variant_flags"] = VARIANT_FLAGS[resolved_variant]
 
     resolved_fold = str(fold or payload.get("fold", "V2_DEV_FOLD_A")).upper()
-    if resolved_fold not in V2_FOLDS:
-        raise ValueError(f"unknown V2 fold {resolved_fold!r}; choose from {sorted(V2_FOLDS)}")
+    # resolve_fold_window raises for a name that is neither config-declared nor a
+    # built-in default, so an unknown fold is rejected here.
     payload["fold"] = resolved_fold
-    payload["fold_window"] = dataclasses.asdict(V2_FOLDS[resolved_fold])
+    payload["fold_window"] = dataclasses.asdict(
+        resolve_fold_window(resolved_fold, payload.get("folds")))
 
     payload["seed"] = int(seed if seed is not None else payload["experiment"]["seed"])
     payload["device"] = str(device or payload["experiment"].get("device", "auto"))
 
-    unlocked = lockbox_unlocked()
-    if resolved_fold == "V2_LOCKBOX" and not unlocked:
-        raise AssertionError(
-            "V2_LOCKBOX requires the explicit lockbox switch (V2_LOCKBOX=1, used only "
-            "by scripts/run_v2_lockbox.py). The development script must never score "
-            f"{V2_LOCKBOX_YEAR}."
-        )
-    assert_no_paper_test_targets([V2_FOLDS[resolved_fold].val_end], where="v2 config")
-    assert_no_lockbox_targets([V2_FOLDS[resolved_fold].val_end], where="v2 config",
-                               unlocked=unlocked)
+    pre_covid = bool(payload.get("pre_covid_mode", False))
+    window = resolve_fold_window(resolved_fold, payload.get("folds"))
+    if "LOCKBOX" in resolved_fold.upper():
+        if pre_covid:
+            if not pre_covid_lockbox_unlocked():
+                raise AssertionError(
+                    f"the PRE-COVID lockbox ({PRECOVID_LOCKBOX_YEAR} evaluation) "
+                    f"requires {PRECOVID_LOCKBOX_ENV}=1, set only by "
+                    "scripts/run_v2_precovid_lockbox.py. The PRE-COVID development "
+                    "path must never score 2019."
+                )
+        elif not lockbox_unlocked():
+            raise AssertionError(
+                "V2_LOCKBOX requires the explicit lockbox switch (V2_LOCKBOX=1, used "
+                "only by scripts/run_v2_lockbox.py). The development script must never "
+                f"score {V2_LOCKBOX_YEAR}."
+            )
+    assert_no_paper_test_targets([window.val_end], where="v2 config")
+    if pre_covid:
+        assert_pre_covid_dates(feature_dates=[window.val_end],
+                               origin_dates=[window.val_end],
+                               target_dates=[window.val_end],
+                               where="v2 precovid config")
+    else:
+        assert_no_lockbox_targets([window.val_end], where="v2 config",
+                                   unlocked=lockbox_unlocked())
 
     payload["config_path"] = str(path)
+    payload["resolved_components"] = {
+        key: bool(value)
+        for key, value in ((payload.get("components") or {})
+                           | {k: v for k, v in VARIANT_FLAGS[resolved_variant].items()
+                              if k not in (payload.get("components") or {})}).items()
+    }
     payload["config_sha256"] = hash_payload(payload)
     return V2RunConfig(path=path, payload=payload, variant=resolved_variant,
                        fold=resolved_fold, seed=payload["seed"], device=payload["device"])
@@ -276,6 +401,7 @@ class V2RunData:
     masks: dict[str, np.ndarray]
     scalers: V2ScalerBundle
     store_meta: dict = field(default_factory=dict)
+    access_audit: dict = field(default_factory=dict)
 
     def split_frame(self, split: str) -> pd.DataFrame:
         """Sample rows of one split, with the store's realised outcome attached."""
@@ -311,7 +437,10 @@ def assemble_context_frame(store) -> pd.DataFrame:
 
 def assemble_run_data(config: V2RunConfig) -> V2RunData:
     """Load the store, build samples, split them and fit the global scalers."""
-    store = load_store()
+    final_allowed = config.final_allowed_date
+    store = load_store(config.processed_root, final_allowed_date=final_allowed)
+    if final_allowed is not None:
+        assert_store_within_pre_covid(store.metadata, final_allowed_date=final_allowed)
     sector_map = load_sector_map(config.sector_map_path)
     flags = config.flags
 
@@ -324,11 +453,13 @@ def assemble_run_data(config: V2RunConfig) -> V2RunData:
         require += ["y_return", "y_rank"]
     samples = build_sample_table(arrays, store.targets,
                                 sequence_length=config.sequence_length,
-                                require_targets=require, max_date=config.max_date)
+                                require_targets=require, max_date=config.max_date,
+                                final_allowed_date=final_allowed)
 
     masks = split_masks(samples, config.window)
     assert_split_targets_legal(masks, samples, where=f"{config.variant}/{config.fold}",
-                                unlocked=lockbox_unlocked())
+                               unlocked=lockbox_unlocked(),
+                               final_allowed_date=final_allowed)
     for name in ("train", "val"):
         if not masks[name].any():
             raise ValueError(
@@ -338,8 +469,41 @@ def assemble_run_data(config: V2RunConfig) -> V2RunData:
 
     scalers = fit_scalers_on_train(samples, masks["train"],
                                     sequence_length=config.sequence_length)
+    access_audit = {
+        "store_root": str(store.root),
+        "store_sha256": store.store_sha256,
+        "store_last_feature_date": str(pd.Timestamp(store.stock["date"].max()).date()),
+        "store_last_target_date": str(
+            pd.Timestamp(store.targets["target_date"].max()).date()),
+        "max_feature_date_consumed": _max_date(
+            samples.frame.loc[masks["train"] | masks["val"], "origin_date"], "origin"),
+        "max_origin_date_consumed": _max_date(
+            samples.frame.loc[masks["train"] | masks["val"], "origin_date"], "origin"),
+        "max_target_date_consumed": _max_date(
+            samples.frame.loc[masks["train"] | masks["val"], "target_date"], "target"),
+        "n_train_samples": int(masks["train"].sum()),
+        "n_val_samples": int(masks["val"].sum()),
+        "post_regime_rows_consumed": 0 if final_allowed is not None else None,
+        "regime": config.experiment_regime,
+        "final_allowed_date": final_allowed,
+    }
+    if final_allowed is not None:
+        assert_pre_covid_dates(
+            feature_dates=[access_audit["max_feature_date_consumed"]],
+            origin_dates=[access_audit["max_origin_date_consumed"]],
+            target_dates=[access_audit["max_target_date_consumed"]],
+            final_allowed_date=final_allowed,
+            where=f"{config.variant}/{config.fold} consumed data")
     return V2RunData(store=store, sector_map=sector_map, samples=samples, arrays=arrays,
-                     masks=masks, scalers=scalers, store_meta=store_fingerprints())
+                     masks=masks, scalers=scalers,
+                     store_meta=store_fingerprints(config.processed_root),
+                     access_audit=access_audit)
+
+
+def _max_date(values: pd.Series, label: str) -> str | None:
+    if len(values) == 0:
+        return None
+    return str(pd.Timestamp(values.max()).date())
 
 
 def build_model_config(config: V2RunConfig, data: V2RunData) -> V2ModelConfig:
@@ -560,6 +724,12 @@ def write_outputs(out_dir: Path, config: V2RunConfig, data: V2RunData, *,
 
     manifest = {
         "experiment_id": config.payload["experiment_id"],
+        "experiment_regime": config.experiment_regime,
+        "pre_covid_mode": config.pre_covid_mode,
+        "final_allowed_date": config.final_allowed_date,
+        "component_flags": config.flags,
+        "results_root": str(config.results_root),
+        "runtime_root": str(config.runtime_root),
         "variant": config.variant,
         "variant_label": V2_VARIANT_LABELS[config.variant],
         "variant_description": V2_VARIANT_DESCRIPTIONS[config.variant],
@@ -584,6 +754,9 @@ def write_outputs(out_dir: Path, config: V2RunConfig, data: V2RunData, *,
         },
         "scaler_fit": data.scalers.state(),
         "firewall": describe_firewall(),
+        "precovid_firewall": (describe_precovid_firewall()
+                              if config.pre_covid_mode else None),
+        "data_access_audit": data.access_audit,
         "test_2022_2023_evaluated": False,
     }
     atomic_json_dump(manifest, out_dir / "manifest.json")
@@ -600,7 +773,8 @@ def run_experiment(config: V2RunConfig, *, out_dir: Path | None = None,
     setup_logging()
     experiment_id = experiment_id or new_experiment_id(config.variant.replace("-", ""))
     config.payload["experiment_id"] = experiment_id
-    out_dir = Path(out_dir) if out_dir is not None else experiment_dir(experiment_id)
+    out_dir = (Path(out_dir) if out_dir is not None
+               else experiment_dir(experiment_id, runtime_root=config.runtime_root))
     ensure_dir(out_dir)
 
     data = assemble_run_data(config)
@@ -729,7 +903,8 @@ def _run_meta_stage(config: V2RunConfig, data: V2RunData, model, device,
 
     meta_config = MetaConfig(**dict(config.payload.get("meta", {})))
     trainer = ReptileMetaTrainer(model, meta_config, device=device,
-                                 loss_weights=config.loss_weights)
+                                 loss_weights=config.loss_weights,
+                                 final_allowed_date=config.final_allowed_date)
     meta_result = trainer.fit(data.samples, data.masks["train"], seed=config.seed,
                               where=f"{config.variant}/{config.fold}/meta-train")
 
@@ -773,6 +948,17 @@ def _run_meta_stage(config: V2RunConfig, data: V2RunData, model, device,
     return predictions, meta_summary, trainer.meta_init
 
 
+def _ledger_root(config: V2RunConfig) -> Path:
+    """Ledger directory for this track.
+
+    The PRE-COVID ledger is never appended to the historical V2 ledger, and the
+    historical V2 ledger is never appended to from a PRE-COVID run.
+    """
+    root = config.results_root
+    root.mkdir(parents=True, exist_ok=True)
+    return root
+
+
 def _append_ledger_row(config: V2RunConfig, data: V2RunData, summary: dict,
                        complexity: dict) -> None:
     direction = summary["metrics"].get("direction", {})
@@ -784,6 +970,7 @@ def _append_ledger_row(config: V2RunConfig, data: V2RunData, summary: dict,
     append_experiment({
         "experiment_id": summary["experiment_id"],
         "experiment_dir": summary["out_dir"],
+        "experiment_regime": config.experiment_regime,
         "variant": config.variant,
         "fold": config.fold,
         "seed": config.seed,
@@ -809,4 +996,4 @@ def _append_ledger_row(config: V2RunConfig, data: V2RunData, summary: dict,
         "return_spearman": return_block.get("return_spearman"),
         "rank_ic": rank_block.get("mean_rank_ic"),
         "test_2022_2023_evaluated": "false",
-    })
+    }, results_root=_ledger_root(config))
