@@ -1,0 +1,29 @@
+# V3 -- information family X2_GLOBAL_RISK.
+#
+# X0 plus a COMPACT global-risk state, conservatively lagged by one source trading
+# observation because every one of these markets closes after the NSE close:
+#   S&P 500, NASDAQ Composite, Dow Jones, US VIX, Nikkei 225, Hang Seng,
+#   EURO STOXX 50 (kept only if its coverage proves excellent)
+#
+# Deliberately compact: dozens of highly correlated global indices would add
+# parameters, not information.
+base: precovid_exogenous_base.yaml
+
+variant: V3_SCREEN_GLOBAL_RISK
+feature_family: X2_GLOBAL_RISK
+
+sources:
+  - SP500
+  - NASDAQ_COMPOSITE
+  - DOW_JONES
+  - US_VIX
+  - NIKKEI_225
+  - HANG_SENG
+  - EURO_STOXX_50
+availability_class: EXTERNAL_CONSERVATIVE_LAG1
+same_date_allowed: false
+lag_rule: >-
+  the most recent source observation STRICTLY BEFORE the NSE prediction timestamp;
+  the provider's same-calendar-date close is never used
+composite: global_risk_factor
+composite_weights: fixed_signs_train_only

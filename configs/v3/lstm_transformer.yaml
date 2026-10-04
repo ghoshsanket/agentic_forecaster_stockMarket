@@ -1,0 +1,23 @@
+# V3 -- STAGE 2 ABLATION ONLY: LSTM_TRANSFORMER_EXOGENOUS.
+#
+# The same dual-encoder fusion with the already-implemented Transformer applied to
+# the stock temporal representation.  This runs ONLY as a second ablation, and only
+# if the shared LSTM already passes the neural gate.
+#
+# It must earn its complexity.  The PRE-COVID price-only study found the Transformer
+# did not improve the broader-universe result, so a win here is not assumed.
+base: precovid_exogenous_base.yaml
+
+variant: LSTM_TRANSFORMER_EXOGENOUS
+neural_architecture: LSTM_TRANSFORMER_EXOGENOUS
+use_transformer: true
+role: ablation
+
+neural:
+  stock_encoder: {hidden_size: 96, layers: 2, dropout: 0.20, unidirectional: true}
+  exogenous_encoder: {hidden_size: 32, layers: 1}
+  ticker_embedding: 16
+  fusion: {hidden: 96, z: 32, dropout: 0.10}
+  head: binary_direction
+  transformer: {d_model: 64, layers: 2, n_heads: 4, dim_feedforward: 128, dropout: 0.10}
+  tuned: false

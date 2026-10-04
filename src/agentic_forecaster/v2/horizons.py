@@ -664,10 +664,17 @@ def non_overlap_mask(frame: pd.DataFrame, *, horizon: int,
     if len(frame) == 0:
         return np.zeros(0, dtype=bool)
     keep = np.zeros(len(frame), dtype=bool)
-    for index in frame.groupby("ticker", sort=True).groups.values():
-        ordered = frame.loc[index].sort_values(date_col).index.to_numpy()
-        positions = np.arange(len(ordered))
-        keep[ordered[(positions % int(horizon)) == 0]] = True
+    # Work in POSITIONS, not index labels: a caller may pass a filtered frame whose
+    # labels are not 0..n-1, and treating labels as positions would then select the
+    # wrong rows (or raise).
+    working = pd.DataFrame({
+        "ticker": frame["ticker"].to_numpy(),
+        "date": pd.to_datetime(frame[date_col]).to_numpy(),
+        "position": np.arange(len(frame)),
+    })
+    for _, group in working.groupby("ticker", sort=True):
+        ordered = group.sort_values("date")["position"].to_numpy()
+        keep[ordered[(np.arange(len(ordered)) % int(horizon)) == 0]] = True
     return keep
 
 

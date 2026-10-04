@@ -1,0 +1,193 @@
+{
+  "track": "V3_EXOGENOUS_PRECOVID",
+  "sample_size": 100,
+  "seed": 42,
+  "sampling": "deterministic uniform draw of stock origin dates",
+  "prediction_timestamp": "after the NSE close on the stock trading date",
+  "per_source": {
+    "NIFTY50": {
+      "availability_class": "INDIA_SAME_CLOSE",
+      "n_checked": 67,
+      "min_source_observation_date": "2007-09-24",
+      "max_source_observation_date": "2019-03-07",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 0,
+      "n_same_date": 67,
+      "violations": 0
+    },
+    "NIFTY_BANK": {
+      "availability_class": "INDIA_SAME_CLOSE",
+      "n_checked": 67,
+      "min_source_observation_date": "2007-09-24",
+      "max_source_observation_date": "2019-03-07",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 0,
+      "n_same_date": 67,
+      "violations": 0
+    },
+    "INDIA_VIX": {
+      "availability_class": "INDIA_SAME_CLOSE",
+      "n_checked": 65,
+      "min_source_observation_date": "2008-04-21",
+      "max_source_observation_date": "2019-03-07",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 0,
+      "n_same_date": 65,
+      "violations": 0
+    },
+    "NIFTY_IT": {
+      "availability_class": "INDIA_SAME_CLOSE",
+      "n_checked": 67,
+      "min_source_observation_date": "2007-09-24",
+      "max_source_observation_date": "2019-03-07",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 0,
+      "n_same_date": 67,
+      "violations": 0
+    },
+    "NIFTY_PHARMA": {
+      "availability_class": "INDIA_SAME_CLOSE",
+      "n_checked": 46,
+      "min_source_observation_date": "2011-02-02",
+      "max_source_observation_date": "2019-03-07",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 0,
+      "n_same_date": 46,
+      "violations": 0
+    },
+    "SP500": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 78,
+      "min_source_observation_date": "2005-04-01",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "NASDAQ_COMPOSITE": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 78,
+      "min_source_observation_date": "2005-04-01",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "DOW_JONES": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 78,
+      "min_source_observation_date": "2005-04-01",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "US_VIX": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 78,
+      "min_source_observation_date": "2005-04-01",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "NIKKEI_225": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 78,
+      "min_source_observation_date": "2005-04-01",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "HANG_SENG": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 78,
+      "min_source_observation_date": "2005-04-01",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "EURO_STOXX_50": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 68,
+      "min_source_observation_date": "2007-07-16",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "USDINR": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 78,
+      "min_source_observation_date": "2005-04-01",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "BRENT_CRUDE": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 67,
+      "min_source_observation_date": "2007-09-21",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "WTI_CRUDE": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 78,
+      "min_source_observation_date": "2005-04-01",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "GOLD": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 78,
+      "min_source_observation_date": "2005-04-01",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "US_DOLLAR_INDEX": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 78,
+      "min_source_observation_date": "2005-04-01",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    },
+    "US_10Y_YIELD": {
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "n_checked": 78,
+      "min_source_observation_date": "2005-04-01",
+      "max_source_observation_date": "2019-03-06",
+      "min_lag_trading_observations": 0,
+      "max_lag_trading_observations": 1,
+      "n_same_date": 0,
+      "violations": 0
+    }
+  },
+  "n_violations": 0,
+  "violations": [],
+  "passed": true,
+  "rule": "every exogenous value used at origin t must come from a source observation no later than t, and a conservative-lag1 source must never use a same-date observation"
+}

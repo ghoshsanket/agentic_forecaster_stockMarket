@@ -1,0 +1,504 @@
+# =============================================================================
+# V3 SOURCE REGISTRY -- PRE-COVID EXOGENOUS MARKET INFORMATION
+#
+# MODEL V2/V3 ARE NOT THE ORIGINAL PAPER MODEL.
+# Classification: NEW_EXPERIMENTAL_ARCHITECTURE.
+#
+# NOTHING HERE IS ASSUMED TO WORK.  Every symbol below is PROBED first by
+# scripts/probe_v3_sources.py, and a symbol that fails is recorded in
+# results/v3/pre_covid_exogenous/source_audit.json with its rejection reason.
+# A rejected source is EXCLUDED, never imputed, proxied or silently replaced.
+#
+# THE PREDICTION TIMESTAMP
+#   AFTER the NSE market close on day t (Asia/Kolkata, 15:30).  A foreign daily
+#   close that happens hours later is NOT available at t, even though the provider
+#   labels it with the same calendar date.
+#
+# AVAILABILITY CLASSES
+#   INDIA_SAME_CLOSE           the official value is known at/by the NSE close on
+#                               t, so the date-t value may be used for an
+#                               after-close prediction made at t.
+#   EXTERNAL_CONSERVATIVE_LAG1 default for everything non-Indian: the provider's
+#                               same-calendar-date close is NEVER used; the most
+#                               recent COMPLETE observation strictly before t is.
+#   VERIFIED_BEFORE_NSE_CLOSE  a same-day foreign value, allowed ONLY with
+#                               documented proof that its session closes before the
+#                               NSE close.  Not granted to Nikkei / Hang Seng.
+#
+#   => In the first run EVERY non-Indian series uses conservative lag1, which
+#      intentionally sacrifices same-day information for causal safety.
+#
+# NSE INDEX POLICY
+#   Real index series are used (^NSEI, ^NSEBANK, ^INDIAVIX, sector indices).
+#   The reconstructed equal-weight proxy computed from the 50 stocks is NOT used
+#   and is NOT called an index.
+#
+# FII/DII FLOWS
+#   Optional and NOT required.  yfinance exposes no reproducible daily FII/DII net
+#   flow series with documented publication timing, so they are declared here with
+#   enabled=false and are expected to be REJECTED by the probe with a reason.  The
+#   programme does not depend on them.
+#
+# FIELDS (per source, all required)
+#   source_id, description, provider, provider_symbol_or_identifier, asset_class,
+#   market_timezone, expected_session, availability_policy, frequency,
+#   requested_start, requested_end, first_actual_date, last_actual_date,
+#   missing_fraction, source_url_or_provenance, raw_sha256, enabled,
+#   exclusion_reason
+#
+# The probe fills first_actual_date / last_actual_date / missing_fraction /
+# raw_sha256 / enabled, and adds accepted / exclusion_reason evidence.
+# =============================================================================
+
+registry_version: 1
+final_allowed_date: "2019-12-31"
+download_end_exclusive: "2020-01-01"
+
+# NSE sector index -> external sector index symbol.
+#
+# These keys are the ACTUAL sector vocabulary of the V2 sector map
+# (v2/metadata/sector_map.csv), not finer NSE industry names, so a mapping can
+# only be made where it is genuine.  A symbol whose source was REJECTED by the probe
+# maps to nothing: an unavailable index never becomes a mapped feature.
+#
+# Deliberately NOT mapped, and why:
+#   FINANCIALS               -> NIFTY Bank is a BANK index, not the whole financial
+#                               sector; forcing it would be a dubious mapping
+#   INDUSTRIALS              -> the only candidate (NIFTY Auto) is unavailable
+#   ENERGY_AND_MATERIALS     -> NIFTY Energy / NIFTY Metal are unavailable
+#   CONSUMER                 -> NIFTY FMCG is unavailable
+#   SERVICES_AND_CONSTRUCTION-> NIFTY Realty / PSU Bank are unavailable
+#   UNKNOWN                  -> never mapped
+#
+# The mapping is recorded and audited even when a sector maps to nothing: a security
+# without a verified sector index keeps its stock features and is NOT dropped.
+sector_index_map:
+  IT_AND_TELECOM: "^CNXIT"
+  HEALTHCARE: "^CNXPHARMA"
+
+sources:
+  # ---------------------------------------------------------------- E1 India
+  - source_id: NIFTY50
+    description: NIFTY 50 index, the primary Indian large-cap benchmark
+    provider: yfinance
+    provider_symbol_or_identifier: "^NSEI"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^NSEI)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  - source_id: NIFTY_BANK
+    description: NIFTY Bank index, the Indian banking benchmark
+    provider: yfinance
+    provider_symbol_or_identifier: "^NSEBANK"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^NSEBANK)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  - source_id: INDIA_VIX
+    description: India VIX, the NSE volatility index
+    provider: yfinance
+    provider_symbol_or_identifier: "^INDIAVIX"
+    asset_class: VOLATILITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^INDIAVIX)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  - source_id: NIFTY_IT
+    description: NIFTY IT / CNX IT sector index
+    provider: yfinance
+    provider_symbol_or_identifier: "^CNXIT"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^CNXIT)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  - source_id: NIFTY_AUTO
+    description: NIFTY Auto / CNX Auto sector index
+    provider: yfinance
+    provider_symbol_or_identifier: "^CNXAUTO"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^CNXAUTO)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  - source_id: NIFTY_FMCG
+    description: NIFTY FMCG / CNX FMCG sector index
+    provider: yfinance
+    provider_symbol_or_identifier: "^CNXFMCG"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^CNXFMCG)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  - source_id: NIFTY_PHARMA
+    description: NIFTY Pharma / CNX Pharma sector index
+    provider: yfinance
+    provider_symbol_or_identifier: "^CNXPHARMA"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^CNXPHARMA)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  - source_id: NIFTY_METAL
+    description: NIFTY Metal / CNX Metal sector index
+    provider: yfinance
+    provider_symbol_or_identifier: "^CNXMETAL"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^CNXMETAL)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  - source_id: NIFTY_ENERGY
+    description: NIFTY Energy / CNX Energy sector index
+    provider: yfinance
+    provider_symbol_or_identifier: "^CNXENERGY"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^CNXENERGY)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  - source_id: NIFTY_FIN_SERVICE
+    description: NIFTY Financial Services / CNX Nifty Financial Services index
+    provider: yfinance
+    provider_symbol_or_identifier: "^NIFTY_FIN_SERVICE"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^NIFTY_FIN_SERVICE)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  - source_id: NIFTY_REALTY
+    description: NIFTY Realty / CNX Realty sector index
+    provider: yfinance
+    provider_symbol_or_identifier: "^CNXREALTY"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^CNXREALTY)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  - source_id: NIFTY_PSU_BANK
+    description: NIFTY PSU Bank / CNX Nifty PSU Bank sector index
+    provider: yfinance
+    provider_symbol_or_identifier: "^CNXPSUBANK"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Kolkata
+    expected_session: "09:15-15:30 Asia/Kolkata"
+    availability_policy: INDIA_SAME_CLOSE
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^CNXPSUBANK)"
+    enabled: true
+    family: E1_INDIA_MARKET
+
+  # ------------------------------------------------------------- E2 global risk
+  - source_id: SP500
+    description: S&P 500 index, the primary global risk benchmark
+    provider: yfinance
+    provider_symbol_or_identifier: "^GSPC"
+    asset_class: EQUITY_INDEX
+    market_timezone: America/New_York
+    expected_session: "09:30-16:00 America/New_York"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^GSPC)"
+    enabled: true
+    family: E2_GLOBAL_RISK
+
+  - source_id: NASDAQ_COMPOSITE
+    description: NASDAQ Composite index
+    provider: yfinance
+    provider_symbol_or_identifier: "^IXIC"
+    asset_class: EQUITY_INDEX
+    market_timezone: America/New_York
+    expected_session: "09:30-16:00 America/New_York"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^IXIC)"
+    enabled: true
+    family: E2_GLOBAL_RISK
+
+  - source_id: DOW_JONES
+    description: Dow Jones Industrial Average
+    provider: yfinance
+    provider_symbol_or_identifier: "^DJI"
+    asset_class: EQUITY_INDEX
+    market_timezone: America/New_York
+    expected_session: "09:30-16:00 America/New_York"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^DJI)"
+    enabled: true
+    family: E2_GLOBAL_RISK
+
+  - source_id: US_VIX
+    description: CBOE Volatility Index, the global risk-aversion gauge
+    provider: yfinance
+    provider_symbol_or_identifier: "^VIX"
+    asset_class: VOLATILITY_INDEX
+    market_timezone: America/New_York
+    expected_session: "09:30-16:00 America/New_York"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^VIX)"
+    enabled: true
+    family: E2_GLOBAL_RISK
+
+  - source_id: NIKKEI_225
+    description: >-
+      Nikkei 225, Asian equity risk. Conservative lag1: the Tokyo close is close to
+      the NSE close, so no same-day availability is assumed.
+    provider: yfinance
+    provider_symbol_or_identifier: "^N225"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Tokyo
+    expected_session: "09:00-15:00 Asia/Tokyo"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^N225)"
+    enabled: true
+    family: E2_GLOBAL_RISK
+
+  - source_id: HANG_SENG
+    description: Hang Seng Index, Asian equity risk. Conservative lag1.
+    provider: yfinance
+    provider_symbol_or_identifier: "^HSI"
+    asset_class: EQUITY_INDEX
+    market_timezone: Asia/Hong_Kong
+    expected_session: "09:30-16:00 Asia/Hong_Kong"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^HSI)"
+    enabled: true
+    family: E2_GLOBAL_RISK
+
+  - source_id: EURO_STOXX_50
+    description: >-
+      EURO STOXX 50, European equity risk. Optional: included only if its historical
+      coverage proves excellent in the probe.
+    provider: yfinance
+    provider_symbol_or_identifier: "^STOXX50E"
+    asset_class: EQUITY_INDEX
+    market_timezone: Europe/Berlin
+    expected_session: "09:00-17:30 Europe/Berlin"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (^STOXX50E)"
+    enabled: true
+    family: E2_GLOBAL_RISK
+
+  # ------------------------------------------------- E3 FX / commodity / rates
+  - source_id: USDINR
+    description: USD/INR spot exchange rate
+    provider: yfinance
+    provider_symbol_or_identifier: "INR=X"
+    asset_class: FX
+    market_timezone: Asia/Kolkata
+    expected_session: "continuous interbank, 24h"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (INR=X)"
+    enabled: true
+    family: E3_FX_COMMODITY_RATES
+
+  - source_id: BRENT_CRUDE
+    description: Brent crude oil front-month
+    provider: yfinance
+    provider_symbol_or_identifier: "BZ=F"
+    asset_class: COMMODITY
+    market_timezone: Europe/London
+    expected_session: "02:00-23:00 Europe/London"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (BZ=F)"
+    enabled: true
+    family: E3_FX_COMMODITY_RATES
+
+  - source_id: WTI_CRUDE
+    description: WTI crude oil front-month
+    provider: yfinance
+    provider_symbol_or_identifier: "CL=F"
+    asset_class: COMMODITY
+    market_timezone: America/New_York
+    expected_session: "09:00-16:30 America/New_York"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (CL=F)"
+    enabled: true
+    family: E3_FX_COMMODITY_RATES
+
+  - source_id: GOLD
+    description: Gold futures, the classic risk-hedge commodity
+    provider: yfinance
+    provider_symbol_or_identifier: "GC=F"
+    asset_class: COMMODITY
+    market_timezone: America/New_York
+    expected_session: "09:00-16:30 America/New_York"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (GC=F)"
+    enabled: true
+    family: E3_FX_COMMODITY_RATES
+
+  - source_id: US_DOLLAR_INDEX
+    description: US Dollar Index (DXY), the global reserve-currency risk gauge
+    provider: yfinance
+    provider_symbol_or_identifier: "DX-Y.NYB"
+    asset_class: FX
+    market_timezone: America/New_York
+    expected_session: "09:00-17:00 America/New_York"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "Yahoo Finance chart API via yfinance (DX-Y.NYB)"
+    enabled: true
+    family: E3_FX_COMMODITY_RATES
+
+  - source_id: US_10Y_YIELD
+    description: US 10-year Treasury yield
+    provider: yfinance
+    provider_symbol_or_identifier: "^TNX"
+    asset_class: RATES
+    market_timezone: America/New_York
+    expected_session: "08:00-17:00 America/New_York"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: >-
+      Yahoo Finance chart API via yfinance (^TNX). NOTE: ^TNX is quoted as a YIELD IN
+      PERCENT (10.0 = 10%), so no log transform is applied to the level.
+    enabled: true
+    family: E3_FX_COMMODITY_RATES
+
+  # ----------------------------------------------- optional FII/DII (not relied on)
+  - source_id: FII_NET_FLOW
+    description: >-
+      Daily FII net flow in INR crore. Optional and NOT required: no free provider
+      exposes a reproducible daily series with documented publication timing, so the
+      probe is expected to reject this. The programme never depends on it.
+    provider: none_available
+    provider_symbol_or_identifier: NOT_PROVIDED
+    asset_class: FLOWS
+    market_timezone: Asia/Kolkata
+    expected_session: "post-close publication, timing uncertain"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "no reproducible free source with documented timing"
+    enabled: false
+    family: FII_DII_FLOWS
+    exclusion_reason: >-
+      declared disabled: publication timing and provenance cannot be documented
+      reproducibly
+
+  - source_id: DII_NET_FLOW
+    description: >-
+      Daily DII net flow in INR crore. Optional and NOT required, and disabled for
+      the same reason as FII_NET_FLOW.
+    provider: none_available
+    provider_symbol_or_identifier: NOT_PROVIDED
+    asset_class: FLOWS
+    market_timezone: Asia/Kolkata
+    expected_session: "post-close publication, timing uncertain"
+    availability_policy: EXTERNAL_CONSERVATIVE_LAG1
+    frequency: 1D
+    requested_start: "2005-01-01"
+    requested_end: "2019-12-31"
+    source_url_or_provenance: "no reproducible free source with documented timing"
+    enabled: false
+    family: FII_DII_FLOWS
+    exclusion_reason: >-
+      declared disabled: publication timing and provenance cannot be documented
+      reproducibly

@@ -1,0 +1,15 @@
+# V3 -- the CONTROL family: X0_STOCK_ONLY.
+#
+# The existing 27 stationary stock-derived features and nothing else.  This is the
+# baseline every exogenous increment is measured against, on the SAME folds, the
+# SAME multi-horizon targets and, for the common view, the SAME observations.
+base: precovid_exogenous_base.yaml
+
+variant: V3_SCREEN_STOCK_ONLY
+feature_family: X0_STOCK_ONLY
+
+# X0 deliberately has NO exogenous block: adding one here would destroy the
+# control.  The exogenous schema is empty by construction.
+exogenous_features: none
+role: CONTROL
+incremental_measured_against: null

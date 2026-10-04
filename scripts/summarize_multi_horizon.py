@@ -454,11 +454,34 @@ def _universe_block(track: HZ.MultiHorizonTrack) -> dict:
     }
 
 
+#: Summary statistics carried in each run's ``metrics_all_valid_origins`` block.
+MAGNITUDE_STATISTICS: tuple[str, ...] = (
+    "abs_future_return_median",
+    "abs_future_return_mean",
+    "abs_future_return_std",
+    "class_balance_up_fraction",
+    "future_return_std",
+)
+
+
 def _magnitude_table(rows: list[dict]) -> dict:
-    """Median / mean absolute future return and class balance per horizon."""
+    """Median / mean absolute future return and class balance per horizon.
+
+    Two DIFFERENT counts are reported, and they are not interchangeable:
+
+    ``n_summary_values_aggregated``
+        how many per-run summary STATISTICS were averaged.  This is a count of
+        numbers, not of market observations.
+    ``n_underlying_observations``
+        the genuine number of scored (ticker, origin) observations, summed over
+        the runs that contributed.  Taken from each run's own ``n`` field, so no
+        prediction file has to be reloaded.
+    """
     out: dict[str, dict] = {}
     for horizon in HZ.HORIZONS:
-        values = []
+        values: list[tuple[str, float]] = []
+        observations = 0
+        contributing_runs = 0
         for row in rows:
             if _int(row, "horizon") != horizon:
                 continue
@@ -467,22 +490,28 @@ def _magnitude_table(rows: list[dict]) -> dict:
             if not path or not path.is_file():
                 continue
             block = json.loads(path.read_text()).get("metrics_all_valid_origins", {})
-            for key, out_key in (("abs_future_return_median", "abs_future_return_median"),
-                                 ("abs_future_return_mean", "abs_future_return_mean"),
-                                 ("abs_future_return_std", "abs_future_return_std"),
-                                 ("class_balance_up_fraction", "class_balance_up_fraction"),
-                                 ("future_return_std", "future_return_std")):
+            contributed = False
+            for key in MAGNITUDE_STATISTICS:
                 value = block.get(key)
                 if value is None or not np.isfinite(float(value)):
                     continue
-                values.append((out_key, float(value)))
+                values.append((key, float(value)))
+                contributed = True
+            if contributed:
+                contributing_runs += 1
+                observations += int(block.get("n") or 0)
         if values:
             out[str(horizon)] = {
                 "objective_id": HZ.objective_id(horizon),
                 "horizon_phrase": HZ.horizon_phrase(horizon),
                 **{key: float(np.mean([v for k, v in values if k == key]))
                    for key in {k for k, _ in values}},
-                "n_observations_used": len(values),
+                "n_summary_values_aggregated": len(values),
+                "n_contributing_runs": contributing_runs,
+                "n_underlying_observations": observations,
+                "count_semantics": ("n_summary_values_aggregated counts summary "
+                                    "STATISTICS averaged; n_underlying_observations "
+                                    "counts scored (ticker, origin) observations"),
                 "note": ("analysis only; samples are never filtered on the size of the "
                          "future move"),
             }
@@ -703,6 +732,13 @@ def render_report(summary: dict, *, lockbox: dict | None = None,
                     f"{block['years_roc_auc_above_50']} | "
                     f"{block['years_beating_majority_baseline']} |")
     add("")
+    add("READ THIS BEFORE READING ANY ACCURACY COLUMN ABOVE: raw accuracy rises with "
+        "the horizon because the UP class becomes more common, but the models remain "
+        "BELOW the train-majority baseline at every horizon and balanced accuracy "
+        "stays near 0.50. A positive \"mean delta\" at 5D/10D means only that the "
+        "imbalance moved less than the accuracy did in a minority of years -- it is "
+        "not evidence of directional skill.")
+    add("")
 
     add("## 17. Confidence intervals (date-block bootstrap)")
     add("")
@@ -857,15 +893,18 @@ def render_report(summary: dict, *, lockbox: dict | None = None,
     add("## 33. Horizon return magnitude diagnostic (analysis only)")
     add("")
     add("| objective | median abs future return | mean abs future return | std of future "
-        "return | class balance (up) |")
-    add("|---|---|---|---|---|")
+        "return | class balance (up) | scored observations |")
+    add("|---|---|---|---|---|---|")
     for horizon, block in summary["return_magnitude_by_horizon"].items():
         add(f"| `{block['objective_id']}` | {_fmt(block.get('abs_future_return_median'), 5)} "
             f"| {_fmt(block.get('abs_future_return_mean'), 5)} | "
             f"{_fmt(block.get('future_return_std'), 5)} | "
-            f"{_fmt(block.get('class_balance_up_fraction'))} |")
+            f"{_fmt(block.get('class_balance_up_fraction'))} | "
+            f"{block.get('n_underlying_observations')} |")
     add("")
-    add("Samples are NEVER filtered on the size of the future move.")
+    add("Samples are NEVER filtered on the size of the future move. The observation "
+        "count above is the number of scored (ticker, origin) samples the averaged "
+        "statistics came from -- it is NOT a count of summary values.")
     add("")
 
     add("## 34. Model confidence vs future move magnitude (analysis only)")

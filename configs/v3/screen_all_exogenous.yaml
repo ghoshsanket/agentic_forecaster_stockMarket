@@ -1,0 +1,19 @@
+# V3 -- information family X4_ALL_EXOGENOUS.
+#
+# X0 plus every ACCEPTED exogenous family: Indian market state, global risk, and
+# FX/commodity/rates.  This is the only combination family, and no further
+# Cartesian combinations are created.
+base: precovid_exogenous_base.yaml
+
+variant: V3_SCREEN_ALL_EXOGENOUS
+feature_family: X4_ALL_EXOGENOUS
+
+includes:
+  - X1_INDIA_MARKET
+  - X2_GLOBAL_RISK
+  - X3_MACRO_COMMODITY
+composite: global_risk_factor
+same_date_allowed: mixed
+same_date_note: >-
+  Indian sources are INDIA_SAME_CLOSE and may use date t; every non-Indian source
+  stays on conservative lag1 inside the same family.

@@ -1,0 +1,27 @@
+# V3 -- information family X3_MACRO_COMMODITY.
+#
+# X0 plus FX, commodity and rates state, all conservatively lagged by one source
+# trading observation:
+#   USD/INR, Brent crude, WTI crude, Gold, US Dollar Index, US 10-year yield
+#
+# Not every candidate has to survive the source-quality gate; a rejected series is
+# excluded rather than replaced by an invented value.
+base: precovid_exogenous_base.yaml
+
+variant: V3_SCREEN_MACRO_COMMODITY
+feature_family: X3_MACRO_COMMODITY
+
+sources:
+  - USDINR
+  - BRENT_CRUDE
+  - WTI_CRUDE
+  - GOLD
+  - US_DOLLAR_INDEX
+  - US_10Y_YIELD
+availability_class: EXTERNAL_CONSERVATIVE_LAG1
+same_date_allowed: false
+lag_rule: >-
+  the most recent source observation STRICTLY BEFORE the NSE prediction timestamp
+yield_note: >-
+  the US 10-year yield is quoted in PERCENT, so its level is used directly with no
+  log transform

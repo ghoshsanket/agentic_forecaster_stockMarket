@@ -1,0 +1,35 @@
+# V3 -- information family X1_INDIA_MARKET.
+#
+# X0 plus ACTUAL INDIAN MARKET STATE:
+#   * NIFTY 50 (^NSEI)         -- a real index series, not a reconstructed proxy
+#   * NIFTY Bank (^NSEBANK)
+#   * India VIX (^INDIAVIX)    -- level, log level, change, 20-day z-score
+#   * verified sector-index features (NIFTY IT / CNX IT, NIFTY Pharma)
+#   * stock-minus-NIFTY relative context
+#
+# All of these are INDIA_SAME_CLOSE: the official value is known at the NSE close
+# on t, so the date-t value may be used for an after-close prediction made at t.
+base: precovid_exogenous_base.yaml
+
+variant: V3_SCREEN_INDIA_MARKET
+feature_family: X1_INDIA_MARKET
+
+sources:
+  - NIFTY50
+  - NIFTY_BANK
+  - INDIA_VIX
+  - NIFTY_IT
+  - NIFTY_PHARMA
+availability_class: INDIA_SAME_CLOSE
+same_date_allowed: true
+relative_features:
+  - stock_minus_NIFTY50_return_1
+  - stock_minus_NIFTY50_return_5
+  - stock_minus_NIFTY50_return_20
+sector_index_features:
+  - stock_minus_sector_return_1
+  - stock_minus_sector_return_5
+  - stock_minus_sector_return_20
+sector_index_note: >-
+  A security whose sector has no verified external index contributes no
+  sector-index block and is NOT dropped from the study.

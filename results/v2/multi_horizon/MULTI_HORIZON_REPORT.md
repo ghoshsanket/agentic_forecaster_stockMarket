@@ -3,7 +3,7 @@
 **MODEL V2 IS NOT THE ORIGINAL PAPER MODEL** (classification `NEW_EXPERIMENTAL_ARCHITECTURE`).
 
 - track: `MULTI_HORIZON` / `PRE_COVID_MULTI_HORIZON_DIRECTION_TRACK`
-- generated: `2026-10-04T08:27:46.151828+00:00`
+- generated: `2026-10-04T08:59:53.371087+00:00`
 - question: does the existing PRE-COVID price-derived dataset contain more predictable directional information at 3-, 5- or 10-trading-day horizons than at the one-day horizon?
 - only what changed: **FORECAST_HORIZON**
 - survivorship: `SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK` -- available securities from the reconstructed fixed universe
@@ -140,6 +140,8 @@ Excluded (with reasons in `supervised_universe.csv`):
 | HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | common_origin | 0.5405 | 0.4996 | 0.5131 | 0.2489 | -0.0167 | 0.5037 | 5 | 2 |
 | HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | non_overlapping | 0.5377 | 0.4996 | 0.5050 | 0.2489 | -0.0167 | 0.4895 | 1 | 2 |
 
+READ THIS BEFORE READING ANY ACCURACY COLUMN ABOVE: raw accuracy rises with the horizon because the UP class becomes more common, but the models remain BELOW the train-majority baseline at every horizon and balanced accuracy stays near 0.50. A positive "mean delta" at 5D/10D means only that the imbalance moved less than the accuracy did in a minority of years -- it is not evidence of directional skill.
+
 ## 17. Confidence intervals (date-block bootstrap)
 
 | model | objective | fold | accuracy 95% CI | ROC-AUC 95% CI | method |
@@ -218,14 +220,14 @@ _Seed stability was not reached._
 
 ## 33. Horizon return magnitude diagnostic (analysis only)
 
-| objective | median abs future return | mean abs future return | std of future return | class balance (up) |
-|---|---|---|---|---|
-| `ABS_DIR_1D_CONTROL` | 0.00987 | 0.01337 | 0.01879 | 0.5056 |
-| `ABS_DIR_3D` | 0.01767 | 0.02370 | 0.03261 | 0.5255 |
-| `ABS_DIR_5D` | 0.02336 | 0.03089 | 0.04199 | 0.5344 |
-| `ABS_DIR_10D` | 0.03426 | 0.04390 | 0.05837 | 0.5503 |
+| objective | median abs future return | mean abs future return | std of future return | class balance (up) | scored observations |
+|---|---|---|---|---|---|
+| `ABS_DIR_1D_CONTROL` | 0.00987 | 0.01337 | 0.01879 | 0.5056 | 102900 |
+| `ABS_DIR_3D` | 0.01767 | 0.02370 | 0.03261 | 0.5255 | 102060 |
+| `ABS_DIR_5D` | 0.02336 | 0.03089 | 0.04199 | 0.5344 | 101220 |
+| `ABS_DIR_10D` | 0.03426 | 0.04390 | 0.05837 | 0.5503 | 99120 |
 
-Samples are NEVER filtered on the size of the future move.
+Samples are NEVER filtered on the size of the future move. The observation count above is the number of scored (ticker, origin) samples the averaged statistics came from -- it is NOT a count of summary values.
 
 ## 34. Model confidence vs future move magnitude (analysis only)
 

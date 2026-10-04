@@ -1,0 +1,31 @@
+# V3 -- STAGE 2 NEURAL: SHARED_LSTM_EXOGENOUS.
+#
+# Two SYNCHRONISED sequences over the same 60 origin dates, fused:
+#
+#   stock sequence      27 stationary features
+#                      -> Linear -> GELU -> LayerNorm
+#                      -> LSTM(96, 2 layers, dropout 0.20, unidirectional)
+#   exogenous sequence  selected external features over the same 60 dates
+#                      -> Linear(F_exog, 32) -> GELU -> LayerNorm
+#                      -> LSTM(32, 1 layer)
+#   ticker embedding    16
+#   fusion             96 + 32 + 16 = 144
+#                      -> Linear(144, 96) -> GELU -> Dropout(0.10)
+#                      -> Linear(96, 32) -> GELU -> Linear(32, 1)
+#
+# The exogenous encoder is deliberately SMALL: the question is whether the external
+# INFORMATION carries signal, not whether a bigger encoder can mine more from it.
+# Hundreds of exogenous features are NOT appended blindly to the stock input.
+base: precovid_exogenous_base.yaml
+
+variant: SHARED_LSTM_EXOGENOUS
+neural_architecture: SHARED_LSTM_EXOGENOUS
+use_transformer: false
+
+neural:
+  stock_encoder: {hidden_size: 96, layers: 2, dropout: 0.20, unidirectional: true}
+  exogenous_encoder: {hidden_size: 32, layers: 1}
+  ticker_embedding: 16
+  fusion: {hidden: 96, z: 32, dropout: 0.10}
+  head: binary_direction
+  tuned: false

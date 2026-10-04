@@ -1,0 +1,1217 @@
+{
+  "track": "V3_EXOGENOUS_PRECOVID",
+  "final_allowed_date": "2019-12-31",
+  "download_end_exclusive": "2020-01-01",
+  "n_declared": 27,
+  "n_accepted": 18,
+  "n_rejected": 9,
+  "coverage_gate": {
+    "development_years": [
+      2014,
+      2018
+    ],
+    "max_missing_fraction": 0.05,
+    "max_unexplained_gap_days": 45
+  },
+  "sources": [
+    {
+      "source_id": "NIFTY50",
+      "provider": "yfinance",
+      "identifier": "^NSEI",
+      "family": "E1_INDIA_MARKET",
+      "available": true,
+      "row_count": 3001,
+      "first_actual_date": "2007-09-17",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.032258064516129004,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "181647ebb31cc07278816c42eefeca4139a319399ecc52e25a326017b48372bd",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E1_INDIA_MARKET/NIFTY50.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E1_INDIA_MARKET/NIFTY50.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2007-09-17",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3001,
+          "observations_per_development_year": {
+            "2014": 240,
+            "2015": 244,
+            "2016": 244,
+            "2017": 248,
+            "2018": 245
+          },
+          "best_development_year_count": 248,
+          "missing_fraction_by_year": {
+            "2014": 0.032258064516129004,
+            "2015": 0.016129032258064502,
+            "2016": 0.016129032258064502,
+            "2017": 0.0,
+            "2018": 0.012096774193548376
+          },
+          "max_missing_fraction_in_development": 0.032258064516129004,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "NIFTY_BANK",
+      "provider": "yfinance",
+      "identifier": "^NSEBANK",
+      "family": "E1_INDIA_MARKET",
+      "available": true,
+      "row_count": 3017,
+      "first_actual_date": "2007-09-17",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.024193548387096753,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "48dde02d7ca17dc10a65f88e385d2a62c10b22da31b157957421d44edf4a3f53",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E1_INDIA_MARKET/NIFTY_BANK.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E1_INDIA_MARKET/NIFTY_BANK.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2007-09-17",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3017,
+          "observations_per_development_year": {
+            "2014": 242,
+            "2015": 246,
+            "2016": 246,
+            "2017": 248,
+            "2018": 246
+          },
+          "best_development_year_count": 248,
+          "missing_fraction_by_year": {
+            "2014": 0.024193548387096753,
+            "2015": 0.008064516129032251,
+            "2016": 0.008064516129032251,
+            "2017": 0.0,
+            "2018": 0.008064516129032251
+          },
+          "max_missing_fraction_in_development": 0.024193548387096753,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "INDIA_VIX",
+      "provider": "yfinance",
+      "identifier": "^INDIAVIX",
+      "family": "E1_INDIA_MARKET",
+      "available": true,
+      "row_count": 2899,
+      "first_actual_date": "2008-03-03",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.024193548387096753,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 8,
+      "raw_sha256": "d64534a6ac525d963d7f125f80a34f042b45829c18cfb8e5546b25d0a0c17e3d",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E1_INDIA_MARKET/INDIA_VIX.parquet",
+      "note": "reused existing immutable snapshot; 8 suspicious one-day jump(s) -- inspect before use",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E1_INDIA_MARKET/INDIA_VIX.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2008-03-03",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 2899,
+          "observations_per_development_year": {
+            "2014": 242,
+            "2015": 246,
+            "2016": 246,
+            "2017": 248,
+            "2018": 246
+          },
+          "best_development_year_count": 248,
+          "missing_fraction_by_year": {
+            "2014": 0.024193548387096753,
+            "2015": 0.008064516129032251,
+            "2016": 0.008064516129032251,
+            "2017": 0.0,
+            "2018": 0.008064516129032251
+          },
+          "max_missing_fraction_in_development": 0.024193548387096753,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "NIFTY_IT",
+      "provider": "yfinance",
+      "identifier": "^CNXIT",
+      "family": "E1_INDIA_MARKET",
+      "available": true,
+      "row_count": 3017,
+      "first_actual_date": "2007-09-17",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.024193548387096753,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "52d8033a5cad40558a3c898622d3ff346038edf1c75ad86221ed4b0fbeb6bf43",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E1_INDIA_MARKET/NIFTY_IT.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E1_INDIA_MARKET/NIFTY_IT.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2007-09-17",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3017,
+          "observations_per_development_year": {
+            "2014": 242,
+            "2015": 246,
+            "2016": 246,
+            "2017": 248,
+            "2018": 246
+          },
+          "best_development_year_count": 248,
+          "missing_fraction_by_year": {
+            "2014": 0.024193548387096753,
+            "2015": 0.008064516129032251,
+            "2016": 0.008064516129032251,
+            "2017": 0.0,
+            "2018": 0.008064516129032251
+          },
+          "max_missing_fraction_in_development": 0.024193548387096753,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "NIFTY_AUTO",
+      "provider": "yfinance",
+      "identifier": "^CNXAUTO",
+      "family": "E1_INDIA_MARKET",
+      "available": false,
+      "row_count": 0,
+      "first_actual_date": null,
+      "last_actual_date": null,
+      "missing_fraction": null,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": null,
+      "raw_path": null,
+      "note": "provider returned no rows",
+      "provenance": {
+        "provider": "yfinance",
+        "identifier": "^CNXAUTO",
+        "requested_start": "2005-01-01",
+        "requested_end_exclusive": "2020-01-01",
+        "provider_version": "1.7.0",
+        "download_parameters": {
+          "auto_adjust": false,
+          "progress": false,
+          "threads": false,
+          "actions": false,
+          "multi_level_index": false
+        },
+        "error": "provider returned no rows"
+      },
+      "accepted": false,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": "provider returned no rows"
+    },
+    {
+      "source_id": "NIFTY_FMCG",
+      "provider": "yfinance",
+      "identifier": "^CNXFMCG",
+      "family": "E1_INDIA_MARKET",
+      "available": false,
+      "row_count": 0,
+      "first_actual_date": null,
+      "last_actual_date": null,
+      "missing_fraction": null,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": null,
+      "raw_path": null,
+      "note": "provider returned no rows",
+      "provenance": {
+        "provider": "yfinance",
+        "identifier": "^CNXFMCG",
+        "requested_start": "2005-01-01",
+        "requested_end_exclusive": "2020-01-01",
+        "provider_version": "1.7.0",
+        "download_parameters": {
+          "auto_adjust": false,
+          "progress": false,
+          "threads": false,
+          "actions": false,
+          "multi_level_index": false
+        },
+        "error": "provider returned no rows"
+      },
+      "accepted": false,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": "provider returned no rows"
+    },
+    {
+      "source_id": "NIFTY_PHARMA",
+      "provider": "yfinance",
+      "identifier": "^CNXPHARMA",
+      "family": "E1_INDIA_MARKET",
+      "available": true,
+      "row_count": 2190,
+      "first_actual_date": "2011-01-31",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.024193548387096753,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "b2b9c3b86fd66b74bccba9f905bbe566259d5e2698a2f644655abf242c210b46",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E1_INDIA_MARKET/NIFTY_PHARMA.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E1_INDIA_MARKET/NIFTY_PHARMA.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2011-01-31",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 2190,
+          "observations_per_development_year": {
+            "2014": 242,
+            "2015": 246,
+            "2016": 246,
+            "2017": 248,
+            "2018": 246
+          },
+          "best_development_year_count": 248,
+          "missing_fraction_by_year": {
+            "2014": 0.024193548387096753,
+            "2015": 0.008064516129032251,
+            "2016": 0.008064516129032251,
+            "2017": 0.0,
+            "2018": 0.008064516129032251
+          },
+          "max_missing_fraction_in_development": 0.024193548387096753,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "NIFTY_METAL",
+      "provider": "yfinance",
+      "identifier": "^CNXMETAL",
+      "family": "E1_INDIA_MARKET",
+      "available": false,
+      "row_count": 0,
+      "first_actual_date": null,
+      "last_actual_date": null,
+      "missing_fraction": null,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": null,
+      "raw_path": null,
+      "note": "provider returned no rows",
+      "provenance": {
+        "provider": "yfinance",
+        "identifier": "^CNXMETAL",
+        "requested_start": "2005-01-01",
+        "requested_end_exclusive": "2020-01-01",
+        "provider_version": "1.7.0",
+        "download_parameters": {
+          "auto_adjust": false,
+          "progress": false,
+          "threads": false,
+          "actions": false,
+          "multi_level_index": false
+        },
+        "error": "provider returned no rows"
+      },
+      "accepted": false,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": "provider returned no rows"
+    },
+    {
+      "source_id": "NIFTY_ENERGY",
+      "provider": "yfinance",
+      "identifier": "^CNXENERGY",
+      "family": "E1_INDIA_MARKET",
+      "available": false,
+      "row_count": 0,
+      "first_actual_date": null,
+      "last_actual_date": null,
+      "missing_fraction": null,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": null,
+      "raw_path": null,
+      "note": "provider returned no rows",
+      "provenance": {
+        "provider": "yfinance",
+        "identifier": "^CNXENERGY",
+        "requested_start": "2005-01-01",
+        "requested_end_exclusive": "2020-01-01",
+        "provider_version": "1.7.0",
+        "download_parameters": {
+          "auto_adjust": false,
+          "progress": false,
+          "threads": false,
+          "actions": false,
+          "multi_level_index": false
+        },
+        "error": "provider returned no rows"
+      },
+      "accepted": false,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": "provider returned no rows"
+    },
+    {
+      "source_id": "NIFTY_FIN_SERVICE",
+      "provider": "yfinance",
+      "identifier": "^NIFTY_FIN_SERVICE",
+      "family": "E1_INDIA_MARKET",
+      "available": false,
+      "row_count": 0,
+      "first_actual_date": null,
+      "last_actual_date": null,
+      "missing_fraction": null,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": null,
+      "raw_path": null,
+      "note": "provider returned no rows",
+      "provenance": {
+        "provider": "yfinance",
+        "identifier": "^NIFTY_FIN_SERVICE",
+        "requested_start": "2005-01-01",
+        "requested_end_exclusive": "2020-01-01",
+        "provider_version": "1.7.0",
+        "download_parameters": {
+          "auto_adjust": false,
+          "progress": false,
+          "threads": false,
+          "actions": false,
+          "multi_level_index": false
+        },
+        "error": "provider returned no rows"
+      },
+      "accepted": false,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": "provider returned no rows"
+    },
+    {
+      "source_id": "NIFTY_REALTY",
+      "provider": "yfinance",
+      "identifier": "^CNXREALTY",
+      "family": "E1_INDIA_MARKET",
+      "available": false,
+      "row_count": 0,
+      "first_actual_date": null,
+      "last_actual_date": null,
+      "missing_fraction": null,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": null,
+      "raw_path": null,
+      "note": "provider returned no rows",
+      "provenance": {
+        "provider": "yfinance",
+        "identifier": "^CNXREALTY",
+        "requested_start": "2005-01-01",
+        "requested_end_exclusive": "2020-01-01",
+        "provider_version": "1.7.0",
+        "download_parameters": {
+          "auto_adjust": false,
+          "progress": false,
+          "threads": false,
+          "actions": false,
+          "multi_level_index": false
+        },
+        "error": "provider returned no rows"
+      },
+      "accepted": false,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": "provider returned no rows"
+    },
+    {
+      "source_id": "NIFTY_PSU_BANK",
+      "provider": "yfinance",
+      "identifier": "^CNXPSUBANK",
+      "family": "E1_INDIA_MARKET",
+      "available": false,
+      "row_count": 0,
+      "first_actual_date": null,
+      "last_actual_date": null,
+      "missing_fraction": null,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": null,
+      "raw_path": null,
+      "note": "provider returned no rows",
+      "provenance": {
+        "provider": "yfinance",
+        "identifier": "^CNXPSUBANK",
+        "requested_start": "2005-01-01",
+        "requested_end_exclusive": "2020-01-01",
+        "provider_version": "1.7.0",
+        "download_parameters": {
+          "auto_adjust": false,
+          "progress": false,
+          "threads": false,
+          "actions": false,
+          "multi_level_index": false
+        },
+        "error": "provider returned no rows"
+      },
+      "accepted": false,
+      "availability_class": "INDIA_SAME_CLOSE",
+      "final_lag_rule": "same-session close (INDIA_SAME_CLOSE)",
+      "exclusion_reason": "provider returned no rows"
+    },
+    {
+      "source_id": "SP500",
+      "provider": "yfinance",
+      "identifier": "^GSPC",
+      "family": "E2_GLOBAL_RISK",
+      "available": true,
+      "row_count": 3775,
+      "first_actual_date": "2005-01-03",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.003968253968253954,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "77e9beb8794d7f40fe741a09f6f20aecceab4f079de54ed7acc5b6669d8c5aff",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/SP500.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/SP500.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2005-01-03",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3775,
+          "observations_per_development_year": {
+            "2014": 252,
+            "2015": 252,
+            "2016": 252,
+            "2017": 251,
+            "2018": 251
+          },
+          "best_development_year_count": 252,
+          "missing_fraction_by_year": {
+            "2014": 0.0,
+            "2015": 0.0,
+            "2016": 0.0,
+            "2017": 0.003968253968253954,
+            "2018": 0.003968253968253954
+          },
+          "max_missing_fraction_in_development": 0.003968253968253954,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "NASDAQ_COMPOSITE",
+      "provider": "yfinance",
+      "identifier": "^IXIC",
+      "family": "E2_GLOBAL_RISK",
+      "available": true,
+      "row_count": 3775,
+      "first_actual_date": "2005-01-03",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.003968253968253954,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "c4f9bf03c5b6d7a290be1e70cf56f34d3a90829fa87ac64c54aae4ee84da8909",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/NASDAQ_COMPOSITE.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/NASDAQ_COMPOSITE.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2005-01-03",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3775,
+          "observations_per_development_year": {
+            "2014": 252,
+            "2015": 252,
+            "2016": 252,
+            "2017": 251,
+            "2018": 251
+          },
+          "best_development_year_count": 252,
+          "missing_fraction_by_year": {
+            "2014": 0.0,
+            "2015": 0.0,
+            "2016": 0.0,
+            "2017": 0.003968253968253954,
+            "2018": 0.003968253968253954
+          },
+          "max_missing_fraction_in_development": 0.003968253968253954,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "DOW_JONES",
+      "provider": "yfinance",
+      "identifier": "^DJI",
+      "family": "E2_GLOBAL_RISK",
+      "available": true,
+      "row_count": 3775,
+      "first_actual_date": "2005-01-03",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.003968253968253954,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "3f11a2732af92650741c075518a7c46efd5b15cfe3a4b1d7f5f4f6fbbb482ba1",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/DOW_JONES.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/DOW_JONES.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2005-01-03",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3775,
+          "observations_per_development_year": {
+            "2014": 252,
+            "2015": 252,
+            "2016": 252,
+            "2017": 251,
+            "2018": 251
+          },
+          "best_development_year_count": 252,
+          "missing_fraction_by_year": {
+            "2014": 0.0,
+            "2015": 0.0,
+            "2016": 0.0,
+            "2017": 0.003968253968253954,
+            "2018": 0.003968253968253954
+          },
+          "max_missing_fraction_in_development": 0.003968253968253954,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "US_VIX",
+      "provider": "yfinance",
+      "identifier": "^VIX",
+      "family": "E2_GLOBAL_RISK",
+      "available": true,
+      "row_count": 3775,
+      "first_actual_date": "2005-01-03",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.003968253968253954,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 11,
+      "raw_sha256": "9be02a8e03a182391c82c89c986be96351d4c74a5d13b48c8f54bbcd917196c7",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/US_VIX.parquet",
+      "note": "reused existing immutable snapshot; 11 suspicious one-day jump(s) -- inspect before use",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/US_VIX.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2005-01-03",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3775,
+          "observations_per_development_year": {
+            "2014": 252,
+            "2015": 252,
+            "2016": 252,
+            "2017": 251,
+            "2018": 251
+          },
+          "best_development_year_count": 252,
+          "missing_fraction_by_year": {
+            "2014": 0.0,
+            "2015": 0.0,
+            "2016": 0.0,
+            "2017": 0.003968253968253954,
+            "2018": 0.003968253968253954
+          },
+          "max_missing_fraction_in_development": 0.003968253968253954,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "NIKKEI_225",
+      "provider": "yfinance",
+      "identifier": "^N225",
+      "family": "E2_GLOBAL_RISK",
+      "available": true,
+      "row_count": 3673,
+      "first_actual_date": "2005-01-04",
+      "last_actual_date": "2019-12-30",
+      "missing_fraction": 0.012145748987854255,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "ea782474f944dd7525dddccc301f2b51761c429285f2adb407d1e6891a2a8351",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/NIKKEI_225.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/NIKKEI_225.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2005-01-04",
+          "last_actual_date": "2019-12-30",
+          "n_observations": 3673,
+          "observations_per_development_year": {
+            "2014": 244,
+            "2015": 244,
+            "2016": 245,
+            "2017": 247,
+            "2018": 246
+          },
+          "best_development_year_count": 247,
+          "missing_fraction_by_year": {
+            "2014": 0.012145748987854255,
+            "2015": 0.012145748987854255,
+            "2016": 0.0080971659919028,
+            "2017": 0.0,
+            "2018": 0.004048582995951455
+          },
+          "max_missing_fraction_in_development": 0.012145748987854255,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "HANG_SENG",
+      "provider": "yfinance",
+      "identifier": "^HSI",
+      "family": "E2_GLOBAL_RISK",
+      "available": true,
+      "row_count": 3696,
+      "first_actual_date": "2005-01-03",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.0080971659919028,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "cf05ca010e8925dd7b8e8b28093dbd50677727d9a14e3118dcd03aa61647bfc8",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/HANG_SENG.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/HANG_SENG.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2005-01-03",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3696,
+          "observations_per_development_year": {
+            "2014": 247,
+            "2015": 247,
+            "2016": 245,
+            "2017": 246,
+            "2018": 246
+          },
+          "best_development_year_count": 247,
+          "missing_fraction_by_year": {
+            "2014": 0.0,
+            "2015": 0.0,
+            "2016": 0.0080971659919028,
+            "2017": 0.004048582995951455,
+            "2018": 0.004048582995951455
+          },
+          "max_missing_fraction_in_development": 0.0080971659919028,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "EURO_STOXX_50",
+      "provider": "yfinance",
+      "identifier": "^STOXX50E",
+      "family": "E2_GLOBAL_RISK",
+      "available": true,
+      "row_count": 3191,
+      "first_actual_date": "2007-03-30",
+      "last_actual_date": "2019-12-30",
+      "missing_fraction": 0.027559055118110187,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "96cb512c4fe59640b464753d8923a2db641540b6ec1875f5c72f39ac812841bb",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/EURO_STOXX_50.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E2_GLOBAL_RISK/EURO_STOXX_50.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2007-03-30",
+          "last_actual_date": "2019-12-30",
+          "n_observations": 3191,
+          "observations_per_development_year": {
+            "2014": 247,
+            "2015": 250,
+            "2016": 254,
+            "2017": 251,
+            "2018": 249
+          },
+          "best_development_year_count": 254,
+          "missing_fraction_by_year": {
+            "2014": 0.027559055118110187,
+            "2015": 0.015748031496062964,
+            "2016": 0.0,
+            "2017": 0.011811023622047223,
+            "2018": 0.019685039370078705
+          },
+          "max_missing_fraction_in_development": 0.027559055118110187,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "USDINR",
+      "provider": "yfinance",
+      "identifier": "INR=X",
+      "family": "E3_FX_COMMODITY_RATES",
+      "available": true,
+      "row_count": 3882,
+      "first_actual_date": "2005-01-03",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.011494252873563204,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "cabcbdfe3cf04ed611c490e6510c19478732c0a792df0f3042567afe8d8a6308",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/USDINR.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/USDINR.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2005-01-03",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3882,
+          "observations_per_development_year": {
+            "2014": 261,
+            "2015": 261,
+            "2016": 261,
+            "2017": 258,
+            "2018": 261
+          },
+          "best_development_year_count": 261,
+          "missing_fraction_by_year": {
+            "2014": 0.0,
+            "2015": 0.0,
+            "2016": 0.0,
+            "2017": 0.011494252873563204,
+            "2018": 0.0
+          },
+          "max_missing_fraction_in_development": 0.011494252873563204,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "BRENT_CRUDE",
+      "provider": "yfinance",
+      "identifier": "BZ=F",
+      "family": "E3_FX_COMMODITY_RATES",
+      "available": true,
+      "row_count": 3074,
+      "first_actual_date": "2007-07-30",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.007936507936507908,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "326b76fb6fa4832b5e7083d8bcaf1dfbb6f6585be8649268e16f31ea8a1ef42b",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/BRENT_CRUDE.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/BRENT_CRUDE.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2007-07-30",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3074,
+          "observations_per_development_year": {
+            "2014": 250,
+            "2015": 252,
+            "2016": 250,
+            "2017": 251,
+            "2018": 251
+          },
+          "best_development_year_count": 252,
+          "missing_fraction_by_year": {
+            "2014": 0.007936507936507908,
+            "2015": 0.0,
+            "2016": 0.007936507936507908,
+            "2017": 0.003968253968253954,
+            "2018": 0.003968253968253954
+          },
+          "max_missing_fraction_in_development": 0.007936507936507908,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "WTI_CRUDE",
+      "provider": "yfinance",
+      "identifier": "CL=F",
+      "family": "E3_FX_COMMODITY_RATES",
+      "available": true,
+      "row_count": 3772,
+      "first_actual_date": "2005-01-03",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.007936507936507908,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "a3df3d255a41e8c6a2a784026e06ce6a8ca9f6607e4107fe2b15fc606e112a2e",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/WTI_CRUDE.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/WTI_CRUDE.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2005-01-03",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3772,
+          "observations_per_development_year": {
+            "2014": 252,
+            "2015": 252,
+            "2016": 250,
+            "2017": 251,
+            "2018": 251
+          },
+          "best_development_year_count": 252,
+          "missing_fraction_by_year": {
+            "2014": 0.0,
+            "2015": 0.0,
+            "2016": 0.007936507936507908,
+            "2017": 0.003968253968253954,
+            "2018": 0.003968253968253954
+          },
+          "max_missing_fraction_in_development": 0.007936507936507908,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "GOLD",
+      "provider": "yfinance",
+      "identifier": "GC=F",
+      "family": "E3_FX_COMMODITY_RATES",
+      "available": true,
+      "row_count": 3768,
+      "first_actual_date": "2005-01-03",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.007936507936507908,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "e7124254a921b93184011daf11357761f23211999b962b7f0876b8128a5590b0",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/GOLD.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/GOLD.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2005-01-03",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3768,
+          "observations_per_development_year": {
+            "2014": 252,
+            "2015": 252,
+            "2016": 250,
+            "2017": 251,
+            "2018": 250
+          },
+          "best_development_year_count": 252,
+          "missing_fraction_by_year": {
+            "2014": 0.0,
+            "2015": 0.0,
+            "2016": 0.007936507936507908,
+            "2017": 0.003968253968253954,
+            "2018": 0.007936507936507908
+          },
+          "max_missing_fraction_in_development": 0.007936507936507908,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "US_DOLLAR_INDEX",
+      "provider": "yfinance",
+      "identifier": "DX-Y.NYB",
+      "family": "E3_FX_COMMODITY_RATES",
+      "available": true,
+      "row_count": 3779,
+      "first_actual_date": "2005-01-03",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.003968253968253954,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "3d719fd51e0eb77d6d802a0801e8b00667bad23d2c22a95245d1028e654756e9",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/US_DOLLAR_INDEX.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/US_DOLLAR_INDEX.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2005-01-03",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3779,
+          "observations_per_development_year": {
+            "2014": 252,
+            "2015": 252,
+            "2016": 251,
+            "2017": 251,
+            "2018": 251
+          },
+          "best_development_year_count": 252,
+          "missing_fraction_by_year": {
+            "2014": 0.0,
+            "2015": 0.0,
+            "2016": 0.003968253968253954,
+            "2017": 0.003968253968253954,
+            "2018": 0.003968253968253954
+          },
+          "max_missing_fraction_in_development": 0.003968253968253954,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "US_10Y_YIELD",
+      "provider": "yfinance",
+      "identifier": "^TNX",
+      "family": "E3_FX_COMMODITY_RATES",
+      "available": true,
+      "row_count": 3770,
+      "first_actual_date": "2005-01-03",
+      "last_actual_date": "2019-12-31",
+      "missing_fraction": 0.003968253968253954,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": "8ec0c22e7ddf48c232d2b9ac047adda1f4c1bcae74c1e3b6e31c0ec43108b924",
+      "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/US_10Y_YIELD.parquet",
+      "note": "reused existing immutable snapshot",
+      "provenance": {
+        "note": "reused existing immutable snapshot",
+        "raw_path": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw/E3_FX_COMMODITY_RATES/US_10Y_YIELD.parquet",
+        "coverage_gate": {
+          "passed": true,
+          "reason": "",
+          "first_actual_date": "2005-01-03",
+          "last_actual_date": "2019-12-31",
+          "n_observations": 3770,
+          "observations_per_development_year": {
+            "2014": 252,
+            "2015": 252,
+            "2016": 251,
+            "2017": 251,
+            "2018": 251
+          },
+          "best_development_year_count": 252,
+          "missing_fraction_by_year": {
+            "2014": 0.0,
+            "2015": 0.0,
+            "2016": 0.003968253968253954,
+            "2017": 0.003968253968253954,
+            "2018": 0.003968253968253954
+          },
+          "max_missing_fraction_in_development": 0.003968253968253954,
+          "long_gap_count": 0,
+          "rule": "every development year 2014-2018 needs >= 200 observations and within 0.05 of this source's best year; no gap > 45 days"
+        }
+      },
+      "accepted": true,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": ""
+    },
+    {
+      "source_id": "FII_NET_FLOW",
+      "provider": "none_available",
+      "identifier": "NOT_PROVIDED",
+      "family": "FII_DII_FLOWS",
+      "available": false,
+      "row_count": 0,
+      "first_actual_date": null,
+      "last_actual_date": null,
+      "missing_fraction": null,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": null,
+      "raw_path": null,
+      "note": "unavailable",
+      "provenance": {
+        "provider": "none_available",
+        "identifier": "NOT_PROVIDED",
+        "requested_start": "2005-01-01",
+        "requested_end_exclusive": "2020-01-01",
+        "provider_version": null,
+        "download_parameters": {
+          "auto_adjust": false,
+          "progress": false,
+          "threads": false,
+          "actions": false,
+          "multi_level_index": false
+        },
+        "note": "provider 'none_available' has no retrieval adapter in this programme; the source is probed as unavailable"
+      },
+      "accepted": false,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": "unavailable"
+    },
+    {
+      "source_id": "DII_NET_FLOW",
+      "provider": "none_available",
+      "identifier": "NOT_PROVIDED",
+      "family": "FII_DII_FLOWS",
+      "available": false,
+      "row_count": 0,
+      "first_actual_date": null,
+      "last_actual_date": null,
+      "missing_fraction": null,
+      "duplicate_dates": 0,
+      "suspicious_jump_count": 0,
+      "raw_sha256": null,
+      "raw_path": null,
+      "note": "unavailable",
+      "provenance": {
+        "provider": "none_available",
+        "identifier": "NOT_PROVIDED",
+        "requested_start": "2005-01-01",
+        "requested_end_exclusive": "2020-01-01",
+        "provider_version": null,
+        "download_parameters": {
+          "auto_adjust": false,
+          "progress": false,
+          "threads": false,
+          "actions": false,
+          "multi_level_index": false
+        },
+        "note": "provider 'none_available' has no retrieval adapter in this programme; the source is probed as unavailable"
+      },
+      "accepted": false,
+      "availability_class": "EXTERNAL_CONSERVATIVE_LAG1",
+      "final_lag_rule": "conservative lag1: most recent source observation strictly before the NSE prediction timestamp",
+      "exclusion_reason": "unavailable"
+    }
+  ],
+  "raw_root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/exogenous/pre_covid/raw",
+  "no_failed_probe_hidden": true
+}

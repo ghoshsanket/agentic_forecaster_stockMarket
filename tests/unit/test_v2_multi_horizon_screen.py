@@ -140,11 +140,16 @@ def test_non_overlap_sampler_spaces_by_at_least_h_trading_positions(horizon):
 
 
 def test_non_overlap_mask_is_deterministic():
+    """The SELECTED origins must not depend on the frame's row order."""
     dates = pd.bdate_range("2016-01-01", periods=120)
     frame = pd.DataFrame({"ticker": "AAA", "origin_date": dates.to_numpy()})
     first = HZ.non_overlap_mask(frame, horizon=5)
-    second = HZ.non_overlap_mask(frame.sample(frac=1.0, random_state=3), horizon=5)
-    assert np.array_equal(first, second)
+    shuffled = frame.sample(frac=1.0, random_state=3)
+    second = HZ.non_overlap_mask(shuffled, horizon=5)
+    selected_first = set(frame.loc[first, "origin_date"])
+    selected_second = set(shuffled.loc[second, "origin_date"])
+    assert selected_first == selected_second
+    assert len(selected_first) == int(first.sum()) == int(second.sum())
 
 
 def test_non_overlap_spacing_audit_reports_the_horizon():

@@ -1,0 +1,288 @@
+# =============================================================================
+# V3 -- PRE-COVID EXOGENOUS MARKET-INFORMATION PROGRAMME (shared base)
+#
+# MODEL V2/V3 ARE NOT THE ORIGINAL PAPER MODEL.
+# Classification: NEW_EXPERIMENTAL_ARCHITECTURE.
+#
+# SEPARATE TRACK.  Nothing here writes results/v2, results/v2/pre_covid or
+# results/v2/multi_horizon, and neither V2 store is modified.  V3 results live in
+# results/v3/pre_covid_exogenous/, runtime in $AGENTIC_OUTPUT_ROOT/v3/
+# pre_covid_exogenous/, raw provider snapshots in $AGENTIC_DATA_ROOT/exogenous/
+# pre_covid/ and the processed store in $AGENTIC_PROCESSED_DATA_ROOT/v3/
+# pre_covid_exogenous/.
+#
+# THE QUESTION
+#   "Does point-in-time market, volatility, global-risk, currency and commodity
+#    information add genuine directional signal beyond the stock's own
+#    price-derived features?"
+#
+# This is a DATA-INFORMATION experiment, not a model-building exercise.  The
+# decision metric is incremental AUC over the stock-only control X0, computed on a
+# common sample.
+#
+# WHAT IS DELIBERATELY ABSENT
+#   No news, no sentiment, no social media, no event NLP.  Standard external
+#   market state must prove itself first; sentiment is a separate later stage.
+#   No FiLM, no Reptile, no MAML, no neural hyper-parameter search, and no target
+#   of 65 %.
+#
+# PREDICTION TIMESTAMP
+#   AFTER the NSE market close on day t.  Every non-Indian source uses a
+#   conservative lag1 alignment; a foreign daily close that happens hours after the
+#   NSE close is never used at t.
+#
+# REGIME
+#   Strictly PRE-COVID.  final_allowed_date = 2019-12-31 for stock features,
+#   exogenous observations and targets.  2019 is sealed behind
+#   V3_PRECOVID_LOCKBOX=1.  Nothing from 2020 onward may be consumed anywhere.
+# =============================================================================
+
+track: V3_EXOGENOUS_PRECOVID
+track_label: V3_PRE_COVID_EXOGENOUS_MARKET_INFORMATION_TRACK
+experiment_regime: PRE_COVID
+pre_covid_mode: true
+final_allowed_date: "2019-12-31"
+
+results_root: results/v3/pre_covid_exogenous
+runtime_root: ${AGENTIC_OUTPUT_ROOT}/v3/pre_covid_exogenous
+processed_root: ${AGENTIC_PROCESSED_DATA_ROOT}/v3/pre_covid_exogenous
+
+variant: V3_BASE
+fold: MH_DEV_2014
+
+experiment:
+  name: v3_precovid_exogenous_base
+  seed: 42
+  device: auto
+  classification: NEW_EXPERIMENTAL_ARCHITECTURE
+  is_original_paper_model: false
+  regime_label: PRE_COVID_EXPERIMENTAL_REGIME
+  survivorship_bias_label: SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK
+
+data:
+  dataset_root: ${AGENTIC_DATA_ROOT}/yfinance_paper_snapshot_2025_11_04
+  dataset_variant: adjusted
+  sector_map_csv: ${AGENTIC_PROCESSED_DATA_ROOT}/v2/metadata/sector_map.csv
+  # READ-ONLY reuse of the PRE-COVID stock store (physically capped 2019-12-31).
+  source_store_root: ${AGENTIC_PROCESSED_DATA_ROOT}/v2/pre_covid
+  # The already-verified multi-horizon targets are REUSED, never rebuilt.
+  horizon_target_cache: ${AGENTIC_PROCESSED_DATA_ROOT}/v2/multi_horizon/horizon_targets
+  supervised_universe: supervised_universe_frozen.json
+  # Probe results merged back by scripts/probe_v3_sources.py and written to the
+  # RESULTS directory (a generated file never lives inside configs/).
+  resolved_registry: results/v3/pre_covid_exogenous/source_registry_resolved.json
+  declared_registry: configs/v3/source_registry.yaml
+  source_manifest: ${AGENTIC_DATA_ROOT}/exogenous/pre_covid/manifests/source_manifest.json
+  exogenous_store: ${AGENTIC_PROCESSED_DATA_ROOT}/v3/pre_covid_exogenous/exogenous_store
+  sequence_length: 60
+  use_context: false
+  balanced_by_ticker: true
+
+# Feature families.  X0 is the CONTROL; the increment is measured against it.
+feature_families:
+  - X0_STOCK_ONLY
+  - X1_INDIA_MARKET
+  - X2_GLOBAL_RISK
+  - X3_MACRO_COMMODITY
+  - X4_ALL_EXOGENOUS
+control_family: X0_STOCK_ONLY
+
+# Horizons and folds: the multi-horizon definitions, unchanged.
+horizons: [1, 3, 5, 10]
+control_horizon: 1
+candidate_horizons: [3, 5, 10]
+
+folds:
+  MH_DEV_2014:
+    train_start: "2005-01-01"
+    train_end: "2013-12-31"
+    val_start: "2014-01-01"
+    val_end: "2014-12-31"
+    selectable: true
+  MH_DEV_2015:
+    train_start: "2005-01-01"
+    train_end: "2014-12-31"
+    val_start: "2015-01-01"
+    val_end: "2015-12-31"
+    selectable: true
+  MH_DEV_2016:
+    train_start: "2005-01-01"
+    train_end: "2015-12-31"
+    val_start: "2016-01-01"
+    val_end: "2016-12-31"
+    selectable: true
+  MH_DEV_2017:
+    train_start: "2005-01-01"
+    train_end: "2016-12-31"
+    val_start: "2017-01-01"
+    val_end: "2017-12-31"
+    selectable: true
+  MH_DEV_2018:
+    train_start: "2005-01-01"
+    train_end: "2017-12-31"
+    val_start: "2018-01-01"
+    val_end: "2018-12-31"
+    selectable: true
+  MH_LOCKBOX_2019:
+    train_start: "2005-01-01"
+    train_end: "2018-12-31"
+    val_start: "2019-01-01"
+    val_end: "2019-12-31"
+    selectable: false
+    note: >-
+      The single sealed lockbox. Requires V3_PRECOVID_LOCKBOX=1 AND a frozen
+      frozen_exogenous_model.json. Never read while an information family, horizon
+      or model is being selected.
+
+development_folds: [MH_DEV_2014, MH_DEV_2015, MH_DEV_2016, MH_DEV_2017, MH_DEV_2018]
+
+# Stage 1: the cheap screen.  Fixed deterministic settings, no search.
+screen:
+  models: [LOGISTIC, HIST_GRADIENT_BOOSTING]
+  logistic:
+    C: 1.0
+    max_iter: 2000
+    solver: lbfgs
+    random_state: 42
+    preprocessing: StandardScaler
+    scaler_fit_on: TRAIN_ONLY
+  hist_gradient_boosting:
+    loss: log_loss
+    learning_rate: 0.05
+    max_iter: 200
+    max_leaf_nodes: 31
+    min_samples_leaf: 50
+    l2_regularization: 1.0
+    max_bins: 255
+    early_stopping: false
+    random_state: 42
+  pca:
+    enabled: false
+    components: 8
+    fit_on: TRAIN_ONLY
+    note: an available, documented alternative for the composite risk factor
+
+# Section 21: the composite global-risk factor.  Signs are FIXED in code and are
+# never optimised against validation.
+global_risk_factor:
+  name: global_risk_factor
+  method: equal_weight_standardised_train_only
+  weights_optimised_on_validation: false
+  components:
+    global_risk_spx_move: {input: SP500_return_1, sign: -1}
+    global_risk_nasdaq_move: {input: NASDAQ_COMPOSITE_return_1, sign: -1}
+    global_risk_vix_change: {input: US_VIX_change_1, sign: 1}
+    global_risk_usdinr_move: {input: USDINR_return_1, sign: -1}
+    global_risk_crude_move: {input: BRENT_CRUDE_return_1, sign: -1}
+
+# Availability classes are declared per source in configs/v3/source_registry.yaml.
+availability:
+  prediction_timestamp: after_nse_close_on_day_t
+  india_class: INDIA_SAME_CLOSE
+  external_class: EXTERNAL_CONSERVATIVE_LAG1
+  external_same_date_allowed: false
+  alignment_method: merge_asof_backward
+  note: >-
+    A foreign daily close that happens after the NSE close is NOT available at t,
+    even when the provider labels it with the same calendar date.
+
+# Source coverage gate.  A source that fails is EXCLUDED, never imputed.
+coverage_gate:
+  development_years: [2014, 2018]
+  min_observations_per_year: 200
+  max_missing_fraction: 0.05
+  max_unexplained_gap_days: 45
+
+# Missing-data policy.
+missing_data:
+  backward_fill: false
+  interpolate_from_future: false
+  fill_market_close_with_future_value: false
+  permitted:
+    - merge-asof previous-observation alignment for market series
+    - previous-observation alignment when the local exchange was closed
+  on_missing_exogenous: drop_the_sample_from_that_family
+  note: >-
+    An unavailable external observation leaves the feature undefined; the sample is
+    excluded from the exogenous families rather than filled with an invented value.
+
+evaluation:
+  ece_bins: 10
+  coverage_levels: [1.0, 0.75, 0.5, 0.3, 0.2, 0.1]
+  non_overlap_spacing_trading_observations: horizon
+  bootstrap:
+    method: circular_moving_block_over_trading_dates
+    block_length_dates: 21
+    n_bootstrap: 400
+    seed: 42
+    metrics: [accuracy, roc_auc]
+  min_meaningful_coverage: 0.20
+  min_meaningful_observations: 500
+  coverage_accuracy_targets: [0.60, 0.62, 0.65]
+
+# Section 30: the FEATURE-FAMILY GATE.  NOT lowered because nothing passed.
+feature_family_gate:
+  min_mean_roc_auc: 0.55
+  min_min_incremental_auc: 0.015
+  min_mean_balanced_accuracy: 0.53
+  min_mean_accuracy_delta: 0.01
+  min_years_positive_incremental_auc: 4
+  n_development_years: 5
+  strong_min_mean_roc_auc: 0.57
+  strong_min_incremental_auc: 0.025
+  strong_min_years_positive_incremental_auc: 4
+  max_selected: 2
+
+# Section 40: the NEURAL GATE.
+neural_gate:
+  min_mean_roc_auc: 0.56
+  min_mean_balanced_accuracy: 0.54
+  min_mean_accuracy_delta: 0.015
+  min_years_positive_baseline_delta: 4
+  min_year_roc_auc: 0.50
+  preferred_min_mean_roc_auc: 0.58
+  require_beats_cheap_x0_control: true
+
+# Section 41: seed stability.  UNSTABLE blocks the lockbox.
+seed_stability:
+  seeds: [11, 42, 73]
+  lockbox_seed: 42
+  max_macro_std: 0.015
+
+# Section 22-23 neural stage: two synchronised sequences.
+neural:
+  stock_encoder:
+    hidden_size: 96
+    layers: 2
+    dropout: 0.20
+    unidirectional: true
+  exogenous_encoder:
+    hidden_size: 32
+    layers: 1
+  ticker_embedding: 16
+  fusion:
+    hidden: 96
+    z: 32
+    dropout: 0.10
+  head: binary_direction
+  training:
+    optimizer: AdamW
+    learning_rate: 0.0003
+    beta1: 0.9
+    beta2: 0.999
+    weight_decay: 0.0001
+    batch_size: 256
+    max_epochs: 30
+    early_stopping_patience: 6
+    gradient_clip: 1.0
+    balanced_by_ticker: true
+    seed: 42
+  not_run_in_this_programme: [FILM, REPTILE, MAML, MULTITASK]
+
+# Section 37: exactly ONE permitted recommendation, reported and never executed.
+next_actions:
+  pass: USE_EXOGENOUS_LSTM
+  fail: BUILD_HISTORICAL_SENTIMENT_EVENT_DATASET
+  ranking_only: BUILD_RELATIVE_RANKING_MODEL
+
+signal_vocabulary: [NONE, WEAK, PROMISING, STRONG]

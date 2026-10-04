@@ -1,0 +1,35 @@
+{
+  "track": "V3_EXOGENOUS_PRECOVID",
+  "final_allowed_date": "2019-12-31",
+  "source_store_root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/pre_covid",
+  "exogenous_store_root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v3/pre_covid_exogenous/exogenous_store",
+  "exogenous_store_sha256": "7181300519bc20613b75b1957704267ff1a7ace002911dfe32d410ce48afc6bd",
+  "source_manifest_sha256": "2efeed90db8eb9a45aaf2df2645cb98ccb3a359d6064cac757636e77a02e7e51",
+  "last_exogenous_feature_date": "2019-12-31",
+  "max_origin_date_consumed": "2018-12-28",
+  "max_target_end_date_consumed": "2018-12-31",
+  "post_2019_stock_rows_consumed": 0,
+  "post_2019_exogenous_rows_consumed": 0,
+  "post_2019_exogenous_rows_present_in_raw_snapshots": 0,
+  "exogenous_rows_in_raw_snapshots": 61829,
+  "development_folds_scored": [
+    "MH_DEV_2014",
+    "MH_DEV_2015",
+    "MH_DEV_2016",
+    "MH_DEV_2017",
+    "MH_DEV_2018"
+  ],
+  "lockbox_fold_scored": false,
+  "expectations": {
+    "before_lockbox": {
+      "max_stock_target": "2018-12-31",
+      "2019_labels_consumed": 0,
+      "2020_plus_consumed": 0
+    },
+    "after_legitimate_lockbox": {
+      "max_stock_target": "2019-12-31",
+      "2020_plus_consumed": 0
+    }
+  },
+  "note": "raw snapshots are capped at 2019-12-31 at download time, so the post-2019 count present in them is zero as well"
+}

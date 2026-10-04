@@ -412,7 +412,9 @@ for a horizon that screen-passes, so no compute is spent on a horizon the eviden
 has already rejected.
 
 **Outcome: no 3D/5D/10D horizon screen-passed.** Mean ROC-AUC stayed between 0.505
-and 0.519 and mean balanced accuracy at ~0.50 for every horizon and both models;
-accuracy above the train-majority baseline at 5D/10D is class imbalance, not
-directional skill. Recommended next action: `ADD_EXOGENOUS_INFORMATION`. See
+and 0.519 and mean balanced accuracy at ~0.50 for every horizon and both models.
+Raw accuracy rises with horizon because the UP class becomes more common, but the
+models remain **below** the train-majority baseline at every horizon and balanced
+accuracy stays near 0.50, so the apparent accuracy gain is class imbalance rather
+than directional skill. Recommended next action: `ADD_EXOGENOUS_INFORMATION`. See
 `results/v2/multi_horizon/MULTI_HORIZON_REPORT.md`.
