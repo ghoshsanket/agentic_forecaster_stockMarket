@@ -3,7 +3,7 @@
 **MODEL V2/V3 ARE NOT THE ORIGINAL PAPER MODEL** (classification `NEW_EXPERIMENTAL_ARCHITECTURE`).
 
 - track: `V3_EXOGENOUS_PRECOVID`
-- generated: `2026-10-04T12:14:43.961033+00:00`
+- generated: `2026-10-04T15:46:52.342220+00:00`
 - question: does point-in-time market, volatility, global-risk, currency and commodity information add genuine directional signal beyond the stock's own price-derived features?
 - only what changed: **INFORMATION_SET** (the information set, not the architecture)
 - survivorship: `SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK`
@@ -56,24 +56,24 @@ A multi-day result is never called next-day accuracy: `5-trading-day directional
 
 | source_id | identifier | availability_class | final_lag_rule | SHA256 |
 |---|---|---|---|---|
-| NIFTY50 | ^NSEI | INDIA_SAME_CLOSE | same-session close (INDIA_SAME_CLOSE) | n/a |
-| NIFTY_BANK | ^NSEBANK | INDIA_SAME_CLOSE | same-session close (INDIA_SAME_CLOSE) | n/a |
-| INDIA_VIX | ^INDIAVIX | INDIA_SAME_CLOSE | same-session close (INDIA_SAME_CLOSE) | n/a |
-| NIFTY_IT | ^CNXIT | INDIA_SAME_CLOSE | same-session close (INDIA_SAME_CLOSE) | n/a |
-| NIFTY_PHARMA | ^CNXPHARMA | INDIA_SAME_CLOSE | same-session close (INDIA_SAME_CLOSE) | n/a |
-| SP500 | ^GSPC | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| NASDAQ_COMPOSITE | ^IXIC | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| DOW_JONES | ^DJI | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| US_VIX | ^VIX | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| NIKKEI_225 | ^N225 | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| HANG_SENG | ^HSI | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| EURO_STOXX_50 | ^STOXX50E | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| USDINR | INR=X | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| BRENT_CRUDE | BZ=F | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| WTI_CRUDE | CL=F | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| GOLD | GC=F | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| US_DOLLAR_INDEX | DX-Y.NYB | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
-| US_10Y_YIELD | ^TNX | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | n/a |
+| NIFTY50 | ^NSEI | INDIA_SAME_CLOSE | same-session close (INDIA_SAME_CLOSE) | 181647ebb31cc07278816c42eefeca4139a319399ecc52e25a326017b48372bd |
+| NIFTY_BANK | ^NSEBANK | INDIA_SAME_CLOSE | same-session close (INDIA_SAME_CLOSE) | 48dde02d7ca17dc10a65f88e385d2a62c10b22da31b157957421d44edf4a3f53 |
+| INDIA_VIX | ^INDIAVIX | INDIA_SAME_CLOSE | same-session close (INDIA_SAME_CLOSE) | d64534a6ac525d963d7f125f80a34f042b45829c18cfb8e5546b25d0a0c17e3d |
+| NIFTY_IT | ^CNXIT | INDIA_SAME_CLOSE | same-session close (INDIA_SAME_CLOSE) | 52d8033a5cad40558a3c898622d3ff346038edf1c75ad86221ed4b0fbeb6bf43 |
+| NIFTY_PHARMA | ^CNXPHARMA | INDIA_SAME_CLOSE | same-session close (INDIA_SAME_CLOSE) | b2b9c3b86fd66b74bccba9f905bbe566259d5e2698a2f644655abf242c210b46 |
+| SP500 | ^GSPC | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | 77e9beb8794d7f40fe741a09f6f20aecceab4f079de54ed7acc5b6669d8c5aff |
+| NASDAQ_COMPOSITE | ^IXIC | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | c4f9bf03c5b6d7a290be1e70cf56f34d3a90829fa87ac64c54aae4ee84da8909 |
+| DOW_JONES | ^DJI | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | 3f11a2732af92650741c075518a7c46efd5b15cfe3a4b1d7f5f4f6fbbb482ba1 |
+| US_VIX | ^VIX | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | 9be02a8e03a182391c82c89c986be96351d4c74a5d13b48c8f54bbcd917196c7 |
+| NIKKEI_225 | ^N225 | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | ea782474f944dd7525dddccc301f2b51761c429285f2adb407d1e6891a2a8351 |
+| HANG_SENG | ^HSI | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | cf05ca010e8925dd7b8e8b28093dbd50677727d9a14e3118dcd03aa61647bfc8 |
+| EURO_STOXX_50 | ^STOXX50E | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | 96cb512c4fe59640b464753d8923a2db641540b6ec1875f5c72f39ac812841bb |
+| USDINR | INR=X | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | cabcbdfe3cf04ed611c490e6510c19478732c0a792df0f3042567afe8d8a6308 |
+| BRENT_CRUDE | BZ=F | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | 326b76fb6fa4832b5e7083d8bcaf1dfbb6f6585be8649268e16f31ea8a1ef42b |
+| WTI_CRUDE | CL=F | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | a3df3d255a41e8c6a2a784026e06ce6a8ca9f6607e4107fe2b15fc606e112a2e |
+| GOLD | GC=F | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | e7124254a921b93184011daf11357761f23211999b962b7f0876b8128a5590b0 |
+| US_DOLLAR_INDEX | DX-Y.NYB | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | 3d719fd51e0eb77d6d802a0801e8b00667bad23d2c22a95245d1028e654756e9 |
+| US_10Y_YIELD | ^TNX | EXTERNAL_CONSERVATIVE_LAG1 | conservative lag1: most recent source observation strictly before the NSE prediction timestamp | 8ec0c22e7ddf48c232d2b9ac047adda1f4c1bcae74c1e3b6e31c0ec43108b924 |
 
 ## 7. Source hashes
 
@@ -94,66 +94,66 @@ A multi-day result is never called next-day accuracy: `5-trading-day directional
 
 | model | objective | mean AUC | mean bal. acc | mean accuracy | mean Brier | train-majority | delta | years AUC>0.50 | ticker breadth | common-sample AUC | incremental AUC |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_1D_CONTROL` | 0.5159 | 0.5103 | 0.5109 | 0.2503 | n/a | 0.0076 | 5 | n/a | n/a | n/a |
-| LOGISTIC | `ABS_DIR_1D_CONTROL` | 0.5128 | 0.5063 | 0.5083 | 0.2499 | n/a | 0.0050 | 5 | n/a | n/a | n/a |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_3D` | 0.5188 | 0.5047 | 0.5203 | 0.2497 | n/a | -0.0029 | 5 | n/a | n/a | n/a |
-| LOGISTIC | `ABS_DIR_3D` | 0.5134 | 0.5026 | 0.5259 | 0.2493 | n/a | 0.0027 | 3 | n/a | n/a | n/a |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_5D` | 0.5170 | 0.5043 | 0.5293 | 0.2495 | n/a | -0.0074 | 5 | n/a | n/a | n/a |
-| LOGISTIC | `ABS_DIR_5D` | 0.5155 | 0.5027 | 0.5359 | 0.2487 | n/a | -0.0009 | 4 | n/a | n/a | n/a |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | 0.5131 | 0.4996 | 0.5405 | 0.2489 | n/a | -0.0167 | 5 | n/a | n/a | n/a |
-| LOGISTIC | `ABS_DIR_10D` | 0.5053 | 0.5000 | 0.5500 | 0.2479 | n/a | -0.0072 | 2 | n/a | n/a | n/a |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_1D_CONTROL` | 0.5159 | 0.5103 | 0.5109 | 0.2503 | 0.5033 | 0.0076 | 5 | n/a | n/a | n/a |
+| LOGISTIC | `ABS_DIR_1D_CONTROL` | 0.5128 | 0.5063 | 0.5083 | 0.2499 | 0.5033 | 0.0050 | 5 | n/a | n/a | n/a |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_3D` | 0.5188 | 0.5047 | 0.5203 | 0.2497 | 0.5232 | -0.0029 | 5 | n/a | n/a | n/a |
+| LOGISTIC | `ABS_DIR_3D` | 0.5134 | 0.5026 | 0.5259 | 0.2493 | 0.5232 | 0.0027 | 3 | n/a | n/a | n/a |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_5D` | 0.5170 | 0.5043 | 0.5293 | 0.2495 | 0.5367 | -0.0074 | 5 | n/a | n/a | n/a |
+| LOGISTIC | `ABS_DIR_5D` | 0.5155 | 0.5027 | 0.5359 | 0.2487 | 0.5367 | -0.0009 | 4 | n/a | n/a | n/a |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | 0.5131 | 0.4996 | 0.5405 | 0.2489 | 0.5572 | -0.0167 | 5 | n/a | n/a | n/a |
+| LOGISTIC | `ABS_DIR_10D` | 0.5053 | 0.5000 | 0.5500 | 0.2479 | 0.5572 | -0.0072 | 2 | n/a | n/a | n/a |
 
 ### X1_INDIA_MARKET
 
 | model | objective | mean AUC | mean bal. acc | mean accuracy | mean Brier | train-majority | delta | years AUC>0.50 | ticker breadth | common-sample AUC | incremental AUC |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_1D_CONTROL` | 0.5070 | 0.5017 | 0.4997 | 0.2539 | n/a | -0.0022 | 3 | n/a | 0.5070 | -0.0060 |
-| LOGISTIC | `ABS_DIR_1D_CONTROL` | 0.5271 | 0.5205 | 0.5192 | 0.2498 | n/a | 0.0173 | 5 | n/a | 0.5271 | 0.0158 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_3D` | 0.5282 | 0.5194 | 0.5160 | 0.2552 | n/a | -0.0025 | 5 | n/a | 0.5282 | 0.0068 |
-| LOGISTIC | `ABS_DIR_3D` | 0.5410 | 0.5204 | 0.5240 | 0.2492 | n/a | 0.0055 | 5 | n/a | 0.5410 | 0.0236 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_5D` | 0.5267 | 0.5145 | 0.5125 | 0.2553 | n/a | -0.0175 | 5 | n/a | 0.5267 | 0.0094 |
-| LOGISTIC | `ABS_DIR_5D` | 0.5455 | 0.5223 | 0.5317 | 0.2489 | n/a | 0.0017 | 5 | n/a | 0.5455 | 0.0298 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | 0.5179 | 0.5055 | 0.5004 | 0.2649 | n/a | -0.0456 | 4 | n/a | 0.5179 | -0.0007 |
-| LOGISTIC | `ABS_DIR_10D` | 0.5472 | 0.5209 | 0.5422 | 0.2482 | n/a | -0.0039 | 5 | n/a | 0.5472 | 0.0370 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_1D_CONTROL` | 0.5070 | 0.5017 | 0.4997 | 0.2539 | 0.5019 | -0.0022 | 3 | n/a | 0.5070 | -0.0060 |
+| LOGISTIC | `ABS_DIR_1D_CONTROL` | 0.5271 | 0.5205 | 0.5192 | 0.2498 | 0.5019 | 0.0173 | 5 | n/a | 0.5271 | 0.0158 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_3D` | 0.5282 | 0.5194 | 0.5160 | 0.2552 | 0.5185 | -0.0025 | 5 | n/a | 0.5282 | 0.0068 |
+| LOGISTIC | `ABS_DIR_3D` | 0.5410 | 0.5204 | 0.5240 | 0.2492 | 0.5185 | 0.0055 | 5 | n/a | 0.5410 | 0.0236 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_5D` | 0.5267 | 0.5145 | 0.5125 | 0.2553 | 0.5300 | -0.0175 | 5 | n/a | 0.5267 | 0.0094 |
+| LOGISTIC | `ABS_DIR_5D` | 0.5455 | 0.5223 | 0.5317 | 0.2489 | 0.5300 | 0.0017 | 5 | n/a | 0.5455 | 0.0298 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | 0.5179 | 0.5055 | 0.5004 | 0.2649 | 0.5461 | -0.0456 | 4 | n/a | 0.5179 | -0.0007 |
+| LOGISTIC | `ABS_DIR_10D` | 0.5472 | 0.5209 | 0.5422 | 0.2482 | 0.5461 | -0.0039 | 5 | n/a | 0.5472 | 0.0370 |
 
 ### X2_GLOBAL_RISK
 
 | model | objective | mean AUC | mean bal. acc | mean accuracy | mean Brier | train-majority | delta | years AUC>0.50 | ticker breadth | common-sample AUC | incremental AUC |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_1D_CONTROL` | 0.5026 | 0.5033 | 0.5029 | 0.2544 | n/a | 0.0012 | 2 | n/a | 0.5042 | -0.0088 |
-| LOGISTIC | `ABS_DIR_1D_CONTROL` | 0.5016 | 0.5036 | 0.5017 | 0.2530 | n/a | -0.0001 | 2 | n/a | 0.5018 | -0.0096 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_3D` | 0.4947 | 0.4953 | 0.4995 | 0.2583 | n/a | -0.0174 | 2 | n/a | 0.5081 | -0.0133 |
-| LOGISTIC | `ABS_DIR_3D` | 0.5069 | 0.5067 | 0.5017 | 0.2563 | n/a | -0.0153 | 3 | n/a | 0.5095 | -0.0079 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_5D` | 0.5091 | 0.5036 | 0.5115 | 0.2560 | n/a | -0.0168 | 3 | n/a | 0.5091 | -0.0083 |
-| LOGISTIC | `ABS_DIR_5D` | 0.4996 | 0.5041 | 0.4955 | 0.2607 | n/a | -0.0327 | 3 | n/a | 0.5015 | -0.0142 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | 0.5055 | 0.5017 | 0.5122 | 0.2593 | n/a | -0.0311 | 1 | n/a | 0.4993 | -0.0193 |
-| LOGISTIC | `ABS_DIR_10D` | 0.5042 | 0.5122 | 0.5065 | 0.2663 | n/a | -0.0368 | 2 | n/a | 0.5060 | -0.0043 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_1D_CONTROL` | 0.5026 | 0.5033 | 0.5029 | 0.2544 | 0.5018 | 0.0012 | 2 | n/a | 0.5042 | -0.0088 |
+| LOGISTIC | `ABS_DIR_1D_CONTROL` | 0.5016 | 0.5036 | 0.5017 | 0.2530 | 0.5018 | -0.0001 | 2 | n/a | 0.5018 | -0.0096 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_3D` | 0.4947 | 0.4953 | 0.4995 | 0.2583 | 0.5169 | -0.0174 | 2 | n/a | 0.5081 | -0.0133 |
+| LOGISTIC | `ABS_DIR_3D` | 0.5069 | 0.5067 | 0.5017 | 0.2563 | 0.5169 | -0.0153 | 3 | n/a | 0.5095 | -0.0079 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_5D` | 0.5091 | 0.5036 | 0.5115 | 0.2560 | 0.5283 | -0.0168 | 3 | n/a | 0.5091 | -0.0083 |
+| LOGISTIC | `ABS_DIR_5D` | 0.4996 | 0.5041 | 0.4955 | 0.2607 | 0.5283 | -0.0327 | 3 | n/a | 0.5015 | -0.0142 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | 0.5055 | 0.5017 | 0.5122 | 0.2593 | 0.5433 | -0.0311 | 1 | n/a | 0.4993 | -0.0193 |
+| LOGISTIC | `ABS_DIR_10D` | 0.5042 | 0.5122 | 0.5065 | 0.2663 | 0.5433 | -0.0368 | 2 | n/a | 0.5060 | -0.0043 |
 
 ### X3_MACRO_COMMODITY
 
 | model | objective | mean AUC | mean bal. acc | mean accuracy | mean Brier | train-majority | delta | years AUC>0.50 | ticker breadth | common-sample AUC | incremental AUC |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_1D_CONTROL` | 0.4986 | 0.4985 | 0.4968 | 0.2544 | n/a | -0.0045 | 2 | n/a | 0.5030 | -0.0100 |
-| LOGISTIC | `ABS_DIR_1D_CONTROL` | 0.5124 | 0.5049 | 0.5041 | 0.2515 | n/a | 0.0028 | 4 | n/a | 0.5147 | 0.0033 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_3D` | 0.4980 | 0.4984 | 0.4982 | 0.2574 | n/a | -0.0176 | 3 | n/a | 0.5133 | -0.0081 |
-| LOGISTIC | `ABS_DIR_3D` | 0.5179 | 0.5017 | 0.5065 | 0.2526 | n/a | -0.0092 | 3 | n/a | 0.5215 | 0.0041 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_5D` | 0.5049 | 0.5009 | 0.4976 | 0.2593 | n/a | -0.0291 | 3 | n/a | 0.5095 | -0.0078 |
-| LOGISTIC | `ABS_DIR_5D` | 0.5307 | 0.5174 | 0.5239 | 0.2532 | n/a | -0.0028 | 4 | n/a | 0.5342 | 0.0185 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | 0.5222 | 0.5161 | 0.5132 | 0.2596 | n/a | -0.0285 | 4 | n/a | 0.5282 | 0.0096 |
-| LOGISTIC | `ABS_DIR_10D` | 0.5356 | 0.5140 | 0.5246 | 0.2565 | n/a | -0.0170 | 4 | n/a | 0.5367 | 0.0265 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_1D_CONTROL` | 0.4986 | 0.4985 | 0.4968 | 0.2544 | 0.5012 | -0.0045 | 2 | n/a | 0.5030 | -0.0100 |
+| LOGISTIC | `ABS_DIR_1D_CONTROL` | 0.5124 | 0.5049 | 0.5041 | 0.2515 | 0.5012 | 0.0028 | 4 | n/a | 0.5147 | 0.0033 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_3D` | 0.4980 | 0.4984 | 0.4982 | 0.2574 | 0.5158 | -0.0176 | 3 | n/a | 0.5133 | -0.0081 |
+| LOGISTIC | `ABS_DIR_3D` | 0.5179 | 0.5017 | 0.5065 | 0.2526 | 0.5158 | -0.0092 | 3 | n/a | 0.5215 | 0.0041 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_5D` | 0.5049 | 0.5009 | 0.4976 | 0.2593 | 0.5267 | -0.0291 | 3 | n/a | 0.5095 | -0.0078 |
+| LOGISTIC | `ABS_DIR_5D` | 0.5307 | 0.5174 | 0.5239 | 0.2532 | 0.5267 | -0.0028 | 4 | n/a | 0.5342 | 0.0185 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | 0.5222 | 0.5161 | 0.5132 | 0.2596 | 0.5416 | -0.0285 | 4 | n/a | 0.5282 | 0.0096 |
+| LOGISTIC | `ABS_DIR_10D` | 0.5356 | 0.5140 | 0.5246 | 0.2565 | 0.5416 | -0.0170 | 4 | n/a | 0.5367 | 0.0265 |
 
 ### X4_ALL_EXOGENOUS
 
 | model | objective | mean AUC | mean bal. acc | mean accuracy | mean Brier | train-majority | delta | years AUC>0.50 | ticker breadth | common-sample AUC | incremental AUC |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_1D_CONTROL` | 0.5048 | 0.5052 | 0.5035 | 0.2544 | n/a | 0.0015 | 3 | n/a | 0.5048 | -0.0082 |
-| LOGISTIC | `ABS_DIR_1D_CONTROL` | 0.5102 | 0.5090 | 0.5059 | 0.2615 | n/a | 0.0039 | 4 | n/a | 0.5102 | -0.0012 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_3D` | 0.5309 | 0.5222 | 0.5172 | 0.2551 | n/a | -0.0013 | 5 | n/a | 0.5309 | 0.0095 |
-| LOGISTIC | `ABS_DIR_3D` | 0.5179 | 0.5128 | 0.5026 | 0.2729 | n/a | -0.0159 | 5 | n/a | 0.5179 | 0.0005 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_5D` | 0.5315 | 0.5176 | 0.5072 | 0.2590 | n/a | -0.0228 | 5 | n/a | 0.5315 | 0.0142 |
-| LOGISTIC | `ABS_DIR_5D` | 0.5232 | 0.5126 | 0.4999 | 0.2798 | n/a | -0.0301 | 5 | n/a | 0.5232 | 0.0075 |
-| HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | 0.5256 | 0.5151 | 0.4991 | 0.2641 | n/a | -0.0470 | 4 | n/a | 0.5256 | 0.0070 |
-| LOGISTIC | `ABS_DIR_10D` | 0.5245 | 0.5046 | 0.4929 | 0.2889 | n/a | -0.0532 | 4 | n/a | 0.5245 | 0.0143 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_1D_CONTROL` | 0.5048 | 0.5052 | 0.5035 | 0.2544 | 0.5019 | 0.0015 | 3 | n/a | 0.5048 | -0.0082 |
+| LOGISTIC | `ABS_DIR_1D_CONTROL` | 0.5102 | 0.5090 | 0.5059 | 0.2615 | 0.5019 | 0.0039 | 4 | n/a | 0.5102 | -0.0012 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_3D` | 0.5309 | 0.5222 | 0.5172 | 0.2551 | 0.5185 | -0.0013 | 5 | n/a | 0.5309 | 0.0095 |
+| LOGISTIC | `ABS_DIR_3D` | 0.5179 | 0.5128 | 0.5026 | 0.2729 | 0.5185 | -0.0159 | 5 | n/a | 0.5179 | 0.0005 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_5D` | 0.5315 | 0.5176 | 0.5072 | 0.2590 | 0.5300 | -0.0228 | 5 | n/a | 0.5315 | 0.0142 |
+| LOGISTIC | `ABS_DIR_5D` | 0.5232 | 0.5126 | 0.4999 | 0.2798 | 0.5300 | -0.0301 | 5 | n/a | 0.5232 | 0.0075 |
+| HIST_GRADIENT_BOOSTING | `ABS_DIR_10D` | 0.5256 | 0.5151 | 0.4991 | 0.2641 | 0.5461 | -0.0470 | 4 | n/a | 0.5256 | 0.0070 |
+| LOGISTIC | `ABS_DIR_10D` | 0.5245 | 0.5046 | 0.4929 | 0.2889 | 0.5461 | -0.0532 | 4 | n/a | 0.5245 | 0.0143 |
 
 ## 16. Common-sample incremental AUC table
 

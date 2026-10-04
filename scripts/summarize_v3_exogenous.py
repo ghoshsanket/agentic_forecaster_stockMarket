@@ -279,6 +279,7 @@ def _merge_increments(blocks: list[dict]) -> dict:
         "mean_incremental_accuracy": _mean("mean_incremental_accuracy"),
         "mean_roc_auc": _mean("mean_roc_auc"),
         "mean_balanced_accuracy": _mean("mean_balanced_accuracy"),
+        "mean_train_majority_baseline": _mean("mean_train_majority_baseline"),
         "positive_incremental_auc_years": int(sum(
             int(block.get("positive_incremental_auc_years") or 0) for block in blocks)),
     }
@@ -452,8 +453,11 @@ def _fmt(value, digits: int = 4) -> str:
 # report
 # ---------------------------------------------------------------------------
 
-def _table(rows: list[dict], columns: tuple[str, ...]) -> list[str]:
+def _table(rows: list[dict], columns: tuple[str, ...],
+           labels: dict[str, str] | None = None) -> list[str]:
     """Markdown table; an absent value renders as ``n/a`` rather than ``None``."""
+    labels = labels or {}
+
     def _cell(value) -> str:
         if value is None:
             return "n/a"
@@ -461,7 +465,8 @@ def _table(rows: list[dict], columns: tuple[str, ...]) -> list[str]:
             return _fmt(value)
         return str(value)
 
-    out = ["| " + " | ".join(columns) + " |",
+    headers = [labels.get(column, column) for column in columns]
+    out = ["| " + " | ".join(headers) + " |",
            "|" + "|".join("---" for _ in columns) + "|"]
     for row in rows:
         out.append("| " + " | ".join(_cell(row.get(column)) for column in columns)
@@ -520,7 +525,8 @@ def render_report(summary: dict, *, verification: dict | None = None) -> str:
     add("")
     accepted = [s for s in sources if s.get("accepted")]
     lines.extend(_table(accepted, ("source_id", "identifier", "availability_class",
-                                   "final_lag_rule", "SHA256")))
+                                   "final_lag_rule", "raw_sha256"),
+                        {"raw_sha256": "SHA256"}))
     add("")
     add("## 7. Source hashes")
     add("")

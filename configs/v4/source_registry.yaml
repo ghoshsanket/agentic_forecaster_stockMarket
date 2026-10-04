@@ -1,0 +1,174 @@
+# V4 news/event source registry.
+#
+# STATUS VOCABULARY
+#   READY              reachable, authenticated, probed with real coverage numbers
+#   REACHABLE_NO_CREDENTIAL
+#                     the API answers, but this environment holds no token
+#   PROBED_REJECTED    deliberately excluded, with the reason recorded
+#   NOT_IMPLEMENTED    permitted by policy but not built in this phase
+#
+# Every verdict below was established by measurement, not assumption; see
+# results/v4/pre_covid_sentiment/MEDIACLOUD_PROBE.md and
+# GDELT_EVENT_PROBE.md for the evidence behind each one.
+
+registry_id: V4_NEWS_SOURCE_REGISTRY
+track: V4_SENTIMENT_EVENT_PRECOVID
+
+# The prediction timestamp is after the NSE close on day t, so no same-date news
+# may ever enter features. Enforced in v4.availability, not by convention.
+availability_rule:
+  rule: publish_date_strictly_before_origin
+  same_date_news_allowed: false
+  weekend_news_allowed_on_next_trading_day: true
+  indexed_date_role: provenance_only_never_publication_time
+
+sources:
+
+  - source_id: MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE
+    priority: 1
+    role: PRIMARY_COMPANY_NEWS
+    status: REACHABLE_NO_CREDENTIAL
+    base_url: https://search.mediacloud.org/api/
+    auth_scheme: "Authorization: Token <token>"
+    credential_env: MEDIA_CLOUD_API_TOKEN
+    credential_file: $RESEARCH_ROOT/secrets/mediacloud_token
+    endpoints_used:
+      - auth/profile
+      - version
+      - search/total-count
+      - search/count-over-time
+      - search/story-list
+      - search/count-by-source-week
+    probe_evidence:
+      anonymous_total_count: '401 {"detail":"Authentication credentials were not provided."}'
+      dummy_token_total_count: '401 {"detail":"Invalid token."}'
+      api_surface_confirmed: true
+      token_present_in_environment: false
+      secrets_dir_token_present: false
+    notes: >-
+      The API itself is alive and returns JSON 401 rather than an HTML error
+      page, so the endpoint surface is real. Coverage cannot be measured without
+      a token, and a token requires an interactive Media Cloud account, which
+      this programme must not create on the user's behalf.
+
+  - source_id: MEDIA_CLOUD_WAYBACK_TITLE_BACKFILL
+    priority: 2
+    role: TITLE_BACKFILL_ONLY
+    status: REACHABLE_NO_CREDENTIAL
+    auth_scheme: "Authorization: Token <token>"
+    probe_evidence:
+      wayback_backend_requires_same_token: true
+      generic_wayback_machine_reachable: true
+      generic_wayback_machine_url: https://archive.org/wayback/available
+    merge_policy: >-
+      Never merged blindly with Online News Archive results. Results are
+      labelled WAYBACK_TITLE_BACKFILL and deduplicated on canonical URL,
+      normalized title and date. Capture time is NOT treated as a publication
+      timestamp.
+    notes: Probed separately; unusable without a Media Cloud token.
+
+  - source_id: EVENT_REGISTRY
+    priority: 3
+    role: OPTIONAL_GAP_FILL
+    status: NOT_CONFIGURED
+    auth_scheme: bearer token supplied by the user
+    credential_file: $RESEARCH_ROOT/secrets/event_registry_token
+    notes: >-
+      Optional adapter only. Used solely when the user independently supplies a
+      valid credential whose archive permissions cover the historical period.
+      No query is ever sent to a paid service speculatively.
+
+  - source_id: GDELT2_EVENTS
+    priority: 4
+    role: SECONDARY_EVENT_PRESSURE
+    status: READY
+    master_file_list: http://data.gdeltproject.org/gdeltv2/masterfilelist.txt
+    archive_glob: "*.export.CSV.zip"
+    first_available_date: "2015-02-18"
+    explicitly_not_downloaded:
+      - "*.gkg.csv.zip"
+      - "*.mentions.CSV.zip"
+    acquisition: stream_reduce_and_delete
+    temporary_root: $RESEARCH_ROOT/tmp
+    notes: >-
+      Raw event exports only. Company sentiment must come from Media Cloud,
+      never from the GKG stream. Event-pressure features are unavailable before
+      2015-02-18 and are NOT filled.
+
+  - source_id: NEWSAPI
+    priority: null
+    role: REJECTED
+    status: PROBED_REJECTED
+    rejection_reason: INSUFFICIENT_HISTORICAL_DEPTH
+    notes: >-
+      Ordinary historical-access plans do not provide the 2013-2018 archive
+      this experiment requires. Recorded, not used.
+
+  - source_id: COMMON_CRAWL
+    priority: 5
+    role: LAST_RESORT_BACKFILL_ONLY
+    status: NOT_IMPLEMENTED
+    reasons:
+      - crawl timestamp is not a publication timestamp
+      - historical page extraction is substantially heavier
+      - company matching is harder
+      - publication-time leakage audit is harder
+    notes: Not implemented in this phase, per source policy.
+
+# --------------------------------------------------------------------------
+# Media Cloud probe plan (pilot companies). Aliases are full validated names;
+# a bare ticker is never used as a query.
+# --------------------------------------------------------------------------
+mediacloud_probe:
+  years: [2013, 2014, 2015, 2016, 2017, 2018]
+  pilot_companies:
+    - ticker: RELIANCE
+      query: '"Reliance Industries"'
+      alias_provenance: legacy_security_lineage.yaml[RELIANCE]
+      alias_confidence: high
+    - ticker: TCS
+      query: '"Tata Consultancy Services"'
+      alias_provenance: UNRESOLVED_no_lineage_row
+      alias_confidence: unverified
+    - ticker: INFY
+      query: '"Infosys Limited" OR "Infosys Technologies"'
+      alias_provenance: legacy_security_lineage.yaml[INFOSYSTCH]
+      alias_confidence: high
+    - ticker: HDFCBANK
+      query: '"HDFC Bank"'
+      alias_provenance: legacy_security_lineage.yaml[HDFCBANK]
+      alias_confidence: high
+    - ticker: ITC
+      query: '"ITC Limited" OR "Imperial Tobacco Company of India"'
+      alias_provenance: legacy_security_lineage.yaml[ITC]
+      alias_confidence: high
+      bare_ticker_forbidden: "ITC"
+    - ticker: LT
+      query: '"Larsen & Toubro"'
+      alias_provenance: legacy_security_lineage.yaml[L&T]
+      alias_confidence: high
+      bare_ticker_forbidden: "LT"
+    - ticker: SUNPHARMA
+      query: '"Sun Pharmaceutical"'
+      alias_provenance: UNRESOLVED_no_lineage_row
+      alias_confidence: unverified
+    - ticker: TATASTEEL
+      query: '"Tata Steel" OR "Tata Iron and Steel"'
+      alias_provenance: legacy_security_lineage.yaml[TISCO]
+      alias_confidence: high
+  # Broad Indian business/market news. Collection ids are resolved by probe, not
+  # hard-coded, and are frozen before any screening.
+  broad_queries:
+    - query_id: INDIAN_MARKET
+      query: '"Indian stock market"'
+    - query_id: INDIAN_BUSINESS
+      query: '"India" AND ("business" OR "corporate")'
+    - query_id: MUMBAI_MARKET
+      query: '"Bombay Stock Exchange" OR "NSE"'
+
+# Feasibility gate. Both conditions must hold before model screening.
+feasibility_gate:
+  min_sentiment_eligible_tickers: 25
+  min_complete_development_years: 3
+  min_median_title_explicit_stories_per_ticker_year: 50
+  max_year_share_from_top_few_companies: true

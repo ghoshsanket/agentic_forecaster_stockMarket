@@ -1,0 +1,12 @@
+check,expected,observed,status,detail
+field_count,61,[61],PASS,a width mismatch would shift every column index
+ragged_rows_rejected,0,0,PASS,short/long rows are dropped before any positional access
+DATEADDED_index,exactly one field == 20170612000000 on every row,[59],PASS,DATEADDED is the file/discovery date used for point-in-time aggregation
+SOURCEURL_index,exactly one http(s) URL field,[60],PASS,
+QuadClass_index,"field taking all of {1,2,3,4} as integers",[29],PASS,"codebook: 1 verbal coop, 2 material coop, 3 verbal conflict, 4 material conflict"
+GoldsteinScale_index,"numeric in [-10,10] whose per-QuadClass mean ranks 2>1>3>4",30,PASS,"identifies the field by verified semantics, not by position"
+AvgTone_index,continuous numeric field (many distinct fractional values),34,PASS,"observed range (-18.03, 9.45); the codebook +/-10 bound applies to GoldsteinScale only and does NOT hold for AvgTone"
+country_name_fields,fields ever equal to 'India',"[36, 52]",PASS,ActionGeo and SourceGeo country names
+country_code_fields,fields equal to 'IN' only where an adjacent country NAME field reads 'India',"[37, 38, 53, 54]",PASS,prevents an administrative code from being read as a country
+india_rows_in_sample,>0,49,PASS,of 3084 sampled rows
+sample_archive_sha256,recorded,30ae40dccb1f16723c6638135e70373d23ecd0494b8003c5b4e5f28d9587cfae,PASS,20170612000000.export.CSV.zip 194338 bytes

@@ -153,6 +153,9 @@ def aggregate_increments(per_fold: list[dict]) -> dict:
         "mean_accuracy": _mean(_collect("candidate_accuracy")),
         "mean_balanced_accuracy": _mean(_collect("candidate_balanced_accuracy")),
         "mean_brier": _mean(_collect("candidate_brier")),
+        # Reporting-only aggregate: the ledger already stores this per fit, it was
+        # simply never carried into the aggregate, so the report rendered "n/a".
+        "mean_train_majority_baseline": _mean(_collect("train_majority_baseline")),
         "mean_baseline_delta": _mean(_collect("baseline_delta")),
         "years_beating_majority_baseline": int(np.nansum(_collect("baseline_delta") > 0)),
         "mean_ticker_fraction_beating_own_baseline": _mean(

@@ -1,0 +1,52 @@
+{
+  "url": "http://data.gdeltproject.org/gdeltv2/20170612000000.export.CSV.zip",
+  "file_name": "20170612000000.export.CSV.zip",
+  "bytes": 194338,
+  "sha256": "30ae40dccb1f16723c6638135e70373d23ecd0494b8003c5b4e5f28d9587cfae",
+  "zip_valid": true,
+  "members": [
+    "20170612000000.export.CSV"
+  ],
+  "total_rows": 3084,
+  "field_count": 61,
+  "sampled_rows": 3084,
+  "schema_index": {
+    "date_added": 59,
+    "source_url": 60,
+    "quad_class": 29,
+    "goldstein": 30,
+    "avg_tone": 34,
+    "avg_tone_observed_range": [
+      -18.03,
+      9.45
+    ],
+    "country_name_fields": [
+      36,
+      52
+    ],
+    "country_code_fields": [
+      37,
+      38,
+      53,
+      54
+    ]
+  },
+  "india_rows": 49,
+  "action_geo_india_rows": 4,
+  "india_quad_class": {
+    "1": 32,
+    "2": 5,
+    "3": 10,
+    "4": 2
+  },
+  "india_mean_goldstein_by_quad": {
+    "1": 1.35625,
+    "2": 6.32,
+    "3": -5.16,
+    "4": -7.0
+  },
+  "avg_tone_observed_range": [
+    -18.03,
+    9.45
+  ]
+}

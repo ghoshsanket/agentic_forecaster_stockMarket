@@ -1,0 +1,661 @@
+registry_id: V4_COMPANY_ALIAS_REGISTRY
+generated_by: scripts/build_v4_company_aliases.py
+universe_sha256: 5b10bd8f5401542c86490efd114a4a4c4adeb68ee1e127813eb520388b426a05
+n_tickers: 42
+n_resolved: 16
+n_unresolved: 26
+policy:
+  auto_match_classes:
+  - EXACT_SAFE
+  - HISTORICAL_SAFE
+  never_auto_match:
+  - AMBIGUOUS
+  - REJECTED
+  bare_ticker: always AMBIGUOUS; requires a validated phrase query
+companies:
+- ticker: ADANIENT
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - ADANIENT
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: ADANIPORTS
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - ADANIPORTS
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: APOLLOHOSP
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - APOLLOHOSP
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: ASIANPAINT
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - ASIANPAINT
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: AXISBANK
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - AXISBANK
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: BAJAJ-AUTO
+  canonical_company_name: Bajaj Auto Limited (new, post-2008)
+  aliases:
+  - alias: Bajaj Auto Limited (new, post-2008)
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  - alias: Bajaj Auto Limited (erstwhile, pre-2008)
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: '2008-02-20'
+    note: historical name; demerger on 2008-02-20
+  ambiguous_aliases:
+  - BAJAJ-AUTO
+  forbidden_aliases: []
+  valid_from: '2008-02-20'
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[BAJAJ-AUTO]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: BAJAJ-AUTO
+  event_type: demerger
+- ticker: BAJAJFINSV
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - BAJAJFINSV
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: BAJFINANCE
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - BAJFINANCE
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: BEL
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - BEL
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: BHARTIARTL
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - BHARTIARTL
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: CIPLA
+  canonical_company_name: Cipla Limited
+  aliases:
+  - alias: Cipla Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  ambiguous_aliases:
+  - CIPLA
+  forbidden_aliases: []
+  valid_from: ''
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[CIPLA]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: CIPLA
+  event_type: unchanged
+- ticker: DRREDDY
+  canonical_company_name: Dr. Reddy's Laboratories Limited
+  aliases:
+  - alias: Dr. Reddy's Laboratories Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  ambiguous_aliases:
+  - DRREDDY
+  forbidden_aliases: []
+  valid_from: ''
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[DRREDDY]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: DRREDDY
+  event_type: unchanged
+- ticker: EICHERMOT
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - EICHERMOT
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: GRASIM
+  canonical_company_name: Grasim Industries Limited
+  aliases:
+  - alias: Grasim Industries Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  ambiguous_aliases:
+  - GRASIM
+  forbidden_aliases: []
+  valid_from: ''
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[GRASIM]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: GRASIM
+  event_type: unchanged
+- ticker: HCLTECH
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - HCLTECH
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: HDFCBANK
+  canonical_company_name: HDFC Bank Limited
+  aliases:
+  - alias: HDFC Bank Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  ambiguous_aliases:
+  - HDFCBANK
+  forbidden_aliases: []
+  valid_from: ''
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[HDFCBANK]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: HDFCBANK
+  event_type: unchanged
+- ticker: HINDALCO
+  canonical_company_name: Hindalco Industries Limited
+  aliases:
+  - alias: Hindalco Industries Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  ambiguous_aliases:
+  - HINDALCO
+  forbidden_aliases: []
+  valid_from: ''
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[HINDALCO]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: HINDALCO
+  event_type: unchanged
+- ticker: HINDUNILVR
+  canonical_company_name: Hindustan Unilever Limited
+  aliases:
+  - alias: Hindustan Unilever Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  - alias: Hindustan Lever Limited
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: '2007-06-25'
+    note: historical name; same_security_rename on 2007-06-25
+  ambiguous_aliases:
+  - HINDUNILVR
+  forbidden_aliases: []
+  valid_from: '2007-06-25'
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[HINDLEVER]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: HINDLEVER
+  event_type: same_security_rename
+- ticker: ICICIBANK
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - ICICIBANK
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: INFY
+  canonical_company_name: Infosys Limited
+  aliases:
+  - alias: Infosys Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  - alias: Infosys Technologies Limited
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: 2011-06
+    note: historical name; same_security_rename on 2011-06
+  ambiguous_aliases:
+  - INFY
+  forbidden_aliases: []
+  valid_from: 2011-06
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[INFOSYSTCH]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: INFOSYSTCH
+  event_type: same_security_rename
+- ticker: ITC
+  canonical_company_name: ITC Limited
+  aliases:
+  - alias: ITC Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  - alias: Imperial Tobacco Company of India Limited
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: '1974-09-18'
+    note: historical name; same_security_rename on 1974-09-18
+  ambiguous_aliases:
+  - ITC
+  forbidden_aliases: []
+  valid_from: '1974-09-18'
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[ITC]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: ITC
+  event_type: same_security_rename
+- ticker: JSWSTEEL
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - JSWSTEEL
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: KOTAKBANK
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - KOTAKBANK
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: LT
+  canonical_company_name: Larsen & Toubro Limited
+  aliases:
+  - alias: Larsen & Toubro Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  ambiguous_aliases:
+  - LT
+  forbidden_aliases: []
+  valid_from: ''
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[L&T]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: L&T
+  event_type: statutory_continuation
+- ticker: M&M
+  canonical_company_name: Mahindra & Mahindra Limited
+  aliases:
+  - alias: Mahindra & Mahindra Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  ambiguous_aliases:
+  - M&M
+  forbidden_aliases: []
+  valid_from: ''
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[M&M]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: M&M
+  event_type: unchanged
+- ticker: MARUTI
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - MARUTI
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: NTPC
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - NTPC
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: ONGC
+  canonical_company_name: Oil and Natural Gas Corporation Limited
+  aliases:
+  - alias: Oil and Natural Gas Corporation Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  ambiguous_aliases:
+  - ONGC
+  forbidden_aliases: []
+  valid_from: ''
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[ONGC]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: ONGC
+  event_type: unchanged
+- ticker: POWERGRID
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - POWERGRID
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: RELIANCE
+  canonical_company_name: Reliance Industries Limited
+  aliases:
+  - alias: Reliance Industries Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  ambiguous_aliases:
+  - RELIANCE
+  forbidden_aliases: []
+  valid_from: ''
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[RELIANCE]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: RELIANCE
+  event_type: unchanged
+- ticker: SBIN
+  canonical_company_name: State Bank of India
+  aliases:
+  - alias: State Bank of India
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  ambiguous_aliases:
+  - SBIN
+  forbidden_aliases: []
+  valid_from: ''
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[SBI]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: SBI
+  event_type: unchanged
+- ticker: SHRIRAMFIN
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - SHRIRAMFIN
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: SUNPHARMA
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - SUNPHARMA
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: TATACONSUM
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - TATACONSUM
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: TATASTEEL
+  canonical_company_name: Tata Steel Limited
+  aliases:
+  - alias: Tata Steel Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  - alias: The Tata Iron and Steel Company Limited
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: '2005-08-12'
+    note: historical name; same_security_rename on 2005-08-12
+  ambiguous_aliases:
+  - TATASTEEL
+  forbidden_aliases: []
+  valid_from: '2005-08-12'
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[TISCO]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: TISCO
+  event_type: same_security_rename
+- ticker: TCS
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - TCS
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: TECHM
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - TECHM
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: TITAN
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - TITAN
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: TMPV
+  canonical_company_name: Tata Motors Passenger Vehicles Limited
+  aliases:
+  - alias: Tata Motors Passenger Vehicles Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: canonical current name
+  - alias: Tata Engineering and Locomotive Company Limited
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: 2003-07-29; 2025-10-01
+    note: historical name; demerger on 2003-07-29; 2025-10-01
+  ambiguous_aliases:
+  - TMPV
+  forbidden_aliases: []
+  valid_from: 2003-07-29; 2025-10-01
+  valid_to: null
+  resolution_status: RESOLVED_FROM_LINEAGE
+  provenance: configs/legacy_security_lineage.yaml[TELCO]
+  confidence: high
+  auto_match_eligible: true
+  legacy_label: TELCO
+  event_type: demerger
+- ticker: TRENT
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - TRENT
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: ULTRACEMCO
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - ULTRACEMCO
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
+- ticker: WIPRO
+  canonical_company_name: null
+  aliases: []
+  ambiguous_aliases:
+  - WIPRO
+  forbidden_aliases: []
+  valid_from: null
+  valid_to: null
+  resolution_status: UNRESOLVED
+  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
+  confidence: none
+  auto_match_eligible: false
