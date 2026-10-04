@@ -2,33 +2,33 @@
   "diagnostic": "L_INVALID_PROBES",
   "probes": {
     "L0": {
-      "mean_validation_accuracy": 0.5034283653613797,
-      "mean_train_accuracy": 0.9933131312308139,
+      "mean_validation_accuracy": 0.5029500749117974,
+      "mean_train_accuracy": 0.7082441675012904,
       "scientifically_invalid": false
     },
     "L1": {
-      "mean_validation_accuracy": 0.5203802470788117,
-      "mean_train_accuracy": 0.9918809468602721,
+      "mean_validation_accuracy": 0.9292872329313204,
+      "mean_train_accuracy": 0.998704707895802,
       "scientifically_invalid": true
     },
     "L2": {
-      "mean_validation_accuracy": 0.9936749311294766,
-      "mean_train_accuracy": 1.0,
+      "mean_validation_accuracy": 0.9313910544532553,
+      "mean_train_accuracy": 0.9987060155833183,
       "scientifically_invalid": true
     },
     "L3": {
-      "mean_validation_accuracy": 0.5058132159455988,
-      "mean_train_accuracy": 0.9985277485277485,
+      "mean_validation_accuracy": 0.5061650741385976,
+      "mean_train_accuracy": 0.7557477700334844,
       "scientifically_invalid": true
     },
     "L4": {
-      "mean_validation_accuracy": 0.5034283653613797,
-      "mean_train_accuracy": 0.9934032456761595,
+      "mean_validation_accuracy": 0.49528176873631424,
+      "mean_train_accuracy": 0.6977427245005491,
       "scientifically_invalid": true
     },
     "L5": {
-      "mean_validation_accuracy": 0.5034283653613797,
-      "mean_train_accuracy": 0.9933131312308139,
+      "mean_validation_accuracy": 0.5029500749117974,
+      "mean_train_accuracy": 0.7082441675012904,
       "scientifically_invalid": false
     }
   },

@@ -93,8 +93,13 @@ def cause_ranking(*, unadjusted_acc: float, adjusted_acc: float,
     """
     out: list[dict] = []
 
-    def add(cause, delta, verdict, evidence):
-        out.append({"cause": cause, "accuracy_delta_vs_legitimate": delta,
+    def add(cause, delta, verdict, evidence, *, status):
+        """`status` separates what the CURRENT reconstruction shows (DEMONSTRATED)
+        from what a LOST implementation COULD have done (HYPOTHETICAL). A
+        deliberately-leaking probe can only ever be HYPOTHETICAL: it is not
+        evidence about our code, only about a possible failure mode."""
+        out.append({"cause": cause, "status": status,
+                    "accuracy_delta_vs_legitimate": delta,
                     "material": delta is not None and delta > MATERIAL_MARGIN,
                     "verdict": verdict, "evidence": evidence})
 
@@ -103,7 +108,8 @@ def cause_ranking(*, unadjusted_acc: float, adjusted_acc: float,
     add("DATA_ADJUSTMENT", d,
         "SUPPORTED" if d > MATERIAL_MARGIN else "NOT_SUPPORTED",
         f"adjusted {adjusted_acc:.4f} vs unadjusted {unadjusted_acc:.4f} "
-        f"(delta {d:+.4f}, material threshold {MATERIAL_MARGIN})")
+        f"(delta {d:+.4f}, material threshold {MATERIAL_MARGIN})",
+        status="DEMONSTRATED")
 
     # MODEL_FORM: does a simpler model beat Attention?
     best_simple = None
@@ -117,7 +123,8 @@ def cause_ranking(*, unadjusted_acc: float, adjusted_acc: float,
         add("MODEL_FORM", d,
             "SUPPORTED" if d > MATERIAL_MARGIN else "NOT_SUPPORTED",
             f"best simple model {best_simple[0]}={best_simple[1]:.4f} vs "
-            f"Attention {unadjusted_acc:.4f} (delta {d:+.4f})")
+            f"Attention {unadjusted_acc:.4f} (delta {d:+.4f})",
+            status="DEMONSTRATED")
 
     # PER_STOCK_VS_POOLED
     if pooled_acc is not None:
@@ -125,7 +132,8 @@ def cause_ranking(*, unadjusted_acc: float, adjusted_acc: float,
         add("PER_STOCK_VS_POOLED", d,
             "SUPPORTED" if d > MATERIAL_MARGIN else "NOT_SUPPORTED",
             f"pooled {pooled_acc:.4f} vs per-stock {unadjusted_acc:.4f} "
-            f"(delta {d:+.4f}); pooled is NOT author-confirmed")
+            f"(delta {d:+.4f}); pooled is NOT author-confirmed",
+            status="DEMONSTRATED")
 
     # SPLIT_PROTOCOL
     if analog_acc is not None:
@@ -133,13 +141,14 @@ def cause_ranking(*, unadjusted_acc: float, adjusted_acc: float,
         add("SPLIT_PROTOCOL", d,
             "SUPPORTED" if d > MATERIAL_MARGIN else "NOT_SUPPORTED",
             f"pre-2022 85/15 analog {analog_acc:.4f} vs walk-forward "
-            f"{unadjusted_acc:.4f} (delta {d:+.4f})")
+            f"{unadjusted_acc:.4f} (delta {d:+.4f})", status="DEMONSTRATED")
 
     # TARGET_ALIGNMENT
     add("TARGET_ALIGNMENT", None,
         "NOT_SUPPORTED" if mismatch_count == 0 else "SUPPORTED",
         f"target-alignment mismatch_count={mismatch_count} over 900 raw-OHLCV "
-        f"samples; next-day target construction is proven correct")
+        f"samples; next-day target construction is proven correct",
+        status="DEMONSTRATED")
 
     # AGGREGATION
     accs = {k: v["accuracy"] for k, v in aggregation.items()
@@ -150,7 +159,7 @@ def cause_ranking(*, unadjusted_acc: float, adjusted_acc: float,
         add("AGGREGATION", d,
             "SUPPORTED" if d > MATERIAL_MARGIN else "NOT_SUPPORTED",
             f"conventions span {lo:.4f}..{hi:.4f} (spread {hi-lo:.4f}); "
-            f"best convention vs legitimate {d:+.4f}")
+            f"best convention vs legitimate {d:+.4f}", status="DEMONSTRATED")
 
     # CONFIDENCE_FILTERING
     conf_accs = {k: v["accuracy"] for k, v in confidence.items()
@@ -169,7 +178,7 @@ def cause_ranking(*, unadjusted_acc: float, adjusted_acc: float,
             f"best confidence floor {bestk} -> {conf_accs[bestk]:.4f} but on "
             f"only {retained:.1f}% of predictions (min required "
             f"{MIN_RETAINED_PCT}%); conditional accuracy, not overall "
-            f"(delta {d:+.4f})")
+            f"(delta {d:+.4f})", status="HYPOTHETICAL")
     return out
 
 
@@ -197,9 +206,18 @@ def leakage_verdict(probes: dict, l0_acc: float) -> dict:
         "verdict": ("EXPLAINS_INFLATION"
                     if best and best["inflation_vs_L0"] > 0.10
                     else "INSUFFICIENT_TO_EXPLAIN"),
-        "note": ("L1-L4 are INTENTIONALLY WRONG. They show how a lost "
-                 "implementation could have produced an inflated number; they "
-                 "are never valid models and never candidates for selection."),
+        "note": ("L1-L4 are INTENTIONALLY WRONG. They demonstrate HOW a "
+                 "given defect inflates measured accuracy; they are never "
+                 "valid models and never candidates for selection."),
+        "l2_interpretation": (
+            "A same-day target definition combined with same-day "
+            "return/features creates severe target leakage and can produce "
+            "artificially high measured accuracy."),
+        "l2_historical_claim": (
+            "NOT ESTABLISHED. The publication describes a NEXT-DAY target, so "
+            "L2 is a hypothetical explanation for a lost-code discrepancy, NOT "
+            "evidence that the original implementation used this defect. No "
+            "source code or author statement has been obtained."),
     }
 
 
@@ -231,8 +249,14 @@ def main() -> int:
     E = raw.get("E_alignment", {})
     L = raw.get("L_invalid_probes", {})
 
-    unadj_acc = B.get("aggregate", {}).get("AttentionLSTM_T10F2", {}).get("accuracy")
-    majority_acc = B.get("aggregate", {}).get("Majority", {}).get("accuracy")
+    panel_agg = B.get("aggregate", {})
+    # The baseline panel predates the terminology fix; map the old label onto
+    # the standardised one at report time rather than rerunning it.
+    panel_agg = {"TrainMajorityBaseline" if k == "Majority" else k: v
+                 for k, v in panel_agg.items()}
+    B = {**B, "aggregate": panel_agg}
+    unadj_acc = panel_agg.get("AttentionLSTM_T10F2", {}).get("accuracy")
+    majority_acc = panel_agg.get("TrainMajorityBaseline", {}).get("accuracy")
     adj_acc = A.get("adjusted", {}).get("mean_accuracy")
     pooled_acc = (C.get("aggregate") or {}).get("accuracy")
     analog_acc = (D.get("aggregate") or {}).get("accuracy")
@@ -245,6 +269,16 @@ def main() -> int:
         repo_fx / "confidence_subsets.csv")
 
     report = {
+        "terminology": {
+            "train_majority_baseline_accuracy":
+                "LEGITIMATE deployable baseline: always predict the class "
+                "that is most common in TRAIN. Models are compared against "
+                "this and only this.",
+            "validation_oracle_majority_rate":
+                "CLASS-BALANCE DESCRIPTION ONLY: max(validation positive "
+                "rate, 1 - rate). It reads validation labels, so no trained "
+                "model can be compared against it.",
+        },
         "firewall": {
             "cutoff": PRE_TEST_CUTOFF,
             "max_target_date_in_legitimate_predictions":
@@ -260,9 +294,18 @@ def main() -> int:
         },
         "B_baseline_panel": B.get("aggregate"),
         "C_pooled": {"label": C.get("label"), "aggregate": C.get("aggregate")},
-        "D_pre2022_85_15": {"label": D.get("label"),
-                            "aggregate": D.get("aggregate"),
-                            "windows": D.get("windows")},
+        "D_pre2022_long_history_85_15": {
+            "label": D.get("label"),
+            "aggregate": D.get("aggregate"),
+            "windows": D.get("windows"),
+            "correction": ("The previous 85/15 diagnostic built its sample "
+                           "list from SEARCH_FOLD_C, which starts in 2016, so "
+                           "it tested 2016-2021 rather than long history. "
+                           "This version loads each stock from the earliest "
+                           "available raw history, truncates at 2021-12-31, "
+                           "and splits the eligible supervised samples "
+                           "chronologically 85/15."),
+        },
         "E_target_alignment": E,
         "P_aggregation": aggregation,
         "Q_confidence_subsets": confidence,
@@ -277,33 +320,50 @@ def main() -> int:
     }
     report["cause_ranking"].append({
         "cause": "LEAKAGE/OFF_BY_ONE",
+        # HYPOTHETICAL: these probes are deliberately broken. A high number here
+        # says the DEFECT would inflate accuracy, not that the original
+        # implementation had it. Ranking this as the "likely cause" of a
+        # historical result would be an unsupported inference.
+        "status": "HYPOTHETICAL",
         "accuracy_delta_vs_legitimate": report["L_leakage_probes"]["max_inflation"],
         "material": report["L_leakage_probes"]["verdict"] == "EXPLAINS_INFLATION",
         "verdict": report["L_leakage_probes"]["verdict"],
         "evidence": (f"max invalid-probe inflation "
                      f"{report['L_leakage_probes']['max_inflation']} via "
                      f"{report['L_leakage_probes']['max_inflation_probe']}"),
+        "historical_claim": "NOT ESTABLISHED - no source code or author evidence",
     })
-    # Rank by the SIZE of the improvement each cause could produce, not by
-    # declaration order: the dominant explanation is the one that actually
-    # moves the number, and a cause worth +0.49 outranks one worth +0.05.
     def _magnitude(c):
         v = c.get("accuracy_delta_vs_legitimate")
         return v if isinstance(v, (int, float)) else -1.0
 
-    report["cause_ranking"].sort(key=_magnitude, reverse=True)
-    supported = [c for c in report["cause_ranking"]
-                 if c["verdict"] in ("SUPPORTED", "EXPLAINS_INFLATION")]
+    # Sort within each status group, then DEMONSTRATED first.
+    report["cause_ranking"].sort(
+        key=lambda c: (0 if c.get("status") == "DEMONSTRATED" else 1,
+                       -_magnitude(c)))
+    demonstrated = [c for c in report["cause_ranking"]
+                    if c["status"] == "DEMONSTRATED"]
+    hypothetical = [c for c in report["cause_ranking"]
+                    if c["status"] == "HYPOTHETICAL"]
+    report["demonstrated"] = demonstrated
+    report["hypothetical"] = hypothetical
+    # A conclusion may rest ONLY on demonstrated facts about THIS code.
+    supported = [c for c in demonstrated if c["verdict"] == "SUPPORTED"]
     report["supported_causes"] = [c["cause"] for c in supported]
-    report["likely_cause"] = (supported[0]["cause"] if supported
-                              else "NO_CLEAR_CAUSE")
+    report["demonstrated_conclusion"] = (
+        supported[0]["cause"] if supported else "NO_CLEAR_CAUSE")
+    report["hypothetical_causes"] = [c["cause"] for c in hypothetical]
+    report["historical_causation"] = (
+        "NOT ESTABLISHED. Deliberately-invalid probes show what a defect "
+        "COULD do; without the original source code or an author statement, "
+        "no historical failure mode can be asserted as the actual cause.")
     report["recommendation"] = _recommend(report, supported)
     report["recommendation_executed"] = False
 
     out = Path(args.out) if args.out else repo_fx / "pre2022_forensics_summary.json"
     fx.write_forensic_json(report, out)
     print(f"forensic summary -> {out}")
-    print(f"  likely_cause   : {report['likely_cause']}")
+    print(f"  demonstrated   : {report['demonstrated_conclusion']}")
     print(f"  recommendation : {report['recommendation']}")
     return 0
 
@@ -324,15 +384,32 @@ def _train_vs_val(L: dict) -> dict:
                      "a reported number.")}
 
 
+#: The permitted next actions. Exactly one is chosen, and it is NEVER executed
+#: automatically.
+NEXT_ACTIONS = (
+    "PROCEED_TO_STAGE_B",
+    "ASK_AUTHOR_FOR_ORIGINAL_PROTOCOL_DETAILS",
+    "LEAK_FREE_REPRODUCTION_NOT_SUPPORTED_SO_FAR",
+)
+
+
 def _recommend(report: dict, supported: list[dict]) -> str:
-    if not supported:
-        return "LEAK_FREE_REPRODUCTION_CURRENTLY_UNSUPPORTED"
-    # A structural cause we can still act on keeps the protocol open.
-    if any(c["cause"] in ("SPLIT_PROTOCOL", "PER_STOCK_VS_POOLED",
-                          "MODEL_FORM", "DATA_ADJUSTMENT")
-           for c in supported):
-        return "INVESTIGATE_ORIGINAL_PROTOCOL_FURTHER"
-    return "INVESTIGATE_ORIGINAL_PROTOCOL_FURTHER"
+    """Pick exactly one next action from DEMONSTRATED evidence only.
+
+    A HYPOTHETICAL cause can never license an action: the deliberately-invalid
+    probes show what a defect would do, not that the original had it, and
+    without source code or an author statement there is nothing to act on.
+    """
+    if any(c["cause"] == "SPLIT_PROTOCOL" for c in supported):
+        return "PROCEED_TO_STAGE_B"
+    if supported:
+        return "INVESTIGATE_ORIGINAL_PROTOCOL_FURTHER" \
+            if "INVESTIGATE_ORIGINAL_PROTOCOL_FURTHER" in NEXT_ACTIONS \
+            else "ASK_AUTHOR_FOR_ORIGINAL_PROTOCOL_DETAILS"
+    # Every demonstrated structural cause was ruled out, so nothing in our own
+    # code explains the gap and the remaining explanations are all about the
+    # LOST original protocol, which only the author can clarify.
+    return "ASK_AUTHOR_FOR_ORIGINAL_PROTOCOL_DETAILS"
 
 
 if __name__ == "__main__":

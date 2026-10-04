@@ -200,7 +200,10 @@ def run_anchor(base_path: str, *, adjusted: bool = False,
             fold_rows.append({"ticker": sym, "fold": fold,
                               "train_positive_rate": bal["train"]["positive_rate"],
                               "val_positive_rate": bal["validation"]["positive_rate"],
-                              "majority_accuracy": bal["validation"]["majority_accuracy"]})
+                              "train_majority_baseline_accuracy":
+                                  bal["train_majority_baseline_accuracy"],
+                              "validation_oracle_majority_rate":
+                                  bal["validation_oracle_majority_rate"]})
         # cross-sectional P@3 needs all tickers of the fold together
         cs = cross_sectional_metrics(pd.DataFrame(fold_pred), k=3)
         for r in rows:
@@ -306,12 +309,19 @@ def diagnostic_b(base_path: str, device: str) -> dict:
                                        ds.val.target_dates,
                                        where=f"{fold}/{sym}")
             ytr, yva = np.asarray(ds.train.y, int), np.asarray(ds.val.y, int)
+            # Train-majority predictor: the class comes from TRAIN labels only,
+            # so this is a legitimate deployable baseline. The
+            # validation-oracle rate is recorded separately for class-balance
+            # description and is NEVER used as a baseline to beat.
             tr_majority = 1 if ytr.mean() >= 0.5 else 0
-            # majority baseline: always predict the TRAIN majority class
-            rows.append(_row(fold, sym, "Majority",
-                             _acc(yva, np.full(len(yva), float(tr_majority))),
-                             _f1(yva, np.full(len(yva), float(tr_majority))),
-                             _brier_const(ytr, yva, tr_majority)))
+            r = _row(fold, sym, "TrainMajorityBaseline",
+                     _acc(yva, np.full(len(yva), float(tr_majority))),
+                     _f1(yva, np.full(len(yva), float(tr_majority))),
+                     _brier_const(ytr, yva, tr_majority))
+            r["train_majority_baseline_accuracy"] = fx.train_majority_baseline(ytr, yva)
+            r["validation_oracle_majority_rate"] = fx.validation_oracle_majority_rate(yva)
+            r["val_positive_rate"] = float(np.mean(yva))
+            rows.append(r)
 
             # flat sklearn models on the last timestep of each sequence
             Xtr = ds.train.X[:, -1, :]
@@ -358,9 +368,9 @@ def diagnostic_b(base_path: str, device: str) -> dict:
                "brier": float(g["brier"].mean()),
                "n_cases": len(g)}
            for n, g in df.groupby("model")}
-    maj = agg.get("Majority", {}).get("accuracy")
+    maj = agg.get("TrainMajorityBaseline", {}).get("accuracy")
     for a in agg.values():
-        a["delta_vs_majority"] = None if maj is None else a["accuracy"] - maj
+        a["delta_vs_train_majority"] = None if maj is None else a["accuracy"] - maj
     fx.write_forensic_json({"diagnostic": "B_BASELINE_PANEL",
                             "anchor": ANCHOR, "aggregate": agg,
                             "per_ticker": {n: {t: float(g2["accuracy"].mean())
@@ -430,8 +440,13 @@ def diagnostic_c(base_path: str, device: str) -> dict:
                      "best_epoch": fit.best_epoch,
                      "n_train": len(ytr), "n_val": len(yva)})
     df = pd.DataFrame(rows)
+    # The pooled model is NOT author-confirmed, but it is a legitimate
+    # scientific experiment -- it must NOT carry the leakage-probe marker.
+    pooled_marker = {"VALID_FOR_FINAL_MODEL": False,
+                     "SCIENTIFICALLY_INVALID": False,
+                     "LABEL": fx.POOLED_LABEL}
     fx.write_forensic_csv(rows, fx.repo_forensic_dir() / "pooled_model.csv",
-                          marker=fx.INVALID_MARKER | {"NOTE": fx.POOLED_LABEL})
+                          marker=pooled_marker)
     agg = {"accuracy": float(df["accuracy"].mean()),
            "f1": float(df["f1"].mean()), "brier": float(df["brier"].mean()),
            "best_epochs": df["best_epoch"].tolist()}
@@ -449,68 +464,133 @@ def diagnostic_c(base_path: str, device: str) -> dict:
 # ---------------------------------------------------------------------------
 
 def diagnostic_d(base_path: str, device: str) -> dict:
-    """85/15 chronological split on data truncated at 2021-12-31.
+    """LONG-HISTORY pre-2022 85/15 chronological analog.
 
-    NOT the official walk-forward protocol. Tests whether much longer history
-    or the 85:15 procedure materially changes performance.
+    NOT the official walk-forward protocol, and not author-confirmed.
+
+    The previous version built its sample list from SEARCH_FOLD_C, whose
+    training window starts in 2016. That silently reduced the "long history"
+    test to 2016-2021 -- roughly the same span as the legitimate folds, so it
+    could not test what it claimed. This version loads each stock from the
+    EARLIEST available raw history, truncates strictly at 2021-12-31, and splits
+    the resulting eligible supervised samples chronologically 85/15.
+
+    The first eligible sample legitimately falls later than the raw first date,
+    because the 30-day lookback and the indicator warm-up consume early rows.
     """
-    print("[D] pre-2022 85/15 analog ...", flush=True)
+    print("[D] pre-2022 LONG-HISTORY 85/15 analog ...", flush=True)
+    from agentic_forecaster.training.trainer import Trainer
 
     rows, windows = [], []
     for sym in TICKERS:
-        # fold C is the closest pre-test analogue; use its raw source frame
         cfg = build_config(base_path, "SEARCH_FOLD_C")
-        da = DataAgent(cfg)
-        ds = da.run(sym)
-        # 85/15 over the source origin dates, truncated at the cutoff
-        tr_d, va_d, last = fx.pre2022_85_15_split(ds.val.dates)
-        # the true split uses all pre-2022 origin dates, so rebuild from the
-        # raw frame: reuse the largest fold window and apply 85/15 to it
-        all_dates = list(ds.train.dates) + list(ds.val.dates)
-        tr_d, va_d, last = fx.pre2022_85_15_split(all_dates)
-        windows.append({"ticker": sym, "n_train_dates": len(tr_d),
-                        "n_val_dates": len(va_d),
-                        "train_first": tr_d[0] if tr_d else None,
-                        "train_last": tr_d[-1] if tr_d else None,
-                        "val_first": va_d[0] if va_d else None,
-                        "val_last": last})
-        if not va_d:
+        # open the window to the earliest legitimate history, ending at the
+        # firewall boundary. The sample-split logic also requires each sample's
+        # TARGET date to fall inside the window, so nothing can reach 2022.
+        data = cfg["data"]
+        for k in ("train_start", "train_end", "val_start", "val_end"):
+            data.pop(k, None)
+        data["train_start"] = fx.LONG_HISTORY_EARLIEST
+        data["train_end"] = "2021-12-31"
+        data["val_start"] = fx.LONG_HISTORY_EARLIEST
+        data["val_end"] = "2021-12-31"
+        raw = _raw_frame(cfg, sym)
+        raw_first = str(pd.Timestamp(raw["date"].min()).date())
+
+        ds = DataAgent(cfg).run(sym)
+        # everything lands in `train` because the val window is identical and
+        # the train branch is tested first.
+        y = np.asarray(ds.train.y, int)
+        td = np.asarray(ds.train.target_dates)
+        fx.assert_targets_pre_test(td, [], where=f"long-history/{sym}")
+        if not len(y):
+            windows.append({"ticker": sym, "raw_first_date": raw_first,
+                            "first_eligible_date": None, "final_date": None,
+                            "n_eligible": 0})
             continue
-        # Re-run the DataAgent on the 85/15 windows by overriding the split.
-        cfg2 = build_config(base_path, "SEARCH_FOLD_C")
-        cfg2["data"]["train_start"] = tr_d[0]
-        cfg2["data"]["train_end"] = tr_d[-1]
-        cfg2["data"]["val_start"] = va_d[0]
-        cfg2["data"]["val_end"] = va_d[-1]
-        cfg2["data"]["test_start"] = None
-        cfg2["data"]["test_end"] = None
-        ds2 = DataAgent(cfg2).run(sym)
-        fx.assert_targets_pre_test(ds2.train.target_dates,
-                                   ds2.val.target_dates, where=f"8515/{sym}")
+
+        first_elig = str(pd.Timestamp(ds.train.dates[0]).date())
+        final = str(pd.Timestamp(td[-1]).date())
+        cut = max(1, min(len(y) - 1, round(len(y) * 0.85)))
+        X, tr_y, va_y = ds.train.X, y[:cut], y[cut:]
+        tr_td, va_td = td[:cut], td[cut:]
+
+        # hard firewall assertions on the realised split
+        assert str(pd.Timestamp(tr_td.max()).date()) < fx.PRE_TEST_CUTOFF
+        assert str(pd.Timestamp(va_td.max()).date()) < fx.PRE_TEST_CUTOFF
+
+        windows.append({
+            "ticker": sym,
+            "raw_first_date": raw_first,
+            "first_eligible_date": first_elig,
+            "final_date": final,
+            "n_eligible": len(y),
+            "n_train": len(tr_y), "n_val": len(va_y),
+            "train_first_target_date": str(pd.Timestamp(tr_td[0]).date()),
+            "train_last_target_date": str(pd.Timestamp(tr_td.max()).date()),
+            "val_first_target_date": str(pd.Timestamp(va_td[0]).date()),
+            "val_last_target_date": str(pd.Timestamp(va_td.max()).date()),
+        })
+        if not len(va_y):
+            continue
+
+        # AUTHOR-CONFIRMED model settings, unchanged. Only the epoch/feature
+        # configuration is fixed; no new hyperparameter is introduced.
         seed_everything(ANCHOR["seed"])
-        fitted = ModelAgent(cfg2).train_ticker(sym, ds2, fold="ANALOG_85_15",
-                                               device=device)
-        p = fitted.predict_proba(ds2.val.X)
-        yva = np.asarray(ds2.val.y, int)
-        rows.append({"ticker": sym, "label": fx.ANALOG_85_15_LABEL,
-                     "accuracy": _acc(yva, p), "f1": _f1(yva, p),
-                     "brier": _brier(yva, p),
-                     "majority_accuracy": float(max(yva.mean(), 1 - yva.mean())),
-                     "n_train": len(ds2.train.y),
-                     "n_val": len(yva),
-                     "best_epoch": fitted.train_config.get("best_epoch")})
+        model = AttentionLSTM(input_size=X.shape[-1], hidden_size=64,
+                              num_layers=2, dropout=ANCHOR["dropout"])
+        tr = Trainer(model, learning_rate=0.001, beta1=0.9, beta2=0.999,
+                     weight_decay=ANCHOR["weight_decay"], batch_size=64,
+                     max_epochs=10, patience=10, restore_best_checkpoint=True,
+                     device=device)
+        fit = tr.fit(X[:cut], tr_y, X[cut:], va_y)
+        p = _torch_proba(model, X[cut:])
+        rows.append({
+            "ticker": sym, "label": fx.ANALOG_85_15_LABEL,
+            "accuracy": _acc(va_y, p), "f1": _f1(va_y, p),
+            "brier": _brier(va_y, p),
+            "train_majority_baseline_accuracy": float(
+                max(np.mean(tr_y), 1 - np.mean(tr_y))),
+            "validation_oracle_majority_rate": float(
+                max(np.mean(va_y), 1 - np.mean(va_y))),
+            "train_positive_rate": float(np.mean(tr_y)),
+            "val_positive_rate": float(np.mean(va_y)),
+            "n_train": len(tr_y), "n_val": len(va_y),
+            "first_eligible_date": first_elig,
+            "best_epoch": fit.best_epoch,
+        })
     df = pd.DataFrame(rows)
-    fx.write_forensic_csv(rows, fx.repo_forensic_dir() / "pre2022_85_15.csv",
-                          marker={"LABEL": fx.ANALOG_85_15_LABEL,
-                                  "VALID_FOR_FINAL_MODEL": False,
-                                  "SCIENTIFICALLY_INVALID": False,
-                                  "NOTE": "diagnostic analog; NOT the official walk-forward protocol"})
-    fx.write_forensic_csv(windows, fx.repo_forensic_dir() / "pre2022_85_15_windows.csv")
-    agg = {"accuracy": float(df["accuracy"].mean()) if len(df) else None,
-           "f1": float(df["f1"].mean()) if len(df) else None,
-           "brier": float(df["brier"].mean()) if len(df) else None,
-           "majority_accuracy": float(df["majority_accuracy"].mean()) if len(df) else None,
-           "n_tickers": len(df)}
+    marker = {"LABEL": fx.ANALOG_85_15_LABEL,
+              "VALID_FOR_FINAL_MODEL": False,
+              "SCIENTIFICALLY_INVALID": False,
+              "NOTE": "alternate paper protocol diagnostic"}
+    fx.write_forensic_csv(rows,
+                          fx.repo_forensic_dir() / "pre2022_long_history_85_15.csv",
+                          marker=marker)
+    fx.write_forensic_csv(windows,
+                          fx.repo_forensic_dir() / "pre2022_long_history_windows.csv")
+    agg = {
+        "label": fx.ANALOG_85_15_LABEL,
+        "accuracy": float(df["accuracy"].mean()) if len(df) else None,
+        "f1": float(df["f1"].mean()) if len(df) else None,
+        "brier": float(df["brier"].mean()) if len(df) else None,
+        "train_majority_baseline_accuracy": float(
+            df["train_majority_baseline_accuracy"].mean()) if len(df) else None,
+        "validation_oracle_majority_rate": float(
+            df["validation_oracle_majority_rate"].mean()) if len(df) else None,
+        "earliest_eligible_date": min((w["first_eligible_date"] for w in windows
+                                       if w.get("first_eligible_date")), default=None),
+        "latest_final_date": max((w["final_date"] for w in windows
+                                  if w.get("final_date")), default=None),
+        "n_tickers": len(df),
+        "max_validation_target_date": max((w["val_last_target_date"] for w in windows
+                                           if w.get("val_last_target_date")),
+                                          default=None),
+    }
+    fx.write_forensic_json({"diagnostic": "D_LONG_HISTORY_85_15", **agg,
+                            "windows": windows},
+                           fx.repo_forensic_dir() / "pre2022_long_history_85_15.json",
+                           marker=marker)
     return {"label": fx.ANALOG_85_15_LABEL, "aggregate": agg,
             "windows": windows, "per_ticker": df.to_dict("records")}
 
@@ -600,10 +680,9 @@ def diagnostic_l(base_path: str, device: str) -> dict:
 
 
 def _run_probe(base_path: str, device: str, probe: str) -> list[dict]:
-    from sklearn.ensemble import RandomForestClassifier
-
     rng = np.random.default_rng(0)
-    rows = []
+    rows: list[dict] = []
+    l1_audit: list[dict] = []
     for fold in SEARCH_FOLDS:
         cfg = build_config(base_path, fold)
         da = DataAgent(cfg)
@@ -616,9 +695,30 @@ def _run_probe(base_path: str, device: str, probe: str) -> list[dict]:
             Xtr, Xva = ds.train.X, ds.val.X
 
             if probe == "L1":
-                # target day INCLUDED in the input window
-                Xtr = _leak_target_day(Xtr, ds)
-                Xva = _leak_target_day(Xva, ds)
+                # target day GENUINELY included as the final timestep.
+                # The naive left-shift left the final row as the ORIGIN, so it
+                # leaked nothing; the mapping below makes the last element the
+                # real target-day feature vector.
+                def _l1(X, y, dates, tdates):
+                    return fx.build_target_day_leak(X, y, dates, tdates)
+
+                if probe == "L1" and len(ds.val.y):
+                    tr1 = _l1(Xtr, ytr, ds.train.dates, ds.train.target_dates)
+                    va1 = _l1(Xva, yva, ds.val.dates, ds.val.target_dates)
+                    Xtr, ytr = tr1["X_leaked"], tr1["y"]
+                    Xva, yva = va1["X_leaked"], va1["y"]
+                    l1_audit.append({
+                        "fold": fold, "ticker": sym,
+                        "n_train_kept": tr1["n_kept"],
+                        "n_val_kept": va1["n_kept"],
+                        "n_dropped": tr1["n_dropped"] + va1["n_dropped"],
+                        "final_timestep_equals_target_date": all(
+                            d == t for d, t in
+                            zip(va1["final_timestep_dates"], va1["target_dates"])),
+                        "target_after_origin": all(
+                            t > o for t, o in
+                            zip(va1["target_dates"], va1["origin_dates"])),
+                    })
             elif probe == "L2":
                 # current-day direction as target: features contain t
                 ytr = _current_day_target(cfg, sym, ds.train.dates)
@@ -627,27 +727,51 @@ def _run_probe(base_path: str, device: str, probe: str) -> list[dict]:
                 # random overlapping-sequence split
                 Xtr, ytr, Xva, yva = _random_split(Xtr, ytr, Xva, yva, rng)
             elif probe == "L4":
-                # scaler fit on train+validation
+                # Deliberate scaler leakage: refit on train+validation. This
+                # REQUIRES unscaled sequences -- rescaling already-scaled data
+                # would not be a real leak. DataAgent exposes the original
+                # feature values for exactly this purpose.
+                ds_unscaled = DataAgent(cfg).run(
+                    sym, return_unscaled_sequences=True)
+                fx.assert_targets_pre_test(
+                    ds_unscaled.train.target_dates,
+                    ds_unscaled.val.target_dates, where=f"L4/{fold}/{sym}")
+                Xtr = np.asarray(ds_unscaled.train.X, dtype=np.float64)
+                Xva = np.asarray(ds_unscaled.val.X, dtype=np.float64)
+                ytr = np.asarray(ds_unscaled.train.y, int)
+                yva = np.asarray(ds_unscaled.val.y, int)
+                assert not ds_unscaled.scaled, "L4 needs unscaled sequences"
                 Xtr, Xva = _leak_scaler(Xtr, Xva)
 
-            clf = RandomForestClassifier(n_estimators=200, max_depth=8,
-                                         random_state=ANCHOR["seed"])
+            # L4 is evaluated with a distance-sensitive model: ordinary linear
+            # rescaling cannot move a tree's split points, so a RandomForest
+            # would make the probe look artificially inert.
+            from sklearn.linear_model import LogisticRegression
+            clf = LogisticRegression(max_iter=1000)
             clf.fit(Xtr.reshape(len(Xtr), -1), ytr)
             p_tr = clf.predict_proba(Xtr.reshape(len(Xtr), -1))[:, 1]
             p_va = clf.predict_proba(Xva.reshape(len(Xva), -1))[:, 1]
             rows.append({"probe": probe, "fold": fold, "ticker": sym,
+                         "model": "LogisticRegression",
                          "train_accuracy": _acc(ytr, p_tr),
                          "validation_accuracy": _acc(yva, p_va),
                          "validation_f1": _f1(yva, p_va)})
+    if probe == "L1":
+        # expose the L1 alignment audit alongside the metrics
+        for r in rows:
+            r["n_l1_kept"] = next((a["n_val_kept"] for a in l1_audit
+                                   if a["fold"] == r["fold"]
+                                   and a["ticker"] == r["ticker"]), None)
+            r["l1_final_timestep_equals_target_date"] = next(
+                (a["final_timestep_equals_target_date"] for a in l1_audit
+                 if a["fold"] == r["fold"] and a["ticker"] == r["ticker"]), None)
     return rows
 
 
-def _leak_target_day(X, ds):
-    """Append the NEXT row's scaled features to each window (the L1 off-by-one)."""
-    # shift each sequence forward by one step so it includes t+1
-    out = np.copy(X)
-    out[:, :-1, :] = X[:, 1:, :]
-    return out
+# NOTE: the previous `_leak_target_day` shifted the window left and left the
+# FINAL timestep as the origin row, so the target day never entered the input
+# and the probe measured nothing. It was replaced by
+# `fx.build_target_day_leak`, which appends the genuine target-day vector.
 
 
 def _current_day_target(cfg, ticker, dates):
@@ -677,12 +801,18 @@ def _random_split(Xtr, ytr, Xva, yva, rng):
 
 
 def _leak_scaler(Xtr, Xva):
-    """Refit the scaler on train+validation: INVALID leakage."""
+    """INVALID: fit StandardScaler on train+validation, then apply to both.
+
+    Takes ORIGINAL (unscaled) feature values. Fitting on already-scaled data
+    would produce a near-identity transform and hide the leak entirely, so the
+    caller must pass sequences obtained with
+    ``return_unscaled_sequences=True``.
+    """
     from sklearn.preprocessing import StandardScaler
-    both = np.concatenate([Xtr.reshape(len(Xtr), -1), Xva.reshape(len(Xva), -1)])
-    sc = StandardScaler().fit(both)
-    return (sc.transform(Xtr.reshape(len(Xtr), -1)).reshape(Xtr.shape),
-            sc.transform(Xva.reshape(len(Xva), -1)).reshape(Xva.shape))
+    tr2, va2 = Xtr.reshape(len(Xtr), -1), Xva.reshape(len(Xva), -1)
+    sc = StandardScaler().fit(np.concatenate([tr2, va2]))
+    return (sc.transform(tr2).reshape(Xtr.shape).astype(np.float32),
+            sc.transform(va2).reshape(Xva.shape).astype(np.float32))
 
 
 # ---------------------------------------------------------------------------

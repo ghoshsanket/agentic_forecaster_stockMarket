@@ -105,6 +105,11 @@ class ProcessedDataset:
     # Resolved recovery choices, recorded so a run can be audited end to end.
     scaler_name: str = "standard"
     volume_mode: str = "raw"
+    #: False when `return_unscaled_sequences=True` was requested, i.e. the
+    #: sequence arrays are ORIGINAL feature values and `scaler` was fitted but
+    #: deliberately NOT applied. Only the L4 leakage probe uses this, because
+    #: refitting a scaler on already-scaled values would not be a real leak.
+    scaled: bool = True
     split_mode: str = "fractional"
     search_mode: bool = False
 
@@ -399,7 +404,8 @@ class DataAgent:
         return daily
 
     def run_ticker(self, ticker: str, df: pd.DataFrame | None = None,
-                   indicators: list[str] | None = None) -> ProcessedDataset:
+                   indicators: list[str] | None = None,
+                   return_unscaled_sequences: bool = False) -> ProcessedDataset:
         """Process a SINGLE ticker end-to-end: features, target, sequences, scaler.
 
         This is the primary entry point for the one-model-per-stock design.
@@ -408,6 +414,12 @@ class DataAgent:
         ----------
         indicators : optional override of ``features.indicators`` (used by the
             OHLCV-only ablation to pass ``[]``).
+        return_unscaled_sequences : when True the scaler is still FIT on train
+            but deliberately NOT applied, so ``X`` holds original feature
+            values and ``dataset.scaled`` is False. This exists so the L4
+            leakage probe can fit a deliberately-leaking scaler on real
+            unscaled values; inverse-transforming already-scaled data would
+            not reproduce a genuine train+validation scaler leak.
         """
         feat_cfg = self.feat_cfg
         selected = indicators if indicators is not None else feat_cfg.get("indicators")
@@ -570,11 +582,18 @@ class DataAgent:
         scaler_name = str(self.data_cfg.get("scaler", "standard")).lower()
         scaler = build_scaler(scaler_name)
         fit_scaler_on_train(scaler, train.X)
-        train.X = apply_scaler(scaler, train.X).astype(np.float32)
-        if len(val.X):
-            val.X = apply_scaler(scaler, val.X).astype(np.float32)
-        if len(test.X):
-            test.X = apply_scaler(scaler, test.X).astype(np.float32)
+        if return_unscaled_sequences:
+            # Hand back ORIGINAL feature values. The caller is responsible for
+            # any scaling; the train-only scaler is still attached for audit.
+            for _b in (train, val, test):
+                if len(_b.X):
+                    _b.X = _b.X.astype(np.float32)
+        else:
+            train.X = apply_scaler(scaler, train.X).astype(np.float32)
+            if len(val.X):
+                val.X = apply_scaler(scaler, val.X).astype(np.float32)
+            if len(test.X):
+                test.X = apply_scaler(scaler, test.X).astype(np.float32)
 
         # Firewall on the ACTUAL materialised data, not just the config: any
         # train/validation origin or target date at/after 2022-01-01 is a leak.
@@ -601,6 +620,7 @@ class DataAgent:
             train=train, val=val, test=test,
             scaler=scaler, feature_names=feat_cols, ticker=ticker,
             scaler_name=scaler_name, volume_mode=volume_mode,
+            scaled=not return_unscaled_sequences,
             split_mode=("train_val_test" if use_date_splits
                         else "train_val_only" if use_train_val_only
                         else "fractional"),
@@ -622,8 +642,11 @@ class DataAgent:
         }
 
     def run(self, ticker: str | None = None,
-            indicators: list[str] | None = None) -> ProcessedDataset:
+            indicators: list[str] | None = None,
+            return_unscaled_sequences: bool = False) -> ProcessedDataset:
         """Process one ticker.
+
+        See :meth:`run_ticker` for ``return_unscaled_sequences``.
 
         ``indicators`` overrides ``features.indicators`` (used by the
         OHLCV-only ablation, which passes ``[]``).
@@ -651,7 +674,9 @@ class DataAgent:
             path = ticker_files[ticker]
             processed_root = Path(self.data_cfg.get("processed_root", "./data/processed"))
             daily = self._to_daily(ticker, path, processed_root)
-            processed = self.run_ticker(ticker, daily, indicators=indicators)
+            processed = self.run_ticker(
+                ticker, daily, indicators=indicators,
+                return_unscaled_sequences=return_unscaled_sequences)
             prov = self._label_provenance(ticker, path)
             processed.requested_label = prov["requested_label"]
             processed.source_file = prov["source_file"]

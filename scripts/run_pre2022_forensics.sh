@@ -153,10 +153,12 @@ uv run --frozen python - <<'PYEOF' >>"$LOG" 2>&1
 import json
 from pathlib import Path
 s = json.loads(Path("results/reproduction_recovery/forensics/pre2022_forensics_summary.json").read_text())
-print(f"  likely_cause   : {s['likely_cause']}")
+print(f"  demonstrated   : {s['demonstrated_conclusion']}")
 print(f"  recommendation : {s['recommendation']}  (NOT executed)")
 for c in s["cause_ranking"]:
-    print(f"    {c['cause']:<24} {c['verdict']:<24} delta={c['accuracy_delta_vs_legitimate']}")
+    print(f"    [{c['status']:<12}] {c['cause']:<24} {c['verdict']:<24} "
+          f"delta={c['accuracy_delta_vs_legitimate']}")
+print("  " + s["historical_causation"])
 PYEOF
 log "=== pre-2022 forensic diagnosis complete ==="
 log "artifacts : $AGENTIC_OUTPUT_ROOT/reproduction_recovery/forensics/"

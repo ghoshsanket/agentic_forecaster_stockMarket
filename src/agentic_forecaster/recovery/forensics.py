@@ -60,9 +60,13 @@ INVALID_MARKER = {
     "SCIENTIFICALLY_INVALID": True,
 }
 
+#: Earliest raw history to consider for the long-history analog. The dataset
+#: itself begins in 2000; this bound only guards against a malformed source.
+LONG_HISTORY_EARLIEST = "1990-01-01"
+
 #: Marks forensic variants that are diagnostics, not author-confirmed designs.
 POOLED_LABEL = "FORENSIC_POOLED_NOT_AUTHOR_CONFIRMED"
-ANALOG_85_15_LABEL = "FORENSIC_PRE2022_85_15"
+ANALOG_85_15_LABEL = "FORENSIC_PRE2022_LONG_HISTORY_85_15"
 
 
 class ForensicFirewallAbort(RuntimeError):
@@ -237,16 +241,57 @@ def confidence_subset_metrics(predictions: pd.DataFrame,
 # label balance
 # ---------------------------------------------------------------------------
 
+def train_majority_baseline(train_y: np.ndarray, val_y: np.ndarray) -> float:
+    """LEGITIMATE deployable baseline: always predict the TRAIN majority class.
+
+    The class is chosen from TRAIN labels only, so no validation label is used
+    to build the predictor. This is the only quantity a model's accuracy should
+    be compared against.
+    """
+    tr = np.asarray(train_y, dtype=int)
+    va = np.asarray(val_y, dtype=int)
+    if not len(tr) or not len(va):
+        return float("nan")
+    cls = 1 if float(np.mean(tr)) >= 0.5 else 0
+    # accuracy ON VALIDATION of the constant predictor chosen from TRAIN
+    return float(np.mean(va == cls))
+
+
+def validation_oracle_majority_rate(val_y: np.ndarray) -> float:
+    """CLASS-BALANCE DESCRIPTION ONLY -- not a deployable predictor.
+
+    This is ``max(validation positive rate, 1 - positive rate)``: it peeks at
+    validation labels, so no trained model can legitimately be compared against
+    it. Reporting it as a "baseline" would overstate a model.
+    """
+    va = np.asarray(val_y, dtype=int)
+    if not len(va):
+        return float("nan")
+    pos = float(np.mean(va))
+    return float(max(pos, 1 - pos))
+
+
 def label_balance(train_y: np.ndarray, val_y: np.ndarray) -> dict:
-    """Positive rate and majority-class accuracy, per stock/fold."""
+    """Class-balance description, with the two 'majority' notions kept apart."""
     def _one(a: np.ndarray) -> dict:
+        a = np.asarray(a, dtype=int)
         n = len(a)
         pos = float(np.mean(a)) if n else float("nan")
         return {"n": n, "positive_rate": pos,
-                "majority_class": "UP" if pos >= 0.5 else "DOWN",
-                "majority_accuracy": float(max(pos, 1 - pos)) if n else float("nan")}
-    return {"train": _one(np.asarray(train_y, dtype=int)),
-            "validation": _one(np.asarray(val_y, dtype=int))}
+                "majority_class": "UP" if pos >= 0.5 else "DOWN"}
+    return {
+        "train": _one(train_y),
+        "validation": _one(val_y),
+        # legitimate, deployable, TRAIN-derived
+        "train_majority_baseline_accuracy": train_majority_baseline(
+            train_y, val_y),
+        # class-balance description only; never a baseline to beat
+        "validation_oracle_majority_rate": validation_oracle_majority_rate(val_y),
+        "terminology_note": (
+            "train_majority_baseline_accuracy is the only legitimate "
+            "comparison. validation_oracle_majority_rate uses validation "
+            "labels and is a class-balance statistic, not a predictor."),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -412,3 +457,93 @@ def repo_forensic_dir(sub: str = "") -> Path:
         root = root / sub
     root.mkdir(parents=True, exist_ok=True)
     return root
+
+
+# ---------------------------------------------------------------------------
+# L1 probe: a GENUINE target-day-in-window off-by-one
+# ---------------------------------------------------------------------------
+
+class L1AlignmentError(AssertionError):
+    """Raised when the L1 leaked sequence is not actually target-aligned."""
+
+
+def build_target_day_leak(X, y, origin_dates, target_dates, *,
+                          date_values=None) -> dict:
+    """Build the DELIBERATELY INVALID "target day is in the window" sequences.
+
+    Why the naive version is wrong
+    -----------------------------
+    Shifting an existing window left and leaving the final timestep alone does
+    NOT leak: the final timestep is still the origin row, so the target day's
+    information is absent and the probe measures nothing. The off-by-one being
+    hypothesised requires the final timestep to BE the target day.
+
+    This builds a genuine mapping ``date -> feature vector at that date`` from
+    the samples themselves (each sample's final timestep is the feature vector
+    at its own origin date), then for every sample appends the vector belonging
+    to its **target date** after shifting the rest left:
+
+        [f(t-L+1) ... f(t-1), f(t), f(t+1)]      <- final element is f(t+1)
+
+    while leaving the label as the true next-day direction
+    ``int(Close[t+1] > Close[t])``.
+
+    Returns aligned ``X_leaked``, ``y``, origin dates, target dates and the
+    final-timestep date actually realised for each kept sample. Every kept
+    sample is asserted: the final timestep must be ``target_date`` and
+    ``target_date > origin_date``.
+    """
+    X = np.asarray(X, dtype=np.float32)
+    y = np.asarray(y)
+    origins = [str(pd.Timestamp(d).date()) for d in origin_dates]
+    targets = [str(pd.Timestamp(d).date()) for d in target_dates]
+
+    # date -> feature vector at that date, taken from each sample's last row
+    vec_by_date: dict[str, np.ndarray] = {}
+    for i, d in enumerate(origins):
+        vec_by_date[d] = X[i, -1, :]
+
+    seq_len = X.shape[1]
+    keep, leaked, last_dates = [], [], []
+    for i, (o, t) in enumerate(zip(origins, targets)):
+        if t <= o:
+            raise L1AlignmentError(f"{o}: target {t} is not after origin")
+        if t not in vec_by_date:
+            continue          # genuinely unavailable -> drop, do not invent
+        out = np.empty_like(X[i])
+        out[:-1, :] = X[i, 1:, :]     # shift left
+        out[-1, :] = vec_by_date[t]    # append the TRUE target-day vector
+        keep.append(i)
+        leaked.append(out)
+        last_dates.append(t)
+
+    if not keep:
+        raise L1AlignmentError("no sample had an available target-day vector")
+
+    X_leaked = np.stack(leaked).astype(np.float32)
+    assert X_leaked.shape[1] == seq_len
+
+    # Per-sample assertions, as required: the final element must genuinely be
+    # the target date, and the target must be strictly after the origin.
+    for j, i in enumerate(keep):
+        o, t = origins[i], targets[j]
+        if not (last_dates[j] == t):
+            raise L1AlignmentError(
+                f"final timestep {last_dates[j]} != target_date {t}")
+        if not (t > o):
+            raise L1AlignmentError(f"target {t} is not after origin {o}")
+        # the appended vector must be the one registered for the target date
+        if not np.allclose(X_leaked[j, -1, :], vec_by_date[t]):
+            raise L1AlignmentError(
+                f"{o}: appended final timestep is not the target-day vector")
+
+    return {
+        "X_leaked": X_leaked,
+        "y": y[keep],
+        "origin_dates": [origins[i] for i in keep],
+        "target_dates": [targets[i] for i in keep],
+        "final_timestep_dates": last_dates,
+        "n_kept": len(keep),
+        "n_dropped": len(origins) - len(keep),
+        "date_values": date_values,
+    }

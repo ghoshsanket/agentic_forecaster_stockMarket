@@ -43,5 +43,8 @@
       "n_val": 1976
     }
   ],
-  "LABEL": "FORENSIC_POOLED_NOT_AUTHOR_CONFIRMED"
+  "LABEL": "FORENSIC_POOLED_NOT_AUTHOR_CONFIRMED",
+  "SCIENTIFICALLY_INVALID": false,
+  "VALID_FOR_FINAL_MODEL": false,
+  "metadata_correction": "The pooled model is NOT author-confirmed but is a legitimate scientific experiment; it previously carried the leakage-probe marker. Metadata only - training was not repeated and metrics are unchanged."
 }

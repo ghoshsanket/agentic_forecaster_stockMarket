@@ -1,4 +1,8 @@
 {
+  "terminology": {
+    "train_majority_baseline_accuracy": "LEGITIMATE deployable baseline: always predict the class that is most common in TRAIN. Models are compared against this and only this.",
+    "validation_oracle_majority_rate": "CLASS-BALANCE DESCRIPTION ONLY: max(validation positive rate, 1 - rate). It reads validation labels, so no trained model can be compared against it."
+  },
   "firewall": {
     "cutoff": "2022-01-01",
     "max_target_date_in_legitimate_predictions": "2021-12-31",
@@ -98,7 +102,7 @@
       "n_cases": 24,
       "delta_vs_majority": -0.00683220686809205
     },
-    "Majority": {
+    "TrainMajorityBaseline": {
       "accuracy": 0.5171676648710142,
       "f1": 0.429272000229078,
       "brier": 0.4828323351289859,
@@ -133,89 +137,127 @@
       ]
     }
   },
-  "D_pre2022_85_15": {
-    "label": "FORENSIC_PRE2022_85_15",
+  "D_pre2022_long_history_85_15": {
+    "label": "FORENSIC_PRE2022_LONG_HISTORY_85_15",
     "aggregate": {
-      "accuracy": 0.5197963800904977,
-      "f1": 0.48372014049819223,
-      "brier": 0.2484486522625996,
-      "majority_accuracy": 0.5407239819004525,
-      "n_tickers": 8
+      "label": "FORENSIC_PRE2022_LONG_HISTORY_85_15",
+      "accuracy": 0.5194353976019065,
+      "f1": 0.551236777643464,
+      "brier": 0.2494047904875238,
+      "train_majority_baseline_accuracy": 0.5062637220212787,
+      "validation_oracle_majority_rate": 0.5193736322625961,
+      "earliest_eligible_date": "2000-03-10",
+      "latest_final_date": "2021-12-31",
+      "n_tickers": 8,
+      "max_validation_target_date": "2021-12-31"
     },
     "windows": [
       {
         "ticker": "RELIANCE",
-        "n_train_dates": 1258,
-        "n_val_dates": 222,
-        "train_first": "2016-01-01",
-        "train_last": "2021-02-05",
-        "val_first": "2021-02-08",
-        "val_last": "2021-12-30"
+        "raw_first_date": "2000-01-03",
+        "first_eligible_date": "2000-03-10",
+        "final_date": "2021-12-31",
+        "n_eligible": 5447,
+        "n_train": 4630,
+        "n_val": 817,
+        "train_first_target_date": "2000-03-13",
+        "train_last_target_date": "2018-09-06",
+        "val_first_target_date": "2018-09-07",
+        "val_last_target_date": "2021-12-31"
       },
       {
         "ticker": "TCS",
-        "n_train_dates": 1258,
-        "n_val_dates": 222,
-        "train_first": "2016-01-01",
-        "train_last": "2021-02-05",
-        "val_first": "2021-02-08",
-        "val_last": "2021-12-30"
+        "raw_first_date": "2002-08-12",
+        "first_eligible_date": "2002-10-18",
+        "final_date": "2021-12-31",
+        "n_eligible": 4768,
+        "n_train": 4053,
+        "n_val": 715,
+        "train_first_target_date": "2002-10-21",
+        "train_last_target_date": "2019-02-06",
+        "val_first_target_date": "2019-02-07",
+        "val_last_target_date": "2021-12-31"
       },
       {
         "ticker": "INFY",
-        "n_train_dates": 1258,
-        "n_val_dates": 222,
-        "train_first": "2016-01-01",
-        "train_last": "2021-02-05",
-        "val_first": "2021-02-08",
-        "val_last": "2021-12-30"
+        "raw_first_date": "2000-01-03",
+        "first_eligible_date": "2000-03-10",
+        "final_date": "2021-12-31",
+        "n_eligible": 5450,
+        "n_train": 4632,
+        "n_val": 818,
+        "train_first_target_date": "2000-03-13",
+        "train_last_target_date": "2018-09-05",
+        "val_first_target_date": "2018-09-06",
+        "val_last_target_date": "2021-12-31"
       },
       {
         "ticker": "HDFCBANK",
-        "n_train_dates": 1258,
-        "n_val_dates": 222,
-        "train_first": "2016-01-01",
-        "train_last": "2021-02-05",
-        "val_first": "2021-02-08",
-        "val_last": "2021-12-30"
+        "raw_first_date": "2000-01-03",
+        "first_eligible_date": "2000-03-10",
+        "final_date": "2021-12-31",
+        "n_eligible": 5450,
+        "n_train": 4632,
+        "n_val": 818,
+        "train_first_target_date": "2000-03-13",
+        "train_last_target_date": "2018-09-05",
+        "val_first_target_date": "2018-09-06",
+        "val_last_target_date": "2021-12-31"
       },
       {
         "ticker": "ITC",
-        "n_train_dates": 1258,
-        "n_val_dates": 222,
-        "train_first": "2016-01-01",
-        "train_last": "2021-02-05",
-        "val_first": "2021-02-08",
-        "val_last": "2021-12-30"
+        "raw_first_date": "2000-01-03",
+        "first_eligible_date": "2000-03-10",
+        "final_date": "2021-12-31",
+        "n_eligible": 5447,
+        "n_train": 4630,
+        "n_val": 817,
+        "train_first_target_date": "2000-03-13",
+        "train_last_target_date": "2018-09-06",
+        "val_first_target_date": "2018-09-07",
+        "val_last_target_date": "2021-12-31"
       },
       {
         "ticker": "LT",
-        "n_train_dates": 1258,
-        "n_val_dates": 222,
-        "train_first": "2016-01-01",
-        "train_last": "2021-02-05",
-        "val_first": "2021-02-08",
-        "val_last": "2021-12-30"
+        "raw_first_date": "2002-07-01",
+        "first_eligible_date": "2002-09-06",
+        "final_date": "2021-12-31",
+        "n_eligible": 4800,
+        "n_train": 4080,
+        "n_val": 720,
+        "train_first_target_date": "2002-09-09",
+        "train_last_target_date": "2019-01-30",
+        "val_first_target_date": "2019-01-31",
+        "val_last_target_date": "2021-12-31"
       },
       {
         "ticker": "SUNPHARMA",
-        "n_train_dates": 1258,
-        "n_val_dates": 222,
-        "train_first": "2016-01-01",
-        "train_last": "2021-02-05",
-        "val_first": "2021-02-08",
-        "val_last": "2021-12-30"
+        "raw_first_date": "2000-01-03",
+        "first_eligible_date": "2000-03-10",
+        "final_date": "2021-12-31",
+        "n_eligible": 5450,
+        "n_train": 4632,
+        "n_val": 818,
+        "train_first_target_date": "2000-03-13",
+        "train_last_target_date": "2018-09-05",
+        "val_first_target_date": "2018-09-06",
+        "val_last_target_date": "2021-12-31"
       },
       {
         "ticker": "TATASTEEL",
-        "n_train_dates": 1258,
-        "n_val_dates": 222,
-        "train_first": "2016-01-01",
-        "train_last": "2021-02-05",
-        "val_first": "2021-02-08",
-        "val_last": "2021-12-30"
+        "raw_first_date": "2000-01-03",
+        "first_eligible_date": "2000-03-10",
+        "final_date": "2021-12-31",
+        "n_eligible": 5450,
+        "n_train": 4632,
+        "n_val": 818,
+        "train_first_target_date": "2000-03-13",
+        "train_last_target_date": "2018-09-05",
+        "val_first_target_date": "2018-09-06",
+        "val_last_target_date": "2021-12-31"
       }
-    ]
+    ],
+    "correction": "The previous 85/15 diagnostic built its sample list from SEARCH_FOLD_C, which starts in 2016, so it tested 2016-2021 rather than long history. This version loads each stock from the earliest available raw history, truncates at 2021-12-31, and splits the eligible supervised samples chronologically 85/15."
   },
   "E_target_alignment": {
     "diagnostic": "E_TARGET_ALIGNMENT",
@@ -301,59 +343,48 @@
     "probes": [
       {
         "probe": "L1",
-        "mean_validation_accuracy": 0.5203802470788117,
-        "inflation_vs_L0": 0.016951881717432005,
+        "mean_validation_accuracy": 0.9292872329313204,
+        "inflation_vs_L0": 0.426337158019523,
         "scientifically_invalid": true
       },
       {
         "probe": "L2",
-        "mean_validation_accuracy": 0.9936749311294766,
-        "inflation_vs_L0": 0.4902465657680969,
+        "mean_validation_accuracy": 0.9313910544532555,
+        "inflation_vs_L0": 0.4284409795414581,
         "scientifically_invalid": true
       },
       {
         "probe": "L3",
-        "mean_validation_accuracy": 0.5058132159455988,
-        "inflation_vs_L0": 0.0023848505842191114,
+        "mean_validation_accuracy": 0.5061650741385976,
+        "inflation_vs_L0": 0.0032149992268001304,
         "scientifically_invalid": true
       },
       {
         "probe": "L4",
-        "mean_validation_accuracy": 0.5034283653613797,
-        "inflation_vs_L0": 0.0,
+        "mean_validation_accuracy": 0.49528176873631424,
+        "inflation_vs_L0": -0.007668306175483197,
         "scientifically_invalid": true
       }
     ],
-    "L0_correct_control": 0.5034283653613797,
-    "max_inflation": 0.4902465657680969,
+    "L0_correct_control": 0.5029500749117974,
+    "max_inflation": 0.4284409795414581,
     "max_inflation_probe": "L2",
     "verdict": "EXPLAINS_INFLATION",
-    "note": "L1-L4 are INTENTIONALLY WRONG. They show how a lost implementation could have produced an inflated number; they are never valid models and never candidates for selection."
+    "note": "L1-L4 are INTENTIONALLY WRONG. They demonstrate HOW a given defect inflates measured accuracy; they are never valid models and never candidates for selection.",
+    "l2_interpretation": "A same-day target definition combined with same-day return/features creates severe target leakage and can produce artificially high measured accuracy.",
+    "l2_historical_claim": "NOT ESTABLISHED. The publication describes a NEXT-DAY target, so L2 is a hypothetical explanation for a lost-code discrepancy, NOT evidence that the original implementation used this defect. No source code or author statement has been obtained."
   },
   "W_train_vs_validation": {
-    "mean_train_accuracy": 0.9933131312308139,
-    "mean_validation_accuracy": 0.5034283653613797,
-    "train_minus_validation": 0.4898847658694342,
+    "mean_train_accuracy": 0.7082441675012904,
+    "mean_validation_accuracy": 0.5029500749117974,
+    "train_minus_validation": 0.20529409258949294,
     "verdict": "EXPLAINS_INFLATION",
     "note": "Training is unaltered in L5; only the reporting differs. A large gap shows a train/validation mix-up could inflate a reported number."
   },
   "cause_ranking": [
     {
-      "cause": "LEAKAGE/OFF_BY_ONE",
-      "accuracy_delta_vs_legitimate": 0.4902465657680969,
-      "material": true,
-      "verdict": "EXPLAINS_INFLATION",
-      "evidence": "max invalid-probe inflation 0.4902465657680969 via L2"
-    },
-    {
-      "cause": "CONFIDENCE_FILTERING",
-      "accuracy_delta_vs_legitimate": 0.10403679180828429,
-      "material": true,
-      "verdict": "NOT_SUPPORTED",
-      "evidence": "best confidence floor >=0.60 -> 0.6290 but on only 1.0% of predictions (min required 20.0%); conditional accuracy, not overall (delta +0.1040)"
-    },
-    {
       "cause": "AGGREGATION",
+      "status": "DEMONSTRATED",
       "accuracy_delta_vs_legitimate": 3.836324309158812e-05,
       "material": false,
       "verdict": "NOT_SUPPORTED",
@@ -361,6 +392,7 @@
     },
     {
       "cause": "DATA_ADJUSTMENT",
+      "status": "DEMONSTRATED",
       "accuracy_delta_vs_legitimate": -0.0006863463490257571,
       "material": false,
       "verdict": "NOT_SUPPORTED",
@@ -368,6 +400,7 @@
     },
     {
       "cause": "MODEL_FORM",
+      "status": "DEMONSTRATED",
       "accuracy_delta_vs_legitimate": -0.003922865013774146,
       "material": false,
       "verdict": "NOT_SUPPORTED",
@@ -375,13 +408,15 @@
     },
     {
       "cause": "SPLIT_PROTOCOL",
-      "accuracy_delta_vs_legitimate": -0.005199086165734168,
+      "status": "DEMONSTRATED",
+      "accuracy_delta_vs_legitimate": -0.005560068654325345,
       "material": false,
       "verdict": "NOT_SUPPORTED",
-      "evidence": "pre-2022 85/15 analog 0.5198 vs walk-forward 0.5250 (delta -0.0052)"
+      "evidence": "pre-2022 85/15 analog 0.5194 vs walk-forward 0.5250 (delta -0.0056)"
     },
     {
       "cause": "PER_STOCK_VS_POOLED",
+      "status": "DEMONSTRATED",
       "accuracy_delta_vs_legitimate": -0.014926328057907057,
       "material": false,
       "verdict": "NOT_SUPPORTED",
@@ -389,16 +424,106 @@
     },
     {
       "cause": "TARGET_ALIGNMENT",
+      "status": "DEMONSTRATED",
+      "accuracy_delta_vs_legitimate": null,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "target-alignment mismatch_count=0 over 900 raw-OHLCV samples; next-day target construction is proven correct"
+    },
+    {
+      "cause": "LEAKAGE/OFF_BY_ONE",
+      "status": "HYPOTHETICAL",
+      "accuracy_delta_vs_legitimate": 0.4284409795414581,
+      "material": true,
+      "verdict": "EXPLAINS_INFLATION",
+      "evidence": "max invalid-probe inflation 0.4284409795414581 via L2",
+      "historical_claim": "NOT ESTABLISHED - no source code or author evidence"
+    },
+    {
+      "cause": "CONFIDENCE_FILTERING",
+      "status": "HYPOTHETICAL",
+      "accuracy_delta_vs_legitimate": 0.10403679180828429,
+      "material": true,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "best confidence floor >=0.60 -> 0.6290 but on only 1.0% of predictions (min required 20.0%); conditional accuracy, not overall (delta +0.1040)"
+    }
+  ],
+  "demonstrated": [
+    {
+      "cause": "AGGREGATION",
+      "status": "DEMONSTRATED",
+      "accuracy_delta_vs_legitimate": 3.836324309158812e-05,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "conventions span 0.5250..0.5250 (spread 0.0000); best convention vs legitimate +0.0000"
+    },
+    {
+      "cause": "DATA_ADJUSTMENT",
+      "status": "DEMONSTRATED",
+      "accuracy_delta_vs_legitimate": -0.0006863463490257571,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "adjusted 0.5243 vs unadjusted 0.5250 (delta -0.0007, material threshold 0.02)"
+    },
+    {
+      "cause": "MODEL_FORM",
+      "status": "DEMONSTRATED",
+      "accuracy_delta_vs_legitimate": -0.003922865013774146,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "best simple model PlainLSTM=0.5211 vs Attention 0.5250 (delta -0.0039)"
+    },
+    {
+      "cause": "SPLIT_PROTOCOL",
+      "status": "DEMONSTRATED",
+      "accuracy_delta_vs_legitimate": -0.005560068654325345,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "pre-2022 85/15 analog 0.5194 vs walk-forward 0.5250 (delta -0.0056)"
+    },
+    {
+      "cause": "PER_STOCK_VS_POOLED",
+      "status": "DEMONSTRATED",
+      "accuracy_delta_vs_legitimate": -0.014926328057907057,
+      "material": false,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "pooled 0.5101 vs per-stock 0.5250 (delta -0.0149); pooled is NOT author-confirmed"
+    },
+    {
+      "cause": "TARGET_ALIGNMENT",
+      "status": "DEMONSTRATED",
       "accuracy_delta_vs_legitimate": null,
       "material": false,
       "verdict": "NOT_SUPPORTED",
       "evidence": "target-alignment mismatch_count=0 over 900 raw-OHLCV samples; next-day target construction is proven correct"
     }
   ],
-  "supported_causes": [
-    "LEAKAGE/OFF_BY_ONE"
+  "hypothetical": [
+    {
+      "cause": "LEAKAGE/OFF_BY_ONE",
+      "status": "HYPOTHETICAL",
+      "accuracy_delta_vs_legitimate": 0.4284409795414581,
+      "material": true,
+      "verdict": "EXPLAINS_INFLATION",
+      "evidence": "max invalid-probe inflation 0.4284409795414581 via L2",
+      "historical_claim": "NOT ESTABLISHED - no source code or author evidence"
+    },
+    {
+      "cause": "CONFIDENCE_FILTERING",
+      "status": "HYPOTHETICAL",
+      "accuracy_delta_vs_legitimate": 0.10403679180828429,
+      "material": true,
+      "verdict": "NOT_SUPPORTED",
+      "evidence": "best confidence floor >=0.60 -> 0.6290 but on only 1.0% of predictions (min required 20.0%); conditional accuracy, not overall (delta +0.1040)"
+    }
   ],
-  "likely_cause": "LEAKAGE/OFF_BY_ONE",
-  "recommendation": "INVESTIGATE_ORIGINAL_PROTOCOL_FURTHER",
+  "supported_causes": [],
+  "demonstrated_conclusion": "NO_CLEAR_CAUSE",
+  "hypothetical_causes": [
+    "LEAKAGE/OFF_BY_ONE",
+    "CONFIDENCE_FILTERING"
+  ],
+  "historical_causation": "NOT ESTABLISHED. Deliberately-invalid probes show what a defect COULD do; without the original source code or an author statement, no historical failure mode can be asserted as the actual cause.",
+  "recommendation": "ASK_AUTHOR_FOR_ORIGINAL_PROTOCOL_DETAILS",
   "recommendation_executed": false
 }

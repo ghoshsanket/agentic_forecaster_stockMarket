@@ -400,9 +400,10 @@ def test_confidence_subset_retains_fewer_at_higher_thresholds():
 def test_label_balance_reports_rates_and_majority():
     out = fx.label_balance(np.array([1, 1, 0, 0]), np.array([1, 1, 1, 0]))
     assert out["train"]["positive_rate"] == pytest.approx(0.5)
-    assert out["train"]["majority_accuracy"] == pytest.approx(0.5)
     assert out["validation"]["positive_rate"] == pytest.approx(0.75)
-    assert out["validation"]["majority_accuracy"] == pytest.approx(0.75)
+    # train is tied, so the constant predictor is UP -> 3 of 4 correct
+    assert out["train_majority_baseline_accuracy"] == pytest.approx(0.75)
+    assert out["validation_oracle_majority_rate"] == pytest.approx(0.75)
 
 
 # ---------------------------------------------------------------------------
@@ -500,10 +501,285 @@ def test_leakage_verdict_rejects_a_marginal_inflation():
 
 def test_recommendation_is_not_executed_automatically():
     m = _load_summarizer()
-    assert m._recommend({}, []) == "LEAK_FREE_REPRODUCTION_CURRENTLY_UNSUPPORTED"
+    # everything demonstrated was ruled out -> ask the author
+    assert m._recommend({}, []) == "ASK_AUTHOR_FOR_ORIGINAL_PROTOCOL_DETAILS"
+    # a supported SPLIT_PROTOCOL cause is the only thing that licenses Stage B
+    assert m._recommend({}, [{"cause": "SPLIT_PROTOCOL",
+                              "verdict": "SUPPORTED"}]) == "PROCEED_TO_STAGE_B"
+    # a HYPOTHETICAL leakage cause must NEVER license an action
     assert m._recommend({}, [{"cause": "LEAKAGE/OFF_BY_ONE",
                               "verdict": "EXPLAINS_INFLATION"}]) \
-        == "INVESTIGATE_ORIGINAL_PROTOCOL_FURTHER"
-    assert m._recommend({}, [{"cause": "SPLIT_PROTOCOL",
-                              "verdict": "SUPPORTED"}]) \
-        == "INVESTIGATE_ORIGINAL_PROTOCOL_FURTHER"
+        == "ASK_AUTHOR_FOR_ORIGINAL_PROTOCOL_DETAILS"
+
+
+def test_recommendation_is_one_of_the_permitted_actions():
+    m = _load_summarizer()
+    for supported in ([], [{"cause": "SPLIT_PROTOCOL", "verdict": "SUPPORTED"}],
+                      [{"cause": "DATA_ADJUSTMENT", "verdict": "SUPPORTED"}]):
+        assert m._recommend({}, supported) in m.NEXT_ACTIONS
+
+
+# ===========================================================================
+# CORRECTION TESTS (post audit)
+# ===========================================================================
+
+def _load_probe_runner():
+    import importlib.util
+    path = REPO_ROOT / "scripts" / "run_pre2022_forensic_diagnostics.py"
+    s = importlib.util.spec_from_file_location("fxcorr", path)
+    mod = importlib.util.module_from_spec(s)
+    s.loader.exec_module(mod)
+    return mod
+
+
+# --- A. L1's final feature timestep comes from target_date -----------------
+
+def _seq_frame():
+    """10 consecutive trading days, distinguishable feature values.
+
+    Row k gets feature value k, so the vector itself identifies its date. A
+    leaked sequence whose final element is the target day must therefore end
+    with the target day's value, not the origin day's.
+    """
+    days = pd.bdate_range("2020-01-01", periods=10)
+    seq_len, n_feat = 3, 3
+    # every timestep of row i carries the value i, so the vector itself
+    # identifies which date it came from
+    X = np.stack([np.full((seq_len, n_feat), float(i), dtype=np.float32)
+                  for i in range(len(days))], axis=0)
+    return X, [str(d.date()) for d in days]
+
+
+def test_l1_final_timestep_is_the_target_day_feature_vector():
+    X, days = _seq_frame()
+    origins = days[:-1]
+    targets = days[1:]                       # next trading day
+    y = np.zeros(len(origins), dtype=int)
+    out = fx.build_target_day_leak(X, y, origins, targets)
+
+    # The mapping is built from sample origins, so days[-1] is NOT registered
+    # (it is only ever a target). That last sample is therefore genuinely
+    # unavailable and is dropped rather than faked: 9 in, 8 out.
+    assert out["n_kept"] == len(origins) - 1 == 8
+    assert out["n_dropped"] == 1
+    assert out["X_leaked"].shape == (8, 3, 3)
+    for j, (o, t) in enumerate(zip(out["origin_dates"], out["target_dates"])):
+        origin_idx = days.index(o)
+        target_idx = days.index(t)
+        # the final timestep is the TARGET day's vector
+        assert np.allclose(out["X_leaked"][j, -1, 0], float(target_idx))
+        # and NOT the origin day's, which is what the old shift-only version
+        # left in place
+        assert not np.allclose(out["X_leaked"][j, -1, 0], float(origin_idx))
+        # the window is shifted left, so element -2 is the origin day
+        assert np.allclose(out["X_leaked"][j, -2, 0], float(origin_idx))
+        assert out["final_timestep_dates"][j] == t
+        assert t > o
+
+
+def test_l1_drops_only_genuinely_unavailable_targets():
+    X, days = _seq_frame()
+    origins = days[:4]
+    targets = days[1:4] + [days[4]]           # last target is a gap
+    out = fx.build_target_day_leak(X, np.zeros(4, int), origins, targets)
+    assert out["n_kept"] + out["n_dropped"] == 4
+    assert out["n_dropped"] >= 1
+
+
+def test_l1_rejects_a_non_increasing_target():
+    X, days = _seq_frame()
+    with pytest.raises(fx.L1AlignmentError):
+        fx.build_target_day_leak(X, np.zeros(1, int), [days[3]], [days[3]])
+
+
+# --- B. the OLD broken implementation fails this test ----------------------
+
+def test_old_shift_only_l1_would_fail_the_alignment_test():
+    """The previous implementation shifts the window and leaves the final
+    timestep as the ORIGIN row, so it leaks nothing and must fail the same
+    assertion the real probe satisfies."""
+    X, days = _seq_frame()
+    origins, targets = days[:-1], days[1:]
+
+    # --- the OLD implementation, reproduced verbatim ---
+    def old_leak_target_day(X):
+        out = np.copy(X)
+        out[:, :-1, :] = X[:, 1:, :]
+        return out
+
+    old = old_leak_target_day(X)
+    old_final = old[:, -1, 0]
+    # every final element is the ORIGIN day -> alignment assertion fails
+    assert all(v != float(days.index(t)) for v, t in zip(old_final, targets))
+    violations = sum(1 for v, t in zip(old_final, targets)
+                     if v != float(days.index(t)))
+    assert violations == len(targets)
+
+    # the CORRECT implementation satisfies it
+    good = fx.build_target_day_leak(X, np.zeros(len(origins), int),
+                                    origins, targets)
+    assert all(v == float(days.index(t))
+               for v, t in zip(good["X_leaked"][:, -1, 0], targets))
+
+
+def test_l1_probe_output_rows_carry_the_alignment_audit():
+    """The audit must come from the actual probe output, not a separate helper."""
+    mod = _load_probe_runner()
+    src = (REPO_ROOT / "scripts" / "run_pre2022_forensic_diagnostics.py").read_text()
+    assert "fx.build_target_day_leak" in src
+    assert "final_timestep_equals_target_date" in src
+    assert "_leak_target_day" not in src.replace(
+        "# NOTE: the previous `_leak_target_day` shifted the window left and left", "")
+    assert callable(mod._leak_scaler)
+
+
+# --- C. corrected 85/15 includes pre-2016 samples --------------------------
+
+def test_long_history_config_opens_past_2016():
+    """The corrected 85/15 must not inherit a 2016 start from the folds."""
+    mod = _load_probe_runner()
+    src = (REPO_ROOT / "scripts" / "run_pre2022_forensic_diagnostics.py").read_text()
+    body = src[src.index("def diagnostic_d"):src.index("# Diagnostic E")]
+    # the fold windows are removed, then the earliest available history is used
+    assert 'for k in ("train_start", "train_end", "val_start", "val_end"):' in body
+    assert 'data.pop(k, None)' in body
+    assert "fx.LONG_HISTORY_EARLIEST" in body
+    assert fx.LONG_HISTORY_EARLIEST < "2016-01-01"
+    # 2016 must NOT be hard-coded anywhere in the 85/15 body
+    assert '"2016-01-01"' not in body
+    assert callable(mod.diagnostic_d)
+
+
+def test_long_history_split_includes_pre_2016_dates_when_available():
+    """A source with 2000+ history must yield pre-2016 training samples."""
+    days = pd.bdate_range("2000-01-03", "2021-12-31")
+    tr, va, _ = fx.pre2022_85_15_split(days)
+    assert min(tr) < "2016-01-01", "expected genuine pre-2016 training history"
+    assert max(tr) < min(va)
+    assert max(va) < fx.PRE_TEST_CUTOFF
+    pre2016 = sum(1 for d in tr if d < "2016-01-01")
+    assert pre2016 > 1000
+
+
+# --- D. corrected 85/15 never accesses target dates >= 2022 ----------------
+
+def test_long_history_windows_are_firewall_bounded():
+    days = pd.bdate_range("2000-01-03", "2023-12-29")
+    tr, va, last = fx.pre2022_85_15_split(days)
+    assert max(tr) < fx.PRE_TEST_CUTOFF
+    assert max(va) < fx.PRE_TEST_CUTOFF
+    assert last < fx.PRE_TEST_CUTOFF
+    fx.assert_targets_pre_test(tr, va, where="long_history")
+
+
+def test_pre2022_8515_label_is_long_history():
+    assert fx.ANALOG_85_15_LABEL == "FORENSIC_PRE2022_LONG_HISTORY_85_15"
+
+
+# --- E. L4 fits the leaking scaler on UNSCALED values ---------------------
+
+def test_leak_scaler_receives_unscaled_data_agent_output(tmp_path):
+    src = (REPO_ROOT / "scripts" / "run_pre2022_forensic_diagnostics.py").read_text()
+    body = src[src.index("def _run_probe"):src.index("def _current_day_target")]
+    assert "return_unscaled_sequences=True" in body
+    assert 'assert not ds_unscaled.scaled' in body
+    # L4 must not be evaluated with a tree model
+    assert "LogisticRegression" in body
+
+
+def test_leak_scaler_actually_changes_the_transform(tmp_path):
+    mod = _load_probe_runner()
+    rng = np.random.default_rng(0)
+    Xtr = rng.normal(loc=0.0, scale=1.0, size=(50, 4, 3))
+    Xva = rng.normal(loc=50.0, scale=1.0, size=(20, 4, 3))   # wildly different
+    out_tr, out_va = mod._leak_scaler(Xtr, Xva)
+    # fitting on train+validation pulls validation onto the pooled scale
+    assert out_va.mean() < 10.0
+    assert out_tr.shape == Xtr.shape
+    assert out_va.shape == Xva.shape
+
+
+def test_data_agent_can_return_unscaled_sequences():
+    import inspect
+
+    from agentic_forecaster.data.agent import DataAgent, ProcessedDataset
+    assert "return_unscaled_sequences" in inspect.signature(DataAgent.run).parameters
+    assert "return_unscaled_sequences" in inspect.signature(
+        DataAgent.run_ticker).parameters
+    assert ProcessedDataset.__dataclass_fields__["scaled"].default is True
+
+
+# --- F. pooled is NOT scientifically invalid ------------------------------
+
+def test_pooled_is_not_marked_scientifically_invalid():
+    assert fx.POOLED_LABEL == "FORENSIC_POOLED_NOT_AUTHOR_CONFIRMED"
+    src = (REPO_ROOT / "scripts" / "run_pre2022_forensic_diagnostics.py").read_text()
+    body = src[src.index("def diagnostic_c"):src.index("# Diagnostic D")]
+    assert '"SCIENTIFICALLY_INVALID": False' in body
+    assert '"VALID_FOR_FINAL_MODEL": False' in body
+    # and it must not reuse the leakage marker
+    assert "fx.INVALID_MARKER |" not in body
+    assert "marker=fx.INVALID_MARKER" not in body
+
+
+# --- G. majority terminology ----------------------------------------------
+
+def test_majority_terminology_distinguishes_the_two_concepts():
+    """The oracle rate peeks at validation labels and is not a baseline."""
+    tr = np.array([1, 1, 1, 0, 0, 0, 0, 0])
+    va = np.array([1, 1, 1, 1, 1, 0, 0, 0])
+    # train leans DOWN (3/8 UP) so the constant predictor says DOWN: 3 of 8
+    # validation rows are DOWN. The oracle rate instead reports the validation
+    # class balance, 5/8. The two are DIFFERENT quantities.
+    base = fx.train_majority_baseline(tr, va)
+    oracle = fx.validation_oracle_majority_rate(va)
+    assert base == pytest.approx(3 / 8)
+    assert oracle == pytest.approx(5 / 8)
+    assert base != oracle
+    # a model must never be compared to the oracle
+    bal = fx.label_balance(tr, va)
+    assert "train_majority_baseline_accuracy" in bal
+    assert "validation_oracle_majority_rate" in bal
+    assert "not a predictor" in bal["terminology_note"]
+
+
+def test_train_majority_baseline_class_comes_from_train_only():
+    """The predicted CLASS is train-derived; only the scoring uses validation.
+
+    With a train set leaning DOWN the predictor must always say DOWN, so the
+    baseline accuracy equals the fraction of validation rows that are DOWN --
+    and that fraction must follow validation only through plain scoring.
+    """
+    tr_down = np.array([0, 0, 0, 0, 0, 0, 1, 1])          # 2/8 UP -> DOWN
+    va = np.array([0, 0, 0, 1, 1, 1])
+    assert fx.train_majority_baseline(tr_down, va) == pytest.approx(0.5)
+
+    # a train set leaning UP flips the predicted class, hence the accuracy
+    tr_up = np.array([1, 1, 1, 1, 1, 1, 0, 0])
+    assert fx.train_majority_baseline(tr_up, va) == pytest.approx(0.5)
+
+    # the oracle rate instead describes the validation class balance and
+    # ignores train entirely -- which is why it is not a deployable baseline
+    assert fx.validation_oracle_majority_rate(va) == pytest.approx(0.5)
+    assert fx.validation_oracle_majority_rate(
+        np.array([1, 1, 1, 1, 0, 0])) == pytest.approx(4 / 6)
+
+
+def test_baseline_panel_uses_the_standardised_name():
+    src = (REPO_ROOT / "scripts" / "run_pre2022_forensic_diagnostics.py").read_text()
+    assert "TrainMajorityBaseline" in src
+    assert "delta_vs_train_majority" in src
+    assert '"Majority"' not in src
+
+
+# --- conclusion structure -------------------------------------------------
+
+def test_leakage_is_hypothetical_not_demonstrated():
+    m = _load_summarizer()
+    src = (REPO_ROOT / "scripts" / "summarize_pre2022_forensics.py").read_text()
+    assert '"status": "HYPOTHETICAL"' in src
+    assert "NOT ESTABLISHED" in src
+    assert m.cause_ranking(
+        unadjusted_acc=0.5250, adjusted_acc=0.5250, panel={},
+        pooled_acc=None, analog_acc=None, majority_acc=0.52,
+        mismatch_count=0, aggregation={}, confidence={}, l5=None)
