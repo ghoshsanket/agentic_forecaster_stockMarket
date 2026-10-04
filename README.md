@@ -1,60 +1,27 @@
 # Explanation-First Agentic Forecaster for Stock Market
 
-> **A software reconstruction / reference implementation of**
-> *Explanation-First Agentic Forecaster for Stock Market*,
-> **DOI: 10.1109/IEMENTECH202669403.2026.11434302**
+Reference implementation of *Explanation-First Agentic Forecaster for Stock
+Market* — [DOI: 10.1109/IEMENTECH202669403.2026.11434302](https://doi.org/10.1109/IEMENTECH202669403.2026.11434302).
 
-## Overview
-
-This repository is a complete software reconstruction of the paper
-*Explanation-First Agentic Forecaster for Stock Market*. It implements a
-**five-agent pipeline** that forecasts next-day price direction for 50 NIFTY-50
-stocks and explains *why* each forecast was made, before any capital is
+A five-agent pipeline that forecasts next-day price direction for the NIFTY-50
+universe and explains *why* each forecast was made before any capital is
 committed.
 
-The five agents are:
+## Agents
 
-1. **Data Agent** — locates the dataset, resamples intraday (1-minute) OHLCV
-   to daily, engineers the Phase-1 feature set (OHLCV + log_return +
-   realized_volatility_20 + RSI-14 + MACD + ATR-14), constructs the next-day
-   direction target, builds 30-day sequences, and fits one `StandardScaler`
-   per ticker per fold on TRAIN rows only.
+1. **Data Agent** — loads daily OHLCV for a ticker, engineers the Phase-1
+   feature set (OHLCV + log_return + realized_volatility_20 + RSI-14 + MACD +
+   ATR-14), builds the next-day direction target and 30-day sequences, and fits
+   one `StandardScaler` per ticker per fold on TRAIN rows only.
 2. **Model Agent** — trains **one independent Attention-LSTM per stock**
-   (max 3 epochs, binary logit + BCEWithLogitsLoss, gradient clipping).
+   (binary logit + `BCEWithLogitsLoss`, early stopping, gradient clipping).
 3. **Explainer Agent** — per-prediction SHAP (GradientExplainer with
    permutation fallback) + attention evidence + reason codes; optional LLM
-   narration with grounding instructions and deterministic fallback.
-4. **Risk Agent** — ATR-based stop-loss / take-profit using confidence bands
-   (HIGH/MEDIUM/LOW) with lambda_SL/lambda_TP multipliers; RRR and RiskScore.
-5. **Report Agent** — renders per-ticker **HTML** and **PDF** reports with
-   forecast, indicators, SL/TP prices, RRR, RiskScore, SHAP, attention,
-   reason codes, narrative, and reconstruction disclaimer.
-
-## Universe Limitation (49 of 50)
-
-| Quantity | Value |
-|---|---|
-| **Requested universe** | **50** NIFTY-50 securities (`configs/nifty50.yaml`) |
-| **Available from the specified Kaggle source** | **49** |
-| **Unavailable** | `ZOMATO` — not present in the dataset |
-| **Models trained per fold** | **49** |
-| **Total models (2 paper folds)** | **98** |
-
-`results/ticker_availability.csv` is the authoritative record. `ZOMATO` is
-reported as unavailable and is **not** substituted with an unrelated company;
-the only alias honoured is `M&M` → `MM`, a genuine symbol-format spelling of
-the *same* security.
-
-The full reproduction therefore trains **49 independent models per fold**
-(98 total across both paper folds). A literal 50-stock reconstruction would
-require deliberately choosing a 50th constituent from a documented NIFTY-50
-snapshot and verifying it exists in the source dataset — that is a scientific
-decision, deliberately not made implicitly.
-
-## Paper
-
-- **Title:** Explanation-First Agentic Forecaster for Stock Market
-- **DOI:** [10.1109/IEMENTECH202669403.2026.11434302](https://doi.org/10.1109/IEMENTECH202669403.2026.11434302)
+   narration with a deterministic fallback.
+4. **Risk Agent** — ATR-based stop-loss / take-profit from confidence bands
+   (HIGH/MEDIUM/LOW), plus RRR and RiskScore.
+5. **Report Agent** — renders per-ticker HTML and PDF reports: forecast,
+   indicators, SL/TP prices, SHAP, attention, reason codes and narrative.
 
 ## Architecture
 
@@ -64,106 +31,117 @@ decision, deliberately not made implicitly.
 └─────────────┘    └─────────────┘    └─────────────────┘    └──────────┘    └─────────────┘
 ```
 
-One-model-per-stock: the orchestration layer calls `DataAgent.run_ticker(ticker)`
-and `ModelAgent.train_ticker(ticker, dataset)` once per ticker, guaranteeing
-independent models and scalers.
+One model per stock: the orchestration layer calls
+`DataAgent.run_ticker(ticker)` and `ModelAgent.train_ticker(ticker, dataset)`
+once per ticker, so models, scalers and calibrators are never shared.
 
 ## Repository Layout
 
 ```
 agentic-forecaster/
 ├── README.md
-├── pyproject.toml
-├── .gitignore
-├── .gitattributes
-├── configs/                    # paper.yaml, demo.yaml, nifty50.yaml
-├── src/agentic_forecaster/     # full implementation
-├── app/streamlit_app.py        # Streamlit demo (DEMO + REAL modes)
-├── scripts/                    # download, train, reproduce, smoke_test, validate
-├── tests/                      # unit + integration + fixtures
-├── docs/                       # architecture, traceability, assumptions, ...
-├── results/                    # final metrics, predictions, baselines, ablations
-├── figures/                    # reliability, training history, comparison, ...
-├── reports/                    # representative example reports
-├── artifacts/                  # manifests + submission manifest
-└── .github/workflows/ci.yml
+├── pyproject.toml               # package metadata + dependency groups
+├── uv.lock                      # locked environment (validated in CI)
+├── configs/                     # nifty50.yaml, demo.yaml, paper.yaml,
+│                                # reproduction_search/ (yfinance variants)
+├── src/agentic_forecaster/      # implementation
+│   ├── agents/  data/  features/  models/  training/
+│   ├── calibration/  explainability/  risk/  evaluation/
+│   ├── orchestration/  recovery/  commands/
+│   └── cli.py                   # command-line entry point
+├── app/streamlit_app.py         # interactive demo (DEMO + REAL modes)
+├── scripts/                     # dataset download, training, validation
+├── tests/                       # unit + integration + fixtures
+├── docs/                        # architecture, traceability, assumptions
+└── .github/workflows/ci.yml     # ruff + pytest + smoke train
 ```
+
+This repository contains **code only**. Datasets, model checkpoints and run
+outputs are stored outside Git — see [data/README.md](data/README.md).
 
 ## Dataset
 
-> **Raw dataset is not stored in Git due to size.**
+Data is downloaded from **Yahoo Finance** through the `yfinance` package.
+No API key or account is required.
 
-- **Kaggle URL:** https://www.kaggle.com/datasets/debashis74017/algo-trading-data-nifty-100-data-with-indicators
-- **Slug:** `debashis74017/algo-trading-data-nifty-100-data-with-indicators`
-- **Content:** 1-minute OHLCV for NIFTY-50 constituents (2015-2026)
-
-The dataset lives **outside** the repository under `$AGENTIC_RAW_DATA_ROOT`.
-
-### How to authenticate
-
-1. Create a Kaggle account and generate an API token at
-   https://www.kaggle.com/settings/api.
-2. Either place `kaggle.json` in `~/.kaggle/` or set `KAGGLE_USERNAME` and
-   `KAGGLE_KEY` in the environment.
-
-**Never commit credentials.** See `docs/DATASET_PROVENANCE.md`.
-
-### How to download
+| | |
+|---|---|
+| **Universe** | 50 NIFTY-50 symbols (`configs/nifty50.yaml`), requested as `<SYMBOL>.NS` |
+| **Bars** | Daily (`interval=1d`), 2000-01-01 → 2025-12-31 (`end` is exclusive) |
+| **Columns** | `Date,Open,High,Low,Close,Volume` |
+| **Variants** | `adjusted` (primary, `auto_adjust=True`), `unadjusted` (sensitivity) |
+| **Location** | `$AGENTIC_YFINANCE_DAILY_ROOT` — **not** committed to Git |
 
 ```bash
-uv run python scripts/download_dataset.py
+# 1. Download (resumable; skips tickers that already validate)
+uv run python scripts/download_yfinance_daily.py \
+    --start 2000-01-01 --end 2026-01-01 --variant both --resume --all
+
+# 2. Build metadata, coverage and SHA-256 manifests
+uv run python scripts/build_yfinance_artifacts.py
 ```
 
-### How to inspect
-
-```bash
-uv run python scripts/inspect_raw_dataset.py
-# verify the 50-symbol universe against the dataset
-uv run python scripts/verify_ticker_universe.py
-# regenerate dataset provenance metadata from the raw files
-uv run python scripts/verify_dataset_provenance.py
-```
+Full layout, request parameters and data-quality notes:
+[docs/YFINANCE_DAILY_DATASET.md](docs/YFINANCE_DAILY_DATASET.md) and
+[data/README.md](data/README.md).
 
 ## Installation
 
-The project targets **Python 3.11** and is managed by **uv** with a committed
-`uv.lock`.  Install Research-locally — do **not** install globally:
+Python **3.11**, managed with [uv](https://docs.astral.sh/uv/) and the
+committed `uv.lock`:
 
 ```bash
-# Preferred: bootstrap the project .venv from the workspace environment
-./scripts/bootstrap_environment.sh
-
-# Equivalent, using the committed lockfile
 uv sync --all-extras --frozen
+
+uv run python -m agentic_forecaster --help
 ```
 
-Both create/update `$AGENTIC_PROJECT_ROOT/.venv`.  Run commands through it:
+CI installs the same way, so the lockfile — not a fresh resolve — is what gets
+validated.
+
+## Configuration
+
+| Config | Purpose |
+|---|---|
+| `configs/reproduction_search/yfinance_adjusted.yaml` | Daily Yahoo Finance data, adjusted — used in the examples below |
+| `configs/reproduction_search/yfinance_unadjusted.yaml` | Same pipeline, unadjusted prices |
+| `configs/nifty50.yaml` | 50-symbol universe |
+| `configs/demo.yaml` | Synthetic end-to-end demo; needs no dataset or GPU |
+| `configs/paper.yaml` | Original paper setup — 1-minute bars resampled to daily; needs its own raw dataset (`docs/DATASET_PROVENANCE.md`) |
+
+`${AGENTIC_*}` placeholders inside the YAML files are expanded from the
+environment at load time; every one has a workspace default, so no exports are
+required.
+
+## Data Preparation
+
+Builds the cached daily series, feature frames and targets for one ticker:
 
 ```bash
-uv run python -m agentic_forecaster --help
-uv run pytest
+uv run python -m agentic_forecaster prepare-data \
+    --config configs/reproduction_search/yfinance_adjusted.yaml \
+    --ticker RELIANCE
 ```
-
-CI installs with `uv sync --all-extras --frozen`, so the committed lockfile is
-what gets validated rather than whatever resolves "latest".
 
 ## Training
 
-One independent model (and one StandardScaler, one calibrator) per stock.
+One independent model, scaler and calibrator per stock:
 
 ```bash
+# Single ticker
 uv run python -m agentic_forecaster train \
-    --ticker RELIANCE --config configs/paper.yaml --device auto
+    --ticker RELIANCE --config configs/reproduction_search/yfinance_adjusted.yaml --device auto
 
-# Every selected NIFTY-50 stock, independently
+# Every configured ticker, independently
 uv run python -m agentic_forecaster train-all \
-    --config configs/paper.yaml --device auto --baselines
+    --config configs/reproduction_search/yfinance_adjusted.yaml --device auto --baselines
 
-# Script form (identical behaviour)
-uv run python scripts/train_all.py --config configs/paper.yaml
+# Equivalent script form
+uv run python scripts/train_all.py --config configs/reproduction_search/yfinance_adjusted.yaml
 ```
 
-Checkpoints are written under `$AGENTIC_MODEL_ROOT/trained/<ticker>/fold_0/`.
+Checkpoints are written to `$AGENTIC_MODEL_ROOT/trained/<ticker>/fold_0/`
+(outside Git).
 
 ## Evaluation
 
@@ -172,85 +150,64 @@ Checkpoints are written under `$AGENTIC_MODEL_ROOT/trained/<ticker>/fold_0/`.
 uv run python -m agentic_forecaster evaluate \
     --model <bundle_dir> --data <processed_dir>
 
-# Paper walk-forward: the two exact folds, retraining every stock
+# Walk-forward: both published folds, retraining every stock
 uv run python -m agentic_forecaster walk-forward \
-    --config configs/paper.yaml --device auto
+    --config configs/reproduction_search/yfinance_adjusted.yaml --device auto
 ```
 
-Metrics: accuracy, Brier (raw + calibrated), ECE (raw + calibrated),
-Precision@3 (cross-sectional UP/DOWN), F1, ROC-AUC.
+Computed metrics: accuracy, Brier (raw + calibrated), ECE (raw + calibrated),
+Precision@3 (cross-sectional UP/DOWN), F1 and ROC-AUC. They are written to
+`$AGENTIC_OUTPUT_ROOT`, not to the repository.
 
-## Reproduce the Paper
-
-Both entry points run the identical implementation:
-
-```bash
-uv run python -m agentic_forecaster reproduce-paper \
-    --config configs/paper.yaml --device auto --export-final-results
-
-uv run python scripts/reproduce_paper.py \
-    --config configs/paper.yaml --device auto --export-final-results
-```
-
-A smoke test on one real stock (real close/ATR/target date, SHAP, report,
-bundle reload):
+## Explanations and Reports
 
 ```bash
+# One prediction with SHAP + attention evidence
+uv run python -m agentic_forecaster explain \
+    --model <bundle_dir> --data <processed_dir> --index -1
+
+# Per-ticker HTML/PDF report
+uv run python -m agentic_forecaster report \
+    --config configs/reproduction_search/yfinance_adjusted.yaml --ticker RELIANCE
+
+# End-to-end smoke test: real data, SHAP, report, bundle reload
 uv run python scripts/smoke_test_real.py --ticker RELIANCE \
-    --config configs/paper.yaml
+    --config configs/reproduction_search/yfinance_adjusted.yaml
+
+# Full pipeline run (same implementation as scripts/reproduce_paper.py)
+uv run python -m agentic_forecaster reproduce-paper \
+    --config configs/reproduction_search/yfinance_adjusted.yaml --device auto
 ```
 
-## Results
+## Interactive Demo
 
-| Model | Accuracy | Brier | ECE | P@3 Up | P@3 Down |
-|---|---|---|---|---|---|
-| Attention-LSTM (calibrated) | see `results/paper_reproduction/` | | | | |
-| Attention-LSTM (raw) | | | | | |
-| Plain LSTM | | | | | |
-| Random Forest | | | | | |
+```bash
+uv run streamlit run app/streamlit_app.py                 # DEMO (synthetic) mode
+uv run streamlit run app/streamlit_app.py -- --mode real  # REAL mode (dataset + checkpoints)
+```
 
-> Paper-reference values are transcribed from the publication and are
-> **not** presented as newly produced results. See `results/README.md` and
-> `docs/RESULTS.md`.
+## Tests and Lint
 
-## Example Reports
+```bash
+uv run ruff check .
+uv run pytest -v
 
-Representative reports are committed under `reports/examples/`.
-See `reports/README.md` for how to generate more.
+# CI smoke train on synthetic data — no dataset, GPU or LLM required
+uv run python -m agentic_forecaster train --ticker SYN00 --config configs/demo.yaml --device cpu
+```
 
-## Models / Checkpoints
+One network test is opt-in: `AGENTIC_RUN_NETWORK_TESTS=1 uv run pytest tests/unit/test_yfinance_download.py`.
 
-- **Code** defining all models is committed under `src/agentic_forecaster/models/`.
-- **Checkpoints** are runtime-only (Category B) under `$AGENTIC_MODEL_ROOT`.
-- **Manifests** with SHA-256 hashes are committed under `artifacts/manifests/`.
-- **Git LFS** is configured in `.gitattributes`.
-- **Recreate checkpoints:** `python -m agentic_forecaster train-all --config configs/paper.yaml`
+## Documentation
 
-## Paper-to-Code Traceability
+- `docs/ARCHITECTURE.md` — pipeline and model architecture
+- `docs/PAPER_TRACEABILITY.md` — paper section → code mapping
+- `docs/IMPLEMENTATION_ASSUMPTIONS.md` — every reconstruction assumption
+- `docs/YFINANCE_DAILY_DATASET.md` — dataset construction and validation
+- `docs/REPRODUCIBILITY.md` — how to rerun the full pipeline
+- `docs/STORAGE_LAYOUT.md` — what lives in Git vs outside it
 
-See `docs/PAPER_TRACEABILITY.md` for a section-by-section mapping of the paper
-to the implementing code, with PAPER-DEFINED vs RECONSTRUCTION-ASSUMED
-classifications.
+## Disclaimer
 
-## Reconstruction Assumptions
-
-See `docs/IMPLEMENTATION_ASSUMPTIONS.md` for every assumption made when
-translating the paper into code.
-
-## Limitations
-
-- The exact ticker list and some hyperparameters are reconstructed from the
-  paper's description; where the paper is ambiguous, sensible defaults are
-  used and documented.
-- The LLM narration layer requires an OpenAI-compatible endpoint; the
-  deterministic fallback is the default and the only mode exercised in CI.
-- SHAP's GradientExplainer may not support the attention mechanism directly;
-  a permutation-based fallback is used and explicitly reported.
-- Results on synthetic data are near-chance by design and are **not** paper
-  reconstructions.
-
-## Research Disclaimer
-
-This is a software reconstruction for research purposes. It does not
-constitute investment advice. Past performance does not guarantee future
-results.
+Research software only. It does not constitute investment advice. Past
+performance does not guarantee future results.
