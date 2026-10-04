@@ -1,0 +1,161 @@
+{
+  "track": "MULTI_HORIZON",
+  "final_allowed_date": "2019-12-31",
+  "horizons": [
+    1,
+    3,
+    5,
+    10
+  ],
+  "objectives": {
+    "1": "ABS_DIR_1D_CONTROL",
+    "3": "ABS_DIR_3D",
+    "5": "ABS_DIR_5D",
+    "10": "ABS_DIR_10D"
+  },
+  "target_schema_sha256": "8256cca11e82983747dbc2955ad5b45ae5ec20cf4f3d915980da73805dbf3668",
+  "target_cache": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/multi_horizon/horizon_targets",
+  "control_identity_check": {
+    "objective_id": "ABS_DIR_1D_CONTROL",
+    "n_compared_keys": 198746,
+    "label_mismatches": 0,
+    "target_date_mismatches": 0,
+    "return_mismatches": 0,
+    "identical": true,
+    "compared_columns": [
+      "y == y_direction",
+      "target_end_date == target_date",
+      "future_log_return == raw_next_return"
+    ]
+  },
+  "per_horizon": {
+    "1": {
+      "objective_id": "ABS_DIR_1D_CONTROL",
+      "horizon_trading_observations": 1,
+      "n_rows": 198849,
+      "n_tickers": 47,
+      "first_origin_date": "2000-01-03",
+      "last_origin_date": "2019-12-30",
+      "last_target_end_date": "2019-12-31",
+      "positive_rate": 0.4938923504769951
+    },
+    "3": {
+      "objective_id": "ABS_DIR_3D",
+      "horizon_trading_observations": 3,
+      "n_rows": 198755,
+      "n_tickers": 47,
+      "first_origin_date": "2000-01-03",
+      "last_origin_date": "2019-12-26",
+      "last_target_end_date": "2019-12-31",
+      "positive_rate": 0.515443636638072
+    },
+    "5": {
+      "objective_id": "ABS_DIR_5D",
+      "horizon_trading_observations": 5,
+      "n_rows": 198661,
+      "n_tickers": 47,
+      "first_origin_date": "2000-01-03",
+      "last_origin_date": "2019-12-23",
+      "last_target_end_date": "2019-12-31",
+      "positive_rate": 0.5274412189609435
+    },
+    "10": {
+      "objective_id": "ABS_DIR_10D",
+      "horizon_trading_observations": 10,
+      "n_rows": 198426,
+      "n_tickers": 47,
+      "first_origin_date": "2000-01-03",
+      "last_origin_date": "2019-12-16",
+      "last_target_end_date": "2019-12-31",
+      "positive_rate": 0.547216594599498
+    }
+  },
+  "universe": {
+    "track": "MULTI_HORIZON",
+    "frozen": true,
+    "frozen_before_training": true,
+    "n_candidates": 47,
+    "n_eligible": 42,
+    "eligible_tickers": [
+      "ADANIENT",
+      "ADANIPORTS",
+      "APOLLOHOSP",
+      "ASIANPAINT",
+      "AXISBANK",
+      "BAJAJ-AUTO",
+      "BAJAJFINSV",
+      "BAJFINANCE",
+      "BEL",
+      "BHARTIARTL",
+      "CIPLA",
+      "DRREDDY",
+      "EICHERMOT",
+      "GRASIM",
+      "HCLTECH",
+      "HDFCBANK",
+      "HINDALCO",
+      "HINDUNILVR",
+      "ICICIBANK",
+      "INFY",
+      "ITC",
+      "JSWSTEEL",
+      "KOTAKBANK",
+      "LT",
+      "M&M",
+      "MARUTI",
+      "NTPC",
+      "ONGC",
+      "POWERGRID",
+      "RELIANCE",
+      "SBIN",
+      "SHRIRAMFIN",
+      "SUNPHARMA",
+      "TATACONSUM",
+      "TATASTEEL",
+      "TCS",
+      "TECHM",
+      "TITAN",
+      "TMPV",
+      "TRENT",
+      "ULTRACEMCO",
+      "WIPRO"
+    ],
+    "excluded": {
+      "COALINDIA": "only 650 valid H=10 training samples in MH_DEV_2014 (need 1000)",
+      "HDFCLIFE": "only 0 valid H=10 training samples in MH_DEV_2014 (need 1000); only 157 valid validation samples in the weakest development year at H=1 (need 180); only 155 valid validation samples in the weakest development year at H=3 (need 180); only 153 valid validation samples in the weakest development year at H=5 (need 180); only 148 valid validation samples in the weakest development year at H=10 (need 180)",
+      "INDIGO": "only 0 valid H=10 training samples in MH_DEV_2014 (need 1000)",
+      "NESTLEIND": "only 916 valid H=10 training samples in MH_DEV_2014 (need 1000)",
+      "SBILIFE": "only 0 valid H=10 training samples in MH_DEV_2014 (need 1000)"
+    },
+    "rules": {
+      "min_train_samples_10d_mh_dev_2014": 1000,
+      "min_validation_samples_per_year": 180,
+      "reference_horizon": 10,
+      "reference_fold": "MH_DEV_2014",
+      "basis": "stock-only stationary features; no context requirement may eliminate a stock-only sample",
+      "note": "H=10 is the most restrictive horizon, so it establishes ONE fixed common universe for the 1D/3D/5D/10D comparison"
+    },
+    "columns": [
+      "ticker",
+      "raw_first_date",
+      "first_usable_date",
+      "samples_1d",
+      "samples_3d",
+      "samples_5d",
+      "samples_10d",
+      "eligible",
+      "exclusion_reason"
+    ],
+    "evidence_columns": [
+      "train_10d_mh_dev_2014",
+      "val_min_1d",
+      "val_min_3d",
+      "val_min_5d",
+      "val_min_10d",
+      "sector"
+    ],
+    "universe_sha256": "5b10bd8f5401542c86490efd114a4a4c4adeb68ee1e127813eb520388b426a05",
+    "csv": "/home/iemiedc2026/Documents/Sanket/Research/projects/agentic-forecaster/results/v2/multi_horizon/supervised_universe.csv"
+  },
+  "source_store_sha256": "9ef053533ab05cfe27c919316503f80b4239e7b97a98acda603d98d29d97ce32"
+}

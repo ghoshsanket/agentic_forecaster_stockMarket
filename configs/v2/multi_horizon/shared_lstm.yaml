@@ -1,0 +1,33 @@
+# PRE-COVID MULTI-HORIZON -- STAGE 2, NEURAL N1: shared LSTM.
+#
+# The EXISTING V2-A architecture, unchanged:
+#   shared unidirectional LSTM, hidden_size 96, 2 layers, dropout 0.20,
+#   ticker embedding 16, sequence length 60, direction head only.
+#
+# Context, multi-task, FiLM and meta-learning are deliberately NOT run in this
+# programme: the previous PRE-COVID experiment found the plain shared LSTM
+# strongest and Transformer/context added little or hurt.  This programme first
+# establishes whether the changed HORIZON itself improves predictability.
+base: base.yaml
+
+variant: MULTI_HORIZON_SHARED_LSTM
+
+model:
+  screen_model: null
+  use_transformer: false
+  use_context: false
+  use_sector_embedding: false
+  use_regime: false
+  use_multitask: false
+  use_film: false
+  use_adapter: false
+
+neural_model:
+  name: SHARED_LSTM
+  label: N1 shared LSTM (unchanged V2-A architecture)
+  architecture:
+    shared unidirectional LSTM: hidden_size 96, layers 2, dropout 0.20
+    ticker_embedding: 16
+    sequence_length: 60
+    head: direction only
+  tuned: false

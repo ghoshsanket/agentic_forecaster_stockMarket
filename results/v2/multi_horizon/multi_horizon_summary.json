@@ -1,0 +1,2017 @@
+{
+  "generated_at": "2026-10-04T08:27:46.151828+00:00",
+  "track": "MULTI_HORIZON",
+  "track_label": "PRE_COVID_MULTI_HORIZON_DIRECTION_TRACK",
+  "experiment_regime": "PRE_COVID",
+  "regime_label": "PRE_COVID_EXPERIMENTAL_REGIME",
+  "survivorship_bias_label": "SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK",
+  "universe_phrase": "available securities from the reconstructed fixed universe",
+  "is_original_paper_model": false,
+  "classification": "NEW_EXPERIMENTAL_ARCHITECTURE",
+  "the_question": "does the existing PRE-COVID price-derived dataset contain more predictable directional information at 3-, 5- or 10-trading-day horizons than at the one-day horizon?",
+  "only_changed": "FORECAST_HORIZON",
+  "horizons": [
+    1,
+    3,
+    5,
+    10
+  ],
+  "control_horizon": 1,
+  "candidate_horizons": [
+    3,
+    5,
+    10
+  ],
+  "objectives": {
+    "1": "ABS_DIR_1D_CONTROL",
+    "3": "ABS_DIR_3D",
+    "5": "ABS_DIR_5D",
+    "10": "ABS_DIR_10D"
+  },
+  "horizon_phrases": {
+    "1": "1-trading-day directional accuracy",
+    "3": "3-trading-day directional accuracy",
+    "5": "5-trading-day directional accuracy",
+    "10": "10-trading-day directional accuracy"
+  },
+  "development_folds": [
+    "MH_DEV_2014",
+    "MH_DEV_2015",
+    "MH_DEV_2016",
+    "MH_DEV_2017",
+    "MH_DEV_2018"
+  ],
+  "lockbox_fold": "MH_LOCKBOX_2019",
+  "lockbox_evaluated": false,
+  "seed": 42,
+  "seed_stability": null,
+  "supervised_universe": {
+    "n_eligible": 42,
+    "eligible_tickers": [
+      "ADANIENT",
+      "ADANIPORTS",
+      "APOLLOHOSP",
+      "ASIANPAINT",
+      "AXISBANK",
+      "BAJAJ-AUTO",
+      "BAJAJFINSV",
+      "BAJFINANCE",
+      "BEL",
+      "BHARTIARTL",
+      "CIPLA",
+      "DRREDDY",
+      "EICHERMOT",
+      "GRASIM",
+      "HCLTECH",
+      "HDFCBANK",
+      "HINDALCO",
+      "HINDUNILVR",
+      "ICICIBANK",
+      "INFY",
+      "ITC",
+      "JSWSTEEL",
+      "KOTAKBANK",
+      "LT",
+      "M&M",
+      "MARUTI",
+      "NTPC",
+      "ONGC",
+      "POWERGRID",
+      "RELIANCE",
+      "SBIN",
+      "SHRIRAMFIN",
+      "SUNPHARMA",
+      "TATACONSUM",
+      "TATASTEEL",
+      "TCS",
+      "TECHM",
+      "TITAN",
+      "TMPV",
+      "TRENT",
+      "ULTRACEMCO",
+      "WIPRO"
+    ],
+    "excluded": {
+      "COALINDIA": "only 650 valid H=10 training samples in MH_DEV_2014 (need 1000)",
+      "HDFCLIFE": "only 0 valid H=10 training samples in MH_DEV_2014 (need 1000); only 157 valid validation samples in the weakest development year at H=1 (need 180); only 155 valid validation samples in the weakest development year at H=3 (need 180); only 153 valid validation samples in the weakest development year at H=5 (need 180); only 148 valid validation samples in the weakest development year at H=10 (need 180)",
+      "INDIGO": "only 0 valid H=10 training samples in MH_DEV_2014 (need 1000)",
+      "NESTLEIND": "only 916 valid H=10 training samples in MH_DEV_2014 (need 1000)",
+      "SBILIFE": "only 0 valid H=10 training samples in MH_DEV_2014 (need 1000)"
+    },
+    "rules": {
+      "min_train_samples_10d_mh_dev_2014": 1000,
+      "min_validation_samples_per_year": 180,
+      "reference_horizon": 10,
+      "reference_fold": "MH_DEV_2014",
+      "basis": "stock-only stationary features; no context requirement may eliminate a stock-only sample",
+      "note": "H=10 is the most restrictive horizon, so it establishes ONE fixed common universe for the 1D/3D/5D/10D comparison"
+    },
+    "universe_sha256": "5b10bd8f5401542c86490efd114a4a4c4adeb68ee1e127813eb520388b426a05",
+    "csv": "/home/iemiedc2026/Documents/Sanket/Research/projects/agentic-forecaster/results/v2/multi_horizon/supervised_universe.csv",
+    "frozen_before_training": true
+  },
+  "store": {
+    "root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/pre_covid/context_store",
+    "built": true,
+    "config_sha256": "14575c5326bb598535750c84ce201ca7ab286800307584afa15458502fc83f50",
+    "source_manifest_sha256": "9c8f66bd5db5b7bc6751747f5d6a091a20bd9fc2c7dbe50b1ce4e5290ed9cd25",
+    "feature_code_sha256": "0c90f570c2f295437eaf8a91ea091e4e8f2559cc4deee5b4156037dd0e855bd7",
+    "sector_map_sha256": "e1c7567c4770e4efc30a02f85e45f8896eeff270563f8b8887d9e0e7602895b3",
+    "store_sha256": "9ef053533ab05cfe27c919316503f80b4239e7b97a98acda603d98d29d97ce32",
+    "max_target_date": "2019-12-31"
+  },
+  "screen": {
+    "LOGISTIC": {
+      "1": {
+        "objective_id": "ABS_DIR_1D_CONTROL",
+        "horizon_phrase": "1-trading-day directional accuracy",
+        "per_fold": [
+          {
+            "fold": "MH_DEV_2014",
+            "n_train": 90927,
+            "n_validation": 10206,
+            "accuracy": 0.5191064079952968,
+            "macro_accuracy": 0.519106407995297,
+            "balanced_accuracy": 0.5138578848844195,
+            "roc_auc": 0.5217163579355388,
+            "brier": 0.24955721620961593,
+            "ece": 0.013870850844774404,
+            "train_majority_baseline": 0.5020730916009546,
+            "baseline_delta": 0.017033316394342246,
+            "experiment_id": "MH-20261004T082447-541c08"
+          },
+          {
+            "fold": "MH_DEV_2015",
+            "n_train": 101175,
+            "n_validation": 10290,
+            "accuracy": 0.49854227405247814,
+            "macro_accuracy": 0.49854227405247803,
+            "balanced_accuracy": 0.4986400411227055,
+            "roc_auc": 0.5030152029270045,
+            "brier": 0.2500794770180935,
+            "ece": 0.012568808044316527,
+            "train_majority_baseline": 0.5035927847788485,
+            "baseline_delta": -0.005050510726370361,
+            "experiment_id": "MH-20261004T082450-890667"
+          },
+          {
+            "fold": "MH_DEV_2016",
+            "n_train": 111507,
+            "n_validation": 10290,
+            "accuracy": 0.5054421768707483,
+            "macro_accuracy": 0.5054421768707483,
+            "balanced_accuracy": 0.5032307605122974,
+            "roc_auc": 0.5050774113113454,
+            "brier": 0.2500014738065492,
+            "ece": 0.004548784292135095,
+            "train_majority_baseline": 0.5032509169827903,
+            "baseline_delta": 0.002191259887957986,
+            "experiment_id": "MH-20261004T082454-49e460"
+          },
+          {
+            "fold": "MH_DEV_2017",
+            "n_train": 121839,
+            "n_validation": 10374,
+            "accuracy": 0.5101214574898786,
+            "macro_accuracy": 0.5101214574898785,
+            "balanced_accuracy": 0.5039671512084585,
+            "roc_auc": 0.5144423822127857,
+            "brier": 0.2497199795457444,
+            "ece": 0.006622865126218036,
+            "train_majority_baseline": 0.5033692003381511,
+            "baseline_delta": 0.006752257151727448,
+            "experiment_id": "MH-20261004T082457-fdc8e5"
+          },
+          {
+            "fold": "MH_DEV_2018",
+            "n_train": 132255,
+            "n_validation": 10290,
+            "accuracy": 0.508357628765792,
+            "macro_accuracy": 0.5083576287657919,
+            "balanced_accuracy": 0.5119912467786368,
+            "roc_auc": 0.5196932367544014,
+            "brier": 0.2499543982280614,
+            "ece": 0.014058871370246483,
+            "train_majority_baseline": 0.5041472912177234,
+            "baseline_delta": 0.0042103375480686545,
+            "experiment_id": "MH-20261004T082501-c1ddb9"
+          }
+        ],
+        "natural": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5083139890348388,
+          "std_accuracy": 0.0074746048802335615,
+          "mean_macro_accuracy": 0.5083139890348387,
+          "std_macro_accuracy": 0.007474604880233631,
+          "mean_balanced_accuracy": 0.5063374169013035,
+          "std_balanced_accuracy": 0.006384400876704836,
+          "mean_roc_auc": 0.5127889182282152,
+          "std_roc_auc": 0.008442386909299677,
+          "mean_brier": 0.24986250896161288,
+          "std_brier": 0.00021699556548423067,
+          "mean_train_majority_baseline": 0.5032866569836936,
+          "mean_baseline_delta": 0.005027332051145195,
+          "std_baseline_delta": 0.008021731842826969,
+          "worst_year_roc_auc": 0.5030152029270045,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 4,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.5030152029270045,
+          "max_year_roc_auc": 0.5217163579355388
+        },
+        "common_origin": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5076201478708244,
+          "std_accuracy": 0.006690779003668583,
+          "mean_macro_accuracy": 0.5083139890348387,
+          "std_macro_accuracy": 0.007474604880233631,
+          "mean_balanced_accuracy": 0.5063374169013035,
+          "std_balanced_accuracy": 0.006384400876704836,
+          "mean_roc_auc": 0.5133170879120913,
+          "std_roc_auc": 0.006928692557291371,
+          "mean_brier": 0.24986250896161288,
+          "std_brier": 0.00021699556548423067,
+          "mean_train_majority_baseline": 0.5032866569836936,
+          "mean_baseline_delta": 0.005027332051145195,
+          "std_baseline_delta": 0.008021731842826969,
+          "worst_year_roc_auc": 0.5056839279258152,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 4,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.5056839279258152,
+          "max_year_roc_auc": 0.5203661578718703
+        },
+        "non_overlapping": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5083139890348388,
+          "std_accuracy": 0.0074746048802335615,
+          "mean_macro_accuracy": 0.5083139890348387,
+          "std_macro_accuracy": 0.007474604880233631,
+          "mean_balanced_accuracy": 0.5063374169013035,
+          "std_balanced_accuracy": 0.006384400876704836,
+          "mean_roc_auc": 0.5127889182282152,
+          "std_roc_auc": 0.008442386909299677,
+          "mean_brier": 0.24986250896161288,
+          "std_brier": 0.00021699556548423067,
+          "mean_train_majority_baseline": 0.5032866569836936,
+          "mean_baseline_delta": 0.005027332051145195,
+          "std_baseline_delta": 0.008021731842826969,
+          "worst_year_roc_auc": 0.5030152029270045,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 4,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.5030152029270045,
+          "max_year_roc_auc": 0.5217163579355388
+        }
+      },
+      "3": {
+        "objective_id": "ABS_DIR_3D",
+        "horizon_phrase": "3-trading-day directional accuracy",
+        "per_fold": [
+          {
+            "fold": "MH_DEV_2014",
+            "n_train": 90843,
+            "n_validation": 10122,
+            "accuracy": 0.5433708753210827,
+            "macro_accuracy": 0.5433708753210829,
+            "balanced_accuracy": 0.5045419752496254,
+            "roc_auc": 0.4971666728634079,
+            "brier": 0.24855727700253313,
+            "ece": 0.018485314765032748,
+            "train_majority_baseline": 0.5220545336459607,
+            "baseline_delta": 0.021316341675122086,
+            "experiment_id": "MH-20261004T082504-ac3ede"
+          },
+          {
+            "fold": "MH_DEV_2015",
+            "n_train": 101091,
+            "n_validation": 10206,
+            "accuracy": 0.5105820105820106,
+            "macro_accuracy": 0.5105820105820106,
+            "balanced_accuracy": 0.501838667474325,
+            "roc_auc": 0.4977770955092904,
+            "brier": 0.25056332935290376,
+            "ece": 0.018423846363077305,
+            "train_majority_baseline": 0.5239140971995528,
+            "baseline_delta": -0.01333208661754226,
+            "experiment_id": "MH-20261004T082508-2df9fc"
+          },
+          {
+            "fold": "MH_DEV_2016",
+            "n_train": 111423,
+            "n_validation": 10206,
+            "accuracy": 0.5172447579854987,
+            "macro_accuracy": 0.5172447579854987,
+            "balanced_accuracy": 0.5009229266113198,
+            "roc_auc": 0.5165126885586976,
+            "brier": 0.24956732456829459,
+            "ece": 0.010786513838702274,
+            "train_majority_baseline": 0.5228184486147385,
+            "baseline_delta": -0.005573690629239736,
+            "experiment_id": "MH-20261004T082511-e60358"
+          },
+          {
+            "fold": "MH_DEV_2017",
+            "n_train": 121755,
+            "n_validation": 10290,
+            "accuracy": 0.5520894071914481,
+            "macro_accuracy": 0.5520894071914481,
+            "balanced_accuracy": 0.5030514549660353,
+            "roc_auc": 0.5130318569912651,
+            "brier": 0.24773752416387618,
+            "ece": 0.02513152584079568,
+            "train_majority_baseline": 0.5222701326434233,
+            "baseline_delta": 0.0298192745480248,
+            "experiment_id": "MH-20261004T082515-ee1620"
+          },
+          {
+            "fold": "MH_DEV_2018",
+            "n_train": 132171,
+            "n_validation": 10206,
+            "accuracy": 0.5062708210856359,
+            "macro_accuracy": 0.5062708210856359,
+            "balanced_accuracy": 0.5024638189597119,
+            "roc_auc": 0.5424009398266321,
+            "brier": 0.2498281463455135,
+            "ece": 0.024142392424424123,
+            "train_majority_baseline": 0.5249109108654697,
+            "baseline_delta": -0.01864008977983378,
+            "experiment_id": "MH-20261004T082518-01b02c"
+          }
+        ],
+        "natural": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5259115744331352,
+          "std_accuracy": 0.02053031016983253,
+          "mean_macro_accuracy": 0.5259115744331352,
+          "std_macro_accuracy": 0.020530310169832554,
+          "mean_balanced_accuracy": 0.5025637686522035,
+          "std_balanced_accuracy": 0.0013582399958313536,
+          "mean_roc_auc": 0.5133778507498586,
+          "std_roc_auc": 0.018428730774725812,
+          "mean_brier": 0.24925072028662423,
+          "std_brier": 0.00110986798535754,
+          "mean_train_majority_baseline": 0.5231936245938289,
+          "mean_baseline_delta": 0.0027179498393062216,
+          "std_baseline_delta": 0.021580678905820425,
+          "worst_year_roc_auc": 0.4971666728634079,
+          "worst_year": "MH_DEV_2014",
+          "years_roc_auc_above_50": 3,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.4971666728634079,
+          "max_year_roc_auc": 0.5424009398266321
+        },
+        "common_origin": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5240149703224763,
+          "std_accuracy": 0.019485615853031563,
+          "mean_macro_accuracy": 0.5259115744331352,
+          "std_macro_accuracy": 0.020530310169832554,
+          "mean_balanced_accuracy": 0.5025637686522035,
+          "std_balanced_accuracy": 0.0013582399958313536,
+          "mean_roc_auc": 0.5141736074292244,
+          "std_roc_auc": 0.019138932356876037,
+          "mean_brier": 0.24925072028662423,
+          "std_brier": 0.00110986798535754,
+          "mean_train_majority_baseline": 0.5231936245938289,
+          "mean_baseline_delta": 0.0027179498393062216,
+          "std_baseline_delta": 0.021580678905820425,
+          "worst_year_roc_auc": 0.49612858842904106,
+          "worst_year": "MH_DEV_2014",
+          "years_roc_auc_above_50": 3,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.49612858842904106,
+          "max_year_roc_auc": 0.5427243078175896
+        },
+        "non_overlapping": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5204693078676819,
+          "std_accuracy": 0.01917386446095543,
+          "mean_macro_accuracy": 0.5259115744331352,
+          "std_macro_accuracy": 0.020530310169832554,
+          "mean_balanced_accuracy": 0.5025637686522035,
+          "std_balanced_accuracy": 0.0013582399958313536,
+          "mean_roc_auc": 0.5114612738962577,
+          "std_roc_auc": 0.014181870875415814,
+          "mean_brier": 0.24925072028662423,
+          "std_brier": 0.00110986798535754,
+          "mean_train_majority_baseline": 0.5231936245938289,
+          "mean_baseline_delta": 0.0027179498393062216,
+          "std_baseline_delta": 0.021580678905820425,
+          "worst_year_roc_auc": 0.49343230207088146,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 4,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.49343230207088146,
+          "max_year_roc_auc": 0.5297996925365458
+        }
+      },
+      "5": {
+        "objective_id": "ABS_DIR_5D",
+        "horizon_phrase": "5-trading-day directional accuracy",
+        "per_fold": [
+          {
+            "fold": "MH_DEV_2014",
+            "n_train": 90759,
+            "n_validation": 10038,
+            "accuracy": 0.5595736202430763,
+            "macro_accuracy": 0.5595736202430763,
+            "balanced_accuracy": 0.5045944789243051,
+            "roc_auc": 0.5115676732573935,
+            "brier": 0.24680326790872253,
+            "ece": 0.018857768823402496,
+            "train_majority_baseline": 0.5364426668429577,
+            "baseline_delta": 0.023130953400118615,
+            "experiment_id": "MH-20261004T082522-833ad6"
+          },
+          {
+            "fold": "MH_DEV_2015",
+            "n_train": 101007,
+            "n_validation": 10122,
+            "accuracy": 0.5163011262596325,
+            "macro_accuracy": 0.5163011262596325,
+            "balanced_accuracy": 0.5037975417439703,
+            "roc_auc": 0.49355200837379787,
+            "brier": 0.25120783954579656,
+            "ece": 0.029252372217569197,
+            "train_majority_baseline": 0.5381805221420297,
+            "baseline_delta": -0.02187939588239718,
+            "experiment_id": "MH-20261004T082525-a5f685"
+          },
+          {
+            "fold": "MH_DEV_2016",
+            "n_train": 111339,
+            "n_validation": 10122,
+            "accuracy": 0.526674570243035,
+            "macro_accuracy": 0.526674570243035,
+            "balanced_accuracy": 0.5022086214916204,
+            "roc_auc": 0.5150212996303267,
+            "brier": 0.2493159469817154,
+            "ece": 0.014716740120470079,
+            "train_majority_baseline": 0.5359846953897556,
+            "baseline_delta": -0.009310125146720583,
+            "experiment_id": "MH-20261004T082528-38251f"
+          },
+          {
+            "fold": "MH_DEV_2017",
+            "n_train": 121671,
+            "n_validation": 10206,
+            "accuracy": 0.5728982951205174,
+            "macro_accuracy": 0.5728982951205174,
+            "balanced_accuracy": 0.49960033555627115,
+            "roc_auc": 0.5091427612157577,
+            "brier": 0.24568130068388977,
+            "ece": 0.03701289817097804,
+            "train_majority_baseline": 0.5347289000665729,
+            "baseline_delta": 0.038169395053944455,
+            "experiment_id": "MH-20261004T082532-9e841f"
+          },
+          {
+            "fold": "MH_DEV_2018",
+            "n_train": 132087,
+            "n_validation": 10122,
+            "accuracy": 0.5038529934795495,
+            "macro_accuracy": 0.5038529934795494,
+            "balanced_accuracy": 0.5034738238767097,
+            "roc_auc": 0.5482223286322693,
+            "brier": 0.25059944022390246,
+            "ece": 0.04036299345016256,
+            "train_majority_baseline": 0.5383648655810186,
+            "baseline_delta": -0.03451187210146911,
+            "experiment_id": "MH-20261004T082536-240405"
+          }
+        ],
+        "natural": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.535860121069162,
+          "std_accuracy": 0.02926406165677463,
+          "mean_macro_accuracy": 0.535860121069162,
+          "std_macro_accuracy": 0.02926406165677466,
+          "mean_balanced_accuracy": 0.5027349603185753,
+          "std_balanced_accuracy": 0.001951647576369731,
+          "mean_roc_auc": 0.515501214221909,
+          "std_roc_auc": 0.020053503140254645,
+          "mean_brier": 0.24872155906880536,
+          "std_brier": 0.0023970991456264083,
+          "mean_train_majority_baseline": 0.5367403300044669,
+          "mean_baseline_delta": -0.0008802089353047605,
+          "std_baseline_delta": 0.030596264459521877,
+          "worst_year_roc_auc": 0.49355200837379787,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 4,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.49355200837379787,
+          "max_year_roc_auc": 0.5482223286322693
+        },
+        "common_origin": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5347860772586595,
+          "std_accuracy": 0.0281470517066491,
+          "mean_macro_accuracy": 0.535860121069162,
+          "std_macro_accuracy": 0.02926406165677466,
+          "mean_balanced_accuracy": 0.5027349603185753,
+          "std_balanced_accuracy": 0.001951647576369731,
+          "mean_roc_auc": 0.5159417613056172,
+          "std_roc_auc": 0.019099337585270066,
+          "mean_brier": 0.24872155906880536,
+          "std_brier": 0.0023970991456264083,
+          "mean_train_majority_baseline": 0.5367403300044669,
+          "mean_baseline_delta": -0.0008802089353047605,
+          "std_baseline_delta": 0.030596264459521877,
+          "worst_year_roc_auc": 0.49434149138582634,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 4,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.49434149138582634,
+          "max_year_roc_auc": 0.5465621645601594
+        },
+        "non_overlapping": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5367650631681244,
+          "std_accuracy": 0.022156386270720974,
+          "mean_macro_accuracy": 0.535860121069162,
+          "std_macro_accuracy": 0.02926406165677466,
+          "mean_balanced_accuracy": 0.5027349603185753,
+          "std_balanced_accuracy": 0.001951647576369731,
+          "mean_roc_auc": 0.5232355527166964,
+          "std_roc_auc": 0.028945855209119256,
+          "mean_brier": 0.24872155906880536,
+          "std_brier": 0.0023970991456264083,
+          "mean_train_majority_baseline": 0.5367403300044669,
+          "mean_baseline_delta": -0.0008802089353047605,
+          "std_baseline_delta": 0.030596264459521877,
+          "worst_year_roc_auc": 0.4894143085094082,
+          "worst_year": "MH_DEV_2017",
+          "years_roc_auc_above_50": 4,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.4894143085094082,
+          "max_year_roc_auc": 0.5657541498090521
+        }
+      },
+      "10": {
+        "objective_id": "ABS_DIR_10D",
+        "horizon_phrase": "10-trading-day directional accuracy",
+        "per_fold": [
+          {
+            "fold": "MH_DEV_2014",
+            "n_train": 90549,
+            "n_validation": 9828,
+            "accuracy": 0.5885225885225885,
+            "macro_accuracy": 0.5885225885225885,
+            "balanced_accuracy": 0.5001029785079406,
+            "roc_auc": 0.5217324423354568,
+            "brier": 0.2424777324529174,
+            "ece": 0.028297281684806216,
+            "train_majority_baseline": 0.5568808048680824,
+            "baseline_delta": 0.031641783654506095,
+            "experiment_id": "MH-20261004T082539-029fda"
+          },
+          {
+            "fold": "MH_DEV_2015",
+            "n_train": 100797,
+            "n_validation": 9912,
+            "accuracy": 0.515637610976594,
+            "macro_accuracy": 0.515637610976594,
+            "balanced_accuracy": 0.49949902215172265,
+            "roc_auc": 0.47222790660993647,
+            "brier": 0.25328482761842686,
+            "ece": 0.047492656647601265,
+            "train_majority_baseline": 0.5595999880948838,
+            "baseline_delta": -0.043962377118289764,
+            "experiment_id": "MH-20261004T082543-82b7fa"
+          },
+          {
+            "fold": "MH_DEV_2016",
+            "n_train": 111129,
+            "n_validation": 9912,
+            "accuracy": 0.5456012913640033,
+            "macro_accuracy": 0.5456012913640033,
+            "balanced_accuracy": 0.49996565374433105,
+            "roc_auc": 0.49436353924676624,
+            "brier": 0.2485151215789524,
+            "ece": 0.013025923580557968,
+            "train_majority_baseline": 0.5558855024341081,
+            "baseline_delta": -0.010284211070104798,
+            "experiment_id": "MH-20261004T082546-d7722f"
+          },
+          {
+            "fold": "MH_DEV_2017",
+            "n_train": 121461,
+            "n_validation": 9996,
+            "accuracy": 0.6061424569827931,
+            "macro_accuracy": 0.6061424569827932,
+            "balanced_accuracy": 0.5003558270856433,
+            "roc_auc": 0.4894612007411835,
+            "brier": 0.24156839991758866,
+            "ece": 0.049282292495442366,
+            "train_majority_baseline": 0.5543260799762887,
+            "baseline_delta": 0.05181637700650443,
+            "experiment_id": "MH-20261004T082550-68e548"
+          },
+          {
+            "fold": "MH_DEV_2018",
+            "n_train": 131877,
+            "n_validation": 9912,
+            "accuracy": 0.4942493946731235,
+            "macro_accuracy": 0.4942493946731235,
+            "balanced_accuracy": 0.5000690186709553,
+            "roc_auc": 0.5488336618269173,
+            "brier": 0.25344774054020075,
+            "ece": 0.06775046658178067,
+            "train_majority_baseline": 0.5592711390159012,
+            "baseline_delta": -0.06502174434277769,
+            "experiment_id": "MH-20261004T082554-c0b095"
+          }
+        ],
+        "natural": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5500306685038205,
+          "std_accuracy": 0.047286924754981814,
+          "mean_macro_accuracy": 0.5500306685038205,
+          "std_macro_accuracy": 0.04728692475498185,
+          "mean_balanced_accuracy": 0.49999850003211865,
+          "std_balanced_accuracy": 0.00031389818617681323,
+          "mean_roc_auc": 0.505323750152052,
+          "std_roc_auc": 0.030122413373554122,
+          "mean_brier": 0.2478587644216172,
+          "std_brier": 0.005692842243325518,
+          "mean_train_majority_baseline": 0.5571927028778528,
+          "mean_baseline_delta": -0.0071620343740323444,
+          "std_baseline_delta": 0.04923400388361534,
+          "worst_year_roc_auc": 0.47222790660993647,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 2,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.47222790660993647,
+          "max_year_roc_auc": 0.5488336618269173
+        },
+        "common_origin": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5500306685038205,
+          "std_accuracy": 0.047286924754981814,
+          "mean_macro_accuracy": 0.5500306685038205,
+          "std_macro_accuracy": 0.04728692475498185,
+          "mean_balanced_accuracy": 0.49999850003211865,
+          "std_balanced_accuracy": 0.00031389818617681323,
+          "mean_roc_auc": 0.505323750152052,
+          "std_roc_auc": 0.030122413373554122,
+          "mean_brier": 0.2478587644216172,
+          "std_brier": 0.005692842243325518,
+          "mean_train_majority_baseline": 0.5571927028778528,
+          "mean_baseline_delta": -0.0071620343740323444,
+          "std_baseline_delta": 0.04923400388361534,
+          "worst_year_roc_auc": 0.47222790660993647,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 2,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.47222790660993647,
+          "max_year_roc_auc": 0.5488336618269173
+        },
+        "non_overlapping": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5498015873015872,
+          "std_accuracy": 0.04452365036895417,
+          "mean_macro_accuracy": 0.5500306685038205,
+          "std_macro_accuracy": 0.04728692475498185,
+          "mean_balanced_accuracy": 0.49999850003211865,
+          "std_balanced_accuracy": 0.00031389818617681323,
+          "mean_roc_auc": 0.4983558583736361,
+          "std_roc_auc": 0.028271496263488655,
+          "mean_brier": 0.2478587644216172,
+          "std_brier": 0.005692842243325518,
+          "mean_train_majority_baseline": 0.5571927028778528,
+          "mean_baseline_delta": -0.0071620343740323444,
+          "std_baseline_delta": 0.04923400388361534,
+          "worst_year_roc_auc": 0.46282518363890585,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 2,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.46282518363890585,
+          "max_year_roc_auc": 0.5293996569468267
+        }
+      }
+    },
+    "HIST_GRADIENT_BOOSTING": {
+      "1": {
+        "objective_id": "ABS_DIR_1D_CONTROL",
+        "horizon_phrase": "1-trading-day directional accuracy",
+        "per_fold": [
+          {
+            "fold": "MH_DEV_2014",
+            "n_train": 90927,
+            "n_validation": 10206,
+            "accuracy": 0.5158730158730159,
+            "macro_accuracy": 0.5158730158730158,
+            "balanced_accuracy": 0.5144810578449915,
+            "roc_auc": 0.5212176773120943,
+            "brier": 0.2505445479062491,
+            "ece": 0.01905987668410778,
+            "train_majority_baseline": 0.5020730916009546,
+            "baseline_delta": 0.013799924272061337,
+            "experiment_id": "MH-20261004T082609-c19ab0"
+          },
+          {
+            "fold": "MH_DEV_2015",
+            "n_train": 101175,
+            "n_validation": 10290,
+            "accuracy": 0.5071914480077745,
+            "macro_accuracy": 0.5071914480077746,
+            "balanced_accuracy": 0.5072332684107651,
+            "roc_auc": 0.5146509649174469,
+            "brier": 0.25011735736867013,
+            "ece": 0.01743875560452953,
+            "train_majority_baseline": 0.5035927847788485,
+            "baseline_delta": 0.0035986632289259912,
+            "experiment_id": "MH-20261004T082612-964ab0"
+          },
+          {
+            "fold": "MH_DEV_2016",
+            "n_train": 111507,
+            "n_validation": 10290,
+            "accuracy": 0.5139941690962099,
+            "macro_accuracy": 0.5139941690962099,
+            "balanced_accuracy": 0.5132420945256715,
+            "roc_auc": 0.5198703766670445,
+            "brier": 0.2498035602341359,
+            "ece": 0.010610035653094069,
+            "train_majority_baseline": 0.5032509169827903,
+            "baseline_delta": 0.010743252113419532,
+            "experiment_id": "MH-20261004T082616-f3d863"
+          },
+          {
+            "fold": "MH_DEV_2017",
+            "n_train": 121839,
+            "n_validation": 10374,
+            "accuracy": 0.5095430884904569,
+            "macro_accuracy": 0.5095430884904568,
+            "balanced_accuracy": 0.5072617299260691,
+            "roc_auc": 0.5089396837406753,
+            "brier": 0.2502683322374784,
+            "ece": 0.012901208342180582,
+            "train_majority_baseline": 0.5033692003381511,
+            "baseline_delta": 0.006173888152305795,
+            "experiment_id": "MH-20261004T082619-8f858e"
+          },
+          {
+            "fold": "MH_DEV_2018",
+            "n_train": 132255,
+            "n_validation": 10290,
+            "accuracy": 0.5076773566569485,
+            "macro_accuracy": 0.5076773566569485,
+            "balanced_accuracy": 0.5091435934544439,
+            "roc_auc": 0.5146053267125743,
+            "brier": 0.2505719247624931,
+            "ece": 0.015051098139411414,
+            "train_majority_baseline": 0.5041472912177234,
+            "baseline_delta": 0.003530065439225072,
+            "experiment_id": "MH-20261004T082623-ad008e"
+          }
+        ],
+        "natural": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5108558156248811,
+          "std_accuracy": 0.0038818489413702715,
+          "mean_macro_accuracy": 0.5108558156248811,
+          "std_macro_accuracy": 0.0038818489413702186,
+          "mean_balanced_accuracy": 0.5102723488323881,
+          "std_balanced_accuracy": 0.0033950900483993105,
+          "mean_roc_auc": 0.5158568058699671,
+          "std_roc_auc": 0.004891689999322045,
+          "mean_brier": 0.25026114450180537,
+          "std_brier": 0.00031898731373731164,
+          "mean_train_majority_baseline": 0.5032866569836936,
+          "mean_baseline_delta": 0.007569158641187545,
+          "std_baseline_delta": 0.004553108750277595,
+          "worst_year_roc_auc": 0.5089396837406753,
+          "worst_year": "MH_DEV_2017",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 5,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.5089396837406753,
+          "max_year_roc_auc": 0.5212176773120943
+        },
+        "common_origin": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5100976563303867,
+          "std_accuracy": 0.004281355011829862,
+          "mean_macro_accuracy": 0.5108558156248811,
+          "std_macro_accuracy": 0.0038818489413702186,
+          "mean_balanced_accuracy": 0.5102723488323881,
+          "std_balanced_accuracy": 0.0033950900483993105,
+          "mean_roc_auc": 0.5156011442520617,
+          "std_roc_auc": 0.0053676943869090795,
+          "mean_brier": 0.25026114450180537,
+          "std_brier": 0.00031898731373731164,
+          "mean_train_majority_baseline": 0.5032866569836936,
+          "mean_baseline_delta": 0.007569158641187545,
+          "std_baseline_delta": 0.004553108750277595,
+          "worst_year_roc_auc": 0.5085306226880413,
+          "worst_year": "MH_DEV_2017",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 5,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.5085306226880413,
+          "max_year_roc_auc": 0.5217288806755174
+        },
+        "non_overlapping": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5108558156248811,
+          "std_accuracy": 0.0038818489413702715,
+          "mean_macro_accuracy": 0.5108558156248811,
+          "std_macro_accuracy": 0.0038818489413702186,
+          "mean_balanced_accuracy": 0.5102723488323881,
+          "std_balanced_accuracy": 0.0033950900483993105,
+          "mean_roc_auc": 0.5158568058699671,
+          "std_roc_auc": 0.004891689999322045,
+          "mean_brier": 0.25026114450180537,
+          "std_brier": 0.00031898731373731164,
+          "mean_train_majority_baseline": 0.5032866569836936,
+          "mean_baseline_delta": 0.007569158641187545,
+          "std_baseline_delta": 0.004553108750277595,
+          "worst_year_roc_auc": 0.5089396837406753,
+          "worst_year": "MH_DEV_2017",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 5,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.5089396837406753,
+          "max_year_roc_auc": 0.5212176773120943
+        }
+      },
+      "3": {
+        "objective_id": "ABS_DIR_3D",
+        "horizon_phrase": "3-trading-day directional accuracy",
+        "per_fold": [
+          {
+            "fold": "MH_DEV_2014",
+            "n_train": 90843,
+            "n_validation": 10122,
+            "accuracy": 0.5346769413159455,
+            "macro_accuracy": 0.5346769413159456,
+            "balanced_accuracy": 0.5096509228128011,
+            "roc_auc": 0.5201786156558799,
+            "brier": 0.24873073949299915,
+            "ece": 0.021361177681566975,
+            "train_majority_baseline": 0.5220545336459607,
+            "baseline_delta": 0.012622407669984792,
+            "experiment_id": "MH-20261004T082627-dee0a7"
+          },
+          {
+            "fold": "MH_DEV_2015",
+            "n_train": 101091,
+            "n_validation": 10206,
+            "accuracy": 0.5052910052910053,
+            "macro_accuracy": 0.5052910052910053,
+            "balanced_accuracy": 0.49883138471921423,
+            "roc_auc": 0.5036163303113756,
+            "brier": 0.25147344194622734,
+            "ece": 0.03464835376467244,
+            "train_majority_baseline": 0.5239140971995528,
+            "baseline_delta": -0.018623091908547496,
+            "experiment_id": "MH-20261004T082630-3fb03d"
+          },
+          {
+            "fold": "MH_DEV_2016",
+            "n_train": 111423,
+            "n_validation": 10206,
+            "accuracy": 0.5191064079952968,
+            "macro_accuracy": 0.519106407995297,
+            "balanced_accuracy": 0.5077730122693525,
+            "roc_auc": 0.5292676319913286,
+            "brier": 0.2494439045889783,
+            "ece": 0.018415668754634015,
+            "train_majority_baseline": 0.5228184486147385,
+            "baseline_delta": -0.0037120406194416367,
+            "experiment_id": "MH-20261004T082633-450a7f"
+          },
+          {
+            "fold": "MH_DEV_2017",
+            "n_train": 121755,
+            "n_validation": 10290,
+            "accuracy": 0.5289601554907677,
+            "macro_accuracy": 0.5289601554907678,
+            "balanced_accuracy": 0.4961272241910322,
+            "roc_auc": 0.5142409060398188,
+            "brier": 0.24818295744166388,
+            "ece": 0.02544158943920416,
+            "train_majority_baseline": 0.5222701326434233,
+            "baseline_delta": 0.0066900228473444345,
+            "experiment_id": "MH-20261004T082637-9326cb"
+          },
+          {
+            "fold": "MH_DEV_2018",
+            "n_train": 132171,
+            "n_validation": 10206,
+            "accuracy": 0.5135214579659024,
+            "macro_accuracy": 0.5135214579659024,
+            "balanced_accuracy": 0.5109085483630322,
+            "roc_auc": 0.5267889186329118,
+            "brier": 0.25051725867315894,
+            "ece": 0.027578743906199438,
+            "train_majority_baseline": 0.5249109108654697,
+            "baseline_delta": -0.011389452899567276,
+            "experiment_id": "MH-20261004T082641-e1f7d5"
+          }
+        ],
+        "natural": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5203111936117836,
+          "std_accuracy": 0.011772184635806112,
+          "mean_macro_accuracy": 0.5203111936117837,
+          "std_macro_accuracy": 0.011772184635806163,
+          "mean_balanced_accuracy": 0.5046582184710864,
+          "std_balanced_accuracy": 0.0067161282705499115,
+          "mean_roc_auc": 0.518818480526263,
+          "std_roc_auc": 0.010327417112443522,
+          "mean_brier": 0.24966966042860556,
+          "std_brier": 0.0013336861082457736,
+          "mean_train_majority_baseline": 0.5231936245938289,
+          "mean_baseline_delta": -0.0028824309820454364,
+          "std_baseline_delta": 0.01277554279081771,
+          "worst_year_roc_auc": 0.5036163303113756,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.5036163303113756,
+          "max_year_roc_auc": 0.5292676319913286
+        },
+        "common_origin": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5191151746806212,
+          "std_accuracy": 0.01197901350704849,
+          "mean_macro_accuracy": 0.5203111936117837,
+          "std_macro_accuracy": 0.011772184635806163,
+          "mean_balanced_accuracy": 0.5046582184710864,
+          "std_balanced_accuracy": 0.0067161282705499115,
+          "mean_roc_auc": 0.5196248706136382,
+          "std_roc_auc": 0.010905104521773092,
+          "mean_brier": 0.24966966042860556,
+          "std_brier": 0.0013336861082457736,
+          "mean_train_majority_baseline": 0.5231936245938289,
+          "mean_baseline_delta": -0.0028824309820454364,
+          "std_baseline_delta": 0.01277554279081771,
+          "worst_year_roc_auc": 0.5037607593140505,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.5037607593140505,
+          "max_year_roc_auc": 0.5321530329162538
+        },
+        "non_overlapping": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5140111268837556,
+          "std_accuracy": 0.011484084027510355,
+          "mean_macro_accuracy": 0.5203111936117837,
+          "std_macro_accuracy": 0.011772184635806163,
+          "mean_balanced_accuracy": 0.5046582184710864,
+          "std_balanced_accuracy": 0.0067161282705499115,
+          "mean_roc_auc": 0.5111428702628424,
+          "std_roc_auc": 0.01093404417158173,
+          "mean_brier": 0.24966966042860556,
+          "std_brier": 0.0013336861082457736,
+          "mean_train_majority_baseline": 0.5231936245938289,
+          "mean_baseline_delta": -0.0028824309820454364,
+          "std_baseline_delta": 0.01277554279081771,
+          "worst_year_roc_auc": 0.49940023312933074,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 4,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.49940023312933074,
+          "max_year_roc_auc": 0.5234133780059982
+        }
+      },
+      "5": {
+        "objective_id": "ABS_DIR_5D",
+        "horizon_phrase": "5-trading-day directional accuracy",
+        "per_fold": [
+          {
+            "fold": "MH_DEV_2014",
+            "n_train": 90759,
+            "n_validation": 10038,
+            "accuracy": 0.5493126120741183,
+            "macro_accuracy": 0.5493126120741183,
+            "balanced_accuracy": 0.5091415006243873,
+            "roc_auc": 0.5270427518575409,
+            "brier": 0.24727072256168386,
+            "ece": 0.021350003912266855,
+            "train_majority_baseline": 0.5364426668429577,
+            "baseline_delta": 0.012869945231160584,
+            "experiment_id": "MH-20261004T082644-72f545"
+          },
+          {
+            "fold": "MH_DEV_2015",
+            "n_train": 101007,
+            "n_validation": 10122,
+            "accuracy": 0.5115589804386484,
+            "macro_accuracy": 0.5115589804386484,
+            "balanced_accuracy": 0.5012656649280639,
+            "roc_auc": 0.5034740931719417,
+            "brier": 0.25211413611108346,
+            "ece": 0.04098215329152726,
+            "train_majority_baseline": 0.5381805221420297,
+            "baseline_delta": -0.02662154170338127,
+            "experiment_id": "MH-20261004T082648-7e1b60"
+          },
+          {
+            "fold": "MH_DEV_2016",
+            "n_train": 111339,
+            "n_validation": 10122,
+            "accuracy": 0.5229203714680893,
+            "macro_accuracy": 0.5229203714680895,
+            "balanced_accuracy": 0.503887986440135,
+            "roc_auc": 0.5205154139069172,
+            "brier": 0.24979376797613762,
+            "ece": 0.02452238063223192,
+            "train_majority_baseline": 0.5359846953897556,
+            "baseline_delta": -0.013064323921666232,
+            "experiment_id": "MH-20261004T082651-85b07f"
+          },
+          {
+            "fold": "MH_DEV_2017",
+            "n_train": 121671,
+            "n_validation": 10206,
+            "accuracy": 0.5572212424064276,
+            "macro_accuracy": 0.5572212424064276,
+            "balanced_accuracy": 0.5018588541389,
+            "roc_auc": 0.5079433750167411,
+            "brier": 0.24642318302422528,
+            "ece": 0.03690538611513309,
+            "train_majority_baseline": 0.5347289000665729,
+            "baseline_delta": 0.022492342339854643,
+            "experiment_id": "MH-20261004T082655-f6a4c3"
+          },
+          {
+            "fold": "MH_DEV_2018",
+            "n_train": 132087,
+            "n_validation": 10122,
+            "accuracy": 0.5055325034578146,
+            "macro_accuracy": 0.5055325034578145,
+            "balanced_accuracy": 0.5052213453695981,
+            "roc_auc": 0.5259414051969444,
+            "brier": 0.25175111934248895,
+            "ece": 0.043863162184264864,
+            "train_majority_baseline": 0.5383648655810186,
+            "baseline_delta": -0.03283236212320395,
+            "experiment_id": "MH-20261004T082659-87ccd9"
+          }
+        ],
+        "natural": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5293091419690197,
+          "std_accuracy": 0.022915264174965706,
+          "mean_macro_accuracy": 0.5293091419690197,
+          "std_macro_accuracy": 0.022915264174965727,
+          "mean_balanced_accuracy": 0.5042750703002168,
+          "std_balanced_accuracy": 0.003147301850547002,
+          "mean_roc_auc": 0.5169834078300171,
+          "std_roc_auc": 0.010702043751232898,
+          "mean_brier": 0.2494705858031238,
+          "std_brier": 0.0025700048710904206,
+          "mean_train_majority_baseline": 0.5367403300044669,
+          "mean_baseline_delta": -0.007431188035447245,
+          "std_baseline_delta": 0.024252707173013206,
+          "worst_year_roc_auc": 0.5034740931719417,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.5034740931719417,
+          "max_year_roc_auc": 0.5270427518575409
+        },
+        "common_origin": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5285366660063996,
+          "std_accuracy": 0.022411959289960582,
+          "mean_macro_accuracy": 0.5293091419690197,
+          "std_macro_accuracy": 0.022915264174965727,
+          "mean_balanced_accuracy": 0.5042750703002168,
+          "std_balanced_accuracy": 0.003147301850547002,
+          "mean_roc_auc": 0.5171071734142018,
+          "std_roc_auc": 0.010370547339098509,
+          "mean_brier": 0.2494705858031238,
+          "std_brier": 0.0025700048710904206,
+          "mean_train_majority_baseline": 0.5367403300044669,
+          "mean_baseline_delta": -0.007431188035447245,
+          "std_baseline_delta": 0.024252707173013206,
+          "worst_year_roc_auc": 0.503209423137071,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.503209423137071,
+          "max_year_roc_auc": 0.5264169415097926
+        },
+        "non_overlapping": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5332300777453838,
+          "std_accuracy": 0.012234573169307802,
+          "mean_macro_accuracy": 0.5293091419690197,
+          "std_macro_accuracy": 0.022915264174965727,
+          "mean_balanced_accuracy": 0.5042750703002168,
+          "std_balanced_accuracy": 0.003147301850547002,
+          "mean_roc_auc": 0.525936272589125,
+          "std_roc_auc": 0.023248091282909333,
+          "mean_brier": 0.2494705858031238,
+          "std_brier": 0.0025700048710904206,
+          "mean_train_majority_baseline": 0.5367403300044669,
+          "mean_baseline_delta": -0.007431188035447245,
+          "std_baseline_delta": 0.024252707173013206,
+          "worst_year_roc_auc": 0.4990402923061506,
+          "worst_year": "MH_DEV_2017",
+          "years_roc_auc_above_50": 4,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.4990402923061506,
+          "max_year_roc_auc": 0.5611619465345785
+        }
+      },
+      "10": {
+        "objective_id": "ABS_DIR_10D",
+        "horizon_phrase": "10-trading-day directional accuracy",
+        "per_fold": [
+          {
+            "fold": "MH_DEV_2014",
+            "n_train": 90549,
+            "n_validation": 9828,
+            "accuracy": 0.5795685795685795,
+            "macro_accuracy": 0.5795685795685797,
+            "balanced_accuracy": 0.5089468138244371,
+            "roc_auc": 0.5332318658610851,
+            "brier": 0.2429867348858816,
+            "ece": 0.03127591790967072,
+            "train_majority_baseline": 0.5568808048680824,
+            "baseline_delta": 0.0226877747004971,
+            "experiment_id": "MH-20261004T082702-3325da"
+          },
+          {
+            "fold": "MH_DEV_2015",
+            "n_train": 100797,
+            "n_validation": 9912,
+            "accuracy": 0.5135189669087974,
+            "macro_accuracy": 0.5135189669087973,
+            "balanced_accuracy": 0.49932370843431584,
+            "roc_auc": 0.5036743334237447,
+            "brier": 0.2541001242667208,
+            "ece": 0.05775959968964329,
+            "train_majority_baseline": 0.5595999880948838,
+            "baseline_delta": -0.04608102118608637,
+            "experiment_id": "MH-20261004T082705-9efc79"
+          },
+          {
+            "fold": "MH_DEV_2016",
+            "n_train": 111129,
+            "n_validation": 9912,
+            "accuracy": 0.5375302663438256,
+            "macro_accuracy": 0.5375302663438257,
+            "balanced_accuracy": 0.4981031956963423,
+            "roc_auc": 0.5143840188945876,
+            "brier": 0.24864293562480758,
+            "ece": 0.02327365572382375,
+            "train_majority_baseline": 0.5558855024341081,
+            "baseline_delta": -0.018355236090282445,
+            "experiment_id": "MH-20261004T082709-c06ced"
+          },
+          {
+            "fold": "MH_DEV_2017",
+            "n_train": 121461,
+            "n_validation": 9996,
+            "accuracy": 0.5764305722288916,
+            "macro_accuracy": 0.5764305722288916,
+            "balanced_accuracy": 0.4908360481847222,
+            "roc_auc": 0.5071822951039862,
+            "brier": 0.24326093390155681,
+            "ece": 0.054627455691578,
+            "train_majority_baseline": 0.5543260799762887,
+            "baseline_delta": 0.022104492252602914,
+            "experiment_id": "MH-20261004T082713-00819b"
+          },
+          {
+            "fold": "MH_DEV_2018",
+            "n_train": 131877,
+            "n_validation": 9912,
+            "accuracy": 0.49556093623890235,
+            "macro_accuracy": 0.49556093623890235,
+            "balanced_accuracy": 0.500909580573333,
+            "roc_auc": 0.506941364506047,
+            "brier": 0.2553502885763262,
+            "ece": 0.06862122443733941,
+            "train_majority_baseline": 0.5592711390159012,
+            "baseline_delta": -0.06371020277699885,
+            "experiment_id": "MH-20261004T082717-1ef7ee"
+          }
+        ],
+        "natural": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5405218642577992,
+          "std_accuracy": 0.03732851609813323,
+          "mean_macro_accuracy": 0.5405218642577994,
+          "std_macro_accuracy": 0.03732851609813328,
+          "mean_balanced_accuracy": 0.49962386934263014,
+          "std_balanced_accuracy": 0.006484571936380584,
+          "mean_roc_auc": 0.5130827755578901,
+          "std_roc_auc": 0.01192403514916166,
+          "mean_brier": 0.2488682034510586,
+          "std_brier": 0.0058196716589094125,
+          "mean_train_majority_baseline": 0.5571927028778528,
+          "mean_baseline_delta": -0.01667083862005353,
+          "std_baseline_delta": 0.039157133898229245,
+          "worst_year_roc_auc": 0.5036743334237447,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.5036743334237447,
+          "max_year_roc_auc": 0.5332318658610851
+        },
+        "common_origin": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5405218642577992,
+          "std_accuracy": 0.03732851609813323,
+          "mean_macro_accuracy": 0.5405218642577994,
+          "std_macro_accuracy": 0.03732851609813328,
+          "mean_balanced_accuracy": 0.49962386934263014,
+          "std_balanced_accuracy": 0.006484571936380584,
+          "mean_roc_auc": 0.5130827755578901,
+          "std_roc_auc": 0.01192403514916166,
+          "mean_brier": 0.2488682034510586,
+          "std_brier": 0.0058196716589094125,
+          "mean_train_majority_baseline": 0.5571927028778528,
+          "mean_baseline_delta": -0.01667083862005353,
+          "std_baseline_delta": 0.039157133898229245,
+          "worst_year_roc_auc": 0.5036743334237447,
+          "worst_year": "MH_DEV_2015",
+          "years_roc_auc_above_50": 5,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.5036743334237447,
+          "max_year_roc_auc": 0.5332318658610851
+        },
+        "non_overlapping": {
+          "n_folds": 5,
+          "folds": [
+            "MH_DEV_2014",
+            "MH_DEV_2015",
+            "MH_DEV_2016",
+            "MH_DEV_2017",
+            "MH_DEV_2018"
+          ],
+          "mean_accuracy": 0.5376984126984127,
+          "std_accuracy": 0.037665764893987375,
+          "mean_macro_accuracy": 0.5405218642577994,
+          "std_macro_accuracy": 0.03732851609813328,
+          "mean_balanced_accuracy": 0.49962386934263014,
+          "std_balanced_accuracy": 0.006484571936380584,
+          "mean_roc_auc": 0.5049976432197011,
+          "std_roc_auc": 0.023479855358700775,
+          "mean_brier": 0.2488682034510586,
+          "std_brier": 0.0058196716589094125,
+          "mean_train_majority_baseline": 0.5571927028778528,
+          "mean_baseline_delta": -0.01667083862005353,
+          "std_baseline_delta": 0.039157133898229245,
+          "worst_year_roc_auc": 0.4895089365380878,
+          "worst_year": "MH_DEV_2016",
+          "years_roc_auc_above_50": 1,
+          "years_beating_majority_baseline": 2,
+          "mean_ticker_fraction_beating_own_baseline": NaN,
+          "min_year_roc_auc": 0.4895089365380878,
+          "max_year_roc_auc": 0.5466612854404198
+        }
+      }
+    }
+  },
+  "neural": {
+    "SHARED_LSTM": {},
+    "LSTM_TRANSFORMER": {}
+  },
+  "horizon_gates": {
+    "LOGISTIC": {
+      "1": {
+        "screen_passed": false,
+        "classification": "SCREEN_FAIL",
+        "criteria": {
+          "mean_roc_auc": {
+            "value": 0.5127889182282152,
+            "threshold": 0.54,
+            "passed": false
+          },
+          "mean_balanced_accuracy": {
+            "value": 0.5063374169013035,
+            "threshold": 0.52,
+            "passed": false
+          },
+          "mean_accuracy_delta_vs_train_majority": {
+            "value": 0.005027332051145195,
+            "threshold": 0.005,
+            "passed": true
+          },
+          "years_roc_auc_above_50": {
+            "value": 5,
+            "threshold": 4,
+            "passed": true
+          },
+          "common_origin_directionally_positive": {
+            "value": 0.005027332051145195,
+            "threshold": 0.0,
+            "passed": true
+          },
+          "non_overlap_not_chance": {
+            "value": 0.5127889182282152,
+            "threshold": 0.5,
+            "passed": true
+          }
+        },
+        "thresholds": {
+          "min_mean_roc_auc": 0.54,
+          "min_mean_balanced_accuracy": 0.52,
+          "min_mean_baseline_delta": 0.005,
+          "min_years_roc_auc_above_50": 4,
+          "n_development_years": 5,
+          "require_common_origin_positive": true,
+          "require_non_overlap_above": 0.5,
+          "strong_min_mean_roc_auc": 0.56,
+          "strong_min_mean_balanced_accuracy": 0.54,
+          "strong_min_years_beating_baseline": 4,
+          "max_selected_horizons": 2
+        },
+        "n_development_years": 5,
+        "note": "diagnostic thresholds, not a target; 1D is a CONTROL and is never selected",
+        "model": "LOGISTIC",
+        "horizon": 1,
+        "objective_id": "ABS_DIR_1D_CONTROL"
+      },
+      "3": {
+        "screen_passed": false,
+        "classification": "SCREEN_FAIL",
+        "criteria": {
+          "mean_roc_auc": {
+            "value": 0.5133778507498586,
+            "threshold": 0.54,
+            "passed": false
+          },
+          "mean_balanced_accuracy": {
+            "value": 0.5025637686522035,
+            "threshold": 0.52,
+            "passed": false
+          },
+          "mean_accuracy_delta_vs_train_majority": {
+            "value": 0.0027179498393062216,
+            "threshold": 0.005,
+            "passed": false
+          },
+          "years_roc_auc_above_50": {
+            "value": 3,
+            "threshold": 4,
+            "passed": false
+          },
+          "common_origin_directionally_positive": {
+            "value": 0.0027179498393062216,
+            "threshold": 0.0,
+            "passed": true
+          },
+          "non_overlap_not_chance": {
+            "value": 0.5114612738962577,
+            "threshold": 0.5,
+            "passed": true
+          }
+        },
+        "thresholds": {
+          "min_mean_roc_auc": 0.54,
+          "min_mean_balanced_accuracy": 0.52,
+          "min_mean_baseline_delta": 0.005,
+          "min_years_roc_auc_above_50": 4,
+          "n_development_years": 5,
+          "require_common_origin_positive": true,
+          "require_non_overlap_above": 0.5,
+          "strong_min_mean_roc_auc": 0.56,
+          "strong_min_mean_balanced_accuracy": 0.54,
+          "strong_min_years_beating_baseline": 4,
+          "max_selected_horizons": 2
+        },
+        "n_development_years": 5,
+        "note": "diagnostic thresholds, not a target; 1D is a CONTROL and is never selected",
+        "model": "LOGISTIC",
+        "horizon": 3,
+        "objective_id": "ABS_DIR_3D"
+      },
+      "5": {
+        "screen_passed": false,
+        "classification": "SCREEN_FAIL",
+        "criteria": {
+          "mean_roc_auc": {
+            "value": 0.515501214221909,
+            "threshold": 0.54,
+            "passed": false
+          },
+          "mean_balanced_accuracy": {
+            "value": 0.5027349603185753,
+            "threshold": 0.52,
+            "passed": false
+          },
+          "mean_accuracy_delta_vs_train_majority": {
+            "value": -0.0008802089353047605,
+            "threshold": 0.005,
+            "passed": false
+          },
+          "years_roc_auc_above_50": {
+            "value": 4,
+            "threshold": 4,
+            "passed": true
+          },
+          "common_origin_directionally_positive": {
+            "value": -0.0008802089353047605,
+            "threshold": 0.0,
+            "passed": false
+          },
+          "non_overlap_not_chance": {
+            "value": 0.5232355527166964,
+            "threshold": 0.5,
+            "passed": true
+          }
+        },
+        "thresholds": {
+          "min_mean_roc_auc": 0.54,
+          "min_mean_balanced_accuracy": 0.52,
+          "min_mean_baseline_delta": 0.005,
+          "min_years_roc_auc_above_50": 4,
+          "n_development_years": 5,
+          "require_common_origin_positive": true,
+          "require_non_overlap_above": 0.5,
+          "strong_min_mean_roc_auc": 0.56,
+          "strong_min_mean_balanced_accuracy": 0.54,
+          "strong_min_years_beating_baseline": 4,
+          "max_selected_horizons": 2
+        },
+        "n_development_years": 5,
+        "note": "diagnostic thresholds, not a target; 1D is a CONTROL and is never selected",
+        "model": "LOGISTIC",
+        "horizon": 5,
+        "objective_id": "ABS_DIR_5D"
+      },
+      "10": {
+        "screen_passed": false,
+        "classification": "SCREEN_FAIL",
+        "criteria": {
+          "mean_roc_auc": {
+            "value": 0.505323750152052,
+            "threshold": 0.54,
+            "passed": false
+          },
+          "mean_balanced_accuracy": {
+            "value": 0.49999850003211865,
+            "threshold": 0.52,
+            "passed": false
+          },
+          "mean_accuracy_delta_vs_train_majority": {
+            "value": -0.0071620343740323444,
+            "threshold": 0.005,
+            "passed": false
+          },
+          "years_roc_auc_above_50": {
+            "value": 2,
+            "threshold": 4,
+            "passed": false
+          },
+          "common_origin_directionally_positive": {
+            "value": -0.0071620343740323444,
+            "threshold": 0.0,
+            "passed": false
+          },
+          "non_overlap_not_chance": {
+            "value": 0.4983558583736361,
+            "threshold": 0.5,
+            "passed": false
+          }
+        },
+        "thresholds": {
+          "min_mean_roc_auc": 0.54,
+          "min_mean_balanced_accuracy": 0.52,
+          "min_mean_baseline_delta": 0.005,
+          "min_years_roc_auc_above_50": 4,
+          "n_development_years": 5,
+          "require_common_origin_positive": true,
+          "require_non_overlap_above": 0.5,
+          "strong_min_mean_roc_auc": 0.56,
+          "strong_min_mean_balanced_accuracy": 0.54,
+          "strong_min_years_beating_baseline": 4,
+          "max_selected_horizons": 2
+        },
+        "n_development_years": 5,
+        "note": "diagnostic thresholds, not a target; 1D is a CONTROL and is never selected",
+        "model": "LOGISTIC",
+        "horizon": 10,
+        "objective_id": "ABS_DIR_10D"
+      }
+    },
+    "HIST_GRADIENT_BOOSTING": {
+      "1": {
+        "screen_passed": false,
+        "classification": "SCREEN_FAIL",
+        "criteria": {
+          "mean_roc_auc": {
+            "value": 0.5158568058699671,
+            "threshold": 0.54,
+            "passed": false
+          },
+          "mean_balanced_accuracy": {
+            "value": 0.5102723488323881,
+            "threshold": 0.52,
+            "passed": false
+          },
+          "mean_accuracy_delta_vs_train_majority": {
+            "value": 0.007569158641187545,
+            "threshold": 0.005,
+            "passed": true
+          },
+          "years_roc_auc_above_50": {
+            "value": 5,
+            "threshold": 4,
+            "passed": true
+          },
+          "common_origin_directionally_positive": {
+            "value": 0.007569158641187545,
+            "threshold": 0.0,
+            "passed": true
+          },
+          "non_overlap_not_chance": {
+            "value": 0.5158568058699671,
+            "threshold": 0.5,
+            "passed": true
+          }
+        },
+        "thresholds": {
+          "min_mean_roc_auc": 0.54,
+          "min_mean_balanced_accuracy": 0.52,
+          "min_mean_baseline_delta": 0.005,
+          "min_years_roc_auc_above_50": 4,
+          "n_development_years": 5,
+          "require_common_origin_positive": true,
+          "require_non_overlap_above": 0.5,
+          "strong_min_mean_roc_auc": 0.56,
+          "strong_min_mean_balanced_accuracy": 0.54,
+          "strong_min_years_beating_baseline": 4,
+          "max_selected_horizons": 2
+        },
+        "n_development_years": 5,
+        "note": "diagnostic thresholds, not a target; 1D is a CONTROL and is never selected",
+        "model": "HIST_GRADIENT_BOOSTING",
+        "horizon": 1,
+        "objective_id": "ABS_DIR_1D_CONTROL"
+      },
+      "3": {
+        "screen_passed": false,
+        "classification": "SCREEN_FAIL",
+        "criteria": {
+          "mean_roc_auc": {
+            "value": 0.518818480526263,
+            "threshold": 0.54,
+            "passed": false
+          },
+          "mean_balanced_accuracy": {
+            "value": 0.5046582184710864,
+            "threshold": 0.52,
+            "passed": false
+          },
+          "mean_accuracy_delta_vs_train_majority": {
+            "value": -0.0028824309820454364,
+            "threshold": 0.005,
+            "passed": false
+          },
+          "years_roc_auc_above_50": {
+            "value": 5,
+            "threshold": 4,
+            "passed": true
+          },
+          "common_origin_directionally_positive": {
+            "value": -0.0028824309820454364,
+            "threshold": 0.0,
+            "passed": false
+          },
+          "non_overlap_not_chance": {
+            "value": 0.5111428702628424,
+            "threshold": 0.5,
+            "passed": true
+          }
+        },
+        "thresholds": {
+          "min_mean_roc_auc": 0.54,
+          "min_mean_balanced_accuracy": 0.52,
+          "min_mean_baseline_delta": 0.005,
+          "min_years_roc_auc_above_50": 4,
+          "n_development_years": 5,
+          "require_common_origin_positive": true,
+          "require_non_overlap_above": 0.5,
+          "strong_min_mean_roc_auc": 0.56,
+          "strong_min_mean_balanced_accuracy": 0.54,
+          "strong_min_years_beating_baseline": 4,
+          "max_selected_horizons": 2
+        },
+        "n_development_years": 5,
+        "note": "diagnostic thresholds, not a target; 1D is a CONTROL and is never selected",
+        "model": "HIST_GRADIENT_BOOSTING",
+        "horizon": 3,
+        "objective_id": "ABS_DIR_3D"
+      },
+      "5": {
+        "screen_passed": false,
+        "classification": "SCREEN_FAIL",
+        "criteria": {
+          "mean_roc_auc": {
+            "value": 0.5169834078300171,
+            "threshold": 0.54,
+            "passed": false
+          },
+          "mean_balanced_accuracy": {
+            "value": 0.5042750703002168,
+            "threshold": 0.52,
+            "passed": false
+          },
+          "mean_accuracy_delta_vs_train_majority": {
+            "value": -0.007431188035447245,
+            "threshold": 0.005,
+            "passed": false
+          },
+          "years_roc_auc_above_50": {
+            "value": 5,
+            "threshold": 4,
+            "passed": true
+          },
+          "common_origin_directionally_positive": {
+            "value": -0.007431188035447245,
+            "threshold": 0.0,
+            "passed": false
+          },
+          "non_overlap_not_chance": {
+            "value": 0.525936272589125,
+            "threshold": 0.5,
+            "passed": true
+          }
+        },
+        "thresholds": {
+          "min_mean_roc_auc": 0.54,
+          "min_mean_balanced_accuracy": 0.52,
+          "min_mean_baseline_delta": 0.005,
+          "min_years_roc_auc_above_50": 4,
+          "n_development_years": 5,
+          "require_common_origin_positive": true,
+          "require_non_overlap_above": 0.5,
+          "strong_min_mean_roc_auc": 0.56,
+          "strong_min_mean_balanced_accuracy": 0.54,
+          "strong_min_years_beating_baseline": 4,
+          "max_selected_horizons": 2
+        },
+        "n_development_years": 5,
+        "note": "diagnostic thresholds, not a target; 1D is a CONTROL and is never selected",
+        "model": "HIST_GRADIENT_BOOSTING",
+        "horizon": 5,
+        "objective_id": "ABS_DIR_5D"
+      },
+      "10": {
+        "screen_passed": false,
+        "classification": "SCREEN_FAIL",
+        "criteria": {
+          "mean_roc_auc": {
+            "value": 0.5130827755578901,
+            "threshold": 0.54,
+            "passed": false
+          },
+          "mean_balanced_accuracy": {
+            "value": 0.49962386934263014,
+            "threshold": 0.52,
+            "passed": false
+          },
+          "mean_accuracy_delta_vs_train_majority": {
+            "value": -0.01667083862005353,
+            "threshold": 0.005,
+            "passed": false
+          },
+          "years_roc_auc_above_50": {
+            "value": 5,
+            "threshold": 4,
+            "passed": true
+          },
+          "common_origin_directionally_positive": {
+            "value": -0.01667083862005353,
+            "threshold": 0.0,
+            "passed": false
+          },
+          "non_overlap_not_chance": {
+            "value": 0.5049976432197011,
+            "threshold": 0.5,
+            "passed": true
+          }
+        },
+        "thresholds": {
+          "min_mean_roc_auc": 0.54,
+          "min_mean_balanced_accuracy": 0.52,
+          "min_mean_baseline_delta": 0.005,
+          "min_years_roc_auc_above_50": 4,
+          "n_development_years": 5,
+          "require_common_origin_positive": true,
+          "require_non_overlap_above": 0.5,
+          "strong_min_mean_roc_auc": 0.56,
+          "strong_min_mean_balanced_accuracy": 0.54,
+          "strong_min_years_beating_baseline": 4,
+          "max_selected_horizons": 2
+        },
+        "n_development_years": 5,
+        "note": "diagnostic thresholds, not a target; 1D is a CONTROL and is never selected",
+        "model": "HIST_GRADIENT_BOOSTING",
+        "horizon": 10,
+        "objective_id": "ABS_DIR_10D"
+      }
+    }
+  },
+  "horizons_screen_passing": [],
+  "horizons_strongly_promising": [],
+  "horizon_ranking": [],
+  "selected_neural_horizons": [],
+  "neural_gates": {},
+  "neural_qualified": [],
+  "transformer_delta_by_horizon": {},
+  "return_magnitude_by_horizon": {
+    "1": {
+      "objective_id": "ABS_DIR_1D_CONTROL",
+      "horizon_phrase": "1-trading-day directional accuracy",
+      "abs_future_return_mean": 0.013367557078135157,
+      "abs_future_return_median": 0.00987061674722039,
+      "abs_future_return_std": 0.013237035770276453,
+      "future_return_std": 0.018792433213122507,
+      "class_balance_up_fraction": 0.5055857693085685,
+      "n_observations_used": 50,
+      "note": "analysis only; samples are never filtered on the size of the future move"
+    },
+    "3": {
+      "objective_id": "ABS_DIR_3D",
+      "horizon_phrase": "3-trading-day directional accuracy",
+      "abs_future_return_mean": 0.02370458742106936,
+      "abs_future_return_median": 0.017670786838289758,
+      "abs_future_return_std": 0.02255814013102872,
+      "future_return_std": 0.03260725047807453,
+      "class_balance_up_fraction": 0.5254815885484898,
+      "n_observations_used": 50,
+      "note": "analysis only; samples are never filtered on the size of the future move"
+    },
+    "5": {
+      "objective_id": "ABS_DIR_5D",
+      "horizon_phrase": "5-trading-day directional accuracy",
+      "abs_future_return_mean": 0.030891328339294543,
+      "abs_future_return_median": 0.02335919960755008,
+      "abs_future_return_std": 0.028813484260734566,
+      "future_return_std": 0.04198768973538747,
+      "class_balance_up_fraction": 0.5343716465073381,
+      "n_observations_used": 50,
+      "note": "analysis only; samples are never filtered on the size of the future move"
+    },
+    "10": {
+      "objective_id": "ABS_DIR_10D",
+      "horizon_phrase": "10-trading-day directional accuracy",
+      "abs_future_return_mean": 0.04390164191910737,
+      "abs_future_return_median": 0.03426097731834007,
+      "abs_future_return_std": 0.039591109812799695,
+      "future_return_std": 0.0583742729834658,
+      "class_balance_up_fraction": 0.550273489085624,
+      "n_observations_used": 50,
+      "note": "analysis only; samples are never filtered on the size of the future move"
+    }
+  },
+  "data_access_audit": {
+    "track": "MULTI_HORIZON",
+    "experiment_regime": "PRE_COVID",
+    "regime_label": "PRE_COVID_EXPERIMENTAL_REGIME",
+    "survivorship_bias_label": "SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK",
+    "final_allowed_date": "2019-12-31",
+    "source_store_root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/pre_covid",
+    "source_store_read_only": true,
+    "store_last_feature_date": "2019-12-31",
+    "store_last_target_date": "2019-12-31",
+    "store_sha256": "9ef053533ab05cfe27c919316503f80b4239e7b97a98acda603d98d29d97ce32",
+    "horizon_target_cache": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/multi_horizon/horizon_targets",
+    "target_schema_sha256": "8256cca11e82983747dbc2955ad5b45ae5ec20cf4f3d915980da73805dbf3668",
+    "target_cache_max_target_end_date": "2019-12-31",
+    "max_feature_date_consumed": "2019-12-31",
+    "max_origin_date_consumed": "2018-12-28",
+    "max_target_end_date_consumed": "2018-12-31",
+    "max_target_end_date_in_cache_upto_2018": "2019-01-14",
+    "2019_labels_consumed_during_development": 0,
+    "rows_from_2020_plus_present_in_source_files": 72900,
+    "rows_from_2020_plus_loaded_into_target_cache": 0,
+    "rows_from_2020_plus_consumed_by_any_model": 0,
+    "development_folds_scored": [
+      "MH_DEV_2014",
+      "MH_DEV_2015",
+      "MH_DEV_2016",
+      "MH_DEV_2017",
+      "MH_DEV_2018"
+    ],
+    "lockbox_fold_scored": false,
+    "post_2019_dates_rejected_by_firewall_test": true,
+    "firewall": {
+      "track": "PRE_COVID_MULTI_HORIZON_DIRECTION_TRACK",
+      "regime": "PRE_COVID_EXPERIMENTAL_REGIME",
+      "final_allowed_date": "2019-12-31",
+      "first_forbidden_date": "2020-01-01",
+      "post_covid_error": "PostCovidDataAccessError",
+      "lockbox_env_var": "MULTI_HORIZON_LOCKBOX",
+      "lockbox_fold": "MH_LOCKBOX_2019",
+      "lockbox_year": 2019,
+      "lockbox_error": "MultiHorizonLockboxError",
+      "trading_day_rule": "H counts FUTURE TRADING OBSERVATIONS of the security: the target row is the H-th subsequent row of that security's ordered trading-observation sequence. Weekends and exchange holidays are not observations and are skipped by construction. date + timedelta(days=H) is never used.",
+      "target_equation": "y_H = 1 if log(Close[t+H] / Close[t]) > 0 else 0",
+      "note": "the raw source files still contain 2020-2025 bars; the PRE-COVID source store is physically capped at 2019-12-31 and every horizon target is capped again here, so no post-2019 close can reach a label"
+    },
+    "expectations": {
+      "before_lockbox": {
+        "max_target": "2018-12-31",
+        "2019_labels_consumed": 0,
+        "2020_plus_consumed": 0
+      },
+      "after_legitimate_lockbox": {
+        "max_target": "2019-12-31",
+        "2020_plus_consumed": 0
+      }
+    },
+    "note": "the raw source files still contain 2020-2025 bars; the PRE-COVID store is physically capped at 2019-12-31 and every horizon target is capped again, so no post-2019 close reaches a label"
+  },
+  "frozen_horizon_model": null,
+  "lockbox": null,
+  "recommended_next_action": "ADD_EXOGENOUS_INFORMATION",
+  "multi_horizon_signal": "NONE",
+  "results_root": "/home/iemiedc2026/Documents/Sanket/Research/projects/agentic-forecaster/results/v2/multi_horizon",
+  "runtime_root": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/multi_horizon",
+  "processed_root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/multi_horizon"
+}

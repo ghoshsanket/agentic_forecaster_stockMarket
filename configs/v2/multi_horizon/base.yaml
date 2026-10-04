@@ -1,0 +1,289 @@
+# =============================================================================
+# PRE-COVID MULTI-HORIZON DIRECTION FORECASTING (shared base configuration)
+#
+# MODEL V2 IS NOT THE ORIGINAL PAPER MODEL.
+# Classification: NEW_EXPERIMENTAL_ARCHITECTURE.  See docs/MODEL_V2.md.
+#
+# THIS IS A SEPARATE TRACK.  Nothing here modifies, reinterprets or overwrites
+#   results/v2/                     (ordinary V2)
+#   results/v2/pre_covid/           (the PRE-COVID regime)
+#   the ordinary V2 context store   (.../v2/context_store, ends 2021-12-31)
+#   the PRE-COVID context store     (.../v2/pre_covid/context_store)
+#   the paper reproduction results
+#   the forensic results
+#
+# THE ONE QUESTION
+#   "Does the existing PRE-COVID price-derived dataset contain more predictable
+#    directional information at 3-, 5- or 10-trading-day horizons than at the
+#    one-day horizon?"
+#
+# ONLY THE FORECAST HORIZON CHANGES.
+#   No new external data.  No sentiment.  No news.  No VIX.  No macro.
+#   No new technical indicator.  No context block.  No architecture search.
+#   No hyper-parameter search.  No meta-learning (FiLM / Reptile / MAML /
+#   multi-task) in this programme.
+#
+# DATA REGIME
+#   Strictly PRE-COVID.  The absolute final allowed TARGET date is 2019-12-31.
+#   Nothing from 2020 onward may be used for features, context, scaler fitting,
+#   target generation, training, validation, confidence analysis or model
+#   selection.  Any consumed target_end_date > 2019-12-31 raises
+#   PostCovidDataAccessError immediately.
+#
+# 2019 IS SEALED
+#   Five chronological development folds score 2014-2018.  2019 is read exactly
+#   once by scripts/run_multi_horizon_lockbox.py, which requires BOTH
+#   MULTI_HORIZON_LOCKBOX=1 AND a frozen results/v2/multi_horizon/
+#   frozen_horizon_model.json.
+#
+# HORIZON MEANS TRADING OBSERVATIONS
+#   H counts FUTURE TRADING OBSERVATIONS of the security, never calendar days.
+#   The target row is the H-th subsequent row of that security's ordered trading
+#   sequence, so weekends and exchange holidays are skipped by construction.
+#   date + timedelta(days=H) is never used.
+#
+#   y_H = 1 if log(Close[t+H] / Close[t]) > 0 else 0
+#
+#   ABS_DIR_1D_CONTROL  reproduces the existing one-day y_direction exactly.
+#   ABS_DIR_3D / 5D / 10D are the candidates.  1D is a CONTROL, never a selection.
+#
+# NO FUTURE PATH INFORMATION
+#   For a 10-trading-day target the input still contains data only through t.
+#   The intermediate closes t+1 .. t+H-1 exist only while deriving the label.
+#
+# SURVIVORSHIP BIAS (stated, not hidden):
+#   SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK -- a fixed, later
+#   reconstructed constituent list projected backwards.  Reports say "available
+#   securities from the reconstructed fixed universe", never the historical
+#   index membership on that date.
+# =============================================================================
+
+track: MULTI_HORIZON
+track_label: PRE_COVID_MULTI_HORIZON_DIRECTION_TRACK
+experiment_regime: PRE_COVID
+pre_covid_mode: true
+final_allowed_date: "2019-12-31"
+
+# Track-isolated locations.
+results_root: results/v2/multi_horizon
+runtime_root: ${AGENTIC_OUTPUT_ROOT}/v2/multi_horizon
+processed_root: ${AGENTIC_PROCESSED_DATA_ROOT}/v2/multi_horizon
+
+variant: MULTI_HORIZON_BASE
+fold: MH_DEV_2014
+
+experiment:
+  name: multi_horizon_base
+  seed: 42
+  device: auto
+  classification: NEW_EXPERIMENTAL_ARCHITECTURE
+  is_original_paper_model: false
+  regime_label: PRE_COVID_EXPERIMENTAL_REGIME
+  survivorship_bias_label: SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK
+
+data:
+  dataset_root: ${AGENTIC_DATA_ROOT}/yfinance_paper_snapshot_2025_11_04
+  dataset_variant: adjusted
+  universe_config: configs/nifty50_paper_snapshot_2025_11_04.yaml
+  universe_id: PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE
+  sector_map_csv: ${AGENTIC_PROCESSED_DATA_ROOT}/v2/metadata/sector_map.csv
+  # READ-ONLY source store: the existing PRE-COVID store, physically capped at
+  # 2019-12-31.  This track NEVER rebuilds or writes it.
+  source_store_root: ${AGENTIC_PROCESSED_DATA_ROOT}/v2/pre_covid
+  max_date: "2019-12-31"
+  final_allowed_date: "2019-12-31"
+  # This track's own cache: the 1D/3D/5D/10D target frame.
+  horizon_target_cache: ${AGENTIC_PROCESSED_DATA_ROOT}/v2/multi_horizon/horizon_targets
+  # Stock-only supervision: no context requirement may eliminate a stock-only
+  # sample.
+  use_context: false
+  sequence_length: 60
+  balanced_by_ticker: true
+
+# Horizons under test.  1 is the CONTROL; 3/5/10 are the candidates.
+horizons: [1, 3, 5, 10]
+control_horizon: 1
+candidate_horizons: [3, 5, 10]
+objectives:
+  1: ABS_DIR_1D_CONTROL
+  3: ABS_DIR_3D
+  5: ABS_DIR_5D
+  10: ABS_DIR_10D
+
+# Supervised universe: derived from STOCK-ONLY features, then frozen BEFORE any
+# model runs.  H=10 is the most restrictive horizon, so it establishes the fixed
+# common universe that makes the 1D/3D/5D/10D comparison fair.
+universe:
+  min_train_samples_10d_mh_dev_2014: 1000
+  min_validation_samples_per_year: 180
+  reference_horizon: 10
+  reference_fold: MH_DEV_2014
+  csv: results/v2/multi_horizon/supervised_universe.csv
+  frozen_before_training: true
+
+# Five chronological development folds plus the sealed lockbox.
+folds:
+  MH_DEV_2014:
+    train_start: "2005-01-01"
+    train_end: "2013-12-31"
+    val_start: "2014-01-01"
+    val_end: "2014-12-31"
+    selectable: true
+  MH_DEV_2015:
+    train_start: "2005-01-01"
+    train_end: "2014-12-31"
+    val_start: "2015-01-01"
+    val_end: "2015-12-31"
+    selectable: true
+  MH_DEV_2016:
+    train_start: "2005-01-01"
+    train_end: "2015-12-31"
+    val_start: "2016-01-01"
+    val_end: "2016-12-31"
+    selectable: true
+  MH_DEV_2017:
+    train_start: "2005-01-01"
+    train_end: "2016-12-31"
+    val_start: "2017-01-01"
+    val_end: "2017-12-31"
+    selectable: true
+  MH_DEV_2018:
+    train_start: "2005-01-01"
+    train_end: "2017-12-31"
+    val_start: "2018-01-01"
+    val_end: "2018-12-31"
+    selectable: true
+  MH_LOCKBOX_2019:
+    train_start: "2005-01-01"
+    train_end: "2018-12-31"
+    val_start: "2019-01-01"
+    val_end: "2019-12-31"
+    selectable: false
+    note: >-
+      The single sealed lockbox. Requires MULTI_HORIZON_LOCKBOX=1 AND a frozen
+      frozen_horizon_model.json. Never read during horizon or model selection.
+
+development_folds: [MH_DEV_2014, MH_DEV_2015, MH_DEV_2016, MH_DEV_2017, MH_DEV_2018]
+
+# Stage 1: the cheap screen.  Fixed deterministic settings, no search.
+screen:
+  models: [LOGISTIC, HIST_GRADIENT_BOOSTING]
+  logistic:
+    C: 1.0
+    max_iter: 2000
+    solver: lbfgs
+    penalty: l2
+    random_state: 42
+    scaler: StandardScaler
+    scaler_fit_on: TRAIN_ONLY
+  hist_gradient_boosting:
+    loss: log_loss
+    learning_rate: 0.05
+    max_iter: 200
+    max_leaf_nodes: 31
+    min_samples_leaf: 50
+    l2_regularization: 1.0
+    max_bins: 255
+    early_stopping: false
+    random_state: 42
+
+# Unchanged V2-A / V2-B architecture parameters.  No tuning.
+model:
+  hidden_size: 96
+  lstm_layers: 2
+  lstm_dropout: 0.20
+  context_dim: 32
+  d_model: 64
+  fusion_temporal_dim: 64
+  transformer_layers: 2
+  n_heads: 4
+  dim_feedforward: 128
+  transformer_dropout: 0.10
+  max_sequence_length: 128
+  ticker_embedding_dim: 16
+  sector_embedding_dim: 8
+  regime_embedding_dim: 16
+  regime_hidden: 32
+  fusion_hidden: 128
+  z_dim: 64
+  fusion_dropout: 0.10
+  head_hidden: 32
+
+# Direction head only.
+loss:
+  direction: 1.00
+  return: 0.00
+  rank: 0.00
+
+training:
+  optimizer: AdamW
+  learning_rate: 0.0003
+  beta1: 0.9
+  beta2: 0.999
+  weight_decay: 0.0001
+  batch_size: 256
+  max_epochs: 30
+  early_stopping_patience: 6
+  gradient_clip_norm: 1.0
+  balanced_by_ticker: true
+  use_amp: false
+  num_workers: 0
+  seed: 42
+
+evaluation:
+  ece_bins: 10
+  coverage_levels: [1.0, 0.75, 0.5, 0.3, 0.2, 0.1]
+  # Overlapping multi-day targets: report both the ALL-ORIGINS and the
+  # NON-OVERLAPPING (origins spaced >= H trading observations) views.
+  non_overlap_spacing_trading_observations: horizon
+  # Block-aware uncertainty, never an IID bootstrap over overlapping rows.
+  bootstrap:
+    method: circular_moving_block_over_trading_dates
+    block_length_dates: 21
+    n_bootstrap: 400
+    seed: 42
+    metrics: [accuracy, roc_auc]
+  # A selective result counts only with coverage >= 20% AND n >= 500.
+  min_meaningful_coverage: 0.20
+  min_meaningful_observations: 500
+  coverage_accuracy_targets: [0.60, 0.62, 0.65]
+
+# Horizon screening gate (section 18).  Diagnostic thresholds, NOT a 65% target.
+horizon_gate:
+  min_mean_roc_auc: 0.54
+  min_mean_balanced_accuracy: 0.52
+  min_mean_baseline_delta: 0.005
+  min_years_roc_auc_above_50: 4
+  n_development_years: 5
+  require_common_origin_positive: true
+  require_non_overlap_above: 0.50
+  strong_min_mean_roc_auc: 0.56
+  strong_min_mean_balanced_accuracy: 0.54
+  strong_min_years_beating_baseline: 4
+  max_selected_horizons: 2
+
+# Neural signal gate (section 26).  65% is NOT required.
+neural_gate:
+  min_mean_roc_auc: 0.55
+  min_mean_balanced_accuracy: 0.53
+  min_mean_accuracy_delta: 0.01
+  min_years_positive_baseline_delta: 4
+  min_year_roc_auc: 0.49
+  preferred_min_mean_roc_auc: 0.57
+  preferred_min_mean_macro_accuracy: 0.55
+
+# Seed stability (section 29).  UNSTABLE blocks the lockbox.
+seed_stability:
+  seeds: [11, 42, 73]
+  lockbox_seed: 42
+  max_macro_std: 0.015
+
+# The single recommended next action is reported, never executed.
+next_actions:
+  3: USE_3_DAY_DIRECTION
+  5: USE_5_DAY_DIRECTION
+  10: USE_10_DAY_DIRECTION
+  none: ADD_EXOGENOUS_INFORMATION
+
+# Final signal line vocabulary.
+signal_vocabulary: [NONE, WEAK, PROMISING, STRONG]

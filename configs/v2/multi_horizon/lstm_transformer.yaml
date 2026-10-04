@@ -1,0 +1,38 @@
+# PRE-COVID MULTI-HORIZON -- STAGE 2, NEURAL N2: shared LSTM + Transformer.
+#
+# The EXISTING V2-B architecture, unchanged:
+#   LSTM hidden sequence -> projection -> 2-layer Transformer -> attention pooling
+#   + residual final LSTM state -> direction head.
+#
+# Same fixed parameters as the existing V2-B.  No architecture redesign, and no
+# context block: N2 - N1 is the only difference measured.
+base: base.yaml
+
+variant: MULTI_HORIZON_LSTM_TRANSFORMER
+
+model:
+  screen_model: null
+  use_transformer: true
+  use_context: false
+  use_sector_embedding: false
+  use_regime: false
+  use_multitask: false
+  use_film: false
+  use_adapter: false
+
+neural_model:
+  name: LSTM_TRANSFORMER
+  label: N2 shared LSTM + Transformer (unchanged V2-B architecture)
+  architecture:
+    temporal_encoder: shared unidirectional LSTM hidden_size 96, layers 2, dropout 0.20
+    projection_to_d_model: 64
+    transformer_layers: 2
+    n_heads: 4
+    dim_feedforward: 128
+    transformer_dropout: 0.10
+    pooling: attention
+    residual: final LSTM state
+    ticker_embedding: 16
+    sequence_length: 60
+    head: direction only
+  tuned: false

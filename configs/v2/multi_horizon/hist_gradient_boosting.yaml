@@ -1,0 +1,30 @@
+# PRE-COVID MULTI-HORIZON -- STAGE 1, MODEL 2: HistGradientBoostingClassifier.
+#
+# A non-linear, fixed-settings counterpart to the logistic probe: if directional
+# information exists in the stationary features but is not linear, a tree ensemble
+# can expose it cheaply.  These settings are recorded in every manifest and are NOT
+# searched.
+base: base.yaml
+
+variant: MULTI_HORIZON_HGB
+
+model:
+  screen_model: HIST_GRADIENT_BOOSTING
+
+screen_model:
+  name: HIST_GRADIENT_BOOSTING
+  kind: sklearn.ensemble.HistGradientBoostingClassifier
+  loss: log_loss
+  learning_rate: 0.05
+  max_iter: 200
+  max_leaf_nodes: 31
+  min_samples_leaf: 50
+  l2_regularization: 1.0
+  max_bins: 255
+  early_stopping: false
+  random_state: 42
+  preprocessing:
+    scaler: null
+    fit_on: NOT_APPLICABLE_TREE_MODEL
+    note: a tree ensemble needs no standardisation; no scaler is fitted at all
+  tuned: false

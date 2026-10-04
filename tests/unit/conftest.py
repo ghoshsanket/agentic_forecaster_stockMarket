@@ -20,6 +20,15 @@ from agentic_forecaster.v2 import features as feat
 from agentic_forecaster.v2.dataset import FeatureArrays, SampleTable, build_sample_table
 from agentic_forecaster.v2.sectors import SECTOR_MAP_COLUMNS, SectorMap
 
+from .multi_horizon_fixtures import (
+    MH_TICKERS,
+    make_horizon_arrays,
+    make_horizon_targets,
+    make_predictions,
+    make_sector_map,
+    multi_year_dates,
+    write_source_tree,
+)
 from .v2_fixtures import (
     LATE_OFFSET,
     LATE_TICKER,
@@ -127,3 +136,39 @@ def targets_fixture(targets: pd.DataFrame) -> pd.DataFrame:
 def samples(arrays: FeatureArrays, targets: pd.DataFrame) -> SampleTable:
     return build_sample_table(arrays, targets, sequence_length=SEQUENCE_LENGTH,
                              require_targets=["y_direction", "y_return", "y_rank"])
+
+
+@pytest.fixture
+def mh_source(tmp_path):
+    """A synthetic parquet source tree with weekends AND a holiday week."""
+    return write_source_tree(tmp_path)
+
+
+@pytest.fixture
+def mh_dates():
+    return multi_year_dates()
+
+
+@pytest.fixture
+def mh_sector_map():
+    return make_sector_map()
+
+
+@pytest.fixture
+def mh_arrays():
+    return make_horizon_arrays()
+
+
+@pytest.fixture
+def mh_targets():
+    return make_horizon_targets()
+
+
+@pytest.fixture
+def mh_predictions():
+    return make_predictions()
+
+
+@pytest.fixture
+def mh_tickers() -> tuple[str, ...]:
+    return MH_TICKERS

@@ -1,0 +1,30 @@
+# PRE-COVID MULTI-HORIZON -- STAGE 1, MODEL 1: LogisticRegression.
+#
+# The cheapest possible directional probe of the EXISTING stationary stock
+# features.  Its purpose is to answer "is there ANY linear signal at this
+# horizon?" before any sequence model is trained, NOT to be beaten.
+#
+# Deterministic and untuned: C=1.0, lbfgs, max_iter=2000, fixed seed.
+# The StandardScaler is fitted on TRAIN ROWS ONLY.
+base: base.yaml
+
+variant: MULTI_HORIZON_LOGISTIC
+
+model:
+  screen_model: LOGISTIC
+
+screen_model:
+  name: LOGISTIC
+  kind: sklearn.linear_model.LogisticRegression
+  C: 1.0
+  max_iter: 2000
+  solver: lbfgs
+  penalty: l2
+  random_state: 42
+  preprocessing:
+    scaler: StandardScaler
+    fit_on: TRAIN_ONLY
+    note: >-
+      Fitted on the TRAIN origin rows of this fold only, then applied unchanged to
+      the validation year.  No validation row ever influences a fitted parameter.
+  tuned: false

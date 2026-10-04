@@ -371,3 +371,48 @@ Engineering requirements for that future track:
 3. its own firewall and ledger, exactly as the PRE-COVID track has its own;
 4. an honest comparison against the PRE-COVID model on the SAME dates, reported
    as two regimes rather than as one time series.
+
+---
+
+## 15. The MULTI-HORIZON track: does a longer horizon help?
+
+**Separate track.** `configs/v2/multi_horizon/`, `results/v2/multi_horizon/`,
+`$AGENTIC_OUTPUT_ROOT/v2/multi_horizon/`,
+`$AGENTIC_PROCESSED_DATA_ROOT/v2/multi_horizon/`. The ordinary V2 store, the
+PRE-COVID store, both their ledgers, the paper reproduction and the forensic
+results are never written by this track.
+
+The PRE-COVID programme found only a weak one-day edge, so this track changes
+**only the forecast horizon** and asks:
+
+> "Does the existing PRE-COVID price-derived dataset contain more predictable
+> directional information at 3-, 5- or 10-trading-day horizons than at the
+> one-day horizon?"
+
+| objective | horizon | label |
+|---|---|---|
+| `ABS_DIR_1D_CONTROL` | 1 | `y = 1 if log(Close[t+1]/Close[t]) > 0` (**CONTROL**) |
+| `ABS_DIR_3D` | 3 | `y = 1 if log(Close[t+3]/Close[t]) > 0` |
+| `ABS_DIR_5D` | 5 | `y = 1 if log(Close[t+5]/Close[t]) > 0` |
+| `ABS_DIR_10D` | 10 | `y = 1 if log(Close[t+10]/Close[t]) > 0` |
+
+`H` counts **future trading observations** of that security, taken from its own
+ordered trading rows, so weekends and exchange holidays are skipped by
+construction; `date + timedelta(days=H)` is never used. `ABS_DIR_1D_CONTROL` is
+asserted in code to reproduce the existing `y_direction` **exactly** (label, target
+date and return) on all 198,746 shared keys. A 10-day label therefore describes
+whether `Close[t+10]` is above or below `Close[t]`, and is never reported as
+"next-day accuracy".
+
+Five chronological development folds (2014-2018) with a sealed 2019 lockbox; the
+absolute final allowed target date is `2019-12-31` and a December-2019 origin whose
+multi-day target would land in 2020 is dropped. Stage 1 screens fixed Logistic and
+HistGradientBoosting models; stage 2 (shared LSTM, LSTM+Transformer) runs **only**
+for a horizon that screen-passes, so no compute is spent on a horizon the evidence
+has already rejected.
+
+**Outcome: no 3D/5D/10D horizon screen-passed.** Mean ROC-AUC stayed between 0.505
+and 0.519 and mean balanced accuracy at ~0.50 for every horizon and both models;
+accuracy above the train-majority baseline at 5D/10D is class imbalance, not
+directional skill. Recommended next action: `ADD_EXOGENOUS_INFORMATION`. See
+`results/v2/multi_horizon/MULTI_HORIZON_REPORT.md`.

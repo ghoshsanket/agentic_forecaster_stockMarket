@@ -1,0 +1,58 @@
+{
+  "track": "MULTI_HORIZON",
+  "experiment_regime": "PRE_COVID",
+  "regime_label": "PRE_COVID_EXPERIMENTAL_REGIME",
+  "survivorship_bias_label": "SURVIVORSHIP_BIASED_FIXED_UNIVERSE_RESEARCH_TRACK",
+  "final_allowed_date": "2019-12-31",
+  "source_store_root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/pre_covid",
+  "source_store_read_only": true,
+  "store_last_feature_date": "2019-12-31",
+  "store_last_target_date": "2019-12-31",
+  "store_sha256": "9ef053533ab05cfe27c919316503f80b4239e7b97a98acda603d98d29d97ce32",
+  "horizon_target_cache": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/multi_horizon/horizon_targets",
+  "target_schema_sha256": "8256cca11e82983747dbc2955ad5b45ae5ec20cf4f3d915980da73805dbf3668",
+  "target_cache_max_target_end_date": "2019-12-31",
+  "max_feature_date_consumed": "2019-12-31",
+  "max_origin_date_consumed": "2018-12-28",
+  "max_target_end_date_consumed": "2018-12-31",
+  "max_target_end_date_in_cache_upto_2018": "2019-01-14",
+  "2019_labels_consumed_during_development": 0,
+  "rows_from_2020_plus_present_in_source_files": 72900,
+  "rows_from_2020_plus_loaded_into_target_cache": 0,
+  "rows_from_2020_plus_consumed_by_any_model": 0,
+  "development_folds_scored": [
+    "MH_DEV_2014",
+    "MH_DEV_2015",
+    "MH_DEV_2016",
+    "MH_DEV_2017",
+    "MH_DEV_2018"
+  ],
+  "lockbox_fold_scored": false,
+  "post_2019_dates_rejected_by_firewall_test": true,
+  "firewall": {
+    "track": "PRE_COVID_MULTI_HORIZON_DIRECTION_TRACK",
+    "regime": "PRE_COVID_EXPERIMENTAL_REGIME",
+    "final_allowed_date": "2019-12-31",
+    "first_forbidden_date": "2020-01-01",
+    "post_covid_error": "PostCovidDataAccessError",
+    "lockbox_env_var": "MULTI_HORIZON_LOCKBOX",
+    "lockbox_fold": "MH_LOCKBOX_2019",
+    "lockbox_year": 2019,
+    "lockbox_error": "MultiHorizonLockboxError",
+    "trading_day_rule": "H counts FUTURE TRADING OBSERVATIONS of the security: the target row is the H-th subsequent row of that security's ordered trading-observation sequence. Weekends and exchange holidays are not observations and are skipped by construction. date + timedelta(days=H) is never used.",
+    "target_equation": "y_H = 1 if log(Close[t+H] / Close[t]) > 0 else 0",
+    "note": "the raw source files still contain 2020-2025 bars; the PRE-COVID source store is physically capped at 2019-12-31 and every horizon target is capped again here, so no post-2019 close can reach a label"
+  },
+  "expectations": {
+    "before_lockbox": {
+      "max_target": "2018-12-31",
+      "2019_labels_consumed": 0,
+      "2020_plus_consumed": 0
+    },
+    "after_legitimate_lockbox": {
+      "max_target": "2019-12-31",
+      "2020_plus_consumed": 0
+    }
+  },
+  "note": "the raw source files still contain 2020-2025 bars; the PRE-COVID store is physically capped at 2019-12-31 and every horizon target is capped again, so no post-2019 close reaches a label"
+}
