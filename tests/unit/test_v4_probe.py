@@ -133,14 +133,23 @@ def test_alias_cannot_map_to_two_current_tickers(registry: dict) -> None:
 
 
 def test_unresolved_tickers_are_excluded_not_guessed(registry: dict) -> None:
-    """A ticker with no lineage evidence must be UNRESOLVED, never guessed."""
+    """The INVARIANT holds regardless of how many are unresolved.
+
+    Previously 26 tickers were UNRESOLVED. They are now resolved from the official
+    NSE name, but the guarantee must not regress: any ticker that ever fails to
+    resolve must carry no name at all rather than a plausible guess.
+    """
     unresolved = [c for c in registry["companies"]
                   if c["resolution_status"] == "UNRESOLVED"]
-    assert unresolved, "expected some unresolved tickers in this fixture"
     for company in unresolved:
         assert company["canonical_company_name"] is None
         assert company["auto_match_eligible"] is False
         assert company["aliases"] == []
+    assert registry["n_resolved"] >= 25, (
+        "V4 policy requires at least 25 sentiment-eligible companies before "
+        "model screening")
+    assert registry["n_resolved"] + registry["n_unresolved"] == \
+        registry["n_tickers"] == 42
 
 
 def test_registry_covers_exactly_the_supervised_universe(registry: dict) -> None:

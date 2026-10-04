@@ -1,201 +1,264 @@
-"""Probe Media Cloud BEFORE building any V4 dataset.
+"""Probe Media Cloud coverage BEFORE downloading any V4 corpus.
 
-WHAT THIS DOES
---------------
-1. Establishes reachability of the real API surface (an anonymous request must
-   return a JSON auth error, not an HTML page -- that distinction is what proves
-   the endpoint exists).
-2. Establishes whether a credential is available.  It is read from
-   ``$RESEARCH_ROOT/secrets`` or the environment and is NEVER printed, logged or
-   written to any artifact.
-3. If a credential exists, measures what §2 asks for, per year and per company:
-   result count, earliest publish date, latest publish date, unique domains and
-   the number of days with matches.
-4. Writes ``mediacloud_probe.csv`` and ``MEDIACLOUD_PROBE.md``.
+SEQUENCED GATES
+---------------
+1. Reachability of the real JSON API (anonymous 401, not an HTML shell).
+2. Credential presence, file permissions, and validation via ``auth/profile``.
+3. Request budget, written to ``request_plan.json`` BEFORE any real query.
+4. Collection discovery, so an India/financial-media collection can be frozen
+   rather than searching the whole global archive blindly.
+5. Date-aware coverage probe over the alias registry.
+6. Title-explicit feasibility probe.
 
-It downloads no corpus. If the credential is missing, every measurement row is
-recorded as ``BLOCKED_NO_CREDENTIAL`` rather than being silently omitted, because
-a missing measurement must never be mistaken for zero coverage.
+DISCIPLINES ENFORCED HERE
+-------------------------
+* The token is never printed, logged, or written to any artifact. Only its
+  provenance and a PASS/FAIL validation result are recorded.
+* With no token, NO authenticated call is attempted at all. Every planned
+  query-year is recorded as ``BLOCKED_NO_CREDENTIAL``, never as zero coverage.
+* Coverage uses only ``total-count`` and ``count-over-time``. ``story-list`` is
+  not called during the probe: it is the expensive endpoint and is only
+  warranted once feasibility has already passed.
+* Queries are alias-validity-aware, so a renamed company is never searched under
+  a name it did not yet use.
+* 429 and transient 5xx are retried with bounded exponential backoff.
 """
 
 from __future__ import annotations
 
 import csv
 import json
+import os
+import stat
 import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import date
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
+import yaml
+
 from agentic_forecaster.config import load_config
 from agentic_forecaster.v4 import V4Track, secrets_root
+from agentic_forecaster.v4.queries import RetryPolicy, build_plan
 
 REGISTRY = REPO / "configs" / "v4" / "source_registry.yaml"
+ALIASES = REPO / "configs" / "v4" / "company_aliases.yaml"
 TIMEOUT = 60
-USER_AGENT = "mediacloud-probe/1.0 (V4 source feasibility probe)"
+USER_AGENT = "mediacloud-probe/2.0 (V4 source feasibility probe)"
+YEARS = [2013, 2014, 2015, 2016, 2017, 2018]
 
 COLUMNS = [
-    "source_id", "query_id", "ticker", "year", "query_expression",
-    "alias_provenance", "alias_confidence", "result_count",
-    "earliest_publish_date", "latest_publish_date", "unique_domains",
-    "days_with_matches", "status", "detail",
+    "ticker", "year", "window_start", "window_end", "alias_used",
+    "alias_class", "query_expression", "title_only",
+    "general_count", "title_explicit_count", "earliest_publish_date",
+    "latest_publish_date", "days_with_matches", "unique_domains",
+    "status", "detail",
 ]
 
 
-def _resolve_token() -> tuple[str | None, str]:
-    """Return ``(token, provenance)`` without ever exposing the value."""
-    import os
+class CredentialError(RuntimeError):
+    """Raised when a credential exists but is unusable or unsafe."""
 
+
+def resolve_token() -> tuple[str | None, str, str]:
+    """Return ``(token, provenance, permissions_note)`` without leaking it."""
     env = os.environ.get("MEDIACLOUD_API_TOKEN")
     if env and env.strip():
-        return env.strip(), "environment:MEDIA_CLOUD_API_TOKEN"
+        return env.strip(), "environment:MEDIACloud_TOKEN", "env (not a file)"
+
     candidate = secrets_root() / "mediacloud_token"
-    if candidate.exists():
-        token = candidate.read_text().strip()
-        if token:
-            return token, f"file:{candidate}"
-    return None, "absent"
+    if not candidate.exists():
+        return None, "absent", "no token file"
+    token = candidate.read_text().strip()
+    if not token:
+        return None, "empty", "token file exists but is empty"
+
+    mode = stat.S_IMODE(candidate.stat().st_mode)
+    if mode & 0o077:
+        raise CredentialError(
+            f"{candidate} is mode {mode:04o}; a credential file must be 0600 "
+            f"because any local user could otherwise read it")
+    return token, f"file:{candidate}", f"mode {mode:04o}"
 
 
-def _get(base: str, endpoint: str, params: dict,
-         token: str | None) -> tuple[int, dict | str]:
-    """One GET. Returns ``(status, parsed_json_or_text)``; never raises."""
+def _get(base: str, endpoint: str, params: dict, token: str | None, *,
+         retry: RetryPolicy | None = None) -> tuple[int, object]:
+    """One GET with bounded backoff. Returns ``(status, json_or_text)``."""
     url = base + endpoint
     if params:
         url += "?" + urllib.parse.urlencode(params, doseq=True)
     headers = {"Accept": "application/json", "User-Agent": USER_AGENT}
     if token:
         headers["Authorization"] = f"Token {token}"
-    request = urllib.request.Request(url, headers=headers)
+
+    def _call() -> tuple[int, object]:
+        request = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
+                status = response.status
+                body = response.read().decode("utf-8", "replace")
+        except urllib.error.HTTPError as exc:
+            status, body = exc.code, exc.read().decode("utf-8", "replace")
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            # A transport failure must be reported, never raised: an unreachable
+            # archive is a probe finding, not a crash.
+            return 0, f"transport-error: {type(exc).__name__}: {exc}"
+        try:
+            return status, json.loads(body)
+        except json.JSONDecodeError:
+            return status, body
+
+    if retry is None:
+        return _call()
     try:
-        with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
-            body = response.read().decode("utf-8", "replace")
-            status = response.status
-    except urllib.error.HTTPError as exc:
-        status, body = exc.code, exc.read().decode("utf-8", "replace")
-    except (urllib.error.URLError, TimeoutError, OSError) as exc:
-        return 0, f"transport-error: {type(exc).__name__}"
-    try:
-        return status, json.loads(body)
-    except json.JSONDecodeError:
-        return status, body
+        return retry.run(_call)
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError,
+            RuntimeError) as exc:
+        return 0, f"request-failed-after-retries: {type(exc).__name__}"
 
 
-def _json_api_alive(base: str) -> tuple[bool, str]:
+def api_surface_alive(base: str) -> tuple[bool, str]:
     """An anonymous call must return a JSON auth error, not the SPA shell."""
     status, payload = _get(base, "search/total-count",
                            {"query": '"Reliance Industries"',
                             "start_date": "20150101", "end_date": "20150131"},
                            token=None)
+    if status == 0:
+        return False, str(payload)[:160]
     if isinstance(payload, dict) and "detail" in payload:
-        return True, f"HTTP {status} JSON {json.dumps(payload)[:120]}"
+        return True, f"HTTP {status} JSON {json.dumps(payload)[:110]}"
     if isinstance(payload, str) and payload.lstrip().startswith("<"):
-        return False, (f"HTTP {status} returned an HTML page, not the JSON API "
-                       f"(endpoint surface not served)")
-    return False, f"HTTP {status} unexpected payload: {str(payload)[:120]}"
+        return False, (f"HTTP {status} returned HTML, not the JSON API")
+    return False, f"HTTP {status} unexpected: {str(payload)[:110]}"
 
 
-def _probe_year(base: str, token: str, query: str, year: int) -> dict:
-    """Count, coverage and domain statistics for one query-year."""
-    start, end = date(year, 1, 1), date(year, 12, 31)
-    common = {"query": query, "start_date": start.strftime("%Y%m%d"),
-              "end_date": end.strftime("%Y%m%d")}
-
-    status, total = _get(base, "search/total-count", common, token)
-    if status != 200 or not isinstance(total, dict) or "count" not in total:
-        detail = (f"total-count failed HTTP {status}: {str(total)[:120]}")
-        return {"result_count": None, "earliest_publish_date": None,
-                "latest_publish_date": None, "unique_domains": None,
-                "days_with_matches": None, "status": "QUERY_FAILED",
-                "detail": detail}
-
-    _, counts = _get(base, "search/count-over-time",
-                     dict(common, interval="daily"), token)
-    days = None
-    if isinstance(counts, dict):
-        series = (counts.get("count_over_time") or {}).get("counts") or []
-        days = sum(1 for point in series if (point.get("count") or 0) > 0)
-
-    _, sources = _get(base, "search/count-by-source-week", common, token)
-    domains = None
-    if isinstance(sources, dict):
-        buckets = sources.get("counts") or sources.get("by_source") or []
-        names = {str(b.get("source_name") or b.get("domain") or "").strip()
-                 for b in buckets if isinstance(b, dict)}
-        domains = len({n for n in names if n}) or None
-
-    earliest = latest = None
-    for sort_order, assign in (("asc", "first"), ("desc", "last")):
-        _, listed = _get(base, "search/story-list",
-                         dict(common, sort_order=sort_order, page_size=10), token)
-        if isinstance(listed, dict):
-            stories = listed.get("stories") or []
-            dates = [str(s.get("publish_date") or "")[:10] for s in stories
-                     if s.get("publish_date")]
-            if dates:
-                if assign == "first":
-                    earliest = min(dates)
-                else:
-                    latest = max(dates)
-
-    return {"result_count": total.get("count"), "earliest_publish_date": earliest,
-            "latest_publish_date": latest, "unique_domains": domains,
-            "days_with_matches": days, "status": "OK", "detail": ""}
+def probe_collections(base: str, token: str) -> list[dict]:
+    """Discover India / business-news collections to freeze by ID."""
+    found: list[dict] = []
+    for name in ("india", "indian", "business", "financial", "market"):
+        status, payload = _get(base, "sources/collections/",
+                               {"name": name, "page_size": 50}, token,
+                               retry=RetryPolicy())
+        if status == 200 and isinstance(payload, dict):
+            for row in payload.get("results") or []:
+                found.append({
+                    "collection_id": row.get("id") or row.get("collection_id"),
+                    "label": row.get("label") or row.get("name"),
+                    "source_count": row.get("story_count") or row.get("source_count"),
+                    "notes": f"matched on name~{name}",
+                })
+    seen: set[object] = set()
+    unique = []
+    for row in found:
+        if row["collection_id"] in seen:
+            continue
+        seen.add(row["collection_id"])
+        unique.append(row)
+    return unique
 
 
 def main() -> int:
     config = load_config(REGISTRY)
     track = V4Track()
     track.results_root.mkdir(parents=True, exist_ok=True)
-    sources = {s["source_id"]: s for s in config["sources"]}
-    primary = sources["MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE"]
+    primary = {s["source_id"]: s for s in config["sources"]}[
+        "MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE"]
     base = str(primary["base_url"])
-    plan = config["mediacloud_probe"]
 
-    alive, evidence = _json_api_alive(base)
-    token, provenance = _resolve_token()
-    print(f"Media Cloud API surface alive : {alive}")
-    print(f"  evidence                   : {evidence}")
-    print(f"credential available          : {bool(token)} ({provenance})")
+    aliases_doc = yaml.safe_load(ALIASES.read_text())
+    companies = [c for c in aliases_doc["companies"] if c["auto_match_eligible"]]
+
+    alive, evidence = api_surface_alive(base)
+    print(f"Media Cloud JSON API surface alive : {alive}")
+    print(f"  evidence                         : {evidence}")
+
+    token_error = ""
+    try:
+        token, provenance, permissions = resolve_token()
+    except CredentialError as exc:
+        token, provenance, permissions = None, "rejected", str(exc)
+        token_error = str(exc)
+    print(f"credential available               : {bool(token)} ({provenance})")
+
+    profile_status, profile_payload = (0, "not attempted (no credential)")
+    if token:
+        profile_status, profile_payload = _get(base, "auth/profile", {}, token,
+                                               retry=RetryPolicy())
+    print(f"auth/profile                       : HTTP {profile_status}")
+
+    plan = build_plan(companies, YEARS, title_only=False)
+    title_plan = build_plan(companies, YEARS, title_only=True)
+    plan["title_explicit_plan"] = {
+        "n_query_windows": title_plan["n_query_windows"],
+        "note": title_plan["estimated_calls"],
+    }
+    plan["collections_probe_calls"] = 5
+    plan_path = track.results_root / "request_plan.json"
+    plan_path.write_text(json.dumps(plan, indent=2))
+    print(f"request plan                       : {plan['estimated_calls']}")
+    print(f"wrote {plan_path}")
+
+    collections: list[dict] = []
+    if token:
+        collections = probe_collections(base, token)
+        print(f"collections matched                : {len(collections)}")
 
     rows: list[dict] = []
-    auth_detail = ""
-    if alive and token:
-        status, profile = _get(base, "auth/profile", {}, token)
-        auth_detail = f"auth/profile HTTP {status}"
-        if status != 200:
-            token, provenance = None, "rejected_by_api"
-            auth_detail += f" {str(profile)[:120]}"
 
-    queries = [(c["ticker"], c["query_id"] if "query_id" in c else c["ticker"],
-                c["query"], c["alias_provenance"], c["alias_confidence"])
-               for c in plan["pilot_companies"]]
-    queries += [(None, b["query_id"], b["query"], "broad_query", "n/a")
-                for b in plan["broad_queries"]]
+    def _blank(ticker: str, window: dict, status: str, detail: str) -> dict:
+        return {
+            "ticker": ticker, "year": window["year"],
+            "window_start": window["start"], "window_end": window["end"],
+            "alias_used": window["alias"], "alias_class": window["alias_class"],
+            "query_expression": window["query"],
+            "title_only": window["title_only"],
+            "general_count": None, "title_explicit_count": None,
+            "earliest_publish_date": None, "latest_publish_date": None,
+            "days_with_matches": None, "unique_domains": None,
+            "status": status, "detail": detail,
+        }
 
-    for ticker, query_id, query, alias_prov, alias_conf in queries:
-        for year in plan["years"]:
-            row = {"source_id": primary["source_id"], "query_id": query_id,
-                   "ticker": ticker or "", "year": year,
-                   "query_expression": query, "alias_provenance": alias_prov,
-                   "alias_confidence": alias_conf, "result_count": None,
-                   "earliest_publish_date": None, "latest_publish_date": None,
-                   "unique_domains": None, "days_with_matches": None,
-                   "status": "", "detail": ""}
-            if not alive:
-                row["status"] = "API_SURFACE_UNREACHABLE"
-                row["detail"] = evidence
-            elif not token:
-                row["status"] = "BLOCKED_NO_CREDENTIAL"
-                row["detail"] = (f"no Media Cloud token ({provenance}); coverage "
-                                 f"cannot be measured and is NOT zero")
-            else:
-                row.update(_probe_year(base, token, query, year))
+    for window in plan["queries"]:
+        if not alive:
+            rows.append(_blank(window["ticker"], window, "API_SURFACE_UNREACHABLE",
+                               evidence))
+        elif not token:
+            rows.append(_blank(window["ticker"], window, "BLOCKED_NO_CREDENTIAL",
+                               f"no Media Cloud token ({provenance}); coverage "
+                               f"unknown and NOT zero"))
+        else:
+            params = {"query": window["query"],
+                      "start_date": window["start"].replace("-", ""),
+                      "end_date": window["end"].replace("-", "")}
+            status, total = _get(base, "search/total-count", params, token,
+                                 retry=RetryPolicy())
+            if status != 200 or not isinstance(total, dict):
+                rows.append(_blank(window["ticker"], window, "QUERY_FAILED",
+                                   f"total-count HTTP {status}"))
+                continue
+            _, over_time = _get(base, "search/count-over-time",
+                                dict(params, interval="daily"), token,
+                                retry=RetryPolicy())
+            days = None
+            if isinstance(over_time, dict):
+                series = (over_time.get("count_over_time") or {}).get("counts") or []
+                days = sum(1 for point in series if (point.get("count") or 0) > 0)
+            _, title_total = _get(
+                base, "search/total-count",
+                dict(params, query=window["query"].replace(
+                    '"', 'article_title:"', 1)), token, retry=RetryPolicy())
+            title_count = (title_total.get("total")
+                           if isinstance(title_total, dict) else None)
+            row = _blank(window["ticker"], window, "OK", "")
+            row.update({
+                "general_count": total.get("count"),
+                "title_explicit_count": title_count,
+                "days_with_matches": days,
+            })
             rows.append(row)
 
     csv_path = track.path("mediacloud_probe_csv")
@@ -204,11 +267,17 @@ def main() -> int:
         writer.writeheader()
         writer.writerows(rows)
 
-    blocked = sum(1 for r in rows if r["status"] == "BLOCKED_NO_CREDENTIAL")
     measured = [r for r in rows if r["status"] == "OK"]
-    years_measured = sorted({r["year"] for r in measured})
-    earliest = min((r["earliest_publish_date"] for r in measured
-                    if r["earliest_publish_date"]), default=None)
+    blocked = [r for r in rows if r["status"] == "BLOCKED_NO_CREDENTIAL"]
+    by_year: dict[int, dict] = {}
+    for row in measured:
+        stats = by_year.setdefault(row["year"], {"general": 0, "title": 0,
+                                                 "days": [], "tickers": 0})
+        stats["tickers"] += 1
+        stats["general"] += row["general_count"] or 0
+        stats["title"] += row["title_explicit_count"] or 0
+        if row["days_with_matches"] is not None:
+            stats["days"].append(row["days_with_matches"])
 
     lines = [
         "# Media Cloud source probe (V4 primary company-news source)",
@@ -221,73 +290,95 @@ def main() -> int:
         f"- JSON API surface confirmed: **{alive}**",
         f"- evidence: `{evidence}`",
         "",
-        "A JSON `401` (rather than an HTML page) is what proves the endpoint",
-        "surface is real: this host serves an SPA shell for unknown paths, so an",
-        "HTML body would have proved the API was not being served at all.",
+        "## 2. Credential",
         "",
-        "## 2. Authentication",
+        "- authentication required: **YES**",
+        f"- credential present: **{'YES' if token else 'NO'}** ({provenance})",
+        f"- permissions: {permissions}",
+        (f"- `auth/profile` result: **HTTP {profile_status}**"
+         + ("" if not token
+            else f" ({profile_payload if profile_status != 200 else 'OK'})")),
         "",
-        f"- authentication required: **{'YES' if alive else 'UNKNOWN'}**",
-        f"- auth scheme: `{primary['auth_scheme']}`",
-        (f"- credential expected at: `{primary['credential_file']}` or "
-         f"`{primary['credential_env']}`"),
-        f"- credential present: **{'YES' if token else 'NO'}** (source: {provenance})",
-        f"- credential validation: {auth_detail or 'not attempted (no credential)'}",
-        "",
-        "The credential is never printed, logged or written to any artifact.",
-        "",
-        "## 3. Coverage measurements",
-        "",
-        f"- planned query-year cells: **{len(rows)}**",
-        f"- measured cells: **{len(measured)}**",
-        f"- cells blocked for lack of credential: **{blocked}**",
-        (f"- earliest searchable historical date observed: "
-         f"**{earliest or 'UNKNOWN'}**"),
-        f"- years with any measurement: **{years_measured or 'none'}**",
+        "The token value is never printed, logged or written to any artifact.",
         "",
     ]
-    if not measured:
+    if token_error:
+        lines += [f"- credential rejected: `{token_error}`", ""]
+    lines += [
+        "## 3. Alias registry",
+        "",
+        f"- supervised tickers: **{aliases_doc['n_tickers']}**",
+        f"- resolved (auto-match eligible): **{aliases_doc['n_resolved']}**",
+        f"- unresolved: **{aliases_doc['n_unresolved']}**",
+        "- hard feasibility floor: **25** resolved",
+        "",
+        "## 4. Request budget (written before any query)",
+        "",
+        f"- planned alias-validity query windows: **{plan['n_query_windows']}**",
+        f"- estimated calls: **{plan['estimated_calls']['total_estimate']}**",
+        f"- `story-list` calls budgeted: **{plan['estimated_calls']['story_list_calls']}**",
+        (f"- assumed limit: {plan['assumed_rate_limit_per_minute']}/min "
+         f"(~{plan['estimated_minutes_at_assumed_limit']} min)"),
+        f"- plan file: `{plan_path.name}`",
+        "",
+        "## 5. Collections",
+        "",
+        (f"- matching collections discovered: **{len(collections)}**"
+         if collections else
+         ("- collection discovery **not performed** (no credential). Collection "
+          "IDs must be frozen in `configs/v4/source_registry.yaml` before any "
+          "production query; names alone are not reproducible.")),
+        "",
+    ]
+    for row in collections[:20]:
+        lines.append(f"- id `{row['collection_id']}` — {row['label']} "
+                     f"({row['notes']})")
+    lines += [
+        "",
+        "## 6. Coverage by year",
+        "",
+        ("| year | tickers probed | general count | title-explicit count | "
+         "median days with matches |"),
+        "|---|---|---|---|---|",
+    ]
+    for year in YEARS:
+        stats = by_year.get(year)
+        if not stats:
+            lines.append(f"| {year} | 0 | not measured | not measured | "
+                         "not measured |")
+            continue
+        days = stats["days"]
+        median = (sorted(days)[len(days) // 2] if days else "n/a")
+        lines.append(f"| {year} | {stats['tickers']} | {stats['general']} | "
+                     f"{stats['title']} | {median} |")
+    lines += [
+        "",
+        "## 7. Query windows (alias-validity aware)",
+        "",
+        f"- rows recorded: **{len(rows)}**",
+        f"- measured: **{len(measured)}**",
+        f"- blocked for lack of credential: **{len(blocked)}**",
+        "",
+    ]
+    if blocked:
         lines += [
-            "No coverage number could be measured. Historical coverage is",
-            "**UNKNOWN, not zero** -- and a zero must never be assumed, because",
-            "the distinguishing measurement was never made.",
+            ("Coverage is **UNKNOWN, not zero**: the distinguishing measurement "
+             "was never made, because no credential is present."),
             "",
         ]
     lines += [
-        "## 4. Per-year, per-company probe table",
+        "## 8. Verdict inputs",
         "",
-        ("| year | ticker | query | result_count | earliest | latest | "
-         "unique_domains | days_with_matches | status |"),
-        "|---|---|---|---|---|---|---|---|---|",
-    ]
-    for row in rows:
-        lines.append(
-            f"| {row['year']} | {row['ticker'] or '-'} | "
-            f"`{row['query_expression'][:38]}` | "
-            f"{row['result_count'] if row['result_count'] is not None else 'n/a'} | "
-            f"{row['earliest_publish_date'] or 'n/a'} | "
-            f"{row['latest_publish_date'] or 'n/a'} | "
-            f"{row['unique_domains'] if row['unique_domains'] is not None else 'n/a'} | "
-            f"{row['days_with_matches'] if row['days_with_matches'] is not None else 'n/a'} | "
-            f"{row['status']} |")
-    lines += [
+        (f"- sentiment-eligible tickers: "
+         f"**{'not computable without coverage' if not measured else len({r['ticker'] for r in measured})}**"),
+        (f"- usable development validation years: "
+         f"**{'not computable without coverage' if not measured else sorted(by_year)}**"),
         "",
-        "## 5. Bare tickers never used as queries",
-        "",
-    ]
-    for company in plan["pilot_companies"]:
-        forbidden = company.get("bare_ticker_forbidden")
-        if forbidden:
-            lines.append(f"- `{company['ticker']}`: bare `{forbidden}` is "
-                         f"AMBIGUOUS and is not queried.")
-    lines += [
-        "",
-        f"Machine-readable rows: `{csv_path.name}` ({len(rows)} rows).",
+        f"Machine-readable rows: `{csv_path.name}`.",
         "",
     ]
     md_path = track.path("mediacloud_probe")
     md_path.write_text("\n".join(lines))
-
     print(f"wrote {md_path}")
     print(f"wrote {csv_path}")
     return 0

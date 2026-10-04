@@ -1,0 +1,2587 @@
+{
+  "generated_by": "agentic_forecaster.v4.queries.build_plan",
+  "years": [
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018
+  ],
+  "earliest_allowed": "2013-04-01",
+  "latest_allowed": "2018-12-31",
+  "n_query_windows": 253,
+  "endpoints": {
+    "coverage": [
+      "search/total-count",
+      "search/count-over-time"
+    ],
+    "title_explicit": [
+      "search/total-count",
+      "search/count-over-time"
+    ],
+    "story_metadata": "NOT CALLED during the coverage probe"
+  },
+  "estimated_calls": {
+    "coverage_probe": 506,
+    "title_explicit_probe": 0,
+    "story_list_calls": 0,
+    "total_estimate": 506
+  },
+  "assumed_rate_limit_per_minute": 10,
+  "estimated_minutes_at_assumed_limit": 50.6,
+  "retry_policy": {
+    "statuses": [
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
+    "base_seconds": 1.0,
+    "max_seconds": 30.0,
+    "strategy": "bounded exponential backoff with jitter"
+  },
+  "queries": [
+    {
+      "ticker": "ADANIENT",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Adani Enterprises",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Enterprises\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ADANIENT",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Adani Enterprises",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Enterprises\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ADANIENT",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Adani Enterprises",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Enterprises\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ADANIENT",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Adani Enterprises",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Enterprises\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ADANIENT",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Adani Enterprises",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Enterprises\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ADANIENT",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Adani Enterprises",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Enterprises\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Adani Ports and Special Economic Zone",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Ports and Special Economic Zone\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Adani Ports and Special Economic Zone",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Ports and Special Economic Zone\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Adani Ports and Special Economic Zone",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Ports and Special Economic Zone\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Adani Ports and Special Economic Zone",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Ports and Special Economic Zone\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Adani Ports and Special Economic Zone",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Ports and Special Economic Zone\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ADANIPORTS",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Adani Ports and Special Economic Zone",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Adani Ports and Special Economic Zone\"",
+      "title_only": false
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Apollo Hospitals Enterprise",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Apollo Hospitals Enterprise\"",
+      "title_only": false
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Apollo Hospitals Enterprise",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Apollo Hospitals Enterprise\"",
+      "title_only": false
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Apollo Hospitals Enterprise",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Apollo Hospitals Enterprise\"",
+      "title_only": false
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Apollo Hospitals Enterprise",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Apollo Hospitals Enterprise\"",
+      "title_only": false
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Apollo Hospitals Enterprise",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Apollo Hospitals Enterprise\"",
+      "title_only": false
+    },
+    {
+      "ticker": "APOLLOHOSP",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Apollo Hospitals Enterprise",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Apollo Hospitals Enterprise\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Asian Paints",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Asian Paints\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Asian Paints",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Asian Paints\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Asian Paints",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Asian Paints\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Asian Paints",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Asian Paints\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Asian Paints",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Asian Paints\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ASIANPAINT",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Asian Paints",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Asian Paints\"",
+      "title_only": false
+    },
+    {
+      "ticker": "AXISBANK",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Axis Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Axis Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "AXISBANK",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Axis Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Axis Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "AXISBANK",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Axis Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Axis Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "AXISBANK",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Axis Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Axis Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "AXISBANK",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Axis Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Axis Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "AXISBANK",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Axis Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Axis Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Bajaj Auto Limited (new, post-2008)",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Auto Limited (new, post-2008)\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Bajaj Auto Limited (new, post-2008)",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Auto Limited (new, post-2008)\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Bajaj Auto Limited (new, post-2008)",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Auto Limited (new, post-2008)\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Bajaj Auto Limited (new, post-2008)",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Auto Limited (new, post-2008)\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Bajaj Auto Limited (new, post-2008)",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Auto Limited (new, post-2008)\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJ-AUTO",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Bajaj Auto Limited (new, post-2008)",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Auto Limited (new, post-2008)\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Bajaj Finserv",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finserv\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Bajaj Finserv",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finserv\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Bajaj Finserv",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finserv\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Bajaj Finserv",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finserv\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Bajaj Finserv",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finserv\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJAJFINSV",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Bajaj Finserv",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finserv\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Bajaj Finance",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Bajaj Finance",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Bajaj Finance",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Bajaj Finance",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Bajaj Finance",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BAJFINANCE",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Bajaj Finance",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bajaj Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BEL",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Bharat Electronics",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharat Electronics\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BEL",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Bharat Electronics",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharat Electronics\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BEL",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Bharat Electronics",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharat Electronics\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BEL",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Bharat Electronics",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharat Electronics\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BEL",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Bharat Electronics",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharat Electronics\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BEL",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Bharat Electronics",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharat Electronics\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BHARTIARTL",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Bharti Airtel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharti Airtel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BHARTIARTL",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Bharti Airtel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharti Airtel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BHARTIARTL",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Bharti Airtel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharti Airtel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BHARTIARTL",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Bharti Airtel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharti Airtel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BHARTIARTL",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Bharti Airtel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharti Airtel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "BHARTIARTL",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Bharti Airtel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Bharti Airtel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "CIPLA",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Cipla Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Cipla Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "CIPLA",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Cipla Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Cipla Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "CIPLA",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Cipla Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Cipla Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "CIPLA",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Cipla Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Cipla Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "CIPLA",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Cipla Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Cipla Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "CIPLA",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Cipla Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Cipla Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "DRREDDY",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Dr. Reddy's Laboratories",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Dr. Reddy's Laboratories\"",
+      "title_only": false
+    },
+    {
+      "ticker": "DRREDDY",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Dr. Reddy's Laboratories",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Dr. Reddy's Laboratories\"",
+      "title_only": false
+    },
+    {
+      "ticker": "DRREDDY",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Dr. Reddy's Laboratories",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Dr. Reddy's Laboratories\"",
+      "title_only": false
+    },
+    {
+      "ticker": "DRREDDY",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Dr. Reddy's Laboratories",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Dr. Reddy's Laboratories\"",
+      "title_only": false
+    },
+    {
+      "ticker": "DRREDDY",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Dr. Reddy's Laboratories",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Dr. Reddy's Laboratories\"",
+      "title_only": false
+    },
+    {
+      "ticker": "DRREDDY",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Dr. Reddy's Laboratories",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Dr. Reddy's Laboratories\"",
+      "title_only": false
+    },
+    {
+      "ticker": "EICHERMOT",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Eicher Motors",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Eicher Motors\"",
+      "title_only": false
+    },
+    {
+      "ticker": "EICHERMOT",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Eicher Motors",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Eicher Motors\"",
+      "title_only": false
+    },
+    {
+      "ticker": "EICHERMOT",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Eicher Motors",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Eicher Motors\"",
+      "title_only": false
+    },
+    {
+      "ticker": "EICHERMOT",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Eicher Motors",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Eicher Motors\"",
+      "title_only": false
+    },
+    {
+      "ticker": "EICHERMOT",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Eicher Motors",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Eicher Motors\"",
+      "title_only": false
+    },
+    {
+      "ticker": "EICHERMOT",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Eicher Motors",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Eicher Motors\"",
+      "title_only": false
+    },
+    {
+      "ticker": "GRASIM",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Grasim Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Grasim Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "GRASIM",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Grasim Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Grasim Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "GRASIM",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Grasim Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Grasim Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "GRASIM",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Grasim Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Grasim Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "GRASIM",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Grasim Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Grasim Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "GRASIM",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Grasim Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Grasim Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HCLTECH",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "HCL Technologies",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HCL Technologies\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HCLTECH",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "HCL Technologies",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HCL Technologies\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HCLTECH",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "HCL Technologies",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HCL Technologies\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HCLTECH",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "HCL Technologies",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HCL Technologies\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HCLTECH",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "HCL Technologies",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HCL Technologies\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HCLTECH",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "HCL Technologies",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HCL Technologies\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HDFCBANK",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "HDFC Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HDFC Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HDFCBANK",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "HDFC Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HDFC Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HDFCBANK",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "HDFC Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HDFC Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HDFCBANK",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "HDFC Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HDFC Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HDFCBANK",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "HDFC Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HDFC Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HDFCBANK",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "HDFC Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"HDFC Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDALCO",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Hindalco Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindalco Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDALCO",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Hindalco Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindalco Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDALCO",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Hindalco Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindalco Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDALCO",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Hindalco Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindalco Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDALCO",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Hindalco Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindalco Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDALCO",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Hindalco Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindalco Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Hindustan Unilever",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindustan Unilever\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Hindustan Unilever",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindustan Unilever\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Hindustan Unilever",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindustan Unilever\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Hindustan Unilever",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindustan Unilever\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Hindustan Unilever",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindustan Unilever\"",
+      "title_only": false
+    },
+    {
+      "ticker": "HINDUNILVR",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Hindustan Unilever",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Hindustan Unilever\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ICICIBANK",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "ICICI Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ICICI Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ICICIBANK",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "ICICI Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ICICI Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ICICIBANK",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "ICICI Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ICICI Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ICICIBANK",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "ICICI Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ICICI Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ICICIBANK",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "ICICI Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ICICI Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ICICIBANK",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "ICICI Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ICICI Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "INFY",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Infosys Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Infosys Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "INFY",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Infosys Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Infosys Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "INFY",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Infosys Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Infosys Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "INFY",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Infosys Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Infosys Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "INFY",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Infosys Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Infosys Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "INFY",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Infosys Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Infosys Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ITC",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "ITC Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ITC Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ITC",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "ITC Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ITC Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ITC",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "ITC Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ITC Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ITC",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "ITC Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ITC Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ITC",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "ITC Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ITC Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ITC",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "ITC Limited",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"ITC Limited\"",
+      "title_only": false
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "JSW Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"JSW Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "JSW Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"JSW Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "JSW Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"JSW Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "JSW Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"JSW Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "JSW Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"JSW Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "JSWSTEEL",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "JSW Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"JSW Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Kotak Mahindra Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Kotak Mahindra Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Kotak Mahindra Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Kotak Mahindra Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Kotak Mahindra Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Kotak Mahindra Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Kotak Mahindra Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Kotak Mahindra Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Kotak Mahindra Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Kotak Mahindra Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "KOTAKBANK",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Kotak Mahindra Bank",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Kotak Mahindra Bank\"",
+      "title_only": false
+    },
+    {
+      "ticker": "LT",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Larsen & Toubro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Larsen & Toubro\"",
+      "title_only": false
+    },
+    {
+      "ticker": "LT",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Larsen & Toubro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Larsen & Toubro\"",
+      "title_only": false
+    },
+    {
+      "ticker": "LT",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Larsen & Toubro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Larsen & Toubro\"",
+      "title_only": false
+    },
+    {
+      "ticker": "LT",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Larsen & Toubro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Larsen & Toubro\"",
+      "title_only": false
+    },
+    {
+      "ticker": "LT",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Larsen & Toubro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Larsen & Toubro\"",
+      "title_only": false
+    },
+    {
+      "ticker": "LT",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Larsen & Toubro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Larsen & Toubro\"",
+      "title_only": false
+    },
+    {
+      "ticker": "M&M",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Mahindra & Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Mahindra & Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "M&M",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Mahindra & Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Mahindra & Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "M&M",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Mahindra & Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Mahindra & Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "M&M",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Mahindra & Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Mahindra & Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "M&M",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Mahindra & Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Mahindra & Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "M&M",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Mahindra & Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Mahindra & Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "MARUTI",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Maruti Suzuki India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Maruti Suzuki India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "MARUTI",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Maruti Suzuki India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Maruti Suzuki India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "MARUTI",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Maruti Suzuki India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Maruti Suzuki India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "MARUTI",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Maruti Suzuki India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Maruti Suzuki India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "MARUTI",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Maruti Suzuki India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Maruti Suzuki India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "MARUTI",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Maruti Suzuki India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Maruti Suzuki India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "NTPC",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "NTPC Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"NTPC Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "NTPC",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "NTPC Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"NTPC Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "NTPC",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "NTPC Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"NTPC Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "NTPC",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "NTPC Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"NTPC Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "NTPC",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "NTPC Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"NTPC Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "NTPC",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "NTPC Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"NTPC Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ONGC",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Oil and Natural Gas Corporation",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Oil and Natural Gas Corporation\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ONGC",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Oil and Natural Gas Corporation",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Oil and Natural Gas Corporation\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ONGC",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Oil and Natural Gas Corporation",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Oil and Natural Gas Corporation\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ONGC",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Oil and Natural Gas Corporation",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Oil and Natural Gas Corporation\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ONGC",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Oil and Natural Gas Corporation",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Oil and Natural Gas Corporation\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ONGC",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Oil and Natural Gas Corporation",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Oil and Natural Gas Corporation\"",
+      "title_only": false
+    },
+    {
+      "ticker": "POWERGRID",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Power Grid Corporation of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Power Grid Corporation of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "POWERGRID",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Power Grid Corporation of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Power Grid Corporation of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "POWERGRID",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Power Grid Corporation of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Power Grid Corporation of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "POWERGRID",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Power Grid Corporation of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Power Grid Corporation of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "POWERGRID",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Power Grid Corporation of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Power Grid Corporation of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "POWERGRID",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Power Grid Corporation of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Power Grid Corporation of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "RELIANCE",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Reliance Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Reliance Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "RELIANCE",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Reliance Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Reliance Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "RELIANCE",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Reliance Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Reliance Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "RELIANCE",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Reliance Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Reliance Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "RELIANCE",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Reliance Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Reliance Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "RELIANCE",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Reliance Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Reliance Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SBIN",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "State Bank of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"State Bank of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SBIN",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "State Bank of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"State Bank of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SBIN",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "State Bank of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"State Bank of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SBIN",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "State Bank of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"State Bank of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SBIN",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "State Bank of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"State Bank of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SBIN",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "State Bank of India",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"State Bank of India\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Shriram Transport Finance",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Shriram Transport Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Shriram Transport Finance",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Shriram Transport Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Shriram Transport Finance",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Shriram Transport Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Shriram Transport Finance",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Shriram Transport Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Shriram Transport Finance",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Shriram Transport Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SHRIRAMFIN",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Shriram Transport Finance",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Shriram Transport Finance\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Sun Pharmaceutical Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Sun Pharmaceutical Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Sun Pharmaceutical Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Sun Pharmaceutical Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Sun Pharmaceutical Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Sun Pharmaceutical Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Sun Pharmaceutical Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Sun Pharmaceutical Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Sun Pharmaceutical Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Sun Pharmaceutical Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "SUNPHARMA",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Sun Pharmaceutical Industries",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Sun Pharmaceutical Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATACONSUM",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Tata Global Beverages",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Tata Global Beverages\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATACONSUM",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Tata Global Beverages",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Tata Global Beverages\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATACONSUM",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Tata Global Beverages",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Tata Global Beverages\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATACONSUM",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Tata Global Beverages",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Tata Global Beverages\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATACONSUM",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Tata Global Beverages",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Tata Global Beverages\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATACONSUM",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Tata Global Beverages",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Tata Global Beverages\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATASTEEL",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Tata Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATASTEEL",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Tata Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATASTEEL",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Tata Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATASTEEL",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Tata Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATASTEEL",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Tata Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TATASTEEL",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Tata Steel",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Steel\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TCS",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Tata Consultancy Services",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Consultancy Services\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TCS",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Tata Consultancy Services",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Consultancy Services\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TCS",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Tata Consultancy Services",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Consultancy Services\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TCS",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Tata Consultancy Services",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Consultancy Services\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TCS",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Tata Consultancy Services",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Consultancy Services\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TCS",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Tata Consultancy Services",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Consultancy Services\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TECHM",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Tech Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tech Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TECHM",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Tech Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tech Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TECHM",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Tech Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tech Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TECHM",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Tech Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tech Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TECHM",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Tech Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tech Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TECHM",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Tech Mahindra",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tech Mahindra\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TITAN",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-08-31",
+      "alias": "Titan Industries",
+      "alias_class": "HISTORICAL_SAFE",
+      "query": "\"Titan Industries\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TITAN",
+      "year": 2013,
+      "start": "2013-09-01",
+      "end": "2013-12-31",
+      "alias": "Titan Company",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Titan Company\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TITAN",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Titan Company",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Titan Company\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TITAN",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Titan Company",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Titan Company\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TITAN",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Titan Company",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Titan Company\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TITAN",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Titan Company",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Titan Company\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TITAN",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Titan Company",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Titan Company\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TMPV",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Tata Motors Passenger Vehicles",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Motors Passenger Vehicles\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TMPV",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Tata Motors Passenger Vehicles",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Motors Passenger Vehicles\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TMPV",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Tata Motors Passenger Vehicles",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Motors Passenger Vehicles\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TMPV",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Tata Motors Passenger Vehicles",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Motors Passenger Vehicles\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TMPV",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Tata Motors Passenger Vehicles",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Motors Passenger Vehicles\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TMPV",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Tata Motors Passenger Vehicles",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Tata Motors Passenger Vehicles\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TRENT",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Trent Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Trent Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TRENT",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Trent Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Trent Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TRENT",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Trent Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Trent Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TRENT",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Trent Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Trent Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TRENT",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Trent Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Trent Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "TRENT",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Trent Ltd.",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Trent Ltd.\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "UltraTech Cement",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"UltraTech Cement\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "UltraTech Cement",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"UltraTech Cement\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "UltraTech Cement",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"UltraTech Cement\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "UltraTech Cement",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"UltraTech Cement\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "UltraTech Cement",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"UltraTech Cement\"",
+      "title_only": false
+    },
+    {
+      "ticker": "ULTRACEMCO",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "UltraTech Cement",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"UltraTech Cement\"",
+      "title_only": false
+    },
+    {
+      "ticker": "WIPRO",
+      "year": 2013,
+      "start": "2013-04-01",
+      "end": "2013-12-31",
+      "alias": "Wipro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Wipro\"",
+      "title_only": false
+    },
+    {
+      "ticker": "WIPRO",
+      "year": 2014,
+      "start": "2014-01-01",
+      "end": "2014-12-31",
+      "alias": "Wipro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Wipro\"",
+      "title_only": false
+    },
+    {
+      "ticker": "WIPRO",
+      "year": 2015,
+      "start": "2015-01-01",
+      "end": "2015-12-31",
+      "alias": "Wipro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Wipro\"",
+      "title_only": false
+    },
+    {
+      "ticker": "WIPRO",
+      "year": 2016,
+      "start": "2016-01-01",
+      "end": "2016-12-31",
+      "alias": "Wipro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Wipro\"",
+      "title_only": false
+    },
+    {
+      "ticker": "WIPRO",
+      "year": 2017,
+      "start": "2017-01-01",
+      "end": "2017-12-31",
+      "alias": "Wipro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Wipro\"",
+      "title_only": false
+    },
+    {
+      "ticker": "WIPRO",
+      "year": 2018,
+      "start": "2018-01-01",
+      "end": "2018-12-31",
+      "alias": "Wipro",
+      "alias_class": "EXACT_SAFE",
+      "query": "\"Wipro\"",
+      "title_only": false
+    }
+  ],
+  "title_explicit_plan": {
+    "n_query_windows": 253,
+    "note": {
+      "coverage_probe": 506,
+      "title_explicit_probe": 506,
+      "story_list_calls": 0,
+      "total_estimate": 1012
+    }
+  },
+  "collections_probe_calls": 5
+}

@@ -1,9 +1,15 @@
 registry_id: V4_COMPANY_ALIAS_REGISTRY
 generated_by: scripts/build_v4_company_aliases.py
 universe_sha256: 5b10bd8f5401542c86490efd114a4a4c4adeb68ee1e127813eb520388b426a05
+evidence_hierarchy:
+- configs/legacy_security_lineage.yaml
+- configs/v4/company_alias_overrides.yaml
+- configs/v2/sector_map.yaml (official NSE current name)
+- targeted official NSE/company verification
+- UNRESOLVED
 n_tickers: 42
-n_resolved: 16
-n_unresolved: 26
+n_resolved: 42
+n_unresolved: 0
 policy:
   auto_match_classes:
   - EXACT_SAFE
@@ -12,67 +18,213 @@ policy:
   - AMBIGUOUS
   - REJECTED
   bare_ticker: always AMBIGUOUS; requires a validated phrase query
+  current_name_is_not_historical_evidence: true
 companies:
 - ticker: ADANIENT
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Adani Enterprises Ltd.
+  aliases:
+  - alias: Adani Enterprises Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Adani Enterprises
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - ADANIENT
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: ADANIENT
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: ADANIPORTS
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Adani Ports and Special Economic Zone Limited
+  aliases:
+  - alias: Adani Ports and Special Economic Zone Limited
+    class: EXACT_SAFE
+    valid_from: 2012-01-06
+    valid_to: null
+    note: Valid across the whole 2013-2018 window, so the current name may be used throughout the study
+      period.
+  - alias: Adani Ports and Special Economic Zone
+    class: EXACT_SAFE
+    valid_from: 2012-01-06
+    valid_to: null
+    note: unambiguous common corporate form
+  - alias: Mundra Port and Special Economic Zone Limited
+    class: REJECTED
+    valid_from: null
+    valid_to: 2012-01-05
+    note: Pre-2012 name, retained as historical metadata only. It is REJECTED as a V4 development alias
+      because it was already superseded before the news window opens.
   ambiguous_aliases:
   - ADANIPORTS
-  forbidden_aliases: []
-  valid_from: null
+  forbidden_aliases:
+  - alias: ADANIPORTS
+    reason: bare ticker is an acronym or common word
+  valid_from: 2012-01-06
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OVERRIDE
+  provenance: configs/v4/company_alias_overrides.yaml; OFFICIAL_COMPANY_HISTORY; https://www.adaniports.com/
+  evidence_type: OFFICIAL_COMPANY_HISTORY
+  evidence_source: https://www.adaniports.com/
+  evidence_date: '2026-10-04'
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://www.adaniports.com/
+    type: OFFICIAL_COMPANY_HISTORY
+    date: '2026-10-04'
+    record: null
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: Renamed from Mundra Port and Special Economic Zone Limited effective 2012-01-06, i.e. before
+      the study period, so the current name is valid for every development year. The official site renders
+      "Adani Ports and SEZ Ltd" and the NSE security master gives "Adani Ports and Special Economic Zone
+      Limited".
+  legacy_label: null
+  event_type: null
 - ticker: APOLLOHOSP
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Apollo Hospitals Enterprise Ltd.
+  aliases:
+  - alias: Apollo Hospitals Enterprise Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Apollo Hospitals Enterprise
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - APOLLOHOSP
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: APOLLOHOSP
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: ASIANPAINT
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Asian Paints Ltd.
+  aliases:
+  - alias: Asian Paints Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Asian Paints
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - ASIANPAINT
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: ASIANPAINT
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: AXISBANK
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Axis Bank Ltd.
+  aliases:
+  - alias: Axis Bank Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Axis Bank
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - AXISBANK
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: AXISBANK
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: BAJAJ-AUTO
   canonical_company_name: Bajaj Auto Limited (new, post-2008)
   aliases:
@@ -80,71 +232,194 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
   - alias: Bajaj Auto Limited (erstwhile, pre-2008)
     class: HISTORICAL_SAFE
     valid_from: null
     valid_to: '2008-02-20'
-    note: historical name; demerger on 2008-02-20
+    note: historical name of the same security; demerger on 2008-02-20
   ambiguous_aliases:
   - BAJAJ-AUTO
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: BAJAJ-AUTO
+    reason: bare ticker is an acronym or common word
   valid_from: '2008-02-20'
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[BAJAJ-AUTO]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: '2008-02-20'
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: '2008-02-20'
+    verified: true
+  historical_validity_evidence:
+    aliases:
+    - Bajaj Auto Limited (erstwhile, pre-2008)
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: BAJAJ-AUTO
   event_type: demerger
 - ticker: BAJAJFINSV
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Bajaj Finserv Ltd.
+  aliases:
+  - alias: Bajaj Finserv Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Bajaj Finserv
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - BAJAJFINSV
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: BAJAJFINSV
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: BAJFINANCE
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Bajaj Finance Ltd.
+  aliases:
+  - alias: Bajaj Finance Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Bajaj Finance
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - BAJFINANCE
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: BAJFINANCE
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: BEL
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Bharat Electronics Ltd.
+  aliases:
+  - alias: Bharat Electronics Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Bharat Electronics
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - BEL
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: BEL
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: BHARTIARTL
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Bharti Airtel Ltd.
+  aliases:
+  - alias: Bharti Airtel Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Bharti Airtel
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - BHARTIARTL
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: BHARTIARTL
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: CIPLA
   canonical_company_name: Cipla Limited
   aliases:
@@ -152,16 +427,30 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
   ambiguous_aliases:
   - CIPLA
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: CIPLA
+    reason: bare ticker is an acronym or common word
   valid_from: ''
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[CIPLA]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: ''
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: ''
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: CIPLA
   event_type: unchanged
 - ticker: DRREDDY
@@ -171,30 +460,76 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
+  - alias: Dr. Reddy's Laboratories
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - DRREDDY
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: DRREDDY
+    reason: bare ticker is an acronym or common word
   valid_from: ''
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[DRREDDY]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: ''
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: ''
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: DRREDDY
   event_type: unchanged
 - ticker: EICHERMOT
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Eicher Motors Ltd.
+  aliases:
+  - alias: Eicher Motors Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Eicher Motors
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - EICHERMOT
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: EICHERMOT
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: GRASIM
   canonical_company_name: Grasim Industries Limited
   aliases:
@@ -202,30 +537,76 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
+  - alias: Grasim Industries
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - GRASIM
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: GRASIM
+    reason: bare ticker is an acronym or common word
   valid_from: ''
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[GRASIM]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: ''
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: ''
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: GRASIM
   event_type: unchanged
 - ticker: HCLTECH
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: HCL Technologies Ltd.
+  aliases:
+  - alias: HCL Technologies Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: HCL Technologies
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - HCLTECH
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: HCLTECH
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: HDFCBANK
   canonical_company_name: HDFC Bank Limited
   aliases:
@@ -233,16 +614,35 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
+  - alias: HDFC Bank
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - HDFCBANK
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: HDFCBANK
+    reason: bare ticker is an acronym or common word
   valid_from: ''
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[HDFCBANK]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: ''
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: ''
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: HDFCBANK
   event_type: unchanged
 - ticker: HINDALCO
@@ -252,16 +652,35 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
+  - alias: Hindalco Industries
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - HINDALCO
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: HINDALCO
+    reason: bare ticker is an acronym or common word
   valid_from: ''
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[HINDALCO]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: ''
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: ''
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: HINDALCO
   event_type: unchanged
 - ticker: HINDUNILVR
@@ -271,35 +690,88 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
+  - alias: Hindustan Unilever
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   - alias: Hindustan Lever Limited
     class: HISTORICAL_SAFE
     valid_from: null
     valid_to: '2007-06-25'
-    note: historical name; same_security_rename on 2007-06-25
+    note: historical name of the same security; same_security_rename on 2007-06-25
+  - alias: Hindustan Lever
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: '2007-06-25'
+    note: safe common corporate form of the historical name
   ambiguous_aliases:
   - HINDUNILVR
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: HINDUNILVR
+    reason: bare ticker is an acronym or common word
   valid_from: '2007-06-25'
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[HINDLEVER]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: '2007-06-25'
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: '2007-06-25'
+    verified: true
+  historical_validity_evidence:
+    aliases:
+    - Hindustan Lever Limited
+    - Hindustan Lever
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: HINDLEVER
   event_type: same_security_rename
 - ticker: ICICIBANK
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: ICICI Bank Ltd.
+  aliases:
+  - alias: ICICI Bank Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: ICICI Bank
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - ICICIBANK
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: ICICIBANK
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: INFY
   canonical_company_name: Infosys Limited
   aliases:
@@ -307,21 +779,42 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
   - alias: Infosys Technologies Limited
     class: HISTORICAL_SAFE
     valid_from: null
     valid_to: 2011-06
-    note: historical name; same_security_rename on 2011-06
+    note: historical name of the same security; same_security_rename on 2011-06
+  - alias: Infosys Technologies
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: 2011-06
+    note: safe common corporate form of the historical name
   ambiguous_aliases:
   - INFY
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: INFY
+    reason: bare ticker is an acronym or common word
   valid_from: 2011-06
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[INFOSYSTCH]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: 2011-06
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: 2011-06
+    verified: true
+  historical_validity_evidence:
+    aliases:
+    - Infosys Technologies Limited
+    - Infosys Technologies
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: INFOSYSTCH
   event_type: same_security_rename
 - ticker: ITC
@@ -331,47 +824,122 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
   - alias: Imperial Tobacco Company of India Limited
     class: HISTORICAL_SAFE
     valid_from: null
     valid_to: '1974-09-18'
-    note: historical name; same_security_rename on 1974-09-18
+    note: historical name of the same security; same_security_rename on 1974-09-18
+  - alias: Imperial Tobacco Company of India
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: '1974-09-18'
+    note: safe common corporate form of the historical name
   ambiguous_aliases:
   - ITC
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: ITC
+    reason: bare ticker is an acronym or common word
   valid_from: '1974-09-18'
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[ITC]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: '1974-09-18'
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: '1974-09-18'
+    verified: true
+  historical_validity_evidence:
+    aliases:
+    - Imperial Tobacco Company of India Limited
+    - Imperial Tobacco Company of India
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: ITC
   event_type: same_security_rename
 - ticker: JSWSTEEL
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: JSW Steel Ltd.
+  aliases:
+  - alias: JSW Steel Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: JSW Steel
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - JSWSTEEL
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: JSWSTEEL
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: KOTAKBANK
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Kotak Mahindra Bank Ltd.
+  aliases:
+  - alias: Kotak Mahindra Bank Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Kotak Mahindra Bank
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - KOTAKBANK
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: KOTAKBANK
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: LT
   canonical_company_name: Larsen & Toubro Limited
   aliases:
@@ -379,16 +947,35 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
+  - alias: Larsen & Toubro
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - LT
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: LT
+    reason: bare ticker is an acronym or common word
   valid_from: ''
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[L&T]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: ''
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: ''
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: L&T
   event_type: statutory_continuation
 - ticker: M&M
@@ -398,42 +985,110 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
+  - alias: Mahindra & Mahindra
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - M&M
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: M&M
+    reason: bare ticker is an acronym or common word
   valid_from: ''
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[M&M]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: ''
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: ''
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: M&M
   event_type: unchanged
 - ticker: MARUTI
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Maruti Suzuki India Ltd.
+  aliases:
+  - alias: Maruti Suzuki India Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Maruti Suzuki India
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - MARUTI
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: MARUTI
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: NTPC
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: NTPC Ltd.
+  aliases:
+  - alias: NTPC Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
   ambiguous_aliases:
   - NTPC
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: NTPC
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: ONGC
   canonical_company_name: Oil and Natural Gas Corporation Limited
   aliases:
@@ -441,30 +1096,76 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
+  - alias: Oil and Natural Gas Corporation
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - ONGC
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: ONGC
+    reason: bare ticker is an acronym or common word
   valid_from: ''
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[ONGC]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: ''
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: ''
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: ONGC
   event_type: unchanged
 - ticker: POWERGRID
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Power Grid Corporation of India Ltd.
+  aliases:
+  - alias: Power Grid Corporation of India Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Power Grid Corporation of India
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - POWERGRID
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: POWERGRID
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: RELIANCE
   canonical_company_name: Reliance Industries Limited
   aliases:
@@ -472,16 +1173,35 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
+  - alias: Reliance Industries
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - RELIANCE
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: RELIANCE
+    reason: bare ticker is an acronym or common word
   valid_from: ''
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[RELIANCE]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: ''
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: ''
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: RELIANCE
   event_type: unchanged
 - ticker: SBIN
@@ -491,54 +1211,181 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
   ambiguous_aliases:
   - SBIN
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: SBIN
+    reason: bare ticker is an acronym or common word
   valid_from: ''
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[SBI]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: ''
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: ''
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: SBI
   event_type: unchanged
 - ticker: SHRIRAMFIN
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Shriram Finance Limited
+  aliases:
+  - alias: Shriram Transport Finance Company Limited
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: 2022-11-29
+    note: The listed entity throughout the entire 2013-2018 news window. Using only "Shriram Finance"
+      for 2013-2018 would search a name that did not exist yet.
+  - alias: Shriram Transport Finance
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: 2022-11-29
+    note: unambiguous common corporate form of the historical name
+  - alias: Shriram Finance Limited
+    class: EXACT_SAFE
+    valid_from: 2022-11-30
+    valid_to: null
+    note: current official NSE name, valid only after the 2022 change
+  - alias: Shriram Finance
+    class: EXACT_SAFE
+    valid_from: 2022-11-30
+    valid_to: null
+    note: current common corporate form
   ambiguous_aliases:
   - SHRIRAMFIN
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: SHRIRAMFIN
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OVERRIDE
+  provenance: configs/v4/company_alias_overrides.yaml; OFFICIAL_COMPANY_HISTORY; https://www.shriramfinance.in/
+  evidence_type: OFFICIAL_COMPANY_HISTORY
+  evidence_source: https://www.shriramfinance.in/
+  evidence_date: '2026-10-04'
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://www.shriramfinance.in/
+    type: OFFICIAL_COMPANY_HISTORY
+    date: '2026-10-04'
+    record: null
+    verified: true
+  historical_validity_evidence:
+    aliases:
+    - Shriram Transport Finance Company Limited
+    - Shriram Transport Finance
+    independently_fetched: false
+    note: Name changed to Shriram Finance Limited effective 2022-11-30, i.e. after the whole V4 development
+      interval. The 2013-2018 query MUST use the Shriram Transport Finance Company form. Current-name
+      evidence verified against the official NSE security master; the 2022 boundary is a documented official
+      company determination not re-fetched in this run.
+  legacy_label: null
+  event_type: null
 - ticker: SUNPHARMA
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Sun Pharmaceutical Industries Ltd.
+  aliases:
+  - alias: Sun Pharmaceutical Industries Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Sun Pharmaceutical Industries
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - SUNPHARMA
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: SUNPHARMA
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: TATACONSUM
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Tata Consumer Products Limited
+  aliases:
+  - alias: Tata Global Beverages Limited
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: 2020-01-31
+    note: The listed company throughout 2013-2018. Searching "Tata Consumer Products" for 2015 would match
+      nothing, because that name did not exist.
+  - alias: Tata Global Beverages
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: 2020-01-31
+    note: unambiguous common corporate form of the historical name
+  - alias: Tata Consumer Products Limited
+    class: EXACT_SAFE
+    valid_from: 2020-02-01
+    valid_to: null
+    note: current official name, valid only after the February 2020 change
+  - alias: Tata Consumer Products
+    class: EXACT_SAFE
+    valid_from: 2020-02-01
+    valid_to: null
+    note: current common corporate form
   ambiguous_aliases:
   - TATACONSUM
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: TATACONSUM
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OVERRIDE
+  provenance: configs/v4/company_alias_overrides.yaml; OFFICIAL_COMPANY_HISTORY; https://www.tataconsumerproducts.com/
+  evidence_type: OFFICIAL_COMPANY_HISTORY
+  evidence_source: https://www.tataconsumerproducts.com/
+  evidence_date: '2026-10-04'
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://www.tataconsumerproducts.com/
+    type: OFFICIAL_COMPANY_HISTORY
+    date: '2026-10-04'
+    record: null
+    verified: true
+  historical_validity_evidence:
+    aliases:
+    - Tata Global Beverages Limited
+    - Tata Global Beverages
+    independently_fetched: false
+    note: Tata Global Beverages Limited was renamed Tata Consumer Products Limited in February 2020, after
+      the development interval. Current name verified in the official NSE security master as "TATA CONSUMER
+      PRODUCTS LIMITED" (normalised to title case here). The 2020 boundary is a documented official company
+      determination not re-fetched in this run; the corporate site did not respond to an automated fetch.
+  legacy_label: null
+  event_type: null
 - ticker: TATASTEEL
   canonical_company_name: Tata Steel Limited
   aliases:
@@ -546,59 +1393,183 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
+  - alias: Tata Steel
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   - alias: The Tata Iron and Steel Company Limited
     class: HISTORICAL_SAFE
     valid_from: null
     valid_to: '2005-08-12'
-    note: historical name; same_security_rename on 2005-08-12
+    note: historical name of the same security; same_security_rename on 2005-08-12
+  - alias: The Tata Iron and Steel Company
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: '2005-08-12'
+    note: safe common corporate form of the historical name
   ambiguous_aliases:
   - TATASTEEL
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: TATASTEEL
+    reason: bare ticker is an acronym or common word
   valid_from: '2005-08-12'
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[TISCO]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: '2005-08-12'
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: '2005-08-12'
+    verified: true
+  historical_validity_evidence:
+    aliases:
+    - The Tata Iron and Steel Company Limited
+    - The Tata Iron and Steel Company
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: TISCO
   event_type: same_security_rename
 - ticker: TCS
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Tata Consultancy Services Ltd.
+  aliases:
+  - alias: Tata Consultancy Services Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Tata Consultancy Services
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - TCS
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: TCS
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: TECHM
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Tech Mahindra Ltd.
+  aliases:
+  - alias: Tech Mahindra Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: Tech Mahindra
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - TECHM
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: TECHM
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: TITAN
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Titan Company Limited
+  aliases:
+  - alias: Titan Industries Limited
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: 2013-08-31
+    note: The name in force at the very start of the study period. Titan Industries Limited became Titan
+      Company Limited during 2013, so the first months of 2013 must not be searched with the new name.
+  - alias: Titan Industries
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: 2013-08-31
+    note: common corporate form of the historical name
+  - alias: Titan Company Limited
+    class: EXACT_SAFE
+    valid_from: 2013-09-01
+    valid_to: null
+    note: current official NSE name
+  - alias: Titan Company
+    class: EXACT_SAFE
+    valid_from: 2013-09-01
+    valid_to: null
+    note: current common corporate form
   ambiguous_aliases:
   - TITAN
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: TITAN
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OVERRIDE
+  provenance: configs/v4/company_alias_overrides.yaml; OFFICIAL_COMPANY_HISTORY; https://www.titancompany.in/
+  evidence_type: OFFICIAL_COMPANY_HISTORY
+  evidence_source: https://www.titancompany.in/
+  evidence_date: '2026-10-04'
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://www.titancompany.in/
+    type: OFFICIAL_COMPANY_HISTORY
+    date: '2026-10-04'
+    record: null
+    verified: true
+  historical_validity_evidence:
+    aliases:
+    - Titan Industries Limited
+    - Titan Industries
+    independently_fetched: false
+    note: The rename to Titan Company Limited completed during 2013. The official company site currently
+      renders "Titan Company Ltd.", confirming the current name; the exact 2013 effective boundary is
+      a documented official determination recorded here and not independently re-fetched. Because the
+      boundary falls INSIDE 2013, 2013 must be queried with both names and the date-aware query builder
+      splits the year rather than picking one.
+  legacy_label: null
+  event_type: null
 - ticker: TMPV
   canonical_company_name: Tata Motors Passenger Vehicles Limited
   aliases:
@@ -606,56 +1577,160 @@ companies:
     class: EXACT_SAFE
     valid_from: null
     valid_to: null
-    note: canonical current name
+    note: canonical current name from dated lineage
+  - alias: Tata Motors Passenger Vehicles
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   - alias: Tata Engineering and Locomotive Company Limited
     class: HISTORICAL_SAFE
     valid_from: null
     valid_to: 2003-07-29; 2025-10-01
-    note: historical name; demerger on 2003-07-29; 2025-10-01
+    note: historical name of the same security; demerger on 2003-07-29; 2025-10-01
+  - alias: Tata Engineering and Locomotive Company
+    class: HISTORICAL_SAFE
+    valid_from: null
+    valid_to: 2003-07-29; 2025-10-01
+    note: safe common corporate form of the historical name
   ambiguous_aliases:
   - TMPV
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: TMPV
+    reason: bare ticker is an acronym or common word
   valid_from: 2003-07-29; 2025-10-01
   valid_to: null
   resolution_status: RESOLVED_FROM_LINEAGE
   provenance: configs/legacy_security_lineage.yaml[TELCO]
+  evidence_type: CURATED_SECURITY_LINEAGE
+  evidence_source: configs/legacy_security_lineage.yaml
+  evidence_date: 2003-07-29; 2025-10-01
   confidence: high
   auto_match_eligible: true
+  current_name_evidence:
+    source: configs/legacy_security_lineage.yaml
+    type: CURATED_SECURITY_LINEAGE
+    date: 2003-07-29; 2025-10-01
+    verified: true
+  historical_validity_evidence:
+    aliases:
+    - Tata Engineering and Locomotive Company Limited
+    - Tata Engineering and Locomotive Company
+    independently_fetched: false
+    note: dated rename recorded in the curated lineage
   legacy_label: TELCO
   event_type: demerger
 - ticker: TRENT
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Trent Ltd.
+  aliases:
+  - alias: Trent Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
   ambiguous_aliases:
   - TRENT
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: TRENT
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: ULTRACEMCO
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: UltraTech Cement Ltd.
+  aliases:
+  - alias: UltraTech Cement Ltd.
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE current company name
+  - alias: UltraTech Cement
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: safe common corporate form
   ambiguous_aliases:
   - ULTRACEMCO
-  forbidden_aliases: []
+  forbidden_aliases:
+  - alias: ULTRACEMCO
+    reason: bare ticker is an acronym or common word
   valid_from: null
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OFFICIAL_NSE_NAME
+  provenance: configs/v2/sector_map.yaml[https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv]
+  evidence_type: OFFICIAL_NSE_CONSTITUENT_FILE
+  evidence_source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+  evidence_date: null
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    type: OFFICIAL_NSE_CONSTITUENT_FILE
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: false
+    note: 'NOT established: an official CURRENT name is not evidence of validity in 2013-2018. No rename
+      is known for this issuer, but absence of a known rename is not proof.'
+  legacy_label: null
+  event_type: null
 - ticker: WIPRO
-  canonical_company_name: null
-  aliases: []
+  canonical_company_name: Wipro Limited
+  aliases:
+  - alias: Wipro Limited
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: official NSE legal name
+  - alias: Wipro
+    class: EXACT_SAFE
+    valid_from: null
+    valid_to: null
+    note: unambiguous common corporate form
   ambiguous_aliases:
   - WIPRO
-  forbidden_aliases: []
-  valid_from: null
+  forbidden_aliases:
+  - alias: WIPRO
+    reason: bare ticker is an acronym or common word
+  valid_from: '1995-11-08'
   valid_to: null
-  resolution_status: UNRESOLVED
-  provenance: no lineage row matched this yfinance symbol; official NSE/company evidence required
-  confidence: none
-  auto_match_eligible: false
+  resolution_status: RESOLVED_FROM_OVERRIDE
+  provenance: configs/v4/company_alias_overrides.yaml; OFFICIAL_NSE_FILING; https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv
+  evidence_type: OFFICIAL_NSE_FILING
+  evidence_source: https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv
+  evidence_date: '2026-10-04'
+  confidence: high
+  auto_match_eligible: true
+  current_name_evidence:
+    source: https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv
+    type: OFFICIAL_NSE_FILING
+    date: '2026-10-04'
+    record: WIPRO,Wipro Limited,EQ,08-NOV-1995,2,1,INE075A01022,2
+    verified: true
+  historical_validity_evidence:
+    aliases: []
+    independently_fetched: true
+    note: WIPRO is the single ticker absent from the NIFTY 50 constituent file (sector_map records n_unmapped=1,
+      unmapped_tickers=[WIPRO]), so it was resolved from the official NSE security master instead. Listing
+      date 08-NOV-1995 is well before the study period, so the legal name covers 2013-2018.
+  legacy_label: null
+  event_type: null

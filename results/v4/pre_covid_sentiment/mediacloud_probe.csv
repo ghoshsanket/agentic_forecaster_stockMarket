@@ -1,67 +1,254 @@
-source_id,query_id,ticker,year,query_expression,alias_provenance,alias_confidence,result_count,earliest_publish_date,latest_publish_date,unique_domains,days_with_matches,status,detail
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,RELIANCE,RELIANCE,2013,"""Reliance Industries""",legacy_security_lineage.yaml[RELIANCE],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,RELIANCE,RELIANCE,2014,"""Reliance Industries""",legacy_security_lineage.yaml[RELIANCE],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,RELIANCE,RELIANCE,2015,"""Reliance Industries""",legacy_security_lineage.yaml[RELIANCE],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,RELIANCE,RELIANCE,2016,"""Reliance Industries""",legacy_security_lineage.yaml[RELIANCE],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,RELIANCE,RELIANCE,2017,"""Reliance Industries""",legacy_security_lineage.yaml[RELIANCE],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,RELIANCE,RELIANCE,2018,"""Reliance Industries""",legacy_security_lineage.yaml[RELIANCE],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TCS,TCS,2013,"""Tata Consultancy Services""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TCS,TCS,2014,"""Tata Consultancy Services""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TCS,TCS,2015,"""Tata Consultancy Services""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TCS,TCS,2016,"""Tata Consultancy Services""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TCS,TCS,2017,"""Tata Consultancy Services""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TCS,TCS,2018,"""Tata Consultancy Services""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INFY,INFY,2013,"""Infosys Limited"" OR ""Infosys Technologies""",legacy_security_lineage.yaml[INFOSYSTCH],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INFY,INFY,2014,"""Infosys Limited"" OR ""Infosys Technologies""",legacy_security_lineage.yaml[INFOSYSTCH],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INFY,INFY,2015,"""Infosys Limited"" OR ""Infosys Technologies""",legacy_security_lineage.yaml[INFOSYSTCH],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INFY,INFY,2016,"""Infosys Limited"" OR ""Infosys Technologies""",legacy_security_lineage.yaml[INFOSYSTCH],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INFY,INFY,2017,"""Infosys Limited"" OR ""Infosys Technologies""",legacy_security_lineage.yaml[INFOSYSTCH],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INFY,INFY,2018,"""Infosys Limited"" OR ""Infosys Technologies""",legacy_security_lineage.yaml[INFOSYSTCH],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,HDFCBANK,HDFCBANK,2013,"""HDFC Bank""",legacy_security_lineage.yaml[HDFCBANK],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,HDFCBANK,HDFCBANK,2014,"""HDFC Bank""",legacy_security_lineage.yaml[HDFCBANK],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,HDFCBANK,HDFCBANK,2015,"""HDFC Bank""",legacy_security_lineage.yaml[HDFCBANK],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,HDFCBANK,HDFCBANK,2016,"""HDFC Bank""",legacy_security_lineage.yaml[HDFCBANK],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,HDFCBANK,HDFCBANK,2017,"""HDFC Bank""",legacy_security_lineage.yaml[HDFCBANK],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,HDFCBANK,HDFCBANK,2018,"""HDFC Bank""",legacy_security_lineage.yaml[HDFCBANK],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,ITC,ITC,2013,"""ITC Limited"" OR ""Imperial Tobacco Company of India""",legacy_security_lineage.yaml[ITC],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,ITC,ITC,2014,"""ITC Limited"" OR ""Imperial Tobacco Company of India""",legacy_security_lineage.yaml[ITC],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,ITC,ITC,2015,"""ITC Limited"" OR ""Imperial Tobacco Company of India""",legacy_security_lineage.yaml[ITC],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,ITC,ITC,2016,"""ITC Limited"" OR ""Imperial Tobacco Company of India""",legacy_security_lineage.yaml[ITC],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,ITC,ITC,2017,"""ITC Limited"" OR ""Imperial Tobacco Company of India""",legacy_security_lineage.yaml[ITC],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,ITC,ITC,2018,"""ITC Limited"" OR ""Imperial Tobacco Company of India""",legacy_security_lineage.yaml[ITC],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,LT,LT,2013,"""Larsen & Toubro""",legacy_security_lineage.yaml[L&T],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,LT,LT,2014,"""Larsen & Toubro""",legacy_security_lineage.yaml[L&T],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,LT,LT,2015,"""Larsen & Toubro""",legacy_security_lineage.yaml[L&T],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,LT,LT,2016,"""Larsen & Toubro""",legacy_security_lineage.yaml[L&T],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,LT,LT,2017,"""Larsen & Toubro""",legacy_security_lineage.yaml[L&T],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,LT,LT,2018,"""Larsen & Toubro""",legacy_security_lineage.yaml[L&T],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,SUNPHARMA,SUNPHARMA,2013,"""Sun Pharmaceutical""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,SUNPHARMA,SUNPHARMA,2014,"""Sun Pharmaceutical""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,SUNPHARMA,SUNPHARMA,2015,"""Sun Pharmaceutical""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,SUNPHARMA,SUNPHARMA,2016,"""Sun Pharmaceutical""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,SUNPHARMA,SUNPHARMA,2017,"""Sun Pharmaceutical""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,SUNPHARMA,SUNPHARMA,2018,"""Sun Pharmaceutical""",UNRESOLVED_no_lineage_row,unverified,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TATASTEEL,TATASTEEL,2013,"""Tata Steel"" OR ""Tata Iron and Steel""",legacy_security_lineage.yaml[TISCO],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TATASTEEL,TATASTEEL,2014,"""Tata Steel"" OR ""Tata Iron and Steel""",legacy_security_lineage.yaml[TISCO],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TATASTEEL,TATASTEEL,2015,"""Tata Steel"" OR ""Tata Iron and Steel""",legacy_security_lineage.yaml[TISCO],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TATASTEEL,TATASTEEL,2016,"""Tata Steel"" OR ""Tata Iron and Steel""",legacy_security_lineage.yaml[TISCO],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TATASTEEL,TATASTEEL,2017,"""Tata Steel"" OR ""Tata Iron and Steel""",legacy_security_lineage.yaml[TISCO],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,TATASTEEL,TATASTEEL,2018,"""Tata Steel"" OR ""Tata Iron and Steel""",legacy_security_lineage.yaml[TISCO],high,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_MARKET,,2013,"""Indian stock market""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_MARKET,,2014,"""Indian stock market""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_MARKET,,2015,"""Indian stock market""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_MARKET,,2016,"""Indian stock market""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_MARKET,,2017,"""Indian stock market""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_MARKET,,2018,"""Indian stock market""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_BUSINESS,,2013,"""India"" AND (""business"" OR ""corporate"")",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_BUSINESS,,2014,"""India"" AND (""business"" OR ""corporate"")",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_BUSINESS,,2015,"""India"" AND (""business"" OR ""corporate"")",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_BUSINESS,,2016,"""India"" AND (""business"" OR ""corporate"")",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_BUSINESS,,2017,"""India"" AND (""business"" OR ""corporate"")",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,INDIAN_BUSINESS,,2018,"""India"" AND (""business"" OR ""corporate"")",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,MUMBAI_MARKET,,2013,"""Bombay Stock Exchange"" OR ""NSE""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,MUMBAI_MARKET,,2014,"""Bombay Stock Exchange"" OR ""NSE""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,MUMBAI_MARKET,,2015,"""Bombay Stock Exchange"" OR ""NSE""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,MUMBAI_MARKET,,2016,"""Bombay Stock Exchange"" OR ""NSE""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,MUMBAI_MARKET,,2017,"""Bombay Stock Exchange"" OR ""NSE""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
-MEDIA_CLOUD_ONLINE_NEWS_ARCHIVE,MUMBAI_MARKET,,2018,"""Bombay Stock Exchange"" OR ""NSE""",broad_query,n/a,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage cannot be measured and is NOT zero
+ticker,year,window_start,window_end,alias_used,alias_class,query_expression,title_only,general_count,title_explicit_count,earliest_publish_date,latest_publish_date,days_with_matches,unique_domains,status,detail
+ADANIENT,2013,2013-04-01,2013-12-31,Adani Enterprises,EXACT_SAFE,"""Adani Enterprises""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ADANIENT,2014,2014-01-01,2014-12-31,Adani Enterprises,EXACT_SAFE,"""Adani Enterprises""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ADANIENT,2015,2015-01-01,2015-12-31,Adani Enterprises,EXACT_SAFE,"""Adani Enterprises""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ADANIENT,2016,2016-01-01,2016-12-31,Adani Enterprises,EXACT_SAFE,"""Adani Enterprises""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ADANIENT,2017,2017-01-01,2017-12-31,Adani Enterprises,EXACT_SAFE,"""Adani Enterprises""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ADANIENT,2018,2018-01-01,2018-12-31,Adani Enterprises,EXACT_SAFE,"""Adani Enterprises""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ADANIPORTS,2013,2013-04-01,2013-12-31,Adani Ports and Special Economic Zone,EXACT_SAFE,"""Adani Ports and Special Economic Zone""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ADANIPORTS,2014,2014-01-01,2014-12-31,Adani Ports and Special Economic Zone,EXACT_SAFE,"""Adani Ports and Special Economic Zone""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ADANIPORTS,2015,2015-01-01,2015-12-31,Adani Ports and Special Economic Zone,EXACT_SAFE,"""Adani Ports and Special Economic Zone""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ADANIPORTS,2016,2016-01-01,2016-12-31,Adani Ports and Special Economic Zone,EXACT_SAFE,"""Adani Ports and Special Economic Zone""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ADANIPORTS,2017,2017-01-01,2017-12-31,Adani Ports and Special Economic Zone,EXACT_SAFE,"""Adani Ports and Special Economic Zone""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ADANIPORTS,2018,2018-01-01,2018-12-31,Adani Ports and Special Economic Zone,EXACT_SAFE,"""Adani Ports and Special Economic Zone""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+APOLLOHOSP,2013,2013-04-01,2013-12-31,Apollo Hospitals Enterprise,EXACT_SAFE,"""Apollo Hospitals Enterprise""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+APOLLOHOSP,2014,2014-01-01,2014-12-31,Apollo Hospitals Enterprise,EXACT_SAFE,"""Apollo Hospitals Enterprise""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+APOLLOHOSP,2015,2015-01-01,2015-12-31,Apollo Hospitals Enterprise,EXACT_SAFE,"""Apollo Hospitals Enterprise""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+APOLLOHOSP,2016,2016-01-01,2016-12-31,Apollo Hospitals Enterprise,EXACT_SAFE,"""Apollo Hospitals Enterprise""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+APOLLOHOSP,2017,2017-01-01,2017-12-31,Apollo Hospitals Enterprise,EXACT_SAFE,"""Apollo Hospitals Enterprise""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+APOLLOHOSP,2018,2018-01-01,2018-12-31,Apollo Hospitals Enterprise,EXACT_SAFE,"""Apollo Hospitals Enterprise""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ASIANPAINT,2013,2013-04-01,2013-12-31,Asian Paints,EXACT_SAFE,"""Asian Paints""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ASIANPAINT,2014,2014-01-01,2014-12-31,Asian Paints,EXACT_SAFE,"""Asian Paints""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ASIANPAINT,2015,2015-01-01,2015-12-31,Asian Paints,EXACT_SAFE,"""Asian Paints""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ASIANPAINT,2016,2016-01-01,2016-12-31,Asian Paints,EXACT_SAFE,"""Asian Paints""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ASIANPAINT,2017,2017-01-01,2017-12-31,Asian Paints,EXACT_SAFE,"""Asian Paints""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ASIANPAINT,2018,2018-01-01,2018-12-31,Asian Paints,EXACT_SAFE,"""Asian Paints""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+AXISBANK,2013,2013-04-01,2013-12-31,Axis Bank,EXACT_SAFE,"""Axis Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+AXISBANK,2014,2014-01-01,2014-12-31,Axis Bank,EXACT_SAFE,"""Axis Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+AXISBANK,2015,2015-01-01,2015-12-31,Axis Bank,EXACT_SAFE,"""Axis Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+AXISBANK,2016,2016-01-01,2016-12-31,Axis Bank,EXACT_SAFE,"""Axis Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+AXISBANK,2017,2017-01-01,2017-12-31,Axis Bank,EXACT_SAFE,"""Axis Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+AXISBANK,2018,2018-01-01,2018-12-31,Axis Bank,EXACT_SAFE,"""Axis Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJ-AUTO,2013,2013-04-01,2013-12-31,"Bajaj Auto Limited (new, post-2008)",EXACT_SAFE,"""Bajaj Auto Limited (new, post-2008)""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJ-AUTO,2014,2014-01-01,2014-12-31,"Bajaj Auto Limited (new, post-2008)",EXACT_SAFE,"""Bajaj Auto Limited (new, post-2008)""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJ-AUTO,2015,2015-01-01,2015-12-31,"Bajaj Auto Limited (new, post-2008)",EXACT_SAFE,"""Bajaj Auto Limited (new, post-2008)""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJ-AUTO,2016,2016-01-01,2016-12-31,"Bajaj Auto Limited (new, post-2008)",EXACT_SAFE,"""Bajaj Auto Limited (new, post-2008)""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJ-AUTO,2017,2017-01-01,2017-12-31,"Bajaj Auto Limited (new, post-2008)",EXACT_SAFE,"""Bajaj Auto Limited (new, post-2008)""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJ-AUTO,2018,2018-01-01,2018-12-31,"Bajaj Auto Limited (new, post-2008)",EXACT_SAFE,"""Bajaj Auto Limited (new, post-2008)""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJFINSV,2013,2013-04-01,2013-12-31,Bajaj Finserv,EXACT_SAFE,"""Bajaj Finserv""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJFINSV,2014,2014-01-01,2014-12-31,Bajaj Finserv,EXACT_SAFE,"""Bajaj Finserv""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJFINSV,2015,2015-01-01,2015-12-31,Bajaj Finserv,EXACT_SAFE,"""Bajaj Finserv""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJFINSV,2016,2016-01-01,2016-12-31,Bajaj Finserv,EXACT_SAFE,"""Bajaj Finserv""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJFINSV,2017,2017-01-01,2017-12-31,Bajaj Finserv,EXACT_SAFE,"""Bajaj Finserv""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJAJFINSV,2018,2018-01-01,2018-12-31,Bajaj Finserv,EXACT_SAFE,"""Bajaj Finserv""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJFINANCE,2013,2013-04-01,2013-12-31,Bajaj Finance,EXACT_SAFE,"""Bajaj Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJFINANCE,2014,2014-01-01,2014-12-31,Bajaj Finance,EXACT_SAFE,"""Bajaj Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJFINANCE,2015,2015-01-01,2015-12-31,Bajaj Finance,EXACT_SAFE,"""Bajaj Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJFINANCE,2016,2016-01-01,2016-12-31,Bajaj Finance,EXACT_SAFE,"""Bajaj Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJFINANCE,2017,2017-01-01,2017-12-31,Bajaj Finance,EXACT_SAFE,"""Bajaj Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BAJFINANCE,2018,2018-01-01,2018-12-31,Bajaj Finance,EXACT_SAFE,"""Bajaj Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BEL,2013,2013-04-01,2013-12-31,Bharat Electronics,EXACT_SAFE,"""Bharat Electronics""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BEL,2014,2014-01-01,2014-12-31,Bharat Electronics,EXACT_SAFE,"""Bharat Electronics""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BEL,2015,2015-01-01,2015-12-31,Bharat Electronics,EXACT_SAFE,"""Bharat Electronics""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BEL,2016,2016-01-01,2016-12-31,Bharat Electronics,EXACT_SAFE,"""Bharat Electronics""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BEL,2017,2017-01-01,2017-12-31,Bharat Electronics,EXACT_SAFE,"""Bharat Electronics""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BEL,2018,2018-01-01,2018-12-31,Bharat Electronics,EXACT_SAFE,"""Bharat Electronics""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BHARTIARTL,2013,2013-04-01,2013-12-31,Bharti Airtel,EXACT_SAFE,"""Bharti Airtel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BHARTIARTL,2014,2014-01-01,2014-12-31,Bharti Airtel,EXACT_SAFE,"""Bharti Airtel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BHARTIARTL,2015,2015-01-01,2015-12-31,Bharti Airtel,EXACT_SAFE,"""Bharti Airtel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BHARTIARTL,2016,2016-01-01,2016-12-31,Bharti Airtel,EXACT_SAFE,"""Bharti Airtel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BHARTIARTL,2017,2017-01-01,2017-12-31,Bharti Airtel,EXACT_SAFE,"""Bharti Airtel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+BHARTIARTL,2018,2018-01-01,2018-12-31,Bharti Airtel,EXACT_SAFE,"""Bharti Airtel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+CIPLA,2013,2013-04-01,2013-12-31,Cipla Limited,EXACT_SAFE,"""Cipla Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+CIPLA,2014,2014-01-01,2014-12-31,Cipla Limited,EXACT_SAFE,"""Cipla Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+CIPLA,2015,2015-01-01,2015-12-31,Cipla Limited,EXACT_SAFE,"""Cipla Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+CIPLA,2016,2016-01-01,2016-12-31,Cipla Limited,EXACT_SAFE,"""Cipla Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+CIPLA,2017,2017-01-01,2017-12-31,Cipla Limited,EXACT_SAFE,"""Cipla Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+CIPLA,2018,2018-01-01,2018-12-31,Cipla Limited,EXACT_SAFE,"""Cipla Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+DRREDDY,2013,2013-04-01,2013-12-31,Dr. Reddy's Laboratories,EXACT_SAFE,"""Dr. Reddy's Laboratories""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+DRREDDY,2014,2014-01-01,2014-12-31,Dr. Reddy's Laboratories,EXACT_SAFE,"""Dr. Reddy's Laboratories""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+DRREDDY,2015,2015-01-01,2015-12-31,Dr. Reddy's Laboratories,EXACT_SAFE,"""Dr. Reddy's Laboratories""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+DRREDDY,2016,2016-01-01,2016-12-31,Dr. Reddy's Laboratories,EXACT_SAFE,"""Dr. Reddy's Laboratories""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+DRREDDY,2017,2017-01-01,2017-12-31,Dr. Reddy's Laboratories,EXACT_SAFE,"""Dr. Reddy's Laboratories""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+DRREDDY,2018,2018-01-01,2018-12-31,Dr. Reddy's Laboratories,EXACT_SAFE,"""Dr. Reddy's Laboratories""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+EICHERMOT,2013,2013-04-01,2013-12-31,Eicher Motors,EXACT_SAFE,"""Eicher Motors""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+EICHERMOT,2014,2014-01-01,2014-12-31,Eicher Motors,EXACT_SAFE,"""Eicher Motors""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+EICHERMOT,2015,2015-01-01,2015-12-31,Eicher Motors,EXACT_SAFE,"""Eicher Motors""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+EICHERMOT,2016,2016-01-01,2016-12-31,Eicher Motors,EXACT_SAFE,"""Eicher Motors""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+EICHERMOT,2017,2017-01-01,2017-12-31,Eicher Motors,EXACT_SAFE,"""Eicher Motors""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+EICHERMOT,2018,2018-01-01,2018-12-31,Eicher Motors,EXACT_SAFE,"""Eicher Motors""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+GRASIM,2013,2013-04-01,2013-12-31,Grasim Industries,EXACT_SAFE,"""Grasim Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+GRASIM,2014,2014-01-01,2014-12-31,Grasim Industries,EXACT_SAFE,"""Grasim Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+GRASIM,2015,2015-01-01,2015-12-31,Grasim Industries,EXACT_SAFE,"""Grasim Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+GRASIM,2016,2016-01-01,2016-12-31,Grasim Industries,EXACT_SAFE,"""Grasim Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+GRASIM,2017,2017-01-01,2017-12-31,Grasim Industries,EXACT_SAFE,"""Grasim Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+GRASIM,2018,2018-01-01,2018-12-31,Grasim Industries,EXACT_SAFE,"""Grasim Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HCLTECH,2013,2013-04-01,2013-12-31,HCL Technologies,EXACT_SAFE,"""HCL Technologies""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HCLTECH,2014,2014-01-01,2014-12-31,HCL Technologies,EXACT_SAFE,"""HCL Technologies""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HCLTECH,2015,2015-01-01,2015-12-31,HCL Technologies,EXACT_SAFE,"""HCL Technologies""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HCLTECH,2016,2016-01-01,2016-12-31,HCL Technologies,EXACT_SAFE,"""HCL Technologies""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HCLTECH,2017,2017-01-01,2017-12-31,HCL Technologies,EXACT_SAFE,"""HCL Technologies""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HCLTECH,2018,2018-01-01,2018-12-31,HCL Technologies,EXACT_SAFE,"""HCL Technologies""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HDFCBANK,2013,2013-04-01,2013-12-31,HDFC Bank,EXACT_SAFE,"""HDFC Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HDFCBANK,2014,2014-01-01,2014-12-31,HDFC Bank,EXACT_SAFE,"""HDFC Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HDFCBANK,2015,2015-01-01,2015-12-31,HDFC Bank,EXACT_SAFE,"""HDFC Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HDFCBANK,2016,2016-01-01,2016-12-31,HDFC Bank,EXACT_SAFE,"""HDFC Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HDFCBANK,2017,2017-01-01,2017-12-31,HDFC Bank,EXACT_SAFE,"""HDFC Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HDFCBANK,2018,2018-01-01,2018-12-31,HDFC Bank,EXACT_SAFE,"""HDFC Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDALCO,2013,2013-04-01,2013-12-31,Hindalco Industries,EXACT_SAFE,"""Hindalco Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDALCO,2014,2014-01-01,2014-12-31,Hindalco Industries,EXACT_SAFE,"""Hindalco Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDALCO,2015,2015-01-01,2015-12-31,Hindalco Industries,EXACT_SAFE,"""Hindalco Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDALCO,2016,2016-01-01,2016-12-31,Hindalco Industries,EXACT_SAFE,"""Hindalco Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDALCO,2017,2017-01-01,2017-12-31,Hindalco Industries,EXACT_SAFE,"""Hindalco Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDALCO,2018,2018-01-01,2018-12-31,Hindalco Industries,EXACT_SAFE,"""Hindalco Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDUNILVR,2013,2013-04-01,2013-12-31,Hindustan Unilever,EXACT_SAFE,"""Hindustan Unilever""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDUNILVR,2014,2014-01-01,2014-12-31,Hindustan Unilever,EXACT_SAFE,"""Hindustan Unilever""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDUNILVR,2015,2015-01-01,2015-12-31,Hindustan Unilever,EXACT_SAFE,"""Hindustan Unilever""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDUNILVR,2016,2016-01-01,2016-12-31,Hindustan Unilever,EXACT_SAFE,"""Hindustan Unilever""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDUNILVR,2017,2017-01-01,2017-12-31,Hindustan Unilever,EXACT_SAFE,"""Hindustan Unilever""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+HINDUNILVR,2018,2018-01-01,2018-12-31,Hindustan Unilever,EXACT_SAFE,"""Hindustan Unilever""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ICICIBANK,2013,2013-04-01,2013-12-31,ICICI Bank,EXACT_SAFE,"""ICICI Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ICICIBANK,2014,2014-01-01,2014-12-31,ICICI Bank,EXACT_SAFE,"""ICICI Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ICICIBANK,2015,2015-01-01,2015-12-31,ICICI Bank,EXACT_SAFE,"""ICICI Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ICICIBANK,2016,2016-01-01,2016-12-31,ICICI Bank,EXACT_SAFE,"""ICICI Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ICICIBANK,2017,2017-01-01,2017-12-31,ICICI Bank,EXACT_SAFE,"""ICICI Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ICICIBANK,2018,2018-01-01,2018-12-31,ICICI Bank,EXACT_SAFE,"""ICICI Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+INFY,2013,2013-04-01,2013-12-31,Infosys Limited,EXACT_SAFE,"""Infosys Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+INFY,2014,2014-01-01,2014-12-31,Infosys Limited,EXACT_SAFE,"""Infosys Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+INFY,2015,2015-01-01,2015-12-31,Infosys Limited,EXACT_SAFE,"""Infosys Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+INFY,2016,2016-01-01,2016-12-31,Infosys Limited,EXACT_SAFE,"""Infosys Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+INFY,2017,2017-01-01,2017-12-31,Infosys Limited,EXACT_SAFE,"""Infosys Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+INFY,2018,2018-01-01,2018-12-31,Infosys Limited,EXACT_SAFE,"""Infosys Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ITC,2013,2013-04-01,2013-12-31,ITC Limited,EXACT_SAFE,"""ITC Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ITC,2014,2014-01-01,2014-12-31,ITC Limited,EXACT_SAFE,"""ITC Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ITC,2015,2015-01-01,2015-12-31,ITC Limited,EXACT_SAFE,"""ITC Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ITC,2016,2016-01-01,2016-12-31,ITC Limited,EXACT_SAFE,"""ITC Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ITC,2017,2017-01-01,2017-12-31,ITC Limited,EXACT_SAFE,"""ITC Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ITC,2018,2018-01-01,2018-12-31,ITC Limited,EXACT_SAFE,"""ITC Limited""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+JSWSTEEL,2013,2013-04-01,2013-12-31,JSW Steel,EXACT_SAFE,"""JSW Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+JSWSTEEL,2014,2014-01-01,2014-12-31,JSW Steel,EXACT_SAFE,"""JSW Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+JSWSTEEL,2015,2015-01-01,2015-12-31,JSW Steel,EXACT_SAFE,"""JSW Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+JSWSTEEL,2016,2016-01-01,2016-12-31,JSW Steel,EXACT_SAFE,"""JSW Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+JSWSTEEL,2017,2017-01-01,2017-12-31,JSW Steel,EXACT_SAFE,"""JSW Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+JSWSTEEL,2018,2018-01-01,2018-12-31,JSW Steel,EXACT_SAFE,"""JSW Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+KOTAKBANK,2013,2013-04-01,2013-12-31,Kotak Mahindra Bank,EXACT_SAFE,"""Kotak Mahindra Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+KOTAKBANK,2014,2014-01-01,2014-12-31,Kotak Mahindra Bank,EXACT_SAFE,"""Kotak Mahindra Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+KOTAKBANK,2015,2015-01-01,2015-12-31,Kotak Mahindra Bank,EXACT_SAFE,"""Kotak Mahindra Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+KOTAKBANK,2016,2016-01-01,2016-12-31,Kotak Mahindra Bank,EXACT_SAFE,"""Kotak Mahindra Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+KOTAKBANK,2017,2017-01-01,2017-12-31,Kotak Mahindra Bank,EXACT_SAFE,"""Kotak Mahindra Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+KOTAKBANK,2018,2018-01-01,2018-12-31,Kotak Mahindra Bank,EXACT_SAFE,"""Kotak Mahindra Bank""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+LT,2013,2013-04-01,2013-12-31,Larsen & Toubro,EXACT_SAFE,"""Larsen & Toubro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+LT,2014,2014-01-01,2014-12-31,Larsen & Toubro,EXACT_SAFE,"""Larsen & Toubro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+LT,2015,2015-01-01,2015-12-31,Larsen & Toubro,EXACT_SAFE,"""Larsen & Toubro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+LT,2016,2016-01-01,2016-12-31,Larsen & Toubro,EXACT_SAFE,"""Larsen & Toubro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+LT,2017,2017-01-01,2017-12-31,Larsen & Toubro,EXACT_SAFE,"""Larsen & Toubro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+LT,2018,2018-01-01,2018-12-31,Larsen & Toubro,EXACT_SAFE,"""Larsen & Toubro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+M&M,2013,2013-04-01,2013-12-31,Mahindra & Mahindra,EXACT_SAFE,"""Mahindra & Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+M&M,2014,2014-01-01,2014-12-31,Mahindra & Mahindra,EXACT_SAFE,"""Mahindra & Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+M&M,2015,2015-01-01,2015-12-31,Mahindra & Mahindra,EXACT_SAFE,"""Mahindra & Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+M&M,2016,2016-01-01,2016-12-31,Mahindra & Mahindra,EXACT_SAFE,"""Mahindra & Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+M&M,2017,2017-01-01,2017-12-31,Mahindra & Mahindra,EXACT_SAFE,"""Mahindra & Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+M&M,2018,2018-01-01,2018-12-31,Mahindra & Mahindra,EXACT_SAFE,"""Mahindra & Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+MARUTI,2013,2013-04-01,2013-12-31,Maruti Suzuki India,EXACT_SAFE,"""Maruti Suzuki India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+MARUTI,2014,2014-01-01,2014-12-31,Maruti Suzuki India,EXACT_SAFE,"""Maruti Suzuki India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+MARUTI,2015,2015-01-01,2015-12-31,Maruti Suzuki India,EXACT_SAFE,"""Maruti Suzuki India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+MARUTI,2016,2016-01-01,2016-12-31,Maruti Suzuki India,EXACT_SAFE,"""Maruti Suzuki India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+MARUTI,2017,2017-01-01,2017-12-31,Maruti Suzuki India,EXACT_SAFE,"""Maruti Suzuki India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+MARUTI,2018,2018-01-01,2018-12-31,Maruti Suzuki India,EXACT_SAFE,"""Maruti Suzuki India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+NTPC,2013,2013-04-01,2013-12-31,NTPC Ltd.,EXACT_SAFE,"""NTPC Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+NTPC,2014,2014-01-01,2014-12-31,NTPC Ltd.,EXACT_SAFE,"""NTPC Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+NTPC,2015,2015-01-01,2015-12-31,NTPC Ltd.,EXACT_SAFE,"""NTPC Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+NTPC,2016,2016-01-01,2016-12-31,NTPC Ltd.,EXACT_SAFE,"""NTPC Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+NTPC,2017,2017-01-01,2017-12-31,NTPC Ltd.,EXACT_SAFE,"""NTPC Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+NTPC,2018,2018-01-01,2018-12-31,NTPC Ltd.,EXACT_SAFE,"""NTPC Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ONGC,2013,2013-04-01,2013-12-31,Oil and Natural Gas Corporation,EXACT_SAFE,"""Oil and Natural Gas Corporation""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ONGC,2014,2014-01-01,2014-12-31,Oil and Natural Gas Corporation,EXACT_SAFE,"""Oil and Natural Gas Corporation""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ONGC,2015,2015-01-01,2015-12-31,Oil and Natural Gas Corporation,EXACT_SAFE,"""Oil and Natural Gas Corporation""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ONGC,2016,2016-01-01,2016-12-31,Oil and Natural Gas Corporation,EXACT_SAFE,"""Oil and Natural Gas Corporation""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ONGC,2017,2017-01-01,2017-12-31,Oil and Natural Gas Corporation,EXACT_SAFE,"""Oil and Natural Gas Corporation""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ONGC,2018,2018-01-01,2018-12-31,Oil and Natural Gas Corporation,EXACT_SAFE,"""Oil and Natural Gas Corporation""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+POWERGRID,2013,2013-04-01,2013-12-31,Power Grid Corporation of India,EXACT_SAFE,"""Power Grid Corporation of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+POWERGRID,2014,2014-01-01,2014-12-31,Power Grid Corporation of India,EXACT_SAFE,"""Power Grid Corporation of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+POWERGRID,2015,2015-01-01,2015-12-31,Power Grid Corporation of India,EXACT_SAFE,"""Power Grid Corporation of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+POWERGRID,2016,2016-01-01,2016-12-31,Power Grid Corporation of India,EXACT_SAFE,"""Power Grid Corporation of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+POWERGRID,2017,2017-01-01,2017-12-31,Power Grid Corporation of India,EXACT_SAFE,"""Power Grid Corporation of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+POWERGRID,2018,2018-01-01,2018-12-31,Power Grid Corporation of India,EXACT_SAFE,"""Power Grid Corporation of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+RELIANCE,2013,2013-04-01,2013-12-31,Reliance Industries,EXACT_SAFE,"""Reliance Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+RELIANCE,2014,2014-01-01,2014-12-31,Reliance Industries,EXACT_SAFE,"""Reliance Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+RELIANCE,2015,2015-01-01,2015-12-31,Reliance Industries,EXACT_SAFE,"""Reliance Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+RELIANCE,2016,2016-01-01,2016-12-31,Reliance Industries,EXACT_SAFE,"""Reliance Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+RELIANCE,2017,2017-01-01,2017-12-31,Reliance Industries,EXACT_SAFE,"""Reliance Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+RELIANCE,2018,2018-01-01,2018-12-31,Reliance Industries,EXACT_SAFE,"""Reliance Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SBIN,2013,2013-04-01,2013-12-31,State Bank of India,EXACT_SAFE,"""State Bank of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SBIN,2014,2014-01-01,2014-12-31,State Bank of India,EXACT_SAFE,"""State Bank of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SBIN,2015,2015-01-01,2015-12-31,State Bank of India,EXACT_SAFE,"""State Bank of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SBIN,2016,2016-01-01,2016-12-31,State Bank of India,EXACT_SAFE,"""State Bank of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SBIN,2017,2017-01-01,2017-12-31,State Bank of India,EXACT_SAFE,"""State Bank of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SBIN,2018,2018-01-01,2018-12-31,State Bank of India,EXACT_SAFE,"""State Bank of India""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SHRIRAMFIN,2013,2013-04-01,2013-12-31,Shriram Transport Finance,HISTORICAL_SAFE,"""Shriram Transport Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SHRIRAMFIN,2014,2014-01-01,2014-12-31,Shriram Transport Finance,HISTORICAL_SAFE,"""Shriram Transport Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SHRIRAMFIN,2015,2015-01-01,2015-12-31,Shriram Transport Finance,HISTORICAL_SAFE,"""Shriram Transport Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SHRIRAMFIN,2016,2016-01-01,2016-12-31,Shriram Transport Finance,HISTORICAL_SAFE,"""Shriram Transport Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SHRIRAMFIN,2017,2017-01-01,2017-12-31,Shriram Transport Finance,HISTORICAL_SAFE,"""Shriram Transport Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SHRIRAMFIN,2018,2018-01-01,2018-12-31,Shriram Transport Finance,HISTORICAL_SAFE,"""Shriram Transport Finance""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SUNPHARMA,2013,2013-04-01,2013-12-31,Sun Pharmaceutical Industries,EXACT_SAFE,"""Sun Pharmaceutical Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SUNPHARMA,2014,2014-01-01,2014-12-31,Sun Pharmaceutical Industries,EXACT_SAFE,"""Sun Pharmaceutical Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SUNPHARMA,2015,2015-01-01,2015-12-31,Sun Pharmaceutical Industries,EXACT_SAFE,"""Sun Pharmaceutical Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SUNPHARMA,2016,2016-01-01,2016-12-31,Sun Pharmaceutical Industries,EXACT_SAFE,"""Sun Pharmaceutical Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SUNPHARMA,2017,2017-01-01,2017-12-31,Sun Pharmaceutical Industries,EXACT_SAFE,"""Sun Pharmaceutical Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+SUNPHARMA,2018,2018-01-01,2018-12-31,Sun Pharmaceutical Industries,EXACT_SAFE,"""Sun Pharmaceutical Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATACONSUM,2013,2013-04-01,2013-12-31,Tata Global Beverages,HISTORICAL_SAFE,"""Tata Global Beverages""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATACONSUM,2014,2014-01-01,2014-12-31,Tata Global Beverages,HISTORICAL_SAFE,"""Tata Global Beverages""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATACONSUM,2015,2015-01-01,2015-12-31,Tata Global Beverages,HISTORICAL_SAFE,"""Tata Global Beverages""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATACONSUM,2016,2016-01-01,2016-12-31,Tata Global Beverages,HISTORICAL_SAFE,"""Tata Global Beverages""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATACONSUM,2017,2017-01-01,2017-12-31,Tata Global Beverages,HISTORICAL_SAFE,"""Tata Global Beverages""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATACONSUM,2018,2018-01-01,2018-12-31,Tata Global Beverages,HISTORICAL_SAFE,"""Tata Global Beverages""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATASTEEL,2013,2013-04-01,2013-12-31,Tata Steel,EXACT_SAFE,"""Tata Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATASTEEL,2014,2014-01-01,2014-12-31,Tata Steel,EXACT_SAFE,"""Tata Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATASTEEL,2015,2015-01-01,2015-12-31,Tata Steel,EXACT_SAFE,"""Tata Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATASTEEL,2016,2016-01-01,2016-12-31,Tata Steel,EXACT_SAFE,"""Tata Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATASTEEL,2017,2017-01-01,2017-12-31,Tata Steel,EXACT_SAFE,"""Tata Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TATASTEEL,2018,2018-01-01,2018-12-31,Tata Steel,EXACT_SAFE,"""Tata Steel""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TCS,2013,2013-04-01,2013-12-31,Tata Consultancy Services,EXACT_SAFE,"""Tata Consultancy Services""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TCS,2014,2014-01-01,2014-12-31,Tata Consultancy Services,EXACT_SAFE,"""Tata Consultancy Services""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TCS,2015,2015-01-01,2015-12-31,Tata Consultancy Services,EXACT_SAFE,"""Tata Consultancy Services""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TCS,2016,2016-01-01,2016-12-31,Tata Consultancy Services,EXACT_SAFE,"""Tata Consultancy Services""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TCS,2017,2017-01-01,2017-12-31,Tata Consultancy Services,EXACT_SAFE,"""Tata Consultancy Services""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TCS,2018,2018-01-01,2018-12-31,Tata Consultancy Services,EXACT_SAFE,"""Tata Consultancy Services""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TECHM,2013,2013-04-01,2013-12-31,Tech Mahindra,EXACT_SAFE,"""Tech Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TECHM,2014,2014-01-01,2014-12-31,Tech Mahindra,EXACT_SAFE,"""Tech Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TECHM,2015,2015-01-01,2015-12-31,Tech Mahindra,EXACT_SAFE,"""Tech Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TECHM,2016,2016-01-01,2016-12-31,Tech Mahindra,EXACT_SAFE,"""Tech Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TECHM,2017,2017-01-01,2017-12-31,Tech Mahindra,EXACT_SAFE,"""Tech Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TECHM,2018,2018-01-01,2018-12-31,Tech Mahindra,EXACT_SAFE,"""Tech Mahindra""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TITAN,2013,2013-04-01,2013-08-31,Titan Industries,HISTORICAL_SAFE,"""Titan Industries""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TITAN,2013,2013-09-01,2013-12-31,Titan Company,EXACT_SAFE,"""Titan Company""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TITAN,2014,2014-01-01,2014-12-31,Titan Company,EXACT_SAFE,"""Titan Company""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TITAN,2015,2015-01-01,2015-12-31,Titan Company,EXACT_SAFE,"""Titan Company""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TITAN,2016,2016-01-01,2016-12-31,Titan Company,EXACT_SAFE,"""Titan Company""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TITAN,2017,2017-01-01,2017-12-31,Titan Company,EXACT_SAFE,"""Titan Company""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TITAN,2018,2018-01-01,2018-12-31,Titan Company,EXACT_SAFE,"""Titan Company""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TMPV,2013,2013-04-01,2013-12-31,Tata Motors Passenger Vehicles,EXACT_SAFE,"""Tata Motors Passenger Vehicles""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TMPV,2014,2014-01-01,2014-12-31,Tata Motors Passenger Vehicles,EXACT_SAFE,"""Tata Motors Passenger Vehicles""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TMPV,2015,2015-01-01,2015-12-31,Tata Motors Passenger Vehicles,EXACT_SAFE,"""Tata Motors Passenger Vehicles""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TMPV,2016,2016-01-01,2016-12-31,Tata Motors Passenger Vehicles,EXACT_SAFE,"""Tata Motors Passenger Vehicles""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TMPV,2017,2017-01-01,2017-12-31,Tata Motors Passenger Vehicles,EXACT_SAFE,"""Tata Motors Passenger Vehicles""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TMPV,2018,2018-01-01,2018-12-31,Tata Motors Passenger Vehicles,EXACT_SAFE,"""Tata Motors Passenger Vehicles""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TRENT,2013,2013-04-01,2013-12-31,Trent Ltd.,EXACT_SAFE,"""Trent Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TRENT,2014,2014-01-01,2014-12-31,Trent Ltd.,EXACT_SAFE,"""Trent Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TRENT,2015,2015-01-01,2015-12-31,Trent Ltd.,EXACT_SAFE,"""Trent Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TRENT,2016,2016-01-01,2016-12-31,Trent Ltd.,EXACT_SAFE,"""Trent Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TRENT,2017,2017-01-01,2017-12-31,Trent Ltd.,EXACT_SAFE,"""Trent Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+TRENT,2018,2018-01-01,2018-12-31,Trent Ltd.,EXACT_SAFE,"""Trent Ltd.""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ULTRACEMCO,2013,2013-04-01,2013-12-31,UltraTech Cement,EXACT_SAFE,"""UltraTech Cement""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ULTRACEMCO,2014,2014-01-01,2014-12-31,UltraTech Cement,EXACT_SAFE,"""UltraTech Cement""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ULTRACEMCO,2015,2015-01-01,2015-12-31,UltraTech Cement,EXACT_SAFE,"""UltraTech Cement""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ULTRACEMCO,2016,2016-01-01,2016-12-31,UltraTech Cement,EXACT_SAFE,"""UltraTech Cement""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ULTRACEMCO,2017,2017-01-01,2017-12-31,UltraTech Cement,EXACT_SAFE,"""UltraTech Cement""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+ULTRACEMCO,2018,2018-01-01,2018-12-31,UltraTech Cement,EXACT_SAFE,"""UltraTech Cement""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+WIPRO,2013,2013-04-01,2013-12-31,Wipro,EXACT_SAFE,"""Wipro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+WIPRO,2014,2014-01-01,2014-12-31,Wipro,EXACT_SAFE,"""Wipro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+WIPRO,2015,2015-01-01,2015-12-31,Wipro,EXACT_SAFE,"""Wipro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+WIPRO,2016,2016-01-01,2016-12-31,Wipro,EXACT_SAFE,"""Wipro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+WIPRO,2017,2017-01-01,2017-12-31,Wipro,EXACT_SAFE,"""Wipro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero
+WIPRO,2018,2018-01-01,2018-12-31,Wipro,EXACT_SAFE,"""Wipro""",False,,,,,,,BLOCKED_NO_CREDENTIAL,no Media Cloud token (absent); coverage unknown and NOT zero

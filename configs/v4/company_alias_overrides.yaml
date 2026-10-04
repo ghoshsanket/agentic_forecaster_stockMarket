@@ -1,0 +1,242 @@
+# V4 company alias overrides.
+#
+# WHY THIS FILE EXISTS
+# --------------------
+# `configs/v2/sector_map.yaml` supplies an official NSE CURRENT company name for
+# 26 supervised tickers. That is evidence of issuer identity and of the current
+# official name -- and it is explicitly NOT evidence that the name was valid
+# during the 2013-2018 news window. A current name applied backwards would be a
+# silent anachronism, so any company whose name changed inside or before the
+# study period is declared here, with a dated alias.
+#
+# Evidence types permitted here:
+#   OFFICIAL_NSE_CONSTITUENT_FILE  ind_nifty50list.csv (official constituent list)
+#   OFFICIAL_NSE_FILING           an NSE filing / official NSE master record
+#   OFFICIAL_COMPANY_FILING       a company filing
+#   OFFICIAL_COMPANY_HISTORY      a company's own official name-change record
+#
+# `historical_validity_independently_fetched: false` means the boundary date comes
+# from a documented official determination that this run did not itself re-fetch
+# from a company filing. It is recorded honestly rather than dressed up as an
+# independently retrieved document.
+#
+# Do not edit configs/v4/company_aliases.yaml by hand: it is generated from the
+# lineage registry, this file and the official NSE sector map.
+
+registry_id: V4_COMPANY_ALIAS_OVERRIDES
+applies_to: results/v2/multi_horizon/supervised_universe_frozen.json
+
+# --------------------------------------------------------------------------
+# Official sources actually retrieved during this run
+# --------------------------------------------------------------------------
+official_sources:
+  nifty50_constituent_list:
+    url: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+    sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+    retrieved: "2026-10-04"
+    note: >-
+      Bit-identical to the source_sha256 already recorded in
+      configs/v2/sector_map.yaml, which confirms that file's evidence is
+      reproducible. This list does NOT contain WIPRO.
+  nse_equity_master:
+    url: https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv
+    sha256: 95f0d731f5858f71e876c45377dcefa79bc7a8db1e8161d0c92320252af4aa8f
+    retrieved: "2026-10-04"
+    note: >-
+      Official NSE security master. Supplies the legal company name, series and
+      ISIN for every symbol used below, including WIPRO.
+
+overrides:
+
+  # ---------------------------------------------------------------- WIPRO ---
+  - ticker: WIPRO
+    canonical_company_name: Wipro Limited
+    aliases:
+      - alias: Wipro Limited
+        class: EXACT_SAFE
+        valid_from: null
+        valid_to: null
+        note: official NSE legal name
+      - alias: Wipro
+        class: EXACT_SAFE
+        valid_from: null
+        valid_to: null
+        note: unambiguous common corporate form
+    valid_from: "1995-11-08"
+    valid_to: null
+    alias_class: EXACT_SAFE
+    evidence_type: OFFICIAL_NSE_FILING
+    evidence_source: https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv
+    evidence_date: "2026-10-04"
+    evidence_record: "WIPRO,Wipro Limited,EQ,08-NOV-1995,2,1,INE075A01022,2"
+    isin: INE075A01022
+    historical_validity_independently_fetched: true
+    notes: >-
+      WIPRO is the single ticker absent from the NIFTY 50 constituent file
+      (sector_map records n_unmapped=1, unmapped_tickers=[WIPRO]), so it was
+      resolved from the official NSE security master instead. Listing date
+      08-NOV-1995 is well before the study period, so the legal name covers
+      2013-2018.
+
+  # ----------------------------------------------------------- SHRIRAMFIN ---
+  - ticker: SHRIRAMFIN
+    canonical_company_name: Shriram Finance Limited
+    aliases:
+      - alias: Shriram Transport Finance Company Limited
+        class: HISTORICAL_SAFE
+        valid_from: null
+        valid_to: 2022-11-29
+        note: >-
+          The listed entity throughout the entire 2013-2018 news window. Using
+          only "Shriram Finance" for 2013-2018 would search a name that did not
+          exist yet.
+      - alias: Shriram Transport Finance
+        class: HISTORICAL_SAFE
+        valid_from: null
+        valid_to: 2022-11-29
+        note: unambiguous common corporate form of the historical name
+      - alias: Shriram Finance Limited
+        class: EXACT_SAFE
+        valid_from: 2022-11-30
+        valid_to: null
+        note: current official NSE name, valid only after the 2022 change
+      - alias: Shriram Finance
+        class: EXACT_SAFE
+        valid_from: 2022-11-30
+        valid_to: null
+        note: current common corporate form
+    valid_from: null
+    valid_to: null
+    alias_class: EXACT_SAFE
+    evidence_type: OFFICIAL_COMPANY_HISTORY
+    evidence_source: https://www.shriramfinance.in/
+    evidence_date: "2026-10-04"
+    historical_validity_independently_fetched: false
+    notes: >-
+      Name changed to Shriram Finance Limited effective 2022-11-30, i.e. after
+      the whole V4 development interval. The 2013-2018 query MUST use the
+      Shriram Transport Finance Company form. Current-name evidence verified
+      against the official NSE security master; the 2022 boundary is a documented
+      official company determination not re-fetched in this run.
+
+  # ----------------------------------------------------------- TATACONSUM ---
+  - ticker: TATACONSUM
+    canonical_company_name: Tata Consumer Products Limited
+    aliases:
+      - alias: Tata Global Beverages Limited
+        class: HISTORICAL_SAFE
+        valid_from: null
+        valid_to: 2020-01-31
+        note: >-
+          The listed company throughout 2013-2018. Searching "Tata Consumer
+          Products" for 2015 would match nothing, because that name did not
+          exist.
+      - alias: Tata Global Beverages
+        class: HISTORICAL_SAFE
+        valid_from: null
+        valid_to: 2020-01-31
+        note: unambiguous common corporate form of the historical name
+      - alias: Tata Consumer Products Limited
+        class: EXACT_SAFE
+        valid_from: 2020-02-01
+        valid_to: null
+        note: current official name, valid only after the February 2020 change
+      - alias: Tata Consumer Products
+        class: EXACT_SAFE
+        valid_from: 2020-02-01
+        valid_to: null
+        note: current common corporate form
+    valid_from: null
+    valid_to: null
+    alias_class: EXACT_SAFE
+    evidence_type: OFFICIAL_COMPANY_HISTORY
+    evidence_source: https://www.tataconsumerproducts.com/
+    evidence_date: "2026-10-04"
+    historical_validity_independently_fetched: false
+    notes: >-
+      Tata Global Beverages Limited was renamed Tata Consumer Products Limited in
+      February 2020, after the development interval. Current name verified in the
+      official NSE security master as "TATA CONSUMER PRODUCTS LIMITED" (normalised
+      to title case here). The 2020 boundary is a documented official company
+      determination not re-fetched in this run; the corporate site did not
+      respond to an automated fetch.
+
+  # ---------------------------------------------------------------- TITAN ---
+  - ticker: TITAN
+    canonical_company_name: Titan Company Limited
+    aliases:
+      - alias: Titan Industries Limited
+        class: HISTORICAL_SAFE
+        valid_from: null
+        valid_to: 2013-08-31
+        note: >-
+          The name in force at the very start of the study period. Titan
+          Industries Limited became Titan Company Limited during 2013, so the
+          first months of 2013 must not be searched with the new name.
+      - alias: Titan Industries
+        class: HISTORICAL_SAFE
+        valid_from: null
+        valid_to: 2013-08-31
+        note: common corporate form of the historical name
+      - alias: Titan Company Limited
+        class: EXACT_SAFE
+        valid_from: 2013-09-01
+        valid_to: null
+        note: current official NSE name
+      - alias: Titan Company
+        class: EXACT_SAFE
+        valid_from: 2013-09-01
+        valid_to: null
+        note: current common corporate form
+    valid_from: null
+    valid_to: null
+    alias_class: EXACT_SAFE
+    evidence_type: OFFICIAL_COMPANY_HISTORY
+    evidence_source: https://www.titancompany.in/
+    evidence_date: "2026-10-04"
+    historical_validity_independently_fetched: false
+    notes: >-
+      The rename to Titan Company Limited completed during 2013. The official
+      company site currently renders "Titan Company Ltd.", confirming the current
+      name; the exact 2013 effective boundary is a documented official
+      determination recorded here and not independently re-fetched. Because the
+      boundary falls INSIDE 2013, 2013 must be queried with both names and the
+      date-aware query builder splits the year rather than picking one.
+
+  # ------------------------------------------------------------ ADANIPORTS ---
+  - ticker: ADANIPORTS
+    canonical_company_name: Adani Ports and Special Economic Zone Limited
+    aliases:
+      - alias: Adani Ports and Special Economic Zone Limited
+        class: EXACT_SAFE
+        valid_from: 2012-01-06
+        valid_to: null
+        note: >-
+          Valid across the whole 2013-2018 window, so the current name may be used
+          throughout the study period.
+      - alias: Adani Ports and Special Economic Zone
+        class: EXACT_SAFE
+        valid_from: 2012-01-06
+        valid_to: null
+        note: unambiguous common corporate form
+      - alias: Mundra Port and Special Economic Zone Limited
+        class: REJECTED
+        valid_from: null
+        valid_to: 2012-01-05
+        note: >-
+          Pre-2012 name, retained as historical metadata only. It is REJECTED as
+          a V4 development alias because it was already superseded before the
+          news window opens.
+    valid_from: 2012-01-06
+    valid_to: null
+    alias_class: EXACT_SAFE
+    evidence_type: OFFICIAL_COMPANY_HISTORY
+    evidence_source: https://www.adaniports.com/
+    evidence_date: "2026-10-04"
+    historical_validity_independently_fetched: false
+    notes: >-
+      Renamed from Mundra Port and Special Economic Zone Limited effective
+      2012-01-06, i.e. before the study period, so the current name is valid for
+      every development year. The official site renders "Adani Ports and SEZ Ltd"
+      and the NSE security master gives "Adani Ports and Special Economic Zone
+      Limited".

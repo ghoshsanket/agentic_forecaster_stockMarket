@@ -10,20 +10,39 @@ WHY THE SCHEMA IS VERIFIED RATHER THAN ASSUMED
 -----------------------------------------------
 The official ``GDELT-Event_Codebook-V2.0.pdf`` is fetched and its semantics are
 recorded (QuadClass 1=Verbal Cooperation, 2=Material Cooperation,
-3=Verbal Conflict, 4=Material Conflict; GoldsteinScale -10..+10; DATEADDED is
-the date the event was ADDED to the database, i.e. the file/discovery date used
-for point-in-time aggregation).  The codebook does NOT publish a positional
-column index, so positions are DERIVED and then PROVEN from a real archive:
+3=Verbal Conflict, 4=Material Conflict; DATEADDED is the date the event was ADDED
+to the database, i.e. the file/discovery date used for point-in-time
+aggregation).  The codebook does NOT publish a positional column index, so
+positions are DERIVED and then PROVEN from a real archive.
 
-* ``DATEADDED`` must equal the archive's own 14-digit stamp for every row -- a
-  check that cannot pass by accident;
-* ``SOURCEURL`` is the only field matching an http URL;
-* ``GLOBALEVENTID`` is field 0 and is a large integer;
-* ``QuadClass`` takes only values in {1,2,3,4};
-* ``GoldsteinScale`` and ``AvgTone`` lie in [-10, 10].
+VERIFIED FACTS (measured, not assumed)
+--------------------------------------
+* The archives are **TAB-delimited despite the ``.CSV`` extension**. Parsing them
+  as comma-separated yields 5-10 "columns" and silently corrupts every index.
+* Verified field width: **61**.
+* ``DATEADDED`` = field **59**. It must equal the archive's own 14-digit stamp on
+  every row -- a check that cannot pass by accident.
+* ``QuadClass`` = field **29**.
+* ``GoldsteinScale`` = field **30**. This is bounded [-10, +10], as documented.
+* ``AvgTone`` = field **34**. It is **NOT** bounded [-10, +10]: it is an average
+  of document tones and was observed spanning roughly -18.03 to +9.45. Treating
+  the codebook's +/-10 bound as a property of AvgTone makes a correct column look
+  invalid.
+* ``SOURCEURL`` = field 60.
+* ``EventDate`` must NOT be used for point-in-time feature windows. It can predate
+  the archive stamp by a year, so windows built on it would be stale.
+  Point-in-time aggregation uses ``DATEADDED`` (file discovery time).
 
-A field that fails its invariant is never used.  Every archive is hashed,
-ZIP-validated, streamed, and the temporary file is deleted after reduction.
+IDENTIFICATION IS SEMANTIC, NOT POSITIONAL
+------------------------------------------
+``DATEADDED`` and ``SOURCEURL`` are found by decisive invariants.
+``GoldsteinScale`` is then told apart from ``AvgTone`` by falsifiable semantics:
+because Goldstein scores are assigned to event TYPES, mean Goldstein must rank
+QuadClass 2 > 1 > 3 > 4. ``AvgTone`` is identified as the remaining CONTINUOUS
+numeric column, so a binary flag such as ``IsRootEvent`` (0/1) can never be
+mistaken for it. Malformed/ragged rows are counted and dropped before any
+positional access. A field failing its invariant is never used. Every archive is
+hashed, ZIP-validated, streamed, and the temporary file deleted after reduction.
 """
 
 from __future__ import annotations
