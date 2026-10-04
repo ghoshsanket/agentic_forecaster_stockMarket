@@ -1,0 +1,1453 @@
+{
+  "generated_at": "2026-10-04T04:54:11.659498+00:00",
+  "classification": "NEW_EXPERIMENTAL_ARCHITECTURE",
+  "is_original_paper_model": false,
+  "development_folds": [
+    "V2_DEV_FOLD_A",
+    "V2_DEV_FOLD_B"
+  ],
+  "lockbox_fold_used": false,
+  "seed": 42,
+  "variants": {
+    "V2-A": {
+      "per_fold": {
+        "V2_DEV_FOLD_A": {
+          "experiment_id": "V2A-20261004T044346-da20aa",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/V2A-20261004T044346-da20aa",
+          "accuracy_micro": 0.5092975206611571,
+          "accuracy_macro_ticker": 0.509297520661157,
+          "f1": 0.6233148295003965,
+          "roc_auc": 0.5216411243800316,
+          "brier": 0.24987344640950854,
+          "ece": 0.014526362284689502,
+          "train_majority_baseline": 0.5094900028977108,
+          "precision_at_3_up": 0.5234159779614326,
+          "precision_at_3_down": 0.5137741046831956,
+          "return_mae": null,
+          "return_spearman": null,
+          "rank_ic": null,
+          "best_epoch": 4.0,
+          "n_parameters": 156370.0,
+          "test_2022_2023_evaluated": "false",
+          "balanced_accuracy": 0.512156022298048,
+          "delta_vs_train_majority_macro": -0.00019248223655388141,
+          "n_predictions": 1936,
+          "training_seconds": 33.021881646011025,
+          "epochs_run": 10,
+          "peak_gpu_memory_mb": 296.89306640625,
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5618556701030928
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5618556701030928
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5618556701030928
+            }
+          },
+          "coverage_curve": [
+            {
+              "coverage_target": 1.0,
+              "n": 1936,
+              "coverage_retained": 1.0,
+              "accuracy": 0.5092975206611571,
+              "f1": 0.6233148295003965,
+              "n_tickers": 8,
+              "mean_confidence": 0.0121366786772135
+            },
+            {
+              "coverage_target": 0.75,
+              "n": 1452,
+              "coverage_retained": 0.75,
+              "accuracy": 0.5158402203856749,
+              "f1": 0.6511166253101737,
+              "n_tickers": 8,
+              "mean_confidence": 0.0153211714780681
+            },
+            {
+              "coverage_target": 0.5,
+              "n": 968,
+              "coverage_retained": 0.5,
+              "accuracy": 0.5103305785123967,
+              "f1": 0.6623931623931624,
+              "n_tickers": 8,
+              "mean_confidence": 0.0189378310186645
+            },
+            {
+              "coverage_target": 0.3,
+              "n": 581,
+              "coverage_retained": 0.3001033057851239,
+              "accuracy": 0.5266781411359724,
+              "f1": 0.6806039488966318,
+              "n_tickers": 8,
+              "mean_confidence": 0.0226039541898119
+            },
+            {
+              "coverage_target": 0.2,
+              "n": 387,
+              "coverage_retained": 0.199896694214876,
+              "accuracy": 0.5297157622739018,
+              "f1": 0.689419795221843,
+              "n_tickers": 8,
+              "mean_confidence": 0.025160976401194
+            },
+            {
+              "coverage_target": 0.1,
+              "n": 194,
+              "coverage_retained": 0.1002066115702479,
+              "accuracy": 0.5618556701030928,
+              "f1": 0.7194719471947195,
+              "n_tickers": 7,
+              "mean_confidence": 0.0292084388313659
+            }
+          ],
+          "per_ticker": [
+            {
+              "ticker": "HDFCBANK",
+              "n": 242,
+              "accuracy": 0.5165289256198347,
+              "majority_baseline": 0.5165289256198347,
+              "delta_vs_majority": 0.0,
+              "positive_rate": 0.5165289256198347,
+              "mean_p_up": 0.5123549373585774,
+              "mean_confidence": 0.0130033240876313
+            },
+            {
+              "ticker": "INFY",
+              "n": 242,
+              "accuracy": 0.5330578512396694,
+              "majority_baseline": 0.5289256198347108,
+              "delta_vs_majority": 0.0041322314049586,
+              "positive_rate": 0.5289256198347108,
+              "mean_p_up": 0.5095366600236617,
+              "mean_confidence": 0.0114385672878044
+            },
+            {
+              "ticker": "ITC",
+              "n": 242,
+              "accuracy": 0.5,
+              "majority_baseline": 0.5165289256198347,
+              "delta_vs_majority": -0.0165289256198346,
+              "positive_rate": 0.4834710743801653,
+              "mean_p_up": 0.5125317388953322,
+              "mean_confidence": 0.0129990915770622
+            },
+            {
+              "ticker": "LT",
+              "n": 242,
+              "accuracy": 0.4876033057851239,
+              "majority_baseline": 0.5371900826446281,
+              "delta_vs_majority": -0.0495867768595041,
+              "positive_rate": 0.4628099173553719,
+              "mean_p_up": 0.5098052681963346,
+              "mean_confidence": 0.0126360799526333
+            },
+            {
+              "ticker": "RELIANCE",
+              "n": 242,
+              "accuracy": 0.4793388429752066,
+              "majority_baseline": 0.5165289256198347,
+              "delta_vs_majority": -0.037190082644628,
+              "positive_rate": 0.4834710743801653,
+              "mean_p_up": 0.5096022615936402,
+              "mean_confidence": 0.0122251814318321
+            },
+            {
+              "ticker": "SUNPHARMA",
+              "n": 242,
+              "accuracy": 0.512396694214876,
+              "majority_baseline": 0.5,
+              "delta_vs_majority": 0.0123966942148759,
+              "positive_rate": 0.5,
+              "mean_p_up": 0.5065003741733749,
+              "mean_confidence": 0.0099388939287647
+            },
+            {
+              "ticker": "TATASTEEL",
+              "n": 242,
+              "accuracy": 0.4917355371900826,
+              "majority_baseline": 0.524793388429752,
+              "delta_vs_majority": -0.0330578512396693,
+              "positive_rate": 0.4752066115702479,
+              "mean_p_up": 0.5170198941049664,
+              "mean_confidence": 0.0175128199174398
+            },
+            {
+              "ticker": "TCS",
+              "n": 242,
+              "accuracy": 0.5537190082644629,
+              "majority_baseline": 0.512396694214876,
+              "delta_vs_majority": 0.0413223140495868,
+              "positive_rate": 0.512396694214876,
+              "mean_p_up": 0.5016696812870005,
+              "mean_confidence": 0.0073394712345399
+            }
+          ]
+        },
+        "V2_DEV_FOLD_B": {
+          "experiment_id": "V2A-20261004T044423-b75ec8",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/V2A-20261004T044423-b75ec8",
+          "accuracy_micro": 0.502,
+          "accuracy_macro_ticker": 0.502,
+          "f1": 0.6370262390670554,
+          "roc_auc": 0.4549807392442408,
+          "brier": 0.2505971518866692,
+          "ece": 0.011467529232524771,
+          "train_majority_baseline": 0.5086288576069301,
+          "precision_at_3_up": 0.5026666666666666,
+          "precision_at_3_down": 0.47333333333333333,
+          "return_mae": null,
+          "return_spearman": null,
+          "rank_ic": null,
+          "best_epoch": 1.0,
+          "n_parameters": 156370.0,
+          "test_2022_2023_evaluated": "false",
+          "balanced_accuracy": 0.48591619867639924,
+          "delta_vs_train_majority_macro": -0.006628857606930105,
+          "n_predictions": 2000,
+          "training_seconds": 25.261769817996537,
+          "epochs_run": 7,
+          "peak_gpu_memory_mb": 296.89306640625,
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.502
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.502
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.502
+            }
+          },
+          "coverage_curve": [
+            {
+              "coverage_target": 1.0,
+              "n": 2000,
+              "coverage_retained": 1.0,
+              "accuracy": 0.502,
+              "f1": 0.6370262390670554,
+              "n_tickers": 8,
+              "mean_confidence": 0.0128935485962368
+            },
+            {
+              "coverage_target": 0.75,
+              "n": 1500,
+              "coverage_retained": 0.75,
+              "accuracy": 0.496,
+              "f1": 0.6480446927374302,
+              "n_tickers": 8,
+              "mean_confidence": 0.0164360771203123
+            },
+            {
+              "coverage_target": 0.5,
+              "n": 1000,
+              "coverage_retained": 0.5,
+              "accuracy": 0.484,
+              "f1": 0.6470588235294118,
+              "n_tickers": 8,
+              "mean_confidence": 0.0210126932185035
+            },
+            {
+              "coverage_target": 0.3,
+              "n": 600,
+              "coverage_retained": 0.3,
+              "accuracy": 0.4783333333333333,
+              "f1": 0.6471251409244645,
+              "n_tickers": 8,
+              "mean_confidence": 0.0254874586186001
+            },
+            {
+              "coverage_target": 0.2,
+              "n": 400,
+              "coverage_retained": 0.2,
+              "accuracy": 0.4525,
+              "f1": 0.6230636833046471,
+              "n_tickers": 8,
+              "mean_confidence": 0.028045629096152
+            },
+            {
+              "coverage_target": 0.1,
+              "n": 200,
+              "coverage_retained": 0.1,
+              "accuracy": 0.42,
+              "f1": 0.5915492957746479,
+              "n_tickers": 7,
+              "mean_confidence": 0.0312234447612444
+            }
+          ],
+          "per_ticker": [
+            {
+              "ticker": "HDFCBANK",
+              "n": 250,
+              "accuracy": 0.496,
+              "majority_baseline": 0.532,
+              "delta_vs_majority": -0.036,
+              "positive_rate": 0.532,
+              "mean_p_up": 0.5104146109243942,
+              "mean_confidence": 0.011733331519321
+            },
+            {
+              "ticker": "INFY",
+              "n": 250,
+              "accuracy": 0.54,
+              "majority_baseline": 0.54,
+              "delta_vs_majority": 0.0,
+              "positive_rate": 0.54,
+              "mean_p_up": 0.5100831374148234,
+              "mean_confidence": 0.0103533000010268
+            },
+            {
+              "ticker": "ITC",
+              "n": 250,
+              "accuracy": 0.468,
+              "majority_baseline": 0.532,
+              "delta_vs_majority": -0.064,
+              "positive_rate": 0.468,
+              "mean_p_up": 0.5176732481945634,
+              "mean_confidence": 0.0182548076789621
+            },
+            {
+              "ticker": "LT",
+              "n": 250,
+              "accuracy": 0.48,
+              "majority_baseline": 0.516,
+              "delta_vs_majority": -0.036,
+              "positive_rate": 0.516,
+              "mean_p_up": 0.5165785687861814,
+              "mean_confidence": 0.0174519710613139
+            },
+            {
+              "ticker": "RELIANCE",
+              "n": 250,
+              "accuracy": 0.488,
+              "majority_baseline": 0.516,
+              "delta_vs_majority": -0.028,
+              "positive_rate": 0.516,
+              "mean_p_up": 0.5125107762217966,
+              "mean_confidence": 0.0142155632700158
+            },
+            {
+              "ticker": "SUNPHARMA",
+              "n": 250,
+              "accuracy": 0.5,
+              "majority_baseline": 0.52,
+              "delta_vs_majority": -0.02,
+              "positive_rate": 0.52,
+              "mean_p_up": 0.5104151010389011,
+              "mean_confidence": 0.0127934492108032
+            },
+            {
+              "ticker": "TATASTEEL",
+              "n": 250,
+              "accuracy": 0.504,
+              "majority_baseline": 0.548,
+              "delta_vs_majority": -0.044,
+              "positive_rate": 0.548,
+              "mean_p_up": 0.5047885718665127,
+              "mean_confidence": 0.0084182171765288
+            },
+            {
+              "ticker": "TCS",
+              "n": 250,
+              "accuracy": 0.54,
+              "majority_baseline": 0.544,
+              "delta_vs_majority": -0.004,
+              "positive_rate": 0.544,
+              "mean_p_up": 0.5097957516926285,
+              "mean_confidence": 0.0099277488519228
+            }
+          ]
+        }
+      },
+      "mean_accuracy_macro_ticker": 0.5056487603305785,
+      "mean_accuracy_micro": 0.5056487603305786,
+      "mean_f1": 0.6301705342837259,
+      "mean_roc_auc": 0.48831093181213625,
+      "mean_brier": 0.25023529914808884,
+      "mean_ece": 0.012996945758607137,
+      "mean_precision_at_3_up": 0.5130413223140495,
+      "mean_precision_at_3_down": 0.4935537190082645,
+      "mean_train_majority_baseline": 0.5090594302523205,
+      "mean_return_mae": null,
+      "mean_return_spearman": null,
+      "mean_rank_ic": null,
+      "baseline_delta_per_fold": {
+        "V2_DEV_FOLD_A": -0.00019248223655388141,
+        "V2_DEV_FOLD_B": -0.006628857606930105
+      },
+      "beats_baseline_both_folds": false,
+      "n_folds": 2
+    },
+    "V2-B": {
+      "per_fold": {
+        "V2_DEV_FOLD_A": {
+          "experiment_id": "V2B-20261004T044453-b99057",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/V2B-20261004T044453-b99057",
+          "accuracy_micro": 0.5180785123966942,
+          "accuracy_macro_ticker": 0.5180785123966942,
+          "f1": 0.5559257496430271,
+          "roc_auc": 0.5185897114338867,
+          "brier": 0.24998294337276727,
+          "ece": 0.010412993065974648,
+          "train_majority_baseline": 0.5094900028977108,
+          "precision_at_3_up": 0.5082644628099173,
+          "precision_at_3_down": 0.5234159779614326,
+          "return_mae": null,
+          "return_spearman": null,
+          "rank_ic": null,
+          "best_epoch": 5.0,
+          "n_parameters": 223314.0,
+          "test_2022_2023_evaluated": "false",
+          "balanced_accuracy": 0.5189157718238997,
+          "delta_vs_train_majority_macro": 0.008588509498983377,
+          "n_predictions": 1936,
+          "training_seconds": 44.20071828798973,
+          "epochs_run": 11,
+          "peak_gpu_memory_mb": 297.92822265625,
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5216942148760331
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5216942148760331
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5216942148760331
+            }
+          },
+          "coverage_curve": [
+            {
+              "coverage_target": 1.0,
+              "n": 1936,
+              "coverage_retained": 1.0,
+              "accuracy": 0.5180785123966942,
+              "f1": 0.5559257496430271,
+              "n_tickers": 8,
+              "mean_confidence": 0.0076655193307196
+            },
+            {
+              "coverage_target": 0.75,
+              "n": 1452,
+              "coverage_retained": 0.75,
+              "accuracy": 0.518595041322314,
+              "f1": 0.5567533291058973,
+              "n_tickers": 8,
+              "mean_confidence": 0.0097255688569518
+            },
+            {
+              "coverage_target": 0.5,
+              "n": 968,
+              "coverage_retained": 0.5,
+              "accuracy": 0.5216942148760331,
+              "f1": 0.5299492385786801,
+              "n_tickers": 8,
+              "mean_confidence": 0.0123614088378708
+            },
+            {
+              "coverage_target": 0.3,
+              "n": 581,
+              "coverage_retained": 0.3001033057851239,
+              "accuracy": 0.5025817555938038,
+              "f1": 0.4577861163227016,
+              "n_tickers": 8,
+              "mean_confidence": 0.0156584553086872
+            },
+            {
+              "coverage_target": 0.2,
+              "n": 387,
+              "coverage_retained": 0.199896694214876,
+              "accuracy": 0.5090439276485789,
+              "f1": 0.3581081081081081,
+              "n_tickers": 8,
+              "mean_confidence": 0.0183636054498712
+            },
+            {
+              "coverage_target": 0.1,
+              "n": 194,
+              "coverage_retained": 0.1002066115702479,
+              "accuracy": 0.4690721649484536,
+              "f1": 0.0,
+              "n_tickers": 8,
+              "mean_confidence": 0.0233959128290876
+            }
+          ],
+          "per_ticker": [
+            {
+              "ticker": "HDFCBANK",
+              "n": 242,
+              "accuracy": 0.5082644628099173,
+              "majority_baseline": 0.5165289256198347,
+              "delta_vs_majority": -0.0082644628099173,
+              "positive_rate": 0.5165289256198347,
+              "mean_p_up": 0.5040521640717726,
+              "mean_confidence": 0.0076849448166702
+            },
+            {
+              "ticker": "INFY",
+              "n": 242,
+              "accuracy": 0.512396694214876,
+              "majority_baseline": 0.5289256198347108,
+              "delta_vs_majority": -0.0165289256198347,
+              "positive_rate": 0.5289256198347108,
+              "mean_p_up": 0.5010694631439763,
+              "mean_confidence": 0.0061442275754067
+            },
+            {
+              "ticker": "ITC",
+              "n": 242,
+              "accuracy": 0.5082644628099173,
+              "majority_baseline": 0.5165289256198347,
+              "delta_vs_majority": -0.0082644628099173,
+              "positive_rate": 0.4834710743801653,
+              "mean_p_up": 0.4998434692764593,
+              "mean_confidence": 0.0072703308895575
+            },
+            {
+              "ticker": "LT",
+              "n": 242,
+              "accuracy": 0.5578512396694215,
+              "majority_baseline": 0.5371900826446281,
+              "delta_vs_majority": 0.0206611570247934,
+              "positive_rate": 0.4628099173553719,
+              "mean_p_up": 0.5012766811971305,
+              "mean_confidence": 0.0091698003110318
+            },
+            {
+              "ticker": "RELIANCE",
+              "n": 242,
+              "accuracy": 0.4876033057851239,
+              "majority_baseline": 0.5165289256198347,
+              "delta_vs_majority": -0.0289256198347107,
+              "positive_rate": 0.4834710743801653,
+              "mean_p_up": 0.4990580175512156,
+              "mean_confidence": 0.005447481427961
+            },
+            {
+              "ticker": "SUNPHARMA",
+              "n": 242,
+              "accuracy": 0.5041322314049587,
+              "majority_baseline": 0.5,
+              "delta_vs_majority": 0.0041322314049586,
+              "positive_rate": 0.5,
+              "mean_p_up": 0.4923634441205837,
+              "mean_confidence": 0.0110353038421617
+            },
+            {
+              "ticker": "TATASTEEL",
+              "n": 242,
+              "accuracy": 0.512396694214876,
+              "majority_baseline": 0.524793388429752,
+              "delta_vs_majority": -0.0123966942148759,
+              "positive_rate": 0.4752066115702479,
+              "mean_p_up": 0.4937656334608008,
+              "mean_confidence": 0.0097460508906119
+            },
+            {
+              "ticker": "TCS",
+              "n": 242,
+              "accuracy": 0.5537190082644629,
+              "majority_baseline": 0.512396694214876,
+              "delta_vs_majority": 0.0413223140495868,
+              "positive_rate": 0.512396694214876,
+              "mean_p_up": 0.5016063072395965,
+              "mean_confidence": 0.0048260148923559
+            }
+          ]
+        },
+        "V2_DEV_FOLD_B": {
+          "experiment_id": "V2B-20261004T044541-a6232b",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/V2B-20261004T044541-a6232b",
+          "accuracy_micro": 0.523,
+          "accuracy_macro_ticker": 0.523,
+          "f1": 0.6868023637557452,
+          "roc_auc": 0.48848363136396616,
+          "brier": 0.24964817592717908,
+          "ece": 0.006695130439228647,
+          "train_majority_baseline": 0.5086288576069301,
+          "precision_at_3_up": 0.5253333333333332,
+          "precision_at_3_down": 0.4773333333333334,
+          "return_mae": null,
+          "return_spearman": null,
+          "rank_ic": null,
+          "best_epoch": 1.0,
+          "n_parameters": 223314.0,
+          "test_2022_2023_evaluated": "false",
+          "balanced_accuracy": 0.5,
+          "delta_vs_train_majority_macro": 0.014371142393069913,
+          "n_predictions": 2000,
+          "training_seconds": 27.577408839017153,
+          "epochs_run": 7,
+          "peak_gpu_memory_mb": 297.92822265625,
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.523
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.523
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.523
+            }
+          },
+          "coverage_curve": [
+            {
+              "coverage_target": 1.0,
+              "n": 2000,
+              "coverage_retained": 1.0,
+              "accuracy": 0.523,
+              "f1": 0.6868023637557452,
+              "n_tickers": 8,
+              "mean_confidence": 0.0296951304392286
+            },
+            {
+              "coverage_target": 0.75,
+              "n": 1500,
+              "coverage_retained": 0.75,
+              "accuracy": 0.5186666666666667,
+              "f1": 0.6830553116769096,
+              "n_tickers": 8,
+              "mean_confidence": 0.0315274380963711
+            },
+            {
+              "coverage_target": 0.5,
+              "n": 1000,
+              "coverage_retained": 0.5,
+              "accuracy": 0.517,
+              "f1": 0.6816084377059987,
+              "n_tickers": 8,
+              "mean_confidence": 0.0333704026671092
+            },
+            {
+              "coverage_target": 0.3,
+              "n": 600,
+              "coverage_retained": 0.3,
+              "accuracy": 0.51,
+              "f1": 0.6754966887417219,
+              "n_tickers": 8,
+              "mean_confidence": 0.035234932795679
+            },
+            {
+              "coverage_target": 0.2,
+              "n": 400,
+              "coverage_retained": 0.2,
+              "accuracy": 0.4925,
+              "f1": 0.6599664991624791,
+              "n_tickers": 7,
+              "mean_confidence": 0.0364422541630046
+            },
+            {
+              "coverage_target": 0.1,
+              "n": 200,
+              "coverage_retained": 0.1,
+              "accuracy": 0.48,
+              "f1": 0.6486486486486487,
+              "n_tickers": 7,
+              "mean_confidence": 0.0381468202427064
+            }
+          ],
+          "per_ticker": [
+            {
+              "ticker": "HDFCBANK",
+              "n": 250,
+              "accuracy": 0.532,
+              "majority_baseline": 0.532,
+              "delta_vs_majority": 0.0,
+              "positive_rate": 0.532,
+              "mean_p_up": 0.5299200494294019,
+              "mean_confidence": 0.0299200494294018
+            },
+            {
+              "ticker": "INFY",
+              "n": 250,
+              "accuracy": 0.54,
+              "majority_baseline": 0.54,
+              "delta_vs_majority": 0.0,
+              "positive_rate": 0.54,
+              "mean_p_up": 0.527905089780035,
+              "mean_confidence": 0.027905089780035
+            },
+            {
+              "ticker": "ITC",
+              "n": 250,
+              "accuracy": 0.468,
+              "majority_baseline": 0.532,
+              "delta_vs_majority": -0.064,
+              "positive_rate": 0.468,
+              "mean_p_up": 0.5319093721020698,
+              "mean_confidence": 0.0319093721020697
+            },
+            {
+              "ticker": "LT",
+              "n": 250,
+              "accuracy": 0.516,
+              "majority_baseline": 0.516,
+              "delta_vs_majority": 0.0,
+              "positive_rate": 0.516,
+              "mean_p_up": 0.530121177403559,
+              "mean_confidence": 0.030121177403559
+            },
+            {
+              "ticker": "RELIANCE",
+              "n": 250,
+              "accuracy": 0.516,
+              "majority_baseline": 0.516,
+              "delta_vs_majority": 0.0,
+              "positive_rate": 0.516,
+              "mean_p_up": 0.5297915123851807,
+              "mean_confidence": 0.0297915123851807
+            },
+            {
+              "ticker": "SUNPHARMA",
+              "n": 250,
+              "accuracy": 0.52,
+              "majority_baseline": 0.52,
+              "delta_vs_majority": 0.0,
+              "positive_rate": 0.52,
+              "mean_p_up": 0.5275633088396102,
+              "mean_confidence": 0.0275633088396103
+            },
+            {
+              "ticker": "TATASTEEL",
+              "n": 250,
+              "accuracy": 0.548,
+              "majority_baseline": 0.548,
+              "delta_vs_majority": 0.0,
+              "positive_rate": 0.548,
+              "mean_p_up": 0.5331973138084927,
+              "mean_confidence": 0.0331973138084926
+            },
+            {
+              "ticker": "TCS",
+              "n": 250,
+              "accuracy": 0.544,
+              "majority_baseline": 0.544,
+              "delta_vs_majority": 0.0,
+              "positive_rate": 0.544,
+              "mean_p_up": 0.5271532197654798,
+              "mean_confidence": 0.0271532197654797
+            }
+          ]
+        }
+      },
+      "mean_accuracy_macro_ticker": 0.5205392561983471,
+      "mean_accuracy_micro": 0.5205392561983471,
+      "mean_f1": 0.6213640566993861,
+      "mean_roc_auc": 0.5035366713989264,
+      "mean_brier": 0.24981555964997318,
+      "mean_ece": 0.008554061752601648,
+      "mean_precision_at_3_up": 0.5167988980716253,
+      "mean_precision_at_3_down": 0.5003746556473829,
+      "mean_train_majority_baseline": 0.5090594302523205,
+      "mean_return_mae": null,
+      "mean_return_spearman": null,
+      "mean_rank_ic": null,
+      "baseline_delta_per_fold": {
+        "V2_DEV_FOLD_A": 0.008588509498983377,
+        "V2_DEV_FOLD_B": 0.014371142393069913
+      },
+      "beats_baseline_both_folds": true,
+      "n_folds": 2
+    },
+    "V2-C": {
+      "per_fold": {
+        "V2_DEV_FOLD_A": {
+          "experiment_id": "V2C-20261004T044613-29f04d",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/V2C-20261004T044613-29f04d",
+          "accuracy_micro": 0.5247933884297521,
+          "accuracy_macro_ticker": 0.524793388429752,
+          "f1": 0.5286885245901639,
+          "roc_auc": 0.5200369712992146,
+          "brier": 0.24985703253672412,
+          "ece": 0.006253828490112186,
+          "train_majority_baseline": 0.5108866261520506,
+          "precision_at_3_up": 0.5055096418732782,
+          "precision_at_3_down": 0.5234159779614326,
+          "return_mae": null,
+          "return_spearman": null,
+          "rank_ic": null,
+          "best_epoch": 3.0,
+          "n_parameters": 230746.0,
+          "test_2022_2023_evaluated": "false",
+          "balanced_accuracy": 0.5249156031903754,
+          "delta_vs_train_majority_macro": 0.013906762277701379,
+          "n_predictions": 1936,
+          "training_seconds": 45.040188137994846,
+          "epochs_run": 9,
+          "peak_gpu_memory_mb": 300.52294921875,
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5618556701030928
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5618556701030928
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.5618556701030928
+            }
+          },
+          "coverage_curve": [
+            {
+              "coverage_target": 1.0,
+              "n": 1936,
+              "coverage_retained": 1.0,
+              "accuracy": 0.5247933884297521,
+              "f1": 0.5286885245901639,
+              "n_tickers": 8,
+              "mean_confidence": 0.0229945757842613
+            },
+            {
+              "coverage_target": 0.75,
+              "n": 1452,
+              "coverage_retained": 0.75,
+              "accuracy": 0.5206611570247934,
+              "f1": 0.5232876712328767,
+              "n_tickers": 8,
+              "mean_confidence": 0.0291450391283051
+            },
+            {
+              "coverage_target": 0.5,
+              "n": 968,
+              "coverage_retained": 0.5,
+              "accuracy": 0.5237603305785123,
+              "f1": 0.526207605344296,
+              "n_tickers": 8,
+              "mean_confidence": 0.0367243523599798
+            },
+            {
+              "coverage_target": 0.3,
+              "n": 581,
+              "coverage_retained": 0.3001033057851239,
+              "accuracy": 0.5060240963855421,
+              "f1": 0.5160202360876898,
+              "n_tickers": 8,
+              "mean_confidence": 0.0454327894045482
+            },
+            {
+              "coverage_target": 0.2,
+              "n": 387,
+              "coverage_retained": 0.199896694214876,
+              "accuracy": 0.5167958656330749,
+              "f1": 0.5427872860635696,
+              "n_tickers": 8,
+              "mean_confidence": 0.0517281173563285
+            },
+            {
+              "coverage_target": 0.1,
+              "n": 194,
+              "coverage_retained": 0.1002066115702479,
+              "accuracy": 0.5618556701030928,
+              "f1": 0.5971563981042654,
+              "n_tickers": 8,
+              "mean_confidence": 0.0617288855740603
+            }
+          ],
+          "per_ticker": [
+            {
+              "ticker": "HDFCBANK",
+              "n": 242,
+              "accuracy": 0.5413223140495868,
+              "majority_baseline": 0.5165289256198347,
+              "delta_vs_majority": 0.024793388429752,
+              "positive_rate": 0.5165289256198347,
+              "mean_p_up": 0.5103571629896816,
+              "mean_confidence": 0.0210519649022906
+            },
+            {
+              "ticker": "INFY",
+              "n": 242,
+              "accuracy": 0.5371900826446281,
+              "majority_baseline": 0.5289256198347108,
+              "delta_vs_majority": 0.0082644628099173,
+              "positive_rate": 0.5289256198347108,
+              "mean_p_up": 0.5033224455034199,
+              "mean_confidence": 0.0168968370251452
+            },
+            {
+              "ticker": "ITC",
+              "n": 242,
+              "accuracy": 0.5702479338842975,
+              "majority_baseline": 0.5165289256198347,
+              "delta_vs_majority": 0.0537190082644628,
+              "positive_rate": 0.4834710743801653,
+              "mean_p_up": 0.5073961989284406,
+              "mean_confidence": 0.0210751808404914
+            },
+            {
+              "ticker": "LT",
+              "n": 242,
+              "accuracy": 0.5330578512396694,
+              "majority_baseline": 0.5371900826446281,
+              "delta_vs_majority": -0.0041322314049586,
+              "positive_rate": 0.4628099173553719,
+              "mean_p_up": 0.4929978330579443,
+              "mean_confidence": 0.0238044285242972
+            },
+            {
+              "ticker": "RELIANCE",
+              "n": 242,
+              "accuracy": 0.4917355371900826,
+              "majority_baseline": 0.5165289256198347,
+              "delta_vs_majority": -0.0247933884297519,
+              "positive_rate": 0.4834710743801653,
+              "mean_p_up": 0.5104081183344905,
+              "mean_confidence": 0.0222398907164022
+            },
+            {
+              "ticker": "SUNPHARMA",
+              "n": 242,
+              "accuracy": 0.512396694214876,
+              "majority_baseline": 0.5,
+              "delta_vs_majority": 0.0123966942148759,
+              "positive_rate": 0.5,
+              "mean_p_up": 0.4902265422957718,
+              "mean_confidence": 0.026465140899268
+            },
+            {
+              "ticker": "TATASTEEL",
+              "n": 242,
+              "accuracy": 0.5041322314049587,
+              "majority_baseline": 0.524793388429752,
+              "delta_vs_majority": -0.0206611570247933,
+              "positive_rate": 0.4752066115702479,
+              "mean_p_up": 0.5014491133478278,
+              "mean_confidence": 0.0344128586780281
+            },
+            {
+              "ticker": "TCS",
+              "n": 242,
+              "accuracy": 0.5082644628099173,
+              "majority_baseline": 0.512396694214876,
+              "delta_vs_majority": -0.0041322314049586,
+              "positive_rate": 0.512396694214876,
+              "mean_p_up": 0.4966831308186929,
+              "mean_confidence": 0.0180103046881674
+            }
+          ]
+        },
+        "V2_DEV_FOLD_B": {
+          "experiment_id": "V2C-20261004T044702-fcd994",
+          "experiment_dir": "/home/iemiedc2026/Documents/Sanket/Research/output/agentic-forecaster/v2/V2C-20261004T044702-fcd994",
+          "accuracy_micro": 0.5165,
+          "accuracy_macro_ticker": 0.5165,
+          "f1": 0.5734450816056462,
+          "roc_auc": 0.5282738274188182,
+          "brier": 0.24923992017194355,
+          "ece": 0.03143134150507143,
+          "train_majority_baseline": 0.5098353924825502,
+          "precision_at_3_up": 0.5266666666666666,
+          "precision_at_3_down": 0.4693333333333333,
+          "return_mae": null,
+          "return_spearman": null,
+          "rank_ic": null,
+          "best_epoch": 8.0,
+          "n_parameters": 230746.0,
+          "test_2022_2023_evaluated": "false",
+          "balanced_accuracy": 0.5114412095995126,
+          "delta_vs_train_majority_macro": 0.006664607517449794,
+          "n_predictions": 2000,
+          "training_seconds": 79.09294408198912,
+          "epochs_run": 14,
+          "peak_gpu_memory_mb": 300.52294921875,
+          "selective_accuracy": {
+            "max_coverage_at_60pct": {
+              "threshold": 0.6,
+              "coverage": 0.1,
+              "coverage_target": 0.1,
+              "accuracy": 0.62,
+              "n": 200,
+              "n_tickers": 8,
+              "reason": "meaningful"
+            },
+            "max_coverage_at_62pct": {
+              "threshold": 0.62,
+              "coverage": 0.1,
+              "coverage_target": 0.1,
+              "accuracy": 0.62,
+              "n": 200,
+              "n_tickers": 8,
+              "reason": "meaningful"
+            },
+            "max_coverage_at_65pct": {
+              "threshold": 0.65,
+              "coverage": null,
+              "accuracy": null,
+              "n": null,
+              "reason": "no coverage level reaches the threshold with at least 200 observations and 10% coverage",
+              "max_accuracy_seen": 0.62
+            }
+          },
+          "coverage_curve": [
+            {
+              "coverage_target": 1.0,
+              "n": 2000,
+              "coverage_retained": 1.0,
+              "accuracy": 0.5165,
+              "f1": 0.5734450816056462,
+              "n_tickers": 8,
+              "mean_confidence": 0.043987500439827
+            },
+            {
+              "coverage_target": 0.75,
+              "n": 1500,
+              "coverage_retained": 0.75,
+              "accuracy": 0.52,
+              "f1": 0.590443686006826,
+              "n_tickers": 8,
+              "mean_confidence": 0.0559254733455538
+            },
+            {
+              "coverage_target": 0.5,
+              "n": 1000,
+              "coverage_retained": 0.5,
+              "accuracy": 0.539,
+              "f1": 0.6167913549459684,
+              "n_tickers": 8,
+              "mean_confidence": 0.0713362432541491
+            },
+            {
+              "coverage_target": 0.3,
+              "n": 600,
+              "coverage_retained": 0.3,
+              "accuracy": 0.56,
+              "f1": 0.648,
+              "n_tickers": 8,
+              "mean_confidence": 0.0894304811794447
+            },
+            {
+              "coverage_target": 0.2,
+              "n": 400,
+              "coverage_retained": 0.2,
+              "accuracy": 0.595,
+              "f1": 0.6798418972332015,
+              "n_tickers": 8,
+              "mean_confidence": 0.1035921134799166
+            },
+            {
+              "coverage_target": 0.1,
+              "n": 200,
+              "coverage_retained": 0.1,
+              "accuracy": 0.62,
+              "f1": 0.6984126984126984,
+              "n_tickers": 8,
+              "mean_confidence": 0.1272272794555027
+            }
+          ],
+          "per_ticker": [
+            {
+              "ticker": "HDFCBANK",
+              "n": 250,
+              "accuracy": 0.528,
+              "majority_baseline": 0.532,
+              "delta_vs_majority": -0.004,
+              "positive_rate": 0.532,
+              "mean_p_up": 0.5212967427537435,
+              "mean_confidence": 0.0347689261418462
+            },
+            {
+              "ticker": "INFY",
+              "n": 250,
+              "accuracy": 0.548,
+              "majority_baseline": 0.54,
+              "delta_vs_majority": 0.008,
+              "positive_rate": 0.54,
+              "mean_p_up": 0.4958388264567501,
+              "mean_confidence": 0.0394007387707676
+            },
+            {
+              "ticker": "ITC",
+              "n": 250,
+              "accuracy": 0.496,
+              "majority_baseline": 0.532,
+              "delta_vs_majority": -0.036,
+              "positive_rate": 0.468,
+              "mean_p_up": 0.5243994950416192,
+              "mean_confidence": 0.0461543889744248
+            },
+            {
+              "ticker": "LT",
+              "n": 250,
+              "accuracy": 0.464,
+              "majority_baseline": 0.516,
+              "delta_vs_majority": -0.0519999999999999,
+              "positive_rate": 0.516,
+              "mean_p_up": 0.5038977653038776,
+              "mean_confidence": 0.0665792783776354
+            },
+            {
+              "ticker": "RELIANCE",
+              "n": 250,
+              "accuracy": 0.504,
+              "majority_baseline": 0.516,
+              "delta_vs_majority": -0.012,
+              "positive_rate": 0.516,
+              "mean_p_up": 0.5281050891357647,
+              "mean_confidence": 0.0416832561285998
+            },
+            {
+              "ticker": "SUNPHARMA",
+              "n": 250,
+              "accuracy": 0.548,
+              "majority_baseline": 0.52,
+              "delta_vs_majority": 0.028,
+              "positive_rate": 0.52,
+              "mean_p_up": 0.5062790510165593,
+              "mean_confidence": 0.0535687238067131
+            },
+            {
+              "ticker": "TATASTEEL",
+              "n": 250,
+              "accuracy": 0.528,
+              "majority_baseline": 0.548,
+              "delta_vs_majority": -0.02,
+              "positive_rate": 0.548,
+              "mean_p_up": 0.5061741509132013,
+              "mean_confidence": 0.0280508170575902
+            },
+            {
+              "ticker": "TCS",
+              "n": 250,
+              "accuracy": 0.516,
+              "majority_baseline": 0.544,
+              "delta_vs_majority": -0.028,
+              "positive_rate": 0.544,
+              "mean_p_up": 0.5167381640653148,
+              "mean_confidence": 0.0416938742610388
+            }
+          ]
+        }
+      },
+      "mean_accuracy_macro_ticker": 0.520646694214876,
+      "mean_accuracy_micro": 0.520646694214876,
+      "mean_f1": 0.5510668030979051,
+      "mean_roc_auc": 0.5241553993590164,
+      "mean_brier": 0.24954847635433383,
+      "mean_ece": 0.01884258499759181,
+      "mean_precision_at_3_up": 0.5160881542699725,
+      "mean_precision_at_3_down": 0.4963746556473829,
+      "mean_train_majority_baseline": 0.5103610093173003,
+      "mean_return_mae": null,
+      "mean_return_spearman": null,
+      "mean_rank_ic": null,
+      "baseline_delta_per_fold": {
+        "V2_DEV_FOLD_A": 0.013906762277701379,
+        "V2_DEV_FOLD_B": 0.006664607517449794
+      },
+      "beats_baseline_both_folds": true,
+      "n_folds": 2
+    }
+  },
+  "context_signal_gate": {
+    "evaluated": true,
+    "passed": false,
+    "criterion_a": {
+      "definition": "V2-C mean macro >= 0.55 AND beats baseline in BOTH dev folds",
+      "mean_macro_accuracy": 0.520646694214876,
+      "mean_macro_threshold": 0.55,
+      "beats_baseline_both_folds": true,
+      "passed": false
+    },
+    "criterion_b": {
+      "definition": "V2-C improves mean macro over V2-B by >= 0.015 AND baseline delta positive in BOTH folds AND AUC >= 0.54",
+      "delta_vs_v2_b": 0.00010743801652890461,
+      "delta_threshold": 0.015,
+      "beats_baseline_both_folds": true,
+      "mean_roc_auc": 0.5241553993590164,
+      "auc_threshold": 0.54,
+      "passed": false
+    },
+    "meaning": "same-data context has NOT produced enough signal to justify multi-task / meta complexity; the programme stops here",
+    "not_a_profitability_claim": true
+  },
+  "adaptation_evaluation": {
+    "V2-D_vs_V2-C": {
+      "evaluated": false,
+      "reason": "V2-D or V2-C not available"
+    },
+    "V2-E_vs_V2-D": {
+      "evaluated": false,
+      "reason": "V2-E or V2-D not available"
+    },
+    "V2-E_vs_V2-C": {
+      "evaluated": false,
+      "reason": "V2-E or V2-C not available"
+    },
+    "V2-F_vs_V2-E": {
+      "evaluated": false,
+      "reason": "V2-F or V2-E not available"
+    }
+  },
+  "meta_learning_justified": false,
+  "selection": {
+    "selected": "V2-C",
+    "primary_metric": "mean macro-ticker directional accuracy across V2_DEV_FOLD_A+B",
+    "secondary_metrics": [
+      "roc_auc",
+      "brier",
+      "f1",
+      "fold consistency"
+    ],
+    "ranking": [
+      {
+        "variant": "V2-C",
+        "mean_macro_accuracy": 0.520646694214876,
+        "mean_accuracy_micro": 0.520646694214876,
+        "mean_roc_auc": 0.5241553993590164,
+        "mean_brier": 0.24954847635433383,
+        "mean_f1": 0.5510668030979051,
+        "both_folds_beat_baseline": true,
+        "fold_spread": 0.008293388429752024
+      },
+      {
+        "variant": "V2-B",
+        "mean_macro_accuracy": 0.5205392561983471,
+        "mean_accuracy_micro": 0.5205392561983471,
+        "mean_roc_auc": 0.5035366713989264,
+        "mean_brier": 0.24981555964997318,
+        "mean_f1": 0.6213640566993861,
+        "both_folds_beat_baseline": true,
+        "fold_spread": 0.004921487603305796
+      },
+      {
+        "variant": "V2-A",
+        "mean_macro_accuracy": 0.5056487603305785,
+        "mean_accuracy_micro": 0.5056487603305786,
+        "mean_roc_auc": 0.48831093181213625,
+        "mean_brier": 0.25023529914808884,
+        "mean_f1": 0.6301705342837259,
+        "both_folds_beat_baseline": false,
+        "fold_spread": 0.007297520661156964
+      }
+    ],
+    "not_ranked_by": [
+      "closeness to 65%",
+      "the original paper's reported accuracy"
+    ]
+  },
+  "feature_store": {
+    "root": "/home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/context_store",
+    "built": true,
+    "config_sha256": "34dc7726043622119e6c8334018a2c6144d1c3a19cb55ff85e25c044c09825b0",
+    "source_manifest_sha256": "9c8f66bd5db5b7bc6751747f5d6a091a20bd9fc2c7dbe50b1ce4e5290ed9cd25",
+    "feature_code_sha256": "70b14bc35f8b478e1f5cbbdfd4db03cdcc79e1e93d7b189d7d4f9fe3667c1d4c",
+    "sector_map_sha256": "e1c7567c4770e4efc30a02f85e45f8896eeff270563f8b8887d9e0e7602895b3",
+    "store_sha256": "aa4604d5317f09da06ed04e7a1d2250f97c77b3b99f421f455605b7b207b3306",
+    "max_target_date": "2021-12-31"
+  },
+  "test_2022_2023_evaluated": false,
+  "paper_reference_used": false,
+  "coverage_targets": [
+    0.6,
+    0.62,
+    0.65
+  ],
+  "historical_local_baseline_note": "the faithful per-stock Attention-LSTM reconstruction reached roughly 52-53% mean pre-2022 accuracy; it is quoted only as a historical local baseline and is NOT an optimisation target",
+  "selective_coverage_summary": {
+    "at_60pct": {
+      "per_variant": {
+        "V2-A": {
+          "coverage": null,
+          "reason": "no meaningful coverage on every fold"
+        },
+        "V2-B": {
+          "coverage": null,
+          "reason": "no meaningful coverage on every fold"
+        },
+        "V2-C": {
+          "coverage": null,
+          "reason": "no meaningful coverage on every fold"
+        }
+      },
+      "best_variant": null,
+      "best_coverage": null,
+      "best_accuracy": null
+    },
+    "at_62pct": {
+      "per_variant": {
+        "V2-A": {
+          "coverage": null,
+          "reason": "no meaningful coverage on every fold"
+        },
+        "V2-B": {
+          "coverage": null,
+          "reason": "no meaningful coverage on every fold"
+        },
+        "V2-C": {
+          "coverage": null,
+          "reason": "no meaningful coverage on every fold"
+        }
+      },
+      "best_variant": null,
+      "best_coverage": null,
+      "best_accuracy": null
+    },
+    "at_65pct": {
+      "per_variant": {
+        "V2-A": {
+          "coverage": null,
+          "reason": "no meaningful coverage on every fold"
+        },
+        "V2-B": {
+          "coverage": null,
+          "reason": "no meaningful coverage on every fold"
+        },
+        "V2-C": {
+          "coverage": null,
+          "reason": "no meaningful coverage on every fold"
+        }
+      },
+      "best_variant": null,
+      "best_coverage": null,
+      "best_accuracy": null
+    }
+  },
+  "answers": {
+    "A. Does a shared LSTM outperform the old independent-stock reconstruction?": "No. V2-A (shared LSTM) reached 50.56% mean macro accuracy across DEV A+B against a train-majority baseline of 50.91%, and did not beat that baseline in both folds (False). The historical local per-stock reconstruction sits at roughly 52-53%.",
+    "B. Does Transformer attention improve the shared LSTM?": "Yes, marginally: +1.49 pp mean macro accuracy (V2-B 52.05% vs V2-A 50.56%), and V2-B beats the majority baseline in BOTH folds (A=0.0086, B=0.0144). The gain is small and ROC-AUC stays near 0.50 (0.504), so ranking ability is weak.",
+    "C. Does market/sector/cross-sectional CONTEXT produce the largest gain?": "No. The full same-data context changed mean macro accuracy by +0.01 pp (V2-C 52.06% vs V2-B 52.05%), with ROC-AUC moving from 0.504 to 0.524.",
+    "D. Does multi-task supervision improve DIRECTION accuracy?": "NOT TESTED. The CONTEXT_SIGNAL_GATE failed, so V2-D was deliberately not run.",
+    "E. Does FiLM conditioning help?": "NOT TESTED. The gate failed before V2-E.",
+    "F. Does actual Reptile-style adaptation help over FiLM?": "NOT TESTED, and deliberately so: the gate failed and no adaptation signal was established, so the meta stage was not justified.",
+    "G. Which component contributes the largest directional-accuracy gain?": "The Transformer (V2-B over V2-A: +1.49 pp) is the largest measured step; the context block (V2-C over V2-B) contributes +0.01 pp, i.e. essentially nothing.",
+    "H. Is improvement present in BOTH 2019 and 2020?": "V2-B vs majority baseline: A=0.0086, B=0.0144; V2-C vs majority baseline: A=0.0139, B=0.0067. V2-B and V2-C beat the baseline in 2019 and in 2020; V2-A does not.",
+    "I. Does the winner beat the legitimate train-majority baseline consistently?": "Yes: the highest-mean variant (V2-C, 52.06%) beats the train-majority baseline in both development folds by A=0.0139, B=0.0067 -- under 1.5 pp.",
+    "J. What is the 2021 lockbox result?": "NOT RUN. The CONTEXT_SIGNAL_GATE failed, so the staged programme stopped before winner selection, seed stability and the lockbox. 2021 has NOT been read by any V2 script and remains a sealed architecture lockbox.",
+    "K. What overall accuracy is achieved?": "Best development all-sample accuracy: 52.06% mean macro (V2-C) across DEV A+B; per fold 2019=52.48%, 2020=51.65%. No 2021 or 2022+ accuracy exists.",
+    "L. At what coverage does directional accuracy reach 60 / 62 / 65 %?": "60%: best single fold: B V2-C at 10% coverage (n=200, accuracy 62.00%) | 62%: best single fold: B V2-C at 10% coverage (n=200, accuracy 62.00%) | 65%: not reached: no coverage level with >=10% coverage and >=200 observations reached 65% accuracy on either development fold",
+    "M. Was ANY 2022/2023 target label accessed?": "NO. The V2 feature store is hard-capped at 2021-12-31, the V2 test firewall raises on any target date >= 2022-01-01, and every ledger row records test_2022_2023_evaluated=false.",
+    "context signal gate": "passed=False: same-data context has NOT produced enough signal to justify multi-task / meta complexity; the programme stops here"
+  },
+  "interpretation": "**NO_SIGNAL (context) / WEAK (architecture programme)**\n\n- best development variant: V2-C at 52.06% mean macro accuracy vs a 51.04% train-majority baseline (+1.03 pp)\n- mean ROC-AUC 0.524, mean Brier 0.2495, mean ECE 0.0188\n- CONTEXT_SIGNAL_GATE passed: False\n- SELECTIVE_65_COVERAGE: not achieved at any meaningful coverage (>=10% coverage and >=200 observations)\n- 2021 lockbox: NOT RUN (the context signal gate failed)\n\nReading: the shared-model programme reproduces the same weak-signal regime as the per-stock reconstruction. The Transformer step is the only measurable improvement, and cross-sectional context adds essentially nothing, which is why the staged programme stopped before multi-task and meta-learning. Nothing here supports a profitability claim, and nothing here approaches the 65% aspiration at any meaningful coverage.",
+  "recommended_next_action": {
+    "action": "STOP the architecture search and treat the next step as a data / target question, not a bigger model",
+    "rationale": "V2-A/B/C all land within ~1.5 pp of a majority baseline with ROC-AUC near 0.50, and the same-data context contributes ~0 pp. Enlarging the model (V2-D multi-task, V2-E FiLM, V2-F meta) would add complexity without evidence that the inputs carry directional signal.",
+    "concrete_next_steps": [
+      "verify the signal ceiling first: a ridge / logistic baseline on the same V2 features, scored the same way, to establish whether ANY model can beat the majority baseline on these eight securities in 2019-2020",
+      "keep the 2021 lockbox sealed; re-open it only after a genuine improvement is demonstrated on DEV A+B",
+      "if the ceiling check is also flat, treat the task as a volatility / ranking problem rather than a direction problem, and re-target the evaluation metric (rank IC, selective coverage) before any new architecture",
+      "only after that: run the full 50-security universe, where the cross-sectional context has far more peers and the ticker-balanced sampler already implemented matters",
+      "2022 and 2023 remain untouched until an architecture has earned its place"
+    ]
+  },
+  "ledger_path": "/home/iemiedc2026/Documents/Sanket/Research/projects/agentic-forecaster/results/v2/experiment_ledger.csv",
+  "ledger_rows": 6,
+  "seed_stability": {
+    "V2-A": {
+      "evaluated": false,
+      "reason": "fewer than two stability seeds ran",
+      "per_seed": {
+        "42": {
+          "mean_macro_accuracy": 0.5056487603305785,
+          "per_fold": {
+            "V2_DEV_FOLD_A": 0.509297520661157,
+            "V2_DEV_FOLD_B": 0.502
+          },
+          "mean_roc_auc": 0.48831093181213625
+        }
+      }
+    },
+    "V2-B": {
+      "evaluated": false,
+      "reason": "fewer than two stability seeds ran",
+      "per_seed": {
+        "42": {
+          "mean_macro_accuracy": 0.5205392561983471,
+          "per_fold": {
+            "V2_DEV_FOLD_A": 0.5180785123966942,
+            "V2_DEV_FOLD_B": 0.523
+          },
+          "mean_roc_auc": 0.5035366713989264
+        }
+      }
+    },
+    "V2-C": {
+      "evaluated": false,
+      "reason": "fewer than two stability seeds ran",
+      "per_seed": {
+        "42": {
+          "mean_macro_accuracy": 0.520646694214876,
+          "per_fold": {
+            "V2_DEV_FOLD_A": 0.524793388429752,
+            "V2_DEV_FOLD_B": 0.5165
+          },
+          "mean_roc_auc": 0.5241553993590164
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,221 @@
+sector_map_id: V2_SECTOR_MAP_f5ba4027d935
+universe_id: PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE
+status: OFFICIAL_NSE_INDUSTRY_FIELD
+source: https://nsearchives.nseindia.com/content/indices/ind_nifty50list.csv
+source_sha256: f5ba4027d935ae72879d5c24bbebf0e8439ec8ed504ffdf4175fde69206244b3
+retrieved_at: '2026-10-04T03:29:49.701102+00:00'
+provenance_csv: /home/iemiedc2026/Documents/Sanket/Research/dataset/agentic-forecaster/processed/v2/metadata/sector_map.csv
+unknown_label: UNKNOWN
+n_tickers: 50
+n_unmapped: 1
+unmapped_tickers:
+- WIPRO
+extra_symbols_in_source:
+- BSE
+broad_sector_definition: Deterministic collapse of the official NSE Industry labels listed in v2/sectors.py:BROAD_SECTOR_BY_INDUSTRY.
+  Not a vendor classification and not inferred from any market data.
+survivorship_note: The universe is a fixed 2025-11-04 candidate snapshot, so sector counts are a TODAY's
+  composition applied backwards. Sector membership is static reference metadata, which is acceptable for
+  a fixed-universe reconstruction, but the resulting sector aggregates inherit the same survivorship bias
+  as the universe itself.
+entries:
+- ticker: RELIANCE
+  company_name: Reliance Industries Ltd.
+  industry: Oil Gas & Consumable Fuels
+  broad_sector: ENERGY_AND_MATERIALS
+- ticker: TCS
+  company_name: Tata Consultancy Services Ltd.
+  industry: Information Technology
+  broad_sector: IT_AND_TELECOM
+- ticker: HDFCBANK
+  company_name: HDFC Bank Ltd.
+  industry: Financial Services
+  broad_sector: FINANCIALS
+- ticker: ICICIBANK
+  company_name: ICICI Bank Ltd.
+  industry: Financial Services
+  broad_sector: FINANCIALS
+- ticker: INFY
+  company_name: Infosys Ltd.
+  industry: Information Technology
+  broad_sector: IT_AND_TELECOM
+- ticker: BHARTIARTL
+  company_name: Bharti Airtel Ltd.
+  industry: Telecommunication
+  broad_sector: IT_AND_TELECOM
+- ticker: LT
+  company_name: Larsen & Toubro Ltd.
+  industry: Construction
+  broad_sector: SERVICES_AND_CONSTRUCTION
+- ticker: ITC
+  company_name: ITC Ltd.
+  industry: Fast Moving Consumer Goods
+  broad_sector: CONSUMER
+- ticker: SBIN
+  company_name: State Bank of India
+  industry: Financial Services
+  broad_sector: FINANCIALS
+- ticker: AXISBANK
+  company_name: Axis Bank Ltd.
+  industry: Financial Services
+  broad_sector: FINANCIALS
+- ticker: KOTAKBANK
+  company_name: Kotak Mahindra Bank Ltd.
+  industry: Financial Services
+  broad_sector: FINANCIALS
+- ticker: BAJFINANCE
+  company_name: Bajaj Finance Ltd.
+  industry: Financial Services
+  broad_sector: FINANCIALS
+- ticker: MARUTI
+  company_name: Maruti Suzuki India Ltd.
+  industry: Automobile and Auto Components
+  broad_sector: INDUSTRIALS
+- ticker: M&M
+  company_name: Mahindra & Mahindra Ltd.
+  industry: Automobile and Auto Components
+  broad_sector: INDUSTRIALS
+- ticker: TATASTEEL
+  company_name: Tata Steel Ltd.
+  industry: Metals & Mining
+  broad_sector: ENERGY_AND_MATERIALS
+- ticker: SUNPHARMA
+  company_name: Sun Pharmaceutical Industries Ltd.
+  industry: Healthcare
+  broad_sector: HEALTHCARE
+- ticker: HINDUNILVR
+  company_name: Hindustan Unilever Ltd.
+  industry: Fast Moving Consumer Goods
+  broad_sector: CONSUMER
+- ticker: ASIANPAINT
+  company_name: Asian Paints Ltd.
+  industry: Consumer Durables
+  broad_sector: CONSUMER
+- ticker: JIOFIN
+  company_name: Jio Financial Services Ltd.
+  industry: Financial Services
+  broad_sector: FINANCIALS
+- ticker: WIPRO
+  company_name: UNKNOWN
+  industry: UNKNOWN
+  broad_sector: UNKNOWN
+- ticker: TMPV
+  company_name: Tata Motors Passenger Vehicles Ltd.
+  industry: Automobile and Auto Components
+  broad_sector: INDUSTRIALS
+- ticker: ADANIENT
+  company_name: Adani Enterprises Ltd.
+  industry: Metals & Mining
+  broad_sector: ENERGY_AND_MATERIALS
+- ticker: BAJAJFINSV
+  company_name: Bajaj Finserv Ltd.
+  industry: Financial Services
+  broad_sector: FINANCIALS
+- ticker: ADANIPORTS
+  company_name: Adani Ports and Special Economic Zone Ltd.
+  industry: Services
+  broad_sector: SERVICES_AND_CONSTRUCTION
+- ticker: DRREDDY
+  company_name: Dr. Reddy's Laboratories Ltd.
+  industry: Healthcare
+  broad_sector: HEALTHCARE
+- ticker: CIPLA
+  company_name: Cipla Ltd.
+  industry: Healthcare
+  broad_sector: HEALTHCARE
+- ticker: POWERGRID
+  company_name: Power Grid Corporation of India Ltd.
+  industry: Power
+  broad_sector: ENERGY_AND_MATERIALS
+- ticker: NTPC
+  company_name: NTPC Ltd.
+  industry: Power
+  broad_sector: ENERGY_AND_MATERIALS
+- ticker: ONGC
+  company_name: Oil & Natural Gas Corporation Ltd.
+  industry: Oil Gas & Consumable Fuels
+  broad_sector: ENERGY_AND_MATERIALS
+- ticker: COALINDIA
+  company_name: Coal India Ltd.
+  industry: Oil Gas & Consumable Fuels
+  broad_sector: ENERGY_AND_MATERIALS
+- ticker: BAJAJ-AUTO
+  company_name: Bajaj Auto Ltd.
+  industry: Automobile and Auto Components
+  broad_sector: INDUSTRIALS
+- ticker: EICHERMOT
+  company_name: Eicher Motors Ltd.
+  industry: Automobile and Auto Components
+  broad_sector: INDUSTRIALS
+- ticker: ULTRACEMCO
+  company_name: UltraTech Cement Ltd.
+  industry: Construction Materials
+  broad_sector: INDUSTRIALS
+- ticker: GRASIM
+  company_name: Grasim Industries Ltd.
+  industry: Construction Materials
+  broad_sector: INDUSTRIALS
+- ticker: HINDALCO
+  company_name: Hindalco Industries Ltd.
+  industry: Metals & Mining
+  broad_sector: ENERGY_AND_MATERIALS
+- ticker: JSWSTEEL
+  company_name: JSW Steel Ltd.
+  industry: Metals & Mining
+  broad_sector: ENERGY_AND_MATERIALS
+- ticker: NESTLEIND
+  company_name: Nestle India Ltd.
+  industry: Fast Moving Consumer Goods
+  broad_sector: CONSUMER
+- ticker: TATACONSUM
+  company_name: Tata Consumer Products Ltd.
+  industry: Fast Moving Consumer Goods
+  broad_sector: CONSUMER
+- ticker: TITAN
+  company_name: Titan Company Ltd.
+  industry: Consumer Durables
+  broad_sector: CONSUMER
+- ticker: TRENT
+  company_name: Trent Ltd.
+  industry: Consumer Services
+  broad_sector: CONSUMER
+- ticker: ETERNAL
+  company_name: Eternal Ltd.
+  industry: Consumer Services
+  broad_sector: CONSUMER
+- ticker: INDIGO
+  company_name: InterGlobe Aviation Ltd.
+  industry: Services
+  broad_sector: SERVICES_AND_CONSTRUCTION
+- ticker: HDFCLIFE
+  company_name: HDFC Life Insurance Company Ltd.
+  industry: Financial Services
+  broad_sector: FINANCIALS
+- ticker: SBILIFE
+  company_name: SBI Life Insurance Company Ltd.
+  industry: Financial Services
+  broad_sector: FINANCIALS
+- ticker: SHRIRAMFIN
+  company_name: Shriram Finance Ltd.
+  industry: Financial Services
+  broad_sector: FINANCIALS
+- ticker: APOLLOHOSP
+  company_name: Apollo Hospitals Enterprise Ltd.
+  industry: Healthcare
+  broad_sector: HEALTHCARE
+- ticker: MAXHEALTH
+  company_name: Max Healthcare Institute Ltd.
+  industry: Healthcare
+  broad_sector: HEALTHCARE
+- ticker: TECHM
+  company_name: Tech Mahindra Ltd.
+  industry: Information Technology
+  broad_sector: IT_AND_TELECOM
+- ticker: HCLTECH
+  company_name: HCL Technologies Ltd.
+  industry: Information Technology
+  broad_sector: IT_AND_TELECOM
+- ticker: BEL
+  company_name: Bharat Electronics Ltd.
+  industry: Capital Goods
+  broad_sector: INDUSTRIALS

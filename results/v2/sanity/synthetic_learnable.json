@@ -1,0 +1,32 @@
+{
+  "name": "synthetic_learnable",
+  "passed": true,
+  "n_train": 2441,
+  "n_val": 1047,
+  "validation_accuracy_micro": 1.0,
+  "validation_accuracy_macro_ticker": 1.0,
+  "train_majority_baseline": 0.5052531041069723,
+  "best_epoch": 12,
+  "epochs_run": 12,
+  "thresholds": {
+    "min_validation_accuracy": 0.85,
+    "chance": 0.5
+  },
+  "details": {
+    "per_ticker_accuracy": {
+      "SYN00": 1.0,
+      "SYN01": 1.0,
+      "SYN02": 1.0,
+      "SYN03": 1.0
+    },
+    "signal": "next-day direction is a deterministic function of the last input feature row",
+    "labels_shuffled": false,
+    "n_parameters": {
+      "total_parameters": 67716,
+      "trainable_parameters": 67716,
+      "adaptable_parameters": 6339
+    },
+    "train_seconds": 12.75136298299185,
+    "config_sha256": "b13173a448630703d5a27d746869823df9efc01a018e4abd00614cbe26f539aa"
+  }
+}

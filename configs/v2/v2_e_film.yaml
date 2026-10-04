@@ -1,0 +1,12 @@
+# V2-E -- CONDITIONAL ADAPTATION (FiLM)
+#
+#   V2-D + FiLM conditioning of the shared representation on the ticker, sector
+#        and regime embeddings (constrained: gamma = 1 + 0.1 tanh(.), beta = 0.1 tanh(.))
+#
+# Purpose: measure the adaptive-representation contribution.
+# FiLM is CONDITIONAL ADAPTATION, not meta-learning. V2-F is the meta-learning
+# step and adapts only the residual adapter and the task heads.
+base: base.yaml
+variant: V2-E
+experiment:
+  name: v2_e_film

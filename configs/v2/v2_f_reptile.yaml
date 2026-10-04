@@ -1,0 +1,15 @@
+# V2-F -- REPTILE_STYLE_HEAD_ADAPTER (meta-learning)
+#
+#   V2-E + residual adapter block (Linear(64,32) GELU Linear(32,64), z_meta = z + adapter(z))
+#        + Reptile-style chronological adaptation of the adapter and the heads only
+#
+# The shared LSTM / Transformer / context encoder / embeddings stay frozen during
+# the inner loop. A meta task is a security PLUS a chronological historical
+# episode (120 support samples, then 20 query samples, stride 20) built from
+# TRAIN data only.
+#
+# Label: REPTILE_STYLE_HEAD_ADAPTER. This is NOT MAML.
+base: base.yaml
+variant: V2-F
+experiment:
+  name: v2_f_reptile

@@ -1,0 +1,150 @@
+# =============================================================================
+# MODEL V2 -- SHARED BASE CONFIGURATION
+#
+# MODEL V2 IS NOT THE ORIGINAL PAPER MODEL.
+# Classification: NEW_EXPERIMENTAL_ARCHITECTURE.  See docs/MODEL_V2.md.
+#
+# Every V2 variant config (configs/v2/v2_*.yaml) inherits from this file with
+# `base: base.yaml` and overrides only what defines that ablation step.
+#
+# NOTHING in this file modifies the paper reconstruction.  The paper config is
+# configs/paper.yaml and is untouched; V2 has its own namespace, its own feature
+# engineer, its own trainer and its own firewall.
+# =============================================================================
+
+variant: V2-A
+fold: V2_DEV_FOLD_A
+
+experiment:
+  name: v2_base
+  seed: 42
+  device: auto
+  classification: NEW_EXPERIMENTAL_ARCHITECTURE
+  is_original_paper_model: false
+  notes: >-
+    One shared multi-security model with stationary features, cross-sectional
+    context, causal Transformer attention, multi-task supervision and optional
+    conditional / meta adaptation.
+
+data:
+  # The already-downloaded paper-snapshot Yahoo dataset.  No new price history
+  # is downloaded for V2.
+  dataset_root: ${AGENTIC_DATA_ROOT}/yfinance_paper_snapshot_2025_11_04
+  # ADJUSTED is the PRIMARY V2 source: V2 is a new model rather than a
+  # reconstruction, and stationary return-derived features benefit from
+  # corporate-action-adjusted prices.  Adjusted and unadjusted bars are never
+  # mixed inside one experiment; unadjusted stays available as a later
+  # sensitivity check.
+  dataset_variant: adjusted
+  universe_config: configs/nifty50_paper_snapshot_2025_11_04.yaml
+  universe_id: PAPER_FIXED_NIFTY50_2025_11_04_CANDIDATE
+  sector_map_csv: ${AGENTIC_PROCESSED_DATA_ROOT}/v2/metadata/sector_map.csv
+  # HARD CAP.  The feature store is not written beyond this date, so no 2022 or
+  # 2023 label can exist anywhere in V2.
+  max_date: "2021-12-31"
+  # Supervised development securities: broad sector coverage, manageable compute.
+  # Context, leave-one-out statistics and cross-sectional ranks still use every
+  # available security of the fixed 50-stock universe.
+  supervised_tickers:
+    - RELIANCE
+    - TCS
+    - INFY
+    - HDFCBANK
+    - ITC
+    - LT
+    - SUNPHARMA
+    - TATASTEEL
+  # V2 deliberately starts at 60 (the paper's 30-day window is untouched): the
+  # LSTM carries local sequential dynamics while the Transformer needs a wider
+  # history.  Sequence length is NOT searched in this programme.
+  sequence_length: 60
+  balanced_by_ticker: true
+
+# Fixed architecture settings.  Nothing here is tuned in the V2 development
+# programme: the purpose is ARCHITECTURE CONTRIBUTION ANALYSIS.
+model:
+  hidden_size: 96                # A. unidirectional LSTM
+  lstm_layers: 2
+  lstm_dropout: 0.20
+  context_dim: 32                # B. context projection
+  d_model: 64                    # C/E. fused width and Transformer width
+  fusion_temporal_dim: 64
+  transformer_layers: 2
+  n_heads: 4
+  dim_feedforward: 128
+  transformer_dropout: 0.10
+  max_sequence_length: 128       # supports at least 128 timesteps
+  ticker_embedding_dim: 16       # one SHARED model, identity via embedding
+  sector_embedding_dim: 8
+  regime_embedding_dim: 16
+  regime_hidden: 32
+  fusion_hidden: 128
+  z_dim: 64
+  fusion_dropout: 0.10
+  head_hidden: 32
+
+# Fixed training settings (see v2/trainer.py for the full statement).
+training:
+  learning_rate: 0.0003
+  beta1: 0.9
+  beta2: 0.999
+  weight_decay: 0.0001
+  batch_size: 256
+  max_epochs: 30
+  early_stopping_patience: 6
+  gradient_clip_norm: 1.0
+  balanced_by_ticker: true
+  use_amp: false                 # determinism of the reported seeds matters more
+  num_workers: 0
+
+# Fixed multi-task loss weights (NOT tuned in this programme).
+loss:
+  direction: 1.00                # BCEWithLogitsLoss
+  return: 0.50                   # SmoothL1Loss on the volatility-normalised return
+  rank: 0.25                     # SmoothL1Loss on the cross-sectional rank
+  return_target_clip: 5.0        # documented, fixed BEFORE any experiment
+
+# Fixed meta-learning settings, used only by V2-F.
+meta:
+  support_size: 120
+  query_size: 20
+  stride: 20
+  inner_steps: 3
+  inner_lr: 0.001
+  meta_step_size: 0.10
+  episodes_per_meta_batch: 8
+  meta_epochs: 5
+  validation_support_size: 120
+  validation_inner_steps: 3
+
+evaluation:
+  ece_bins: 10
+  p_at_k: 3
+  coverage_levels: [1.0, 0.75, 0.5, 0.3, 0.2, 0.1]
+
+folds:
+  # V2 is NOT constrained by the paper's 2016 training start: 2005 gives the
+  # eight principal development securities established histories and a range of
+  # market regimes.
+  V2_DEV_FOLD_A:
+    train_start: "2005-01-01"
+    train_end: "2018-12-31"
+    val_start: "2019-01-01"
+    val_end: "2019-12-31"
+    selectable: true
+  V2_DEV_FOLD_B:
+    train_start: "2005-01-01"
+    train_end: "2019-12-31"
+    val_start: "2020-01-01"
+    val_end: "2020-12-31"
+    selectable: true
+  V2_LOCKBOX:
+    train_start: "2005-01-01"
+    train_end: "2020-12-31"
+    val_start: "2021-01-01"
+    val_end: "2021-12-31"
+    selectable: false
+    note: >-
+      2021 is the V2 architecture LOCKBOX. It must not be read while comparing
+      V2-A .. V2-F. Only scripts/run_v2_lockbox.py with V2_LOCKBOX=1 may score
+      it, and never 2022 or later.

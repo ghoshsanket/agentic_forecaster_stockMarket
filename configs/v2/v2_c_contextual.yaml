@@ -1,0 +1,12 @@
+# V2-C -- CONTEXTUAL LSTM + TRANSFORMER
+#
+#   V2-B + market context (incl. leave-one-out) + sector context (leave-one-out)
+#        + cross-sectional rank inputs + sector embedding + regime encoder
+#   direction target only
+#
+# Purpose: isolate the contribution of INFORMATION/CONTEXT that is already
+# present in the same 50-security universe. No new data source is introduced.
+base: base.yaml
+variant: V2-C
+experiment:
+  name: v2_c_contextual

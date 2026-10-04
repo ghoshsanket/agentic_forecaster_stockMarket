@@ -1,0 +1,10 @@
+# V2-B -- LSTM + TRANSFORMER
+#
+#   V2-A + causal Transformer + learned attention pooling + LSTM residual
+#   still stock features only, still direction target only
+#
+# Purpose: isolate the Transformer's contribution over the shared LSTM.
+base: base.yaml
+variant: V2-B
+experiment:
+  name: v2_b_lstm_transformer

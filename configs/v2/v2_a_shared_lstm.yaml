@@ -1,0 +1,11 @@
+# V2-A -- SHARED LSTM (baseline of the ablation)
+#
+#   shared LSTM + ticker embedding + direction head
+#   no Transformer, no market/sector context, no multi-task, no FiLM, no meta
+#
+# Purpose: establish the shared-LSTM baseline that every later V2 variant is
+# measured against.
+base: base.yaml
+variant: V2-A
+experiment:
+  name: v2_a_shared_lstm

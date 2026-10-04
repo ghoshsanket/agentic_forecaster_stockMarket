@@ -526,7 +526,10 @@ def build_target_day_leak(X, y, origin_dates, target_dates, *,
     # Per-sample assertions, as required: the final element must genuinely be
     # the target date, and the target must be strictly after the origin.
     for j, i in enumerate(keep):
-        o, t = origins[i], targets[j]
+        # `i` indexes the ORIGINAL sample list, `j` indexes the KEPT list. Any
+        # sample dropped above makes the two diverge, so the target must come
+        # from `targets[i]` (the returned target_dates already do this).
+        o, t = origins[i], targets[i]
         if not (last_dates[j] == t):
             raise L1AlignmentError(
                 f"final timestep {last_dates[j]} != target_date {t}")

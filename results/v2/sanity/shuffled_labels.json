@@ -1,0 +1,32 @@
+{
+  "name": "shuffled_labels",
+  "passed": true,
+  "n_train": 2441,
+  "n_val": 1047,
+  "validation_accuracy_micro": 0.5033428844317096,
+  "validation_accuracy_macro_ticker": 0.5033195870258255,
+  "train_majority_baseline": 0.5138490926456543,
+  "best_epoch": 4,
+  "epochs_run": 12,
+  "thresholds": {
+    "max_validation_accuracy": 0.6,
+    "chance": 0.5
+  },
+  "details": {
+    "per_ticker_accuracy": {
+      "SYN00": 0.5381679389312977,
+      "SYN01": 0.4580152671755725,
+      "SYN02": 0.4789272030651341,
+      "SYN03": 0.5381679389312977
+    },
+    "signal": "next-day direction is a deterministic function of the last input feature row",
+    "labels_shuffled": true,
+    "n_parameters": {
+      "total_parameters": 67716,
+      "trainable_parameters": 67716,
+      "adaptable_parameters": 6339
+    },
+    "train_seconds": 10.413053486001445,
+    "config_sha256": "b13173a448630703d5a27d746869823df9efc01a018e4abd00614cbe26f539aa"
+  }
+}
